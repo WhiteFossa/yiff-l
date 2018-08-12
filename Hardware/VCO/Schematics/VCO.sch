@@ -1,0 +1,350 @@
+EESchema Schematic File Version 2
+LIBS:power
+LIBS:device
+LIBS:switches
+LIBS:relays
+LIBS:motors
+LIBS:transistors
+LIBS:conn
+LIBS:linear
+LIBS:regul
+LIBS:74xx
+LIBS:cmos4000
+LIBS:adc-dac
+LIBS:memory
+LIBS:xilinx
+LIBS:microcontrollers
+LIBS:dsp
+LIBS:microchip
+LIBS:analog_switches
+LIBS:motorola
+LIBS:texas
+LIBS:intel
+LIBS:audio
+LIBS:interface
+LIBS:digital-audio
+LIBS:philips
+LIBS:display
+LIBS:cypress
+LIBS:siliconi
+LIBS:opto
+LIBS:atmel
+LIBS:contrib
+LIBS:valves
+LIBS:fossa library
+LIBS:VCO-cache
+EELAYER 25 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title "VCO (GPLv3+)"
+Date "2018-08-12"
+Rev "1"
+Comp "White Fossa aka Artyom Vetrov"
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L Conn_01x04 J?
+U 1 1 5B7063C4
+P 5650 1450
+F 0 "J?" H 5650 1650 50  0000 C CNN
+F 1 "Conn_01x04" H 5650 1150 50  0000 C CNN
+F 2 "" H 5650 1450 50  0001 C CNN
+F 3 "" H 5650 1450 50  0001 C CNN
+	1    5650 1450
+	1    0    0    -1  
+$EndComp
+Text Notes 5700 1350 0    60   ~ 0
++5V
+Text Notes 5700 1450 0    60   ~ 0
+GND
+Text Notes 5700 1550 0    60   ~ 0
+OUT+
+Text Notes 5700 1650 0    60   ~ 0
+OUT-
+$Comp
+L GND #PWR?
+U 1 1 5B706542
+P 5150 1800
+F 0 "#PWR?" H 5150 1550 50  0001 C CNN
+F 1 "GND" H 5150 1650 50  0000 C CNN
+F 2 "" H 5150 1800 50  0001 C CNN
+F 3 "" H 5150 1800 50  0001 C CNN
+	1    5150 1800
+	1    0    0    -1  
+$EndComp
+$Comp
+L C C?
+U 1 1 5B70657A
+P 4900 1600
+F 0 "C?" H 4925 1700 50  0000 L CNN
+F 1 "0.1uF" H 4925 1500 50  0000 L CNN
+F 2 "" H 4938 1450 50  0001 C CNN
+F 3 "" H 4900 1600 50  0001 C CNN
+	1    4900 1600
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 5B706662
+P 4900 1800
+F 0 "#PWR?" H 4900 1550 50  0001 C CNN
+F 1 "GND" H 4900 1650 50  0000 C CNN
+F 2 "" H 4900 1800 50  0001 C CNN
+F 3 "" H 4900 1800 50  0001 C CNN
+	1    4900 1800
+	1    0    0    -1  
+$EndComp
+$Comp
+L BF862 VT?
+U 1 1 5B706795
+P 4400 1650
+F 0 "VT?" H 4550 1650 60  0000 C CNN
+F 1 "BF862" H 4200 1650 60  0000 C CNN
+F 2 "" H 4400 1650 60  0001 C CNN
+F 3 "" H 4400 1650 60  0001 C CNN
+	1    4400 1650
+	1    0    0    -1  
+$EndComp
+$Comp
+L L_Core_Ferrite L?
+U 1 1 5B7068F5
+P 4550 2450
+F 0 "L?" V 4500 2450 50  0000 C CNN
+F 1 "1mH" V 4660 2450 50  0000 C CNN
+F 2 "" H 4550 2450 50  0001 C CNN
+F 3 "" H 4550 2450 50  0001 C CNN
+	1    4550 2450
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 5B7069A3
+P 4550 2650
+F 0 "#PWR?" H 4550 2400 50  0001 C CNN
+F 1 "GND" H 4550 2500 50  0000 C CNN
+F 2 "" H 4550 2650 50  0001 C CNN
+F 3 "" H 4550 2650 50  0001 C CNN
+	1    4550 2650
+	1    0    0    -1  
+$EndComp
+$Comp
+L C C?
+U 1 1 5B706A22
+P 4050 2050
+F 0 "C?" H 4075 2150 50  0000 L CNN
+F 1 "560pF" H 4075 1950 50  0000 L CNN
+F 2 "" H 4088 1900 50  0001 C CNN
+F 3 "" H 4050 2050 50  0001 C CNN
+	1    4050 2050
+	1    0    0    -1  
+$EndComp
+$Comp
+L C C?
+U 1 1 5B706AA9
+P 4050 2450
+F 0 "C?" H 4075 2550 50  0000 L CNN
+F 1 "560pF" H 4075 2350 50  0000 L CNN
+F 2 "" H 4088 2300 50  0001 C CNN
+F 3 "" H 4050 2450 50  0001 C CNN
+	1    4050 2450
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 5B706B54
+P 4050 2650
+F 0 "#PWR?" H 4050 2400 50  0001 C CNN
+F 1 "GND" H 4050 2500 50  0000 C CNN
+F 2 "" H 4050 2650 50  0001 C CNN
+F 3 "" H 4050 2650 50  0001 C CNN
+	1    4050 2650
+	1    0    0    -1  
+$EndComp
+$Comp
+L R R?
+U 1 1 5B706C78
+P 3800 2250
+F 0 "R?" V 3880 2250 50  0000 C CNN
+F 1 "100k" V 3800 2250 50  0000 C CNN
+F 2 "" V 3730 2250 50  0001 C CNN
+F 3 "" H 3800 2250 50  0001 C CNN
+	1    3800 2250
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 5B706D03
+P 3800 2650
+F 0 "#PWR?" H 3800 2400 50  0001 C CNN
+F 1 "GND" H 3800 2500 50  0000 C CNN
+F 2 "" H 3800 2650 50  0001 C CNN
+F 3 "" H 3800 2650 50  0001 C CNN
+	1    3800 2650
+	1    0    0    -1  
+$EndComp
+$Comp
+L D D?
+U 1 1 5B7071A6
+P 3550 2250
+F 0 "D?" H 3550 2350 50  0000 C CNN
+F 1 "1N4148" H 3550 2150 50  0000 C CNN
+F 2 "" H 3550 2250 50  0001 C CNN
+F 3 "" H 3550 2250 50  0001 C CNN
+	1    3550 2250
+	0    -1   -1   0   
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 5B707304
+P 3550 2650
+F 0 "#PWR?" H 3550 2400 50  0001 C CNN
+F 1 "GND" H 3550 2500 50  0000 C CNN
+F 2 "" H 3550 2650 50  0001 C CNN
+F 3 "" H 3550 2650 50  0001 C CNN
+	1    3550 2650
+	1    0    0    -1  
+$EndComp
+$Comp
+L C C?
+U 1 1 5B707492
+P 3300 1850
+F 0 "C?" H 3325 1950 50  0000 L CNN
+F 1 "47pF" H 3325 1750 50  0000 L CNN
+F 2 "" H 3338 1700 50  0001 C CNN
+F 3 "" H 3300 1850 50  0001 C CNN
+	1    3300 1850
+	0    1    1    0   
+$EndComp
+$Comp
+L Transformer_1P_1S T?
+U 1 1 5B7075E9
+P 2750 2300
+F 0 "T?" H 2750 2550 50  0000 C CNN
+F 1 "Transformer_1P_1S" H 2750 2000 50  0000 C CNN
+F 2 "" H 2750 2300 50  0001 C CNN
+F 3 "" H 2750 2300 50  0001 C CNN
+	1    2750 2300
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 5B707677
+P 3150 2650
+F 0 "#PWR?" H 3150 2400 50  0001 C CNN
+F 1 "GND" H 3150 2500 50  0000 C CNN
+F 2 "" H 3150 2650 50  0001 C CNN
+F 3 "" H 3150 2650 50  0001 C CNN
+	1    3150 2650
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4550 1350 5450 1350
+Wire Wire Line
+	4900 1350 4900 1450
+Wire Wire Line
+	4900 1800 4900 1750
+Wire Wire Line
+	5450 1450 5150 1450
+Wire Wire Line
+	5150 1450 5150 1800
+Wire Wire Line
+	4550 1350 4550 1750
+Connection ~ 4900 1350
+Wire Wire Line
+	4550 2300 4550 1950
+Wire Wire Line
+	4050 2300 4050 2200
+Connection ~ 4550 2250
+Connection ~ 4050 2250
+Wire Wire Line
+	4050 1900 4050 1850
+Wire Wire Line
+	4550 2600 4550 2650
+Wire Wire Line
+	4050 2600 4050 2650
+Connection ~ 4050 1850
+Wire Wire Line
+	3450 1850 4150 1850
+Wire Wire Line
+	3550 1850 3550 2100
+Wire Wire Line
+	3800 2100 3800 1850
+Connection ~ 3800 1850
+Wire Wire Line
+	4050 2250 4550 2250
+Wire Wire Line
+	3800 2400 3800 2650
+Wire Wire Line
+	3550 2400 3550 2650
+Connection ~ 3550 1850
+Wire Wire Line
+	3150 2100 3150 1850
+Wire Wire Line
+	3150 2650 3150 2500
+Wire Wire Line
+	2350 2500 2250 2500
+Wire Wire Line
+	2250 2500 2250 2900
+Wire Wire Line
+	2250 2900 5250 2900
+Wire Wire Line
+	5250 2900 5250 1550
+Wire Wire Line
+	5250 1550 5450 1550
+Wire Wire Line
+	2350 2100 2150 2100
+Wire Wire Line
+	2150 2100 2150 2950
+Wire Wire Line
+	2150 2950 5350 2950
+Wire Wire Line
+	5350 2950 5350 1650
+Wire Wire Line
+	5350 1650 5450 1650
+Wire Wire Line
+	3150 1850 1850 1850
+Wire Wire Line
+	1850 1850 1850 1950
+$Comp
+L C C?
+U 1 1 5B7077BD
+P 1850 2100
+F 0 "C?" H 1875 2200 50  0000 L CNN
+F 1 "0.1uF" H 1875 2000 50  0000 L CNN
+F 2 "" H 1888 1950 50  0001 C CNN
+F 3 "" H 1850 2100 50  0001 C CNN
+	1    1850 2100
+	1    0    0    -1  
+$EndComp
+$Comp
+L BB135 VD?
+U 1 1 5B707DE6
+P 1900 2650
+F 0 "VD?" H 1750 2750 60  0000 C CNN
+F 1 "BB135" H 2100 2750 60  0000 C CNN
+F 2 "" H 1950 2700 60  0001 C CNN
+F 3 "" H 1950 2700 60  0001 C CNN
+	1    1900 2650
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	1850 2400 1850 2250
+$Comp
+L GND #PWR?
+U 1 1 5B707F0D
+P 1850 3050
+F 0 "#PWR?" H 1850 2800 50  0001 C CNN
+F 1 "GND" H 1850 2900 50  0000 C CNN
+F 2 "" H 1850 3050 50  0001 C CNN
+F 3 "" H 1850 3050 50  0001 C CNN
+	1    1850 3050
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1850 3050 1850 2950
+$EndSCHEMATC
