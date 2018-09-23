@@ -1,4 +1,4 @@
-update=Вс 12 авг 2018 19:42:16
+update=Вс 26 авг 2018 10:01:15
 version=1
 last_client=kicad
 [pcbnew]
@@ -61,4 +61,4 @@ LibName29=opto
 LibName30=atmel
 LibName31=contrib
 LibName32=valves
-LibName33=/mnt/nfs/thehive/shared_private_storage/fossa/Projects/Electronics/KiCad/fossas_kicad_lib/fossa library/fossa library
+LibName33=/mnt/nfs/th/sps/fossa/Projects/Electronics/KiCad/fossas_kicad_lib/fossa library/fossa library
