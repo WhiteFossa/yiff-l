@@ -32,13 +32,13 @@ LIBS:atmel
 LIBS:contrib
 LIBS:valves
 LIBS:fossa library
-LIBS:VCO-cache
+LIBS:FullSchematic-cache
 EELAYER 25 0
 EELAYER END
 $Descr A3 16535 11693
 encoding utf-8
 Sheet 1 1
-Title "VCO (GPLv3+)"
+Title "Full device (GPLv3+)"
 Date "2018-08-12"
 Rev "2"
 Comp "White Fossa aka Artyom Vetrov"

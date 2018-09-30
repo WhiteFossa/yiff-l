@@ -1,9 +1,7 @@
 EESchema Schematic File Version 2
+LIBS:FullSchematic-rescue
 LIBS:power
 LIBS:device
-LIBS:switches
-LIBS:relays
-LIBS:motors
 LIBS:transistors
 LIBS:conn
 LIBS:linear
@@ -32,13 +30,13 @@ LIBS:atmel
 LIBS:contrib
 LIBS:valves
 LIBS:fossa library
-LIBS:VCO-cache
+LIBS:FullSchematic-cache
 EELAYER 25 0
 EELAYER END
 $Descr A3 16535 11693
 encoding utf-8
 Sheet 1 1
-Title "VCO (GPLv3+)"
+Title "Full device (GPLv3+)"
 Date "2018-08-12"
 Rev "2"
 Comp "White Fossa aka Artyom Vetrov"
@@ -239,14 +237,14 @@ F 3 "" H 4900 2750 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Conn_01x02 J1
+L CONN_01X02 J1
 U 1 1 5B720BFC
-P 3550 1900
-F 0 "J1" H 3550 2000 50  0000 C CNN
-F 1 "Conn_01x02" H 3550 1700 50  0000 C CNN
-F 2 "" H 3550 1900 50  0001 C CNN
-F 3 "" H 3550 1900 50  0001 C CNN
-	1    3550 1900
+P 3550 1950
+F 0 "J1" H 3550 2050 50  0000 C CNN
+F 1 "Conn_01x02" H 3550 1750 50  0000 C CNN
+F 2 "" H 3550 1950 50  0001 C CNN
+F 3 "" H 3550 1950 50  0001 C CNN
+	1    3550 1950
 	-1   0    0    -1  
 $EndComp
 $Comp
@@ -263,7 +261,7 @@ $EndComp
 Text Notes 3250 1975 0    60   ~ 0
 Tune
 $Comp
-L Conn_01x02 J2
+L CONN_01X02 J2
 U 1 1 5B7237EE
 P 8600 1050
 F 0 "J2" H 8600 1150 50  0000 C CNN
@@ -274,14 +272,14 @@ F 3 "" H 8600 1050 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Conn_01x02 J4
+L CONN_01X02 J4
 U 1 1 5B726E8F
-P 9600 2325
-F 0 "J4" H 9600 2425 50  0000 C CNN
-F 1 "Conn_01x02" H 9600 2125 50  0000 C CNN
-F 2 "" H 9600 2325 50  0001 C CNN
-F 3 "" H 9600 2325 50  0001 C CNN
-	1    9600 2325
+P 9600 2375
+F 0 "J4" H 9600 2475 50  0000 C CNN
+F 1 "Conn_01x02" H 9600 2175 50  0000 C CNN
+F 2 "" H 9600 2375 50  0001 C CNN
+F 3 "" H 9600 2375 50  0001 C CNN
+	1    9600 2375
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -295,7 +293,7 @@ F 3 "" H 9400 2600 50  0001 C CNN
 	1    9400 2600
 	1    0    0    -1  
 $EndComp
-Text Notes 9700 2400 0    60   ~ 0
+Text Notes 9700 2450 0    60   ~ 0
 Out
 $Comp
 L GND #PWR6
@@ -762,17 +760,17 @@ Wire Wire Line
 	8500 3675 8500 3575
 Connection ~ 8400 3475
 $Comp
-L Conn_01x02 J3
+L CONN_01X02 J3
 U 1 1 5BA77BC4
-P 8700 3475
-F 0 "J3" H 8700 3575 50  0000 C CNN
-F 1 "Conn_01x02" H 8700 3275 50  0000 C CNN
-F 2 "" H 8700 3475 50  0001 C CNN
-F 3 "" H 8700 3475 50  0001 C CNN
-	1    8700 3475
+P 8700 3525
+F 0 "J3" H 8700 3625 50  0000 C CNN
+F 1 "Conn_01x02" H 8700 3325 50  0000 C CNN
+F 2 "" H 8700 3525 50  0001 C CNN
+F 3 "" H 8700 3525 50  0001 C CNN
+	1    8700 3525
 	1    0    0    -1  
 $EndComp
-Text Notes 9875 2425 0    60   ~ 0
+Text Notes 9875 2475 0    60   ~ 0
 1V peak to peak\n3.5MHz
 Text Notes 8800 3550 0    60   ~ 0
 Signal ground - 6V
