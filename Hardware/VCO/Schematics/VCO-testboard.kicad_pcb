@@ -37,7 +37,7 @@
   )
 
   (setup
-    (last_trace_width 0.4)
+    (last_trace_width 1)
     (user_trace_width 0.3)
     (user_trace_width 0.4)
     (user_trace_width 1)
@@ -71,8 +71,8 @@
       (usegerberextensions false)
       (excludeedgelayer true)
       (linewidth 0.100000)
-      (plotframeref true)
-      (viasonmask false)
+      (plotframeref false)
+      (viasonmask true)
       (mode 1)
       (useauxorigin false)
       (hpglpennumber 1)
@@ -1199,7 +1199,7 @@
   (segment (start 30.75 23.18) (end 28.235 23.18) (width 0.25) (layer F.Cu) (net 6))
   (segment (start 28.235 23.18) (end 27.94 23.475) (width 0.25) (layer F.Cu) (net 6) (tstamp 5BB0F490))
   (segment (start 32.465 20.955) (end 32.465 21.465) (width 0.25) (layer F.Cu) (net 6))
-  (segment (start 32.465 21.465) (end 30.75 23.18) (width 0.3) (layer F.Cu) (net 6) (tstamp 5BB0F48D))
+  (segment (start 32.465 21.465) (end 30.75 23.18) (width 1) (layer F.Cu) (net 6) (tstamp 5BB0F48D))
   (segment (start 27.94 25.42) (end 27.94 23.475) (width 0.25) (layer F.Cu) (net 6))
   (segment (start 41.91 24.765) (end 44.43 24.765) (width 1) (layer F.Cu) (net 7))
   (segment (start 44.43 24.765) (end 44.45 24.785) (width 1) (layer F.Cu) (net 7) (tstamp 5BB0F94B))
