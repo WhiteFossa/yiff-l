@@ -365,7 +365,7 @@ L L_Core_Ferrite L1
 U 1 1 5B78C44C
 P 5600 1975
 F 0 "L1" V 5550 1975 50  0000 C CNN
-F 1 "22 uH" V 5710 1975 50  0000 C CNN
+F 1 "21 uH" V 5710 1975 50  0000 C CNN
 F 2 "Inductors_NEOSID:Neosid_Inductor_Sd8" H 5600 1975 50  0001 C CNN
 F 3 "" H 5600 1975 50  0001 C CNN
 	1    5600 1975
@@ -688,7 +688,7 @@ F 3 "" H 8700 3525 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Text Notes 9875 2425 0    60   ~ 0
-1V peak to peak\n3.5MHz
+1.7V peak to peak\n3.5MHz
 Text Notes 8800 3550 0    60   ~ 0
 Signal ground - 6V
 $Comp
@@ -736,5 +736,5 @@ Connection ~ 9300 2125
 Wire Wire Line
 	7150 3025 7150 3475
 Text Notes 4250 1400 0    60   ~ 0
-0V - \nxV - 3.5 MHz\nxV - 3.575 MHz\nxV - 3.65 MHz\n12V - 
+0V - 3.115 MHz\n2.8V - 3.5 MHz\n4.3V - 3.575 MHz\n6.3V - 3.65 MHz\n12V - 3.769 MHz
 $EndSCHEMATC
