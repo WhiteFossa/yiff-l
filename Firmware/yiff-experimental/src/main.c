@@ -101,13 +101,19 @@ int main(int argc, char* argv[])
 	/* And it's button */
 	L2HAL_Buttons_AddButton(&L2HAL_Buttons_Context, GPIOA, GPIO_PIN_2, NULL, 10, &EncoderButtonCallback);
 
-	/* Experimental */
+	/* R counter */
 	L2HAL_ADF4001_ReferenceCounterStruct rData;
 	rData.ReferenceCounter = 3550;
 	rData.AntiBacklashWidth = PulseWidth6_0;
 	rData.LockDetectPrecision = Cycles5;
+	L2HAL_ADF4001_WriteReferenceCounter(&rData);
 
-	uint8_t tmp = L2HAL_ADF4001_WriteReferenceCounter(&rData);
+	/* N counter */
+	L2HAL_ADF4001_NCounterStruct nData;
+	nData.NCounter = 8000;
+	nData.CPGain = CP_GAIN_1;
+	uint8_t tmp = L2HAL_ADF4001_WriteNCounter(&nData);
+
 	char buffer[32];
 	sprintf(buffer, "Tmp: %d", tmp);
 	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &fontSettings, 0, 32, NULL, NULL, false, buffer);

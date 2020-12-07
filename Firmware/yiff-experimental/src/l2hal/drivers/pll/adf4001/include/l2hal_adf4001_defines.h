@@ -51,4 +51,18 @@ enum L2HAL_ADF4001_LockDetectPrecision
  */
 #define L2HAL_ADF4001_LOCK_DETECT_PRECISION 4
 
+/**
+ * What charge pump current setting to use.
+ */
+enum L2HAL_ADF4001_CPGain
+{
+	CP_GAIN_1,
+	CP_GAIN_2
+};
+
+/**
+ * Position of CP Gain bit in most significant byte
+ */
+#define L2HAL_ADF4001_CP_GAIN 5
+
 #endif /* L2HAL_DRIVERS_PLL_ADF4001_INCLUDE_L2HAL_ADF4001_DEFINES_H_ */

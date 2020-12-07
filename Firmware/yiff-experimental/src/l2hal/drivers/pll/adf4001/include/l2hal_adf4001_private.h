@@ -19,15 +19,15 @@
  */
 typedef struct
 {
-	uint8_t most;
-	uint8_t middle;
-	uint8_t least;
+	uint8_t Most;
+	uint8_t Middle;
+	uint8_t Least;
 }
 L2HAL_ADF4001_BytesToSendStruct;
 
 /**
  * Writes bytes to device
  */
-void WriteToPll(L2HAL_ADF4001_BytesToSendStruct bytes);
+void L2HAL_ADF4001_WriteToPll(L2HAL_ADF4001_BytesToSendStruct bytes);
 
 #endif /* L2HAL_DRIVERS_PLL_ADF4001_INCLUDE_L2HAL_ADF4001_PRIVATE_H_ */

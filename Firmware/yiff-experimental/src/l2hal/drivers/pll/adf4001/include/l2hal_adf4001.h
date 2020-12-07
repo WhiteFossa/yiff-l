@@ -45,8 +45,31 @@ L2HAL_ADF4001_ReferenceCounterStruct;
 
 
 /**
+ * Fill this struct to generate N-counter latch content.
+ */
+typedef struct
+{
+	/**
+	 * N-counter value.
+	 */
+	uint16_t NCounter;
+
+	/**
+	 * Charge pump current setting to use.
+	 */
+	enum L2HAL_ADF4001_CPGain CPGain;
+}
+L2HAL_ADF4001_NCounterStruct;
+
+
+/**
  * Write reference counter data into PLL
  */
-uint8_t L2HAL_ADF4001_WriteReferenceCounter(L2HAL_ADF4001_ReferenceCounterStruct* data);
+void L2HAL_ADF4001_WriteReferenceCounter(L2HAL_ADF4001_ReferenceCounterStruct* data);
+
+/**
+ * Write N counter data into PLL
+ */
+uint8_t L2HAL_ADF4001_WriteNCounter(L2HAL_ADF4001_NCounterStruct* data);
 
 #endif /* L2HAL_DRIVERS_PLL_ADF4001_INCLUDE_L2HAL_ADF4001_H_ */
