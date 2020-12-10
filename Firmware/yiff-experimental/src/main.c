@@ -101,23 +101,34 @@ int main(int argc, char* argv[])
 	/* And it's button */
 	L2HAL_Buttons_AddButton(&L2HAL_Buttons_Context, GPIOA, GPIO_PIN_2, NULL, 10, &EncoderButtonCallback);
 
+	/* PLL Initialization */
+	L2HAL_ADF4001_FunctionStruct functionData;
+	functionData.CountersReset = CRNormal;
+	functionData.PowerDownMode = PDNNormal;
+	functionData.MuxoutControl = MCRDivider;
+	functionData.PhaseDetectorPolarity = PDPPositive;
+	functionData.CPThreeState = CPNormal;
+	functionData.FastlockEnable = FLDisabled;
+	functionData.FastlockMode = FLMode1;
+	functionData.TimerCounterControl = TCC_63;
+	functionData.CurrentSetting1 = CS5_0;
+	functionData.CurrentSetting2 = CS5_0;
+
+	L2HAL_ADF4001_WriteInitializationLatch(&functionData);
+
 	/* R counter */
 	L2HAL_ADF4001_ReferenceCounterStruct rData;
-	rData.ReferenceCounter = 3550;
-	rData.AntiBacklashWidth = PulseWidth6_0;
-	rData.LockDetectPrecision = Cycles5;
+	rData.ReferenceCounter = 8000;
+	rData.AntiBacklashWidth = ABWPulseWidth6_0;
+	rData.LockDetectPrecision = LDPCycles5;
 	L2HAL_ADF4001_WriteReferenceCounter(&rData);
 
 	/* N counter */
 	L2HAL_ADF4001_NCounterStruct nData;
-	nData.NCounter = 8000;
-	nData.CPGain = CP_GAIN_1;
-	uint8_t tmp = L2HAL_ADF4001_WriteNCounter(&nData);
+	nData.NCounter = 3500;
+	nData.CPGain = CPGain1;
+	L2HAL_ADF4001_WriteNCounter(&nData);
 
-	char buffer[32];
-	sprintf(buffer, "Tmp: %d", tmp);
-	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &fontSettings, 0, 32, NULL, NULL, false, buffer);
-	FMGL_API_PushFramebuffer(&fmglContext);
 
 	while(true)
 	{
@@ -155,6 +166,11 @@ void EncoderCallback(L2HAL_Encoders_EncoderStruct* encoderStruct, L2HAL_Encoders
 void EncoderButtonCallback(L2HAL_Buttons_ButtonStruct* button, GPIO_PinState newPinState, uint16_t* portData)
 {
 	currentN = newN;
+
+	L2HAL_ADF4001_NCounterStruct nData;
+	nData.NCounter = newN;
+	nData.CPGain = CPGain2;
+	L2HAL_ADF4001_WriteNCounter(&nData);
 
 	DrawFrequencies();
 }
