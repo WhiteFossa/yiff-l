@@ -12,13 +12,22 @@
 #include <stm32f1xx_hal.h>
 #include <l2hal_adf4001_defines.h>
 #include <l2hal_adf4001_private.h>
-#include <l2hal_custom.h>
 
 /**
  * PLL context, SPI connection and various stuff is stored here
  */
 typedef struct
 {
+	/**
+	 * SPI bus handle
+	 */
+	SPI_HandleTypeDef* SPIHandle;
+
+	/**
+	 * ADF4001 LE pin is connected to this port and pin.
+	 */
+	GPIO_TypeDef* LEPort;
+	uint32_t LEPin;
 
 }
 L2HAL_ADF4001_ContextStruct;
@@ -117,24 +126,29 @@ typedef struct
 L2HAL_ADF4001_FunctionStruct;
 
 /**
+ * Initializes ports, to what ADF4001 connected. Doesn't initializes PLL itself.
+ */
+void L2HAL_ADF4001_InitPorts(L2HAL_ADF4001_ContextStruct* context);
+
+/**
  * Write reference counter data into PLL
  */
-void L2HAL_ADF4001_WriteReferenceCounter(L2HAL_ADF4001_ReferenceCounterStruct* data);
+void L2HAL_ADF4001_WriteReferenceCounter(L2HAL_ADF4001_ContextStruct* context, L2HAL_ADF4001_ReferenceCounterStruct* data);
 
 /**
  * Write N counter data into PLL
  */
-void L2HAL_ADF4001_WriteNCounter(L2HAL_ADF4001_NCounterStruct* data);
+void L2HAL_ADF4001_WriteNCounter(L2HAL_ADF4001_ContextStruct* context, L2HAL_ADF4001_NCounterStruct* data);
 
 /**
  * Write settings into PLL function latch.
  */
-void L2HAL_ADF4001_WriteFunctionLatch(L2HAL_ADF4001_FunctionStruct* data);
+void L2HAL_ADF4001_WriteFunctionLatch(L2HAL_ADF4001_ContextStruct* context, L2HAL_ADF4001_FunctionStruct* data);
 
 /**
  * Write settings into PLL initialization latch.
  */
-void L2HAL_ADF4001_WriteInitializationLatch(L2HAL_ADF4001_FunctionStruct* data);
+void L2HAL_ADF4001_WriteInitializationLatch(L2HAL_ADF4001_ContextStruct* context, L2HAL_ADF4001_FunctionStruct* data);
 
 /**
  * Private stuff going below
@@ -146,5 +160,10 @@ void L2HAL_ADF4001_WriteInitializationLatch(L2HAL_ADF4001_FunctionStruct* data);
 L2HAL_ADF4001_BytesToSendStruct L2HAL_ADF4001_PrepareFinctionAndInitializationData(L2HAL_ADF4001_FunctionStruct* data);
 
 uint8_t L2HAL_ADF4001_GenerateCurrentSettingsByte(enum L2HAL_ADF4001_CurrentSetting current);
+
+/**
+ * Writes bytes to device
+ */
+void L2HAL_ADF4001_WriteToPll(L2HAL_ADF4001_ContextStruct* context, L2HAL_ADF4001_BytesToSendStruct bytes);
 
 #endif /* L2HAL_DRIVERS_PLL_ADF4001_INCLUDE_L2HAL_ADF4001_H_ */

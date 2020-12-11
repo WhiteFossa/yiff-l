@@ -1,17 +1,52 @@
 #include <l2hal_adf4001.h>
 #include <l2hal_adf4001_private.h>
 
-void L2HAL_ADF4001_WriteToPll(L2HAL_ADF4001_BytesToSendStruct bytes)
+void L2HAL_ADF4001_InitPorts(L2HAL_ADF4001_ContextStruct* context)
 {
+	/* Clocking port in */
+	if (GPIOA == context->LEPort)
+	{
+		__HAL_RCC_GPIOA_CLK_ENABLE();
+	}
+	else if (GPIOB == context->LEPort)
+	{
+		__HAL_RCC_GPIOB_CLK_ENABLE();
+	}
+	else if (GPIOC == context->LEPort)
+	{
+		__HAL_RCC_GPIOC_CLK_ENABLE();
+	}
+	else if (GPIOD == context->LEPort)
+	{
+		__HAL_RCC_GPIOD_CLK_ENABLE();
+	}
+
+	GPIO_InitTypeDef GPIO_InitStruct;
+	GPIO_InitStruct.Pin       = context->LEPin;
+	GPIO_InitStruct.Mode      = GPIO_MODE_OUTPUT_PP;
+	GPIO_InitStruct.Pull      = GPIO_NOPULL;
+	GPIO_InitStruct.Speed     = GPIO_SPEED_FREQ_HIGH;
+	HAL_GPIO_Init(context->LEPort, &GPIO_InitStruct);
+
+	/* LE - low */
+	HAL_GPIO_WritePin(context->LEPort, context->LEPin, GPIO_PIN_RESET);
+}
+
+void L2HAL_ADF4001_WriteToPll(L2HAL_ADF4001_ContextStruct* context, L2HAL_ADF4001_BytesToSendStruct bytes)
+{
+
 	uint8_t data[3];
 	data[0] = bytes.Most;
 	data[1] = bytes.Middle;
 	data[2] = bytes.Least;
 
-	HAL_SPI_Transmit(&SPIHandle, data, 3, 1000);
+	HAL_SPI_Transmit(context->SPIHandle, data, 3, 1000);
+
+	HAL_GPIO_WritePin(context->LEPort, context->LEPin, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(context->LEPort, context->LEPin, GPIO_PIN_RESET);
 }
 
-void L2HAL_ADF4001_WriteReferenceCounter(L2HAL_ADF4001_ReferenceCounterStruct* data)
+void L2HAL_ADF4001_WriteReferenceCounter(L2HAL_ADF4001_ContextStruct* context, L2HAL_ADF4001_ReferenceCounterStruct* data)
 {
 	L2HAL_ADF4001_BytesToSendStruct toWrite;
 	toWrite.Most = 0x00;
@@ -45,11 +80,11 @@ void L2HAL_ADF4001_WriteReferenceCounter(L2HAL_ADF4001_ReferenceCounterStruct* d
 		toWrite.Most |= (1 << L2HAL_ADF4001_LOCK_DETECT_PRECISION);
 	}
 
-	L2HAL_ADF4001_WriteToPll(toWrite);
+	L2HAL_ADF4001_WriteToPll(context, toWrite);
 }
 
 
-void L2HAL_ADF4001_WriteNCounter(L2HAL_ADF4001_NCounterStruct* data)
+void L2HAL_ADF4001_WriteNCounter(L2HAL_ADF4001_ContextStruct* context, L2HAL_ADF4001_NCounterStruct* data)
 {
 	L2HAL_ADF4001_BytesToSendStruct toWrite;
 	toWrite.Most = 0x00;
@@ -70,25 +105,25 @@ void L2HAL_ADF4001_WriteNCounter(L2HAL_ADF4001_NCounterStruct* data)
 		toWrite.Most |= (1 << L2HAL_ADF4001_CP_GAIN);
 	}
 
-	L2HAL_ADF4001_WriteToPll(toWrite);
+	L2HAL_ADF4001_WriteToPll(context, toWrite);
 }
 
-void L2HAL_ADF4001_WriteFunctionLatch(L2HAL_ADF4001_FunctionStruct* data)
+void L2HAL_ADF4001_WriteFunctionLatch(L2HAL_ADF4001_ContextStruct* context, L2HAL_ADF4001_FunctionStruct* data)
 {
 	L2HAL_ADF4001_BytesToSendStruct toWrite = L2HAL_ADF4001_PrepareFinctionAndInitializationData(data);
 
 	toWrite.Least |= L2HAL_ADF4001_CONTROLBITS_FUNCTION;
 
-	L2HAL_ADF4001_WriteToPll(toWrite);
+	L2HAL_ADF4001_WriteToPll(context, toWrite);
 }
 
-void L2HAL_ADF4001_WriteInitializationLatch(L2HAL_ADF4001_FunctionStruct* data)
+void L2HAL_ADF4001_WriteInitializationLatch(L2HAL_ADF4001_ContextStruct* context, L2HAL_ADF4001_FunctionStruct* data)
 {
 	L2HAL_ADF4001_BytesToSendStruct toWrite = L2HAL_ADF4001_PrepareFinctionAndInitializationData(data);
 
 	toWrite.Least |= L2HAL_ADF4001_CONTROLBITS_INITIALIZATION;
 
-	L2HAL_ADF4001_WriteToPll(toWrite);
+	L2HAL_ADF4001_WriteToPll(context, toWrite);
 }
 
 L2HAL_ADF4001_BytesToSendStruct L2HAL_ADF4001_PrepareFinctionAndInitializationData(L2HAL_ADF4001_FunctionStruct* data)

@@ -81,6 +81,11 @@ L2HAL_Buttons_ContextStruct L2HAL_Buttons_Context;
 L2HAL_Encoders_ContextStruct L2HAL_Encoders_Context;
 
 /**
+ * PLL context.
+ */
+L2HAL_ADF4001_ContextStruct L2HAL_ADF4001_Context;
+
+/**
  * Put custom hardware initialization stuff here,
  */
 void L2HAL_InitCustomHardware(void);

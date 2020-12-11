@@ -102,6 +102,11 @@ int main(int argc, char* argv[])
 	L2HAL_Buttons_AddButton(&L2HAL_Buttons_Context, GPIOA, GPIO_PIN_2, NULL, 10, &EncoderButtonCallback);
 
 	/* PLL Initialization */
+	L2HAL_ADF4001_Context.SPIHandle = &SPIHandle;
+	L2HAL_ADF4001_Context.LEPort = GPIOA;
+	L2HAL_ADF4001_Context.LEPin = GPIO_PIN_8;
+	L2HAL_ADF4001_InitPorts(&L2HAL_ADF4001_Context);
+
 	L2HAL_ADF4001_FunctionStruct functionData;
 	functionData.CountersReset = CRNormal;
 	functionData.PowerDownMode = PDNNormal;
@@ -114,26 +119,24 @@ int main(int argc, char* argv[])
 	functionData.CurrentSetting1 = CS5_0;
 	functionData.CurrentSetting2 = CS5_0;
 
-	L2HAL_ADF4001_WriteInitializationLatch(&functionData);
+	L2HAL_ADF4001_WriteInitializationLatch(&L2HAL_ADF4001_Context, &functionData);
 
 	/* R counter */
 	L2HAL_ADF4001_ReferenceCounterStruct rData;
 	rData.ReferenceCounter = 8000;
 	rData.AntiBacklashWidth = ABWPulseWidth6_0;
 	rData.LockDetectPrecision = LDPCycles5;
-	L2HAL_ADF4001_WriteReferenceCounter(&rData);
+	L2HAL_ADF4001_WriteReferenceCounter(&L2HAL_ADF4001_Context, &rData);
 
 	/* N counter */
 	L2HAL_ADF4001_NCounterStruct nData;
 	nData.NCounter = 3500;
 	nData.CPGain = CPGain1;
-	L2HAL_ADF4001_WriteNCounter(&nData);
+	L2HAL_ADF4001_WriteNCounter(&L2HAL_ADF4001_Context, &nData);
 
 
 	while(true)
 	{
-		L2HAL_ADF4001_WriteReferenceCounter(&rData);
-
 		L2HAL_Buttons_Poll(&L2HAL_Buttons_Context);
 	}
 
@@ -171,8 +174,8 @@ void EncoderButtonCallback(L2HAL_Buttons_ButtonStruct* button, GPIO_PinState new
 
 	L2HAL_ADF4001_NCounterStruct nData;
 	nData.NCounter = newN;
-	nData.CPGain = CPGain2;
-	L2HAL_ADF4001_WriteNCounter(&nData);
+	nData.CPGain = CPGain1;
+	L2HAL_ADF4001_WriteNCounter(&L2HAL_ADF4001_Context, &nData);
 
 	DrawFrequencies();
 }

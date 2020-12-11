@@ -153,7 +153,7 @@ void HAL_I2C_MemTxCpltCallback(I2C_HandleTypeDef *hi2c)
 
 void L2HAL_SetupSPI(void)
 {
-	SPIHandle.Instance = SPI1;
+	SPIHandle.Instance				 = SPI1;
 	SPIHandle.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_256;
 	SPIHandle.Init.Direction         = SPI_DIRECTION_2LINES;
 	SPIHandle.Init.CLKPhase          = SPI_PHASE_1EDGE;
@@ -188,7 +188,7 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef *hspi)
 		GPIO_InitStruct.Pin       = GPIO_PIN_5 | GPIO_PIN_7;
 		GPIO_InitStruct.Mode      = GPIO_MODE_AF_PP;
 		GPIO_InitStruct.Pull      = GPIO_PULLDOWN;
-		GPIO_InitStruct.Speed     = GPIO_SPEED_FREQ_LOW;
+		GPIO_InitStruct.Speed     = GPIO_SPEED_FREQ_HIGH;
 		HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 	}
 }
