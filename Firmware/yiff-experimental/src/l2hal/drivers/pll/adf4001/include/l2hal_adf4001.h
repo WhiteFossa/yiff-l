@@ -12,6 +12,7 @@
 #include <stm32f1xx_hal.h>
 #include <l2hal_adf4001_defines.h>
 #include <l2hal_adf4001_private.h>
+#include <l2hal_custom.h>
 
 /**
  * PLL context, SPI connection and various stuff is stored here

@@ -3,9 +3,12 @@
 
 void L2HAL_ADF4001_WriteToPll(L2HAL_ADF4001_BytesToSendStruct bytes)
 {
-	/**
-	 * TODO: Implement it
-	 */
+	uint8_t data[3];
+	data[0] = bytes.Most;
+	data[1] = bytes.Middle;
+	data[2] = bytes.Least;
+
+	HAL_SPI_Transmit(&SPIHandle, data, 3, 1000);
 }
 
 void L2HAL_ADF4001_WriteReferenceCounter(L2HAL_ADF4001_ReferenceCounterStruct* data)

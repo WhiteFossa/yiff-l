@@ -1041,4 +1041,6 @@ Wire Wire Line
 	4450 3700 4400 3700
 Text Notes 4325 4150 0    50   ~ 0
 0.4V P-P
+Text Notes 5400 5100 0    50   ~ 0
+CLK - PA5\nDATA - PA7\nLE - PA8
 $EndSCHEMATC

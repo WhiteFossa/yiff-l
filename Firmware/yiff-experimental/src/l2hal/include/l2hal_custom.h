@@ -61,6 +61,11 @@
 I2C_HandleTypeDef I2CHandle;
 
 /**
+ * SPI bus handle.
+ */
+SPI_HandleTypeDef SPIHandle;
+
+/**
  * Display driver context.
  */
 L2HAL_SSD1306_ContextStruct L2HAL_SSD1306_Context;
@@ -84,6 +89,11 @@ void L2HAL_InitCustomHardware(void);
  * Settig up I2C for display.
  */
 void L2HAL_SetupI2C(void);
+
+/**
+ * Setting up
+ */
+void L2HAL_SetupSPI(void);
 
 /**
  * Setting up buttons driver.
@@ -112,5 +122,14 @@ void I2C1_EV_IRQHandler(void);
 void I2C1_ER_IRQHandler(void);
 void HAL_I2C_MemTxCpltCallback(I2C_HandleTypeDef *hi2c);
 
+/**
+ * SPI init
+ */
+void HAL_SPI_MspInit(SPI_HandleTypeDef *hspi);
+
+/**
+ * SPI de-init
+ */
+void HAL_SPI_MspDeInit(SPI_HandleTypeDef *hspi);
 
 #endif /* L2HAL_INCLUDE_L2HAL_CUSTOM_H_ */

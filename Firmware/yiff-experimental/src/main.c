@@ -132,6 +132,8 @@ int main(int argc, char* argv[])
 
 	while(true)
 	{
+		L2HAL_ADF4001_WriteReferenceCounter(&rData);
+
 		L2HAL_Buttons_Poll(&L2HAL_Buttons_Context);
 	}
 
