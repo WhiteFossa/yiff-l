@@ -25,11 +25,12 @@ void L2HAL_ADF4001_InitPorts(L2HAL_ADF4001_ContextStruct* context)
 	GPIO_InitStruct.Pin       = context->LEPin;
 	GPIO_InitStruct.Mode      = GPIO_MODE_OUTPUT_PP;
 	GPIO_InitStruct.Pull      = GPIO_NOPULL;
-	GPIO_InitStruct.Speed     = GPIO_SPEED_FREQ_HIGH;
+	GPIO_InitStruct.Speed     = GPIO_SPEED_FREQ_LOW;
 	HAL_GPIO_Init(context->LEPort, &GPIO_InitStruct);
 
 	/* LE - low */
 	HAL_GPIO_WritePin(context->LEPort, context->LEPin, GPIO_PIN_RESET);
+	HAL_Delay(100);
 }
 
 void L2HAL_ADF4001_WriteToPll(L2HAL_ADF4001_ContextStruct* context, L2HAL_ADF4001_BytesToSendStruct bytes)
@@ -43,7 +44,9 @@ void L2HAL_ADF4001_WriteToPll(L2HAL_ADF4001_ContextStruct* context, L2HAL_ADF400
 	HAL_SPI_Transmit(context->SPIHandle, data, 3, 1000);
 
 	HAL_GPIO_WritePin(context->LEPort, context->LEPin, GPIO_PIN_SET);
+	HAL_Delay(1);
 	HAL_GPIO_WritePin(context->LEPort, context->LEPin, GPIO_PIN_RESET);
+	HAL_Delay(1);
 }
 
 void L2HAL_ADF4001_WriteReferenceCounter(L2HAL_ADF4001_ContextStruct* context, L2HAL_ADF4001_ReferenceCounterStruct* data)

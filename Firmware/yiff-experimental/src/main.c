@@ -110,8 +110,8 @@ int main(int argc, char* argv[])
 	L2HAL_ADF4001_FunctionStruct functionData;
 	functionData.CountersReset = CRNormal;
 	functionData.PowerDownMode = PDNNormal;
-	functionData.MuxoutControl = MCRDivider;
-	functionData.PhaseDetectorPolarity = PDPPositive;
+	functionData.MuxoutControl = MCNDivider;
+	functionData.PhaseDetectorPolarity = PDPNegative;
 	functionData.CPThreeState = CPNormal;
 	functionData.FastlockEnable = FLDisabled;
 	functionData.FastlockMode = FLMode1;
@@ -123,14 +123,13 @@ int main(int argc, char* argv[])
 
 	/* R counter */
 	L2HAL_ADF4001_ReferenceCounterStruct rData;
-	rData.ReferenceCounter = 8000;
 	rData.AntiBacklashWidth = ABWPulseWidth6_0;
 	rData.LockDetectPrecision = LDPCycles5;
 	L2HAL_ADF4001_WriteReferenceCounter(&L2HAL_ADF4001_Context, &rData);
 
 	/* N counter */
 	L2HAL_ADF4001_NCounterStruct nData;
-	nData.NCounter = 3500;
+	nData.NCounter = 10;
 	nData.CPGain = CPGain1;
 	L2HAL_ADF4001_WriteNCounter(&L2HAL_ADF4001_Context, &nData);
 
