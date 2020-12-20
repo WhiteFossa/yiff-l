@@ -40,12 +40,15 @@
 #include <l2hal.h>
 #include <fmgl.h>
 #include <terminusRegular12.h>
+#include <l2hal_ad9835.h>
 
-#define MIN_N 3500
-#define MAX_N 3650
+/* PLL-related stuff */
+#define Fmclk 50000000UL
 
-#define R_DIVIDER 8000
-#define REFIN 8000
+#define FREGmin 300647711UL
+#define FREGmax 313532613UL
+
+#define FREGstep 85899UL
 
 /**
  * FMGL context.
@@ -58,14 +61,14 @@ FMGL_API_DriverContext fmglContext;
 FMGL_API_FontSettings fontSettings;
 
 /**
- * N, sent to PLL
+ * FREG (in DDS)
  */
-uint16_t currentN;
+uint32_t freg;
 
 /**
- * New N, which will be sent to PLL on button press
+ * FREG (new)
  */
-uint16_t newN;
+uint32_t newFreg;
 
 /* Callback function for encoder */
 void EncoderCallback(L2HAL_Encoders_EncoderStruct* encoderStruct, L2HAL_Encoders_Direction direction);
@@ -75,6 +78,6 @@ void EncoderButtonCallback(L2HAL_Buttons_ButtonStruct* button, GPIO_PinState new
 
 void DrawFrequencies();
 
-uint16_t GetKHzFromN(uint16_t N);
+uint32_t GetHzFromFreg(uint32_t freg);
 
 #endif /* __MAIN_H */

@@ -62,7 +62,7 @@ L FullSchematic-rescue:C C3
 U 1 1 5B706A22
 P 7000 1750
 F 0 "C3" H 7025 1850 50  0000 L CNN
-F 1 "560pF" H 7025 1650 50  0000 L CNN
+F 1 "220pF" H 7025 1650 50  0000 L CNN
 F 2 "" H 7038 1600 50  0001 C CNN
 F 3 "" H 7000 1750 50  0001 C CNN
 	1    7000 1750
@@ -73,7 +73,7 @@ L FullSchematic-rescue:C C4
 U 1 1 5B706AA9
 P 7000 2150
 F 0 "C4" H 7025 2250 50  0000 L CNN
-F 1 "560pF" H 7025 2050 50  0000 L CNN
+F 1 "220pF" H 7025 2050 50  0000 L CNN
 F 2 "" H 7038 2000 50  0001 C CNN
 F 3 "" H 7000 2150 50  0001 C CNN
 	1    7000 2150
@@ -190,30 +190,6 @@ F 3 "" H 4950 2750 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L FullSchematic-rescue:CONN_01X02 J4
-U 1 1 5B726E8F
-P 9950 2375
-F 0 "J4" H 9950 2475 50  0000 C CNN
-F 1 "Conn_01x02" H 9950 2175 50  0000 C CNN
-F 2 "" H 9950 2375 50  0001 C CNN
-F 3 "" H 9950 2375 50  0001 C CNN
-	1    9950 2375
-	1    0    0    -1  
-$EndComp
-$Comp
-L FullSchematic-rescue:GND #PWR018
-U 1 1 5B72709E
-P 9750 2600
-F 0 "#PWR018" H 9750 2350 50  0001 C CNN
-F 1 "GND" H 9750 2450 50  0000 C CNN
-F 2 "" H 9750 2600 50  0001 C CNN
-F 3 "" H 9750 2600 50  0001 C CNN
-	1    9750 2600
-	1    0    0    -1  
-$EndComp
-Text Notes 10050 2450 0    60   ~ 0
-Out
-$Comp
 L FullSchematic-rescue:GND #PWR05
 U 1 1 5B7892C1
 P 5600 2350
@@ -284,7 +260,7 @@ L FullSchematic-rescue:L_Core_Ferrite L1
 U 1 1 5B78C44C
 P 5600 1975
 F 0 "L1" V 5550 1975 50  0000 C CNN
-F 1 "16 uH" V 5710 1975 50  0000 C CNN
+F 1 "2.4 uH" V 5710 1975 50  0000 C CNN
 F 2 "" H 5600 1975 50  0001 C CNN
 F 3 "" H 5600 1975 50  0001 C CNN
 	1    5600 1975
@@ -378,10 +354,6 @@ F 3 "" H 7000 2350 50  0000 C CNN
 	1    7000 2350
 	1    0    0    -1  
 $EndComp
-Text Notes 10225 2475 0    60   ~ 0
-1.7V peak to peak\n3.5MHz
-Text Notes 4275 1350 0    60   ~ 0
-0V - 3.152 MHz\n1.45V - 3.5 MHz\n2.02V - 3.575 MHz\n2.75V - 3.65 MHz\n5V - 3.817 MHz
 $Comp
 L FullSchematic-rescue:BB135 VD1
 U 1 1 5BD0DBE7
@@ -404,7 +376,7 @@ F 3 "" H 4700 2750 50  0000 C CNN
 	1    4700 2750
 	1    0    0    -1  
 $EndComp
-Text GLabel 9900 2150 2    60   Output ~ 0
+Text GLabel 9875 2325 2    60   Output ~ 0
 Fvco3.5
 Wire Wire Line
 	7500 1050 7850 1050
@@ -505,15 +477,6 @@ F 3 "" H 9500 2325 50  0000 C CNN
 	0    1    1    0   
 $EndComp
 Wire Wire Line
-	9750 2325 9700 2325
-Wire Wire Line
-	9750 2425 9750 2600
-Wire Wire Line
-	9900 2150 9700 2150
-Wire Wire Line
-	9700 2150 9700 2325
-Connection ~ 9700 2325
-Wire Wire Line
 	7850 1050 7850 1150
 Wire Wire Line
 	7000 1950 7000 1900
@@ -539,8 +502,6 @@ Wire Wire Line
 	4950 2000 4700 2000
 Wire Wire Line
 	4950 2000 4950 2100
-Wire Wire Line
-	9700 2325 9650 2325
 $Comp
 L Oscillator:XO53 X1
 U 1 1 5FCD32B3
@@ -959,60 +920,10 @@ Wire Wire Line
 	4850 4500 4850 4100
 Wire Wire Line
 	4850 4100 5850 4100
-Text GLabel 4250 4300 0    50   Input ~ 0
+Text GLabel 4125 4300 0    50   Input ~ 0
 8MHz_5V_Ref
-Wire Wire Line
-	5850 4300 4250 4300
-$Comp
-L Device:R R8
-U 1 1 5FE0D1B7
-P 4450 4650
-F 0 "R8" H 4520 4696 50  0000 L CNN
-F 1 "4.7k" V 4450 4575 50  0000 L CNN
-F 2 "" V 4380 4650 50  0001 C CNN
-F 3 "~" H 4450 4650 50  0001 C CNN
-	1    4450 4650
-	1    0    0    -1  
-$EndComp
-$Comp
-L FullSchematic-rescue:GND #PWR023
-U 1 1 5FE0EF2A
-P 4450 4850
-F 0 "#PWR023" H 4450 4600 50  0001 C CNN
-F 1 "GND" H 4455 4677 50  0000 C CNN
-F 2 "" H 4450 4850 50  0000 C CNN
-F 3 "" H 4450 4850 50  0000 C CNN
-	1    4450 4850
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	4450 4850 4450 4800
-$Comp
-L Device:R R7
-U 1 1 5FE18327
-P 4450 3950
-F 0 "R7" H 4520 3996 50  0000 L CNN
-F 1 "18k" V 4450 3875 50  0000 L CNN
-F 2 "" V 4380 3950 50  0001 C CNN
-F 3 "~" H 4450 3950 50  0001 C CNN
-	1    4450 3950
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	5850 4200 4450 4200
-Wire Wire Line
-	4450 4200 4450 4100
-Wire Wire Line
-	4450 4500 4450 4200
-Connection ~ 4450 4200
-Text GLabel 4400 3700 0    50   Input ~ 0
+Text GLabel 3725 4200 0    50   Input ~ 0
 Fvco3.5
-Wire Wire Line
-	4450 3800 4450 3700
-Wire Wire Line
-	4450 3700 4400 3700
-Text Notes 4325 4150 0    50   ~ 0
-0.4V P-P
 Text Notes 1525 4950 0    50   ~ 0
 CLK - PA5\nDATA - PA7\nLE - PA8
 $Comp
@@ -1072,8 +983,6 @@ Wire Wire Line
 Wire Wire Line
 	7675 4000 7200 4000
 Connection ~ 7675 4000
-Text Notes 4275 825  0    50   ~ 0
-Kvco=0.133MHz/V
 Text GLabel 8450 4000 2    50   Input ~ 0
 Vtune3.5
 Wire Wire Line
@@ -1086,14 +995,72 @@ Vtune3.5
 Wire Wire Line
 	4950 1550 4775 1550
 $Comp
-L Device:CP C?
+L Device:CP C13
 U 1 1 5FDB45CA
 P 8125 4625
-F 0 "C?" H 8243 4671 50  0000 L CNN
+F 0 "C13" H 8243 4671 50  0000 L CNN
 F 1 "4.7uF" H 8243 4580 50  0000 L CNN
 F 2 "" H 8163 4475 50  0001 C CNN
 F 3 "~" H 8125 4625 50  0001 C CNN
 	1    8125 4625
 	1    0    0    -1  
 $EndComp
+Text Notes 4450 1100 0    50   ~ 0
+4 x 3.5-3.65MHz\n\n14.0MHz - 14.6MHz\n0V - 12.21\n5V - 14.81
+Wire Wire Line
+	9650 2325 9875 2325
+Wire Wire Line
+	4125 4300 5850 4300
+$Comp
+L Device:C C?
+U 1 1 5FDE6E98
+P 5525 3775
+F 0 "C?" H 5640 3821 50  0000 L CNN
+F 1 "0.1uF" H 5640 3730 50  0000 L CNN
+F 2 "" H 5563 3625 50  0001 C CNN
+F 3 "~" H 5525 3775 50  0001 C CNN
+	1    5525 3775
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5850 4200 5525 4200
+Wire Wire Line
+	5525 4200 5525 3925
+$Comp
+L Device:R R?
+U 1 1 5FDEBFF6
+P 5000 3775
+F 0 "R?" H 5070 3821 50  0000 L CNN
+F 1 "R" H 5070 3730 50  0000 L CNN
+F 2 "" V 4930 3775 50  0001 C CNN
+F 3 "~" H 5000 3775 50  0001 C CNN
+	1    5000 3775
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5FDED040
+P 4575 3425
+F 0 "R?" H 4645 3471 50  0000 L CNN
+F 1 "R" H 4645 3380 50  0000 L CNN
+F 2 "" V 4505 3425 50  0001 C CNN
+F 3 "~" H 4575 3425 50  0001 C CNN
+	1    4575 3425
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5000 3625 5525 3625
+$Comp
+L FullSchematic-rescue:GND #PWR?
+U 1 1 5FDF221B
+P 5000 3975
+F 0 "#PWR?" H 5000 3725 50  0001 C CNN
+F 1 "GND" H 5005 3802 50  0000 C CNN
+F 2 "" H 5000 3975 50  0000 C CNN
+F 3 "" H 5000 3975 50  0000 C CNN
+	1    5000 3975
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5000 3975 5000 3925
 $EndSCHEMATC

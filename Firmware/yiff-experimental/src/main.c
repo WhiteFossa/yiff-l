@@ -90,8 +90,8 @@ int main(int argc, char* argv[])
 	FMGL_API_ClearScreen(&fmglContext);
 	FMGL_API_PushFramebuffer(&fmglContext);
 
-	newN = MIN_N;
-	currentN = MIN_N;
+	freg = FREGmin;
+	newFreg = FREGmin;
 
 	DrawFrequencies();
 
@@ -101,41 +101,17 @@ int main(int argc, char* argv[])
 	/* And it's button */
 	L2HAL_Buttons_AddButton(&L2HAL_Buttons_Context, GPIOA, GPIO_PIN_2, NULL, 10, &EncoderButtonCallback);
 
-	/* PLL Initialization */
-	L2HAL_ADF4001_Context.SPIHandle = &SPIHandle;
-	L2HAL_ADF4001_Context.LEPort = GPIOA;
-	L2HAL_ADF4001_Context.LEPin = GPIO_PIN_8;
-	L2HAL_ADF4001_InitPorts(&L2HAL_ADF4001_Context);
+	/* PLL init */
+	L2HAL_AD9835_Context.SPIHandle = &SPIHandle;
+	L2HAL_AD9835_Context.FSYNCPort = GPIOA;
+	L2HAL_AD9835_Context.FSYNCPin = GPIO_PIN_8;
+	L2HAL_AD9835_Init(&L2HAL_AD9835_Context);
 
-	L2HAL_ADF4001_FunctionStruct functionData;
-	functionData.CountersReset = CRNormal;
-	functionData.PowerDownMode = PDNNormal;
-	functionData.MuxoutControl = MCNDivider;
-	functionData.PhaseDetectorPolarity = PDPNegative;
-	functionData.CPThreeState = CPNormal;
-	functionData.FastlockEnable = FLDisabled;
-	functionData.FastlockMode = FLMode1;
-	functionData.TimerCounterControl = TCC_63;
-	functionData.CurrentSetting1 = CS5_0;
-	functionData.CurrentSetting2 = CS5_0;
-
-	L2HAL_ADF4001_WriteInitializationLatch(&L2HAL_ADF4001_Context, &functionData);
-
-	/* R counter */
-	L2HAL_ADF4001_ReferenceCounterStruct rData;
-	rData.AntiBacklashWidth = ABWPulseWidth6_0;
-	rData.LockDetectPrecision = LDPCycles5;
-	L2HAL_ADF4001_WriteReferenceCounter(&L2HAL_ADF4001_Context, &rData);
-
-	/* N counter */
-	L2HAL_ADF4001_NCounterStruct nData;
-	nData.NCounter = 10;
-	nData.CPGain = CPGain1;
-	L2HAL_ADF4001_WriteNCounter(&L2HAL_ADF4001_Context, &nData);
-
+	L2HAL_AD9835_WriteFrequencyWord(&L2HAL_AD9835_Context, Freg0, freg);
 
 	while(true)
 	{
+		L2HAL_AD9835_WriteFrequencyWord(&L2HAL_AD9835_Context, Freg0, freg);
 		L2HAL_Buttons_Poll(&L2HAL_Buttons_Context);
 	}
 
@@ -147,21 +123,21 @@ void EncoderCallback(L2HAL_Encoders_EncoderStruct* encoderStruct, L2HAL_Encoders
 	/* We don't need to check encoderStruct because we have only one encoder. */
 	if (Clockwise == direction)
 	{
-		newN ++;
+		newFreg += FREGstep;
 	}
 	else
 	{
-		newN --;
+		newFreg -= FREGstep;
 	}
 
-	if (newN > MAX_N)
+	if (newFreg > FREGmax)
 	{
-		newN = MAX_N;
+		newFreg = FREGmax;
 	}
 
-	if (newN < MIN_N)
+	if (newFreg < FREGmin)
 	{
-		newN = MIN_N;
+		newFreg = FREGmin;
 	}
 
 	DrawFrequencies();
@@ -169,12 +145,9 @@ void EncoderCallback(L2HAL_Encoders_EncoderStruct* encoderStruct, L2HAL_Encoders
 
 void EncoderButtonCallback(L2HAL_Buttons_ButtonStruct* button, GPIO_PinState newPinState, uint16_t* portData)
 {
-	currentN = newN;
+	freg = newFreg;
 
-	L2HAL_ADF4001_NCounterStruct nData;
-	nData.NCounter = newN;
-	nData.CPGain = CPGain1;
-	L2HAL_ADF4001_WriteNCounter(&L2HAL_ADF4001_Context, &nData);
+	L2HAL_AD9835_WriteFrequencyWord(&L2HAL_AD9835_Context, Freg0, freg);
 
 	DrawFrequencies();
 }
@@ -184,19 +157,20 @@ void DrawFrequencies()
 	char buffer[32];
 
 	/* New frequency */
-	sprintf(buffer, "New: %d KHz", GetKHzFromN(newN));
+	volatile uint32_t tmp = GetHzFromFreg(newFreg);
+	sprintf(buffer, "New: %d Hz", tmp);
 	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &fontSettings, 0, 0, NULL, NULL, false, buffer);
 
 	/* Current frequency */
-	sprintf(buffer, "Current: %d KHz", GetKHzFromN(currentN));
+	sprintf(buffer, "Current: %d Hz", GetHzFromFreg(freg));
 	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &fontSettings, 0, 16, NULL, NULL, false, buffer);
 
 	FMGL_API_PushFramebuffer(&fmglContext);
 }
 
-uint16_t GetKHzFromN(uint16_t N)
+uint32_t GetHzFromFreg(uint32_t freg)
 {
-	return N * REFIN / R_DIVIDER;
+	return (uint32_t)((float)Fmclk * (float)freg / (float)4294967296);
 }
 
 #pragma GCC diagnostic pop
