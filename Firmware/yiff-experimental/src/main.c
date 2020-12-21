@@ -111,7 +111,6 @@ int main(int argc, char* argv[])
 
 	while(true)
 	{
-		L2HAL_AD9835_WriteFrequencyWord(&L2HAL_AD9835_Context, Freg0, freg);
 		L2HAL_Buttons_Poll(&L2HAL_Buttons_Context);
 	}
 

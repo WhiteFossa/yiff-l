@@ -11,7 +11,7 @@
 #include <stdint.h>
 #include <stm32f1xx_hal.h>
 
-#define L2HAL_AD9835_SMALLDELAY 50UL
+#define L2HAL_AD9835_SMALLDELAY 500UL
 
 /**
  * Various commands

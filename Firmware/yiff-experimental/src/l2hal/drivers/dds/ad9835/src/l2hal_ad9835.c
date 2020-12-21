@@ -36,7 +36,7 @@ void L2HAL_AD9835_Init(L2HAL_AD9835_ContextStruct* context)
 
 	/* Resetting */
 	HAL_Delay(100);
-	L2HAL_AD9835_PowerControl(context, false, true, true);
+	L2HAL_AD9835_PowerControl(context, true	, true, true);
 	HAL_Delay(100);
 	L2HAL_AD9835_PowerControl(context, false, false, false);
 	HAL_Delay(100);

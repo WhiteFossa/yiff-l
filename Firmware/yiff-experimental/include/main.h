@@ -45,10 +45,18 @@
 /* PLL-related stuff */
 #define Fmclk 50000000UL
 
-#define FREGmin 300647711UL
-#define FREGmax 313532613UL
+/* 80m: 3.50-3.65 x 1*/
+#define FREGmin 300647711UL /* 3.50MHz */
+#define FREGmax 313532613UL  /* 3.65MHz */
 
-#define FREGstep 85899UL
+#define FREGstep 85899UL /* 1KHz step */
+
+
+/* 2m: 144-146 x 1 = 18.0 - 18.25 x 8*/
+//#define FREGmin 1546188227UL /* 18.00MHz */
+//#define FREGmax 1567663063UL  /* 18.25MHz */
+
+//#define FREGstep 107374UL /* 1.25KHz step */
 
 /**
  * FMGL context.

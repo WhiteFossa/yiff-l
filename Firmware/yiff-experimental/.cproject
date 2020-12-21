@@ -127,8 +127,6 @@
                                     									
                                     <listOptionValue builtIn="false" value="&quot;../src/l2hal/drivers/input/encoders/include&quot;"/>
                                     									
-                                    <listOptionValue builtIn="false" value="&quot;../src/l2hal/drivers/pll/adf4001/include&quot;"/>
-                                    									
                                     <listOptionValue builtIn="false" value="&quot;../src/l2hal/drivers/display/ssd1306/include&quot;"/>
                                     									
                                     <listOptionValue builtIn="false" value="&quot;../src/l2hal/drivers/input/buttons/include&quot;"/>
@@ -180,8 +178,6 @@
                                     <listOptionValue builtIn="false" value="&quot;../include&quot;"/>
                                     									
                                     <listOptionValue builtIn="false" value="&quot;../src/l2hal/drivers/dds/ad9835/include&quot;"/>
-                                    									
-                                    <listOptionValue builtIn="false" value="&quot;../src/l2hal/drivers/pll/adf4001/include&quot;"/>
                                     									
                                     <listOptionValue builtIn="false" value="&quot;../src/l2hal/drivers/input/encoders/include&quot;"/>
                                     									
@@ -244,8 +240,6 @@
                                     <listOptionValue builtIn="false" value="&quot;../include&quot;"/>
                                     									
                                     <listOptionValue builtIn="false" value="&quot;../src/l2hal/drivers/dds/ad9835/include&quot;"/>
-                                    									
-                                    <listOptionValue builtIn="false" value="&quot;../src/l2hal/drivers/pll/adf4001/include&quot;"/>
                                     									
                                     <listOptionValue builtIn="false" value="&quot;../src/l2hal/drivers/input/encoders/include&quot;"/>
                                     									
@@ -687,8 +681,6 @@
                                     									
                                     <listOptionValue builtIn="false" value="&quot;../src/l2hal/drivers/input/encoders/include&quot;"/>
                                     									
-                                    <listOptionValue builtIn="false" value="&quot;../src/l2hal/drivers/pll/adf4001/include&quot;"/>
-                                    									
                                     <listOptionValue builtIn="false" value="&quot;../src/l2hal/drivers/display/ssd1306/include&quot;"/>
                                     									
                                     <listOptionValue builtIn="false" value="&quot;../src/l2hal/drivers/input/buttons/include&quot;"/>
@@ -740,8 +732,6 @@
                                     <listOptionValue builtIn="false" value="&quot;../include&quot;"/>
                                     									
                                     <listOptionValue builtIn="false" value="&quot;../src/l2hal/drivers/dds/ad9835/include&quot;"/>
-                                    									
-                                    <listOptionValue builtIn="false" value="&quot;../src/l2hal/drivers/pll/adf4001/include&quot;"/>
                                     									
                                     <listOptionValue builtIn="false" value="&quot;../src/l2hal/drivers/input/encoders/include&quot;"/>
                                     									
@@ -804,8 +794,6 @@
                                     <listOptionValue builtIn="false" value="&quot;../include&quot;"/>
                                     									
                                     <listOptionValue builtIn="false" value="&quot;../src/l2hal/drivers/dds/ad9835/include&quot;"/>
-                                    									
-                                    <listOptionValue builtIn="false" value="&quot;../src/l2hal/drivers/pll/adf4001/include&quot;"/>
                                     									
                                     <listOptionValue builtIn="false" value="&quot;../src/l2hal/drivers/input/encoders/include&quot;"/>
                                     									
