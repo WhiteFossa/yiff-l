@@ -394,17 +394,11 @@ Connection ~ 4550 3000
 Wire Wire Line
 	4550 3000 4550 3400
 Wire Wire Line
-	2900 1550 4600 1550
-Wire Wire Line
 	4600 1550 4600 2150
 Wire Wire Line
 	4600 2250 4550 2250
 Wire Wire Line
 	4550 2250 4550 1750
-Wire Wire Line
-	4550 1750 2900 1750
-Wire Wire Line
-	4600 2350 3300 2350
 Wire Wire Line
 	3300 2350 3300 3400
 Wire Wire Line
@@ -682,4 +676,49 @@ Wire Wire Line
 	6200 3250 6250 3250
 Text Notes 6500 3200 0    50   ~ 0
 Clock out
+$Comp
+L Device:R R?
+U 1 1 5FDFBB2B
+P 3200 1550
+F 0 "R?" V 2993 1550 50  0000 C CNN
+F 1 "100" V 3084 1550 50  0000 C CNN
+F 2 "" V 3130 1550 50  0001 C CNN
+F 3 "~" H 3200 1550 50  0001 C CNN
+	1    3200 1550
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5FDFCB33
+P 3400 1750
+F 0 "R?" V 3193 1750 50  0000 C CNN
+F 1 "100" V 3284 1750 50  0000 C CNN
+F 2 "" V 3330 1750 50  0001 C CNN
+F 3 "~" H 3400 1750 50  0001 C CNN
+	1    3400 1750
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 5FDFD6DE
+P 3500 2350
+F 0 "R?" V 3293 2350 50  0000 C CNN
+F 1 "100" V 3384 2350 50  0000 C CNN
+F 2 "" V 3430 2350 50  0001 C CNN
+F 3 "~" H 3500 2350 50  0001 C CNN
+	1    3500 2350
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	2900 1550 3050 1550
+Wire Wire Line
+	3350 1550 4600 1550
+Wire Wire Line
+	3250 1750 2900 1750
+Wire Wire Line
+	3550 1750 4550 1750
+Wire Wire Line
+	3350 2350 3300 2350
+Wire Wire Line
+	3650 2350 4600 2350
 $EndSCHEMATC
