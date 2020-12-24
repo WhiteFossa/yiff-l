@@ -30,16 +30,17 @@ void L2HAL_AD9835_Init(L2HAL_AD9835_ContextStruct* context)
 	GPIO_InitTypeDef GPIO_InitStruct;
 	GPIO_InitStruct.Pin       = context->FSYNCPin;
 	GPIO_InitStruct.Mode      = GPIO_MODE_OUTPUT_PP;
-	GPIO_InitStruct.Pull      = GPIO_NOPULL;
+	GPIO_InitStruct.Pull      = GPIO_PULLUP;
 	GPIO_InitStruct.Speed     = GPIO_SPEED_FREQ_LOW;
 	HAL_GPIO_Init(context->FSYNCPort, &GPIO_InitStruct);
 
 	/* Resetting */
-	HAL_Delay(100);
+	HAL_GPIO_WritePin(context->FSYNCPort, context->FSYNCPin, GPIO_PIN_SET);
+	HAL_Delay(1);
 	L2HAL_AD9835_PowerControl(context, true	, true, true);
-	HAL_Delay(100);
+	HAL_Delay(1);
 	L2HAL_AD9835_PowerControl(context, false, false, false);
-	HAL_Delay(100);
+	HAL_Delay(1);
 }
 
 void L2HAL_AD9835_SmallDelay()
@@ -68,10 +69,8 @@ void L2HAL_AD9835_WriteToDDS(L2HAL_AD9835_ContextStruct* context, L2HAL_AD9835_D
 void L2HAL_AD9835_SelectPFSource(L2HAL_AD9835_ContextStruct* context, bool sync, bool useBits)
 {
 	L2HAL_AD9835_DataStruct data;
-	data.Msb = 0x00;
+	data.Msb = (1 << 7); /* D15 = 1, D14 = 0 */
 	data.Lsb = 0x00;
-
-	data.Msb |= (1 << 7); /* D15 = 1, D14 = 0 */
 
 	if (sync)
 	{
@@ -89,7 +88,7 @@ void L2HAL_AD9835_SelectPFSource(L2HAL_AD9835_ContextStruct* context, bool sync,
 void L2HAL_AD9835_PowerControl(L2HAL_AD9835_ContextStruct* context, bool sleep, bool reset, bool clear)
 {
 	L2HAL_AD9835_DataStruct data;
-	data.Msb = 0x00;
+	data.Msb = (1 << 7) | (1 << 6); /* D15 = 1, D14 = 1 */
 	data.Lsb = 0x00;
 
 	if (sleep)
