@@ -86,6 +86,11 @@ L2HAL_Encoders_ContextStruct L2HAL_Encoders_Context;
 L2HAL_AD9835_ContextStruct L2HAL_AD9835_Context;
 
 /**
+ * ADC handle.
+ */
+ADC_HandleTypeDef ADCHandle;
+
+/**
  * Put custom hardware initialization stuff here,
  */
 void L2HAL_InitCustomHardware(void);
@@ -136,5 +141,12 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef *hspi);
  * SPI de-init
  */
 void HAL_SPI_MspDeInit(SPI_HandleTypeDef *hspi);
+
+/* ADC init */
+void HAL_ADC_MspInit(ADC_HandleTypeDef *hadc);
+
+/* ADC de-init */
+void HAL_ADC_MspDeInit(ADC_HandleTypeDef *hadc);
+
 
 #endif /* L2HAL_INCLUDE_L2HAL_CUSTOM_H_ */

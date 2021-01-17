@@ -75,9 +75,9 @@ FMGL_API_FontSettings fontSettings;
 uint32_t freg;
 
 /**
- * FREG (new)
+ * ADC (detector) level
  */
-uint32_t newFreg;
+uint16_t detectorLevel;
 
 /* Callback function for encoder */
 void EncoderCallback(L2HAL_Encoders_EncoderStruct* encoderStruct, L2HAL_Encoders_Direction direction);
@@ -86,6 +86,8 @@ void EncoderCallback(L2HAL_Encoders_EncoderStruct* encoderStruct, L2HAL_Encoders
 void EncoderButtonCallback(L2HAL_Buttons_ButtonStruct* button, GPIO_PinState newPinState, uint16_t* portData);
 
 void DrawFrequencies();
+
+void DrawDetectorLevel();
 
 uint32_t GetHzFromFreg(uint32_t freg);
 

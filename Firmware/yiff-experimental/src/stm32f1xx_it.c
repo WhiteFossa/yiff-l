@@ -160,6 +160,11 @@ void SysTick_Handler(void)
   L2HAL_SysTick_Callback();
 }
 
+void ADC1_IRQHandler(void)
+{
+  HAL_ADC_IRQHandler(&ADCHandle);
+}
+
 /******************************************************************************/
 /*                 STM32F1xx Peripherals Interrupt Handlers                   */
 /*  Add here the Interrupt Handler for the used peripheral(s) (PPP), for the  */

@@ -91,30 +91,37 @@ int main(int argc, char* argv[])
 	FMGL_API_PushFramebuffer(&fmglContext);
 
 	freg = FREGmin;
-	newFreg = FREGmin;
-
 	DrawFrequencies();
+
+	detectorLevel = 0;
+	DrawDetectorLevel();
+
+	/* Bug somewhere in encoder driver - if button and encoder registrations are swapped, then encoder always
+	 * counter-clockwise. */
+	/* Encoder button */
+	L2HAL_Buttons_AddButton(&L2HAL_Buttons_Context, GPIOA, GPIO_PIN_2, NULL, 10, &EncoderButtonCallback);
 
 	/* Attaching encoder */
 	L2HAL_Encoders_AddEncoder(&L2HAL_Encoders_Context, GPIOA, GPIO_PIN_0, GPIOA, GPIO_PIN_1, GPIO_PIN_RESET, 10, NULL, &EncoderCallback);
 
-	/* And it's button */
-	L2HAL_Buttons_AddButton(&L2HAL_Buttons_Context, GPIOA, GPIO_PIN_2, NULL, 10, &EncoderButtonCallback);
-
 	/* PLL init */
-	L2HAL_AD9835_Context.SPIHandle = &SPIHandle;
-	L2HAL_AD9835_Context.FSYNCPort = GPIOA;
-	L2HAL_AD9835_Context.FSYNCPin = GPIO_PIN_8;
-	L2HAL_AD9835_Init(&L2HAL_AD9835_Context);
+	HalInitPll(freg);
 
-	L2HAL_AD9835_WriteFrequencyWord(&L2HAL_AD9835_Context, Freg0, freg);
+	/* ADC init */
+	HalSetupADC();
 
 	while(true)
 	{
 		L2HAL_Buttons_Poll(&L2HAL_Buttons_Context);
+		DrawDetectorLevel();
 	}
 
 	return 0;
+}
+
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* AdcHandle)
+{
+	detectorLevel = HAL_ADC_GetValue(&ADCHandle);
 }
 
 void EncoderCallback(L2HAL_Encoders_EncoderStruct* encoderStruct, L2HAL_Encoders_Direction direction)
@@ -122,46 +129,49 @@ void EncoderCallback(L2HAL_Encoders_EncoderStruct* encoderStruct, L2HAL_Encoders
 	/* We don't need to check encoderStruct because we have only one encoder. */
 	if (Clockwise == direction)
 	{
-		newFreg += FREGstep;
+		freg += FREGstep;
 	}
 	else
 	{
-		newFreg -= FREGstep;
+		freg -= FREGstep;
 	}
 
-	if (newFreg > FREGmax)
+	if (freg > FREGmax)
 	{
-		newFreg = FREGmax;
+		freg = FREGmax;
 	}
 
-	if (newFreg < FREGmin)
+	if (freg < FREGmin)
 	{
-		newFreg = FREGmin;
+		freg = FREGmin;
 	}
+
+	HalSetPllFrequency(freg);
 
 	DrawFrequencies();
 }
 
 void EncoderButtonCallback(L2HAL_Buttons_ButtonStruct* button, GPIO_PinState newPinState, uint16_t* portData)
 {
-	freg = newFreg;
-
-	L2HAL_AD9835_WriteFrequencyWord(&L2HAL_AD9835_Context, Freg0, freg);
-
-	DrawFrequencies();
 }
 
 void DrawFrequencies()
 {
 	char buffer[32];
 
-	/* New frequency */
-	volatile uint32_t tmp = GetHzFromFreg(newFreg);
-	sprintf(buffer, "New: %d Hz", tmp);
+	/* Current frequency */
+	sprintf(buffer, "Freq: %d Hz", GetHzFromFreg(freg));
 	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &fontSettings, 0, 0, NULL, NULL, false, buffer);
 
-	/* Current frequency */
-	sprintf(buffer, "Current: %d Hz", GetHzFromFreg(freg));
+	FMGL_API_PushFramebuffer(&fmglContext);
+}
+
+void DrawDetectorLevel()
+{
+	char buffer[32];
+
+	sprintf(buffer, "Detector: %d", detectorLevel);
+
 	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &fontSettings, 0, 16, NULL, NULL, false, buffer);
 
 	FMGL_API_PushFramebuffer(&fmglContext);
