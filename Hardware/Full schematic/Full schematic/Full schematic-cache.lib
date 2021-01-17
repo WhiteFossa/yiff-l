@@ -323,7 +323,7 @@ ENDDEF
 DEF Fossa_library_EDR101A0500 K 0 20 Y Y 1 F N
 F0 "K" 350 150 50 H V L CNN
 F1 "Fossa_library_EDR101A0500" 350 50 50 H V L CNN
-F2 "Relay_THT:Relay_SPST_StandexMeder_MS_Form1AB" 350 -50 50 H I L CNN
+F2 "Relay_THT:Relay_SPST_StandexMeder_SIL_Form1A" 350 -50 50 H I L CNN
 F3 "" 0 0 50 H I C CNN
 $FPLIST
  Relay*SPST*StandexMeder*MS*Form1AB*

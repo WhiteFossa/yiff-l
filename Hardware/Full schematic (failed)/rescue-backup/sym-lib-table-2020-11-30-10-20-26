@@ -1,3 +1,0 @@
-(sym_lib_table
-  (lib (name FullSchematic-rescue)(type Legacy)(uri ${KIPRJMOD}/FullSchematic-rescue.lib)(options "")(descr ""))
-)

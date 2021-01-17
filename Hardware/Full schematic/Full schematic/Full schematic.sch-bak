@@ -144,7 +144,7 @@ U 1 1 5FDD3420
 P 3100 1800
 F 0 "U1" H 3100 1211 50  0000 C CNN
 F 1 "74LVC2T45DC" H 3100 1120 50  0000 C CNN
-F 2 "Package_SO:VSSOP-8_2.3x2mm_P0.5mm" H 3100 950 50  0001 C CNN
+F 2 "Package_SO:SSOP-8_3.9x5.05mm_P1.27mm" H 3100 950 50  0001 C CNN
 F 3 "https://assets.nexperia.com/documents/data-sheet/74LVC_LVCH2T45.pdf" H 3350 1550 50  0001 C CNN
 	1    3100 1800
 	1    0    0    -1  
@@ -155,7 +155,7 @@ U 1 1 5FDD413A
 P 3100 3650
 F 0 "U2" H 3100 3061 50  0000 C CNN
 F 1 "74LVC2T45DC" H 3100 2970 50  0000 C CNN
-F 2 "Package_SO:VSSOP-8_2.3x2mm_P0.5mm" H 3100 2800 50  0001 C CNN
+F 2 "Package_SO:SSOP-8_3.9x5.05mm_P1.27mm" H 3100 2800 50  0001 C CNN
 F 3 "https://assets.nexperia.com/documents/data-sheet/74LVC_LVCH2T45.pdf" H 3350 3400 50  0001 C CNN
 	1    3100 3650
 	1    0    0    -1  
@@ -1089,8 +1089,6 @@ Wire Wire Line
 	12725 2275 12725 2200
 Wire Wire Line
 	12725 2200 12950 2200
-Wire Wire Line
-	13475 2250 13475 2200
 $Comp
 L power:GND #PWR055
 U 1 1 5FE9B8C4
@@ -1414,7 +1412,7 @@ L Device:C C23
 U 1 1 5FF242A4
 P 13000 4050
 F 0 "C23" H 13115 4096 50  0000 L CNN
-F 1 "0.01uF" H 13115 4005 50  0000 L CNN
+F 1 "10nF" H 13115 4005 50  0000 L CNN
 F 2 "Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder" H 13038 3900 50  0001 C CNN
 F 3 "~" H 13000 4050 50  0001 C CNN
 	1    13000 4050
@@ -1506,7 +1504,7 @@ U 1 1 5FF371A8
 P 15925 3750
 F 0 "K1" H 16075 3500 50  0000 R CNN
 F 1 "EDR101A0500" H 16100 3625 50  0000 R CNN
-F 2 "Relay_THT:Relay_SPST_StandexMeder_MS_Form1AB" H 16275 3700 50  0001 L CNN
+F 2 "Relay_THT:Relay_SPST_StandexMeder_SIL_Form1A" H 16275 3700 50  0001 L CNN
 F 3 "https://standexelectronics.com/de/produkte/ms-reed-relais/" H 15925 3750 50  0001 C CNN
 	1    15925 3750
 	-1   0    0    1   
@@ -1532,7 +1530,7 @@ U 1 1 5FF59BA9
 P 16925 3750
 F 0 "K2" H 17075 3500 50  0000 R CNN
 F 1 "EDR101A0500" H 17100 3625 50  0000 R CNN
-F 2 "Relay_THT:Relay_SPST_StandexMeder_MS_Form1AB" H 17275 3700 50  0001 L CNN
+F 2 "Relay_THT:Relay_SPST_StandexMeder_SIL_Form1A" H 17275 3700 50  0001 L CNN
 F 3 "https://standexelectronics.com/de/produkte/ms-reed-relais/" H 16925 3750 50  0001 C CNN
 	1    16925 3750
 	-1   0    0    1   
@@ -1556,7 +1554,7 @@ U 1 1 5FF7E77F
 P 17925 3750
 F 0 "K3" H 18075 3500 50  0000 R CNN
 F 1 "EDR101A0500" H 18100 3625 50  0000 R CNN
-F 2 "Relay_THT:Relay_SPST_StandexMeder_MS_Form1AB" H 18275 3700 50  0001 L CNN
+F 2 "Relay_THT:Relay_SPST_StandexMeder_SIL_Form1A" H 18275 3700 50  0001 L CNN
 F 3 "https://standexelectronics.com/de/produkte/ms-reed-relais/" H 17925 3750 50  0001 C CNN
 	1    17925 3750
 	-1   0    0    1   
@@ -1580,7 +1578,7 @@ U 1 1 5FF87815
 P 18925 3750
 F 0 "K4" H 19075 3500 50  0000 R CNN
 F 1 "EDR101A0500" H 19100 3625 50  0000 R CNN
-F 2 "Relay_THT:Relay_SPST_StandexMeder_MS_Form1AB" H 19275 3700 50  0001 L CNN
+F 2 "Relay_THT:Relay_SPST_StandexMeder_SIL_Form1A" H 19275 3700 50  0001 L CNN
 F 3 "https://standexelectronics.com/de/produkte/ms-reed-relais/" H 18925 3750 50  0001 C CNN
 	1    18925 3750
 	-1   0    0    1   
@@ -1604,7 +1602,7 @@ U 1 1 5FF91775
 P 19925 3750
 F 0 "K5" H 20075 3500 50  0000 R CNN
 F 1 "EDR101A0500" H 20100 3625 50  0000 R CNN
-F 2 "Relay_THT:Relay_SPST_StandexMeder_MS_Form1AB" H 20275 3700 50  0001 L CNN
+F 2 "Relay_THT:Relay_SPST_StandexMeder_SIL_Form1A" H 20275 3700 50  0001 L CNN
 F 3 "https://standexelectronics.com/de/produkte/ms-reed-relais/" H 19925 3750 50  0001 C CNN
 	1    19925 3750
 	-1   0    0    1   
