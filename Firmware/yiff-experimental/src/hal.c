@@ -12,6 +12,7 @@ void HalInitHardware(void)
 	HalInitPll(1);
 	HalSetupADC();
 	HalInitAntennaMatching();
+	HalInitManipulator();
 }
 
 void HalInitPll(uint32_t frequency)
@@ -87,9 +88,10 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* AdcHandle)
 void HalOnDetectorValueUpdated(uint16_t detectorValue)
 {
 	HalDetectorAverage = detectorValue;
+	HalIsDetectorValueUpdated = true;
 }
 
-void HalInitAntennaMatching()
+void HalInitAntennaMatching(void)
 {
 	__HAL_RCC_GPIOB_CLK_ENABLE();
 
@@ -107,4 +109,32 @@ void HalSetAntennaMatching(uint8_t matching)
 {
 	uint16_t tmp = ((uint16_t)matching) << 10;
 	GPIOB->ODR = tmp & 0b0111110000000000;
+}
+
+void HalInitManipulator(void)
+{
+	__HAL_RCC_GPIOB_CLK_ENABLE();
+
+	GPIO_InitTypeDef GPIO_InitStruct;
+
+	GPIO_InitStruct.Pin = GPIO_PIN_0;
+	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+
+	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+	HalSwitchManipulator(false);
+}
+
+void HalSwitchManipulator(bool isOn)
+{
+	if (isOn)
+	{
+		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
+	}
+	else
+	{
+		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_SET);
+	}
 }

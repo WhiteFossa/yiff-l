@@ -2681,4 +2681,14 @@ Wire Wire Line
 Connection ~ 10225 3725
 Wire Wire Line
 	10225 3725 10225 2700
+Text Notes 18250 5675 3    50   ~ 0
+PB10
+Text Notes 18150 5675 3    50   ~ 0
+PB11
+Text Notes 18050 5675 3    50   ~ 0
+PB12
+Text Notes 17950 5675 3    50   ~ 0
+PB13
+Text Notes 17850 5675 3    50   ~ 0
+PB14
 $EndSCHEMATC

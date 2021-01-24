@@ -2691,4 +2691,6 @@ Text Notes 17950 5675 3    50   ~ 0
 PB13
 Text Notes 17850 5675 3    50   ~ 0
 PB14
+Text Notes 8450 4050 0    50   ~ 0
+PB0
 $EndSCHEMATC

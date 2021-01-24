@@ -47,6 +47,11 @@ uint16_t HalDetectorAveragingCounter;
 uint16_t HalDetectorAverage;
 
 /**
+ * True when detector value updated, user have to reset in manually.
+ */
+bool HalIsDetectorValueUpdated;
+
+/**
  * Initialize hardware
  */
 void HalInitHardware(void);
@@ -64,14 +69,27 @@ void HalSetPllFrequency(uint32_t frequency);
 /**
  * Set up detector ADC
  */
-void HalSetupADC();
+void HalSetupADC(void);
 
 /**
  * Initialize antenna matching unit
  */
-void HalInitAntennaMatching();
+void HalInitAntennaMatching(void);
 
+/**
+ * Set antenna matching level
+ */
 void HalSetAntennaMatching(uint8_t matching);
+
+/**
+ * Initialize manipulation output
+ */
+void HalInitManipulator(void);
+
+/**
+ * Switch manipulator.
+ */
+void HalSwitchManipulator(bool isOn);
 
 /**
  * Called when detector value is updated.

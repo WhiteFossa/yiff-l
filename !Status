@@ -1,5 +1,9 @@
+2021-01-24:
+3.5MHz part is redesigned from scratch and working OK now.
+
 2018-09-23:
 Actually opamps wasn't fake, but I've probably had HF parasitic oscillation in oscillator, making them unusable. Got good amplification with external oscillator, removed inductor from source in my oscillator and everything is OK now.
 
 2018-08-21:
 Got fake (as I believe) AD8031s, so waitng for salary to order this opamps from other supplier along with RD06FFH and LC72131.
+

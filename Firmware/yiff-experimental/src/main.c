@@ -112,10 +112,21 @@ int main(int argc, char* argv[])
 	/* Attaching encoder */
 	L2HAL_Encoders_AddEncoder(&L2HAL_Encoders_Context, GPIOA, GPIO_PIN_0, GPIOA, GPIO_PIN_1, GPIO_PIN_RESET, 10, NULL, &EncoderCallback);
 
+	manipulationCounter = 500;
+	isManipulationOn = false;
+
+	/* Registering systick handler */
+	L2HAL_SysTick_RegisterHandler(&MySysTickHandler);
+
 	while(true)
 	{
 		L2HAL_Buttons_Poll(&L2HAL_Buttons_Context);
-		DrawDetectorLevel();
+
+		if (HalIsDetectorValueUpdated)
+		{
+			DrawDetectorLevel();
+			HalIsDetectorValueUpdated = false;
+		}
 	}
 
 	return 0;
@@ -268,6 +279,22 @@ void DrawInputMode()
 	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &fontSettings, 0, yPos, NULL, NULL, false, buffer);
 
 	FMGL_API_PushFramebuffer(&fmglContext);
+}
+
+void MySysTickHandler(void)
+{
+	if (manipulationCounter > 0)
+	{
+		manipulationCounter --;
+	}
+
+	if (0 == manipulationCounter)
+	{
+		manipulationCounter = 500;
+
+		isManipulationOn = !isManipulationOn;
+		HalSwitchManipulator(isManipulationOn);
+	}
 }
 
 #pragma GCC diagnostic pop

@@ -89,6 +89,10 @@ uint32_t freg;
  */
 uint8_t antennaMatching;
 
+uint16_t manipulationCounter;
+
+bool isManipulationOn;
+
 enum InputMode inputMode;
 
 /* Callback function for encoder */
@@ -106,5 +110,7 @@ void DrawAntennaMatching();
 void DrawInputMode();
 
 uint32_t GetHzFromFreg(uint32_t freg);
+
+void MySysTickHandler(void);
 
 #endif /* __MAIN_H */
