@@ -216,7 +216,7 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef *hadc)
 	gpioInit.Pull = GPIO_NOPULL;
 	HAL_GPIO_Init(GPIOA, &gpioInit);
 
-	HAL_NVIC_SetPriority(ADC1_IRQn, 0, 0);
+	HAL_NVIC_SetPriority(ADC1_IRQn, 1, 0);
 	HAL_NVIC_EnableIRQ(ADC1_IRQn);
 }
 

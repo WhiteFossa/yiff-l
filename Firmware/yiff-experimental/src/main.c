@@ -50,6 +50,8 @@ int main(int argc, char* argv[])
 	/* Setting up hardware */
 	L2HAL_Init();
 
+	HalInitHardware();
+
 	HAL_Delay(100);
 
 	/* Detecting display */
@@ -90,10 +92,16 @@ int main(int argc, char* argv[])
 	FMGL_API_ClearScreen(&fmglContext);
 	FMGL_API_PushFramebuffer(&fmglContext);
 
+	inputMode = ImFreq;
+	DrawInputMode();
+
 	freg = FREGmin;
+	HalSetPllFrequency(freg);
 	DrawFrequencies();
 
-	detectorLevel = 0;
+	antennaMatching = MIN_ANTENNA_MATCHING;
+	DrawAntennaMatching();
+
 	DrawDetectorLevel();
 
 	/* Bug somewhere in encoder driver - if button and encoder registrations are swapped, then encoder always
@@ -104,12 +112,6 @@ int main(int argc, char* argv[])
 	/* Attaching encoder */
 	L2HAL_Encoders_AddEncoder(&L2HAL_Encoders_Context, GPIOA, GPIO_PIN_0, GPIOA, GPIO_PIN_1, GPIO_PIN_RESET, 10, NULL, &EncoderCallback);
 
-	/* PLL init */
-	HalInitPll(freg);
-
-	/* ADC init */
-	HalSetupADC();
-
 	while(true)
 	{
 		L2HAL_Buttons_Poll(&L2HAL_Buttons_Context);
@@ -119,40 +121,87 @@ int main(int argc, char* argv[])
 	return 0;
 }
 
-void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* AdcHandle)
-{
-	detectorLevel = HAL_ADC_GetValue(&ADCHandle);
-}
-
 void EncoderCallback(L2HAL_Encoders_EncoderStruct* encoderStruct, L2HAL_Encoders_Direction direction)
 {
-	/* We don't need to check encoderStruct because we have only one encoder. */
-	if (Clockwise == direction)
-	{
-		freg += FREGstep;
-	}
-	else
-	{
-		freg -= FREGstep;
-	}
+	int8_t tmpMatching;
 
-	if (freg > FREGmax)
+	switch (inputMode)
 	{
-		freg = FREGmax;
+		case ImFreq:
+			if (Clockwise == direction)
+			{
+				freg += FREGstep;
+			}
+			else
+			{
+				freg -= FREGstep;
+			}
+
+			if (freg > FREGmax)
+			{
+				freg = FREGmax;
+			}
+
+			if (freg < FREGmin)
+			{
+				freg = FREGmin;
+			}
+
+			HalSetPllFrequency(freg);
+
+			DrawFrequencies();
+		break;
+
+		case ImMatching:
+			tmpMatching = antennaMatching;
+
+			if (Clockwise == direction)
+			{
+				tmpMatching ++;
+			}
+			else
+			{
+				tmpMatching --;
+			}
+
+			if (tmpMatching < MIN_ANTENNA_MATCHING)
+			{
+				tmpMatching = MIN_ANTENNA_MATCHING;
+			}
+
+			if (tmpMatching > MAX_ANTENNA_MATCHING)
+			{
+				tmpMatching = MAX_ANTENNA_MATCHING;
+			}
+
+			antennaMatching = tmpMatching;
+
+			HalSetAntennaMatching(antennaMatching);
+
+			DrawAntennaMatching();
+		break;
 	}
-
-	if (freg < FREGmin)
-	{
-		freg = FREGmin;
-	}
-
-	HalSetPllFrequency(freg);
-
-	DrawFrequencies();
 }
 
 void EncoderButtonCallback(L2HAL_Buttons_ButtonStruct* button, GPIO_PinState newPinState, uint16_t* portData)
 {
+	if (newPinState != GPIO_PIN_RESET)
+	{
+		return;
+	}
+
+	switch (inputMode)
+	{
+		case ImFreq:
+			inputMode = ImMatching;
+		break;
+
+		case ImMatching:
+			inputMode = ImFreq;
+		break;
+	}
+
+	DrawInputMode();
 }
 
 void DrawFrequencies()
@@ -161,7 +210,7 @@ void DrawFrequencies()
 
 	/* Current frequency */
 	sprintf(buffer, "Freq: %d Hz", GetHzFromFreg(freg));
-	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &fontSettings, 0, 0, NULL, NULL, false, buffer);
+	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &fontSettings, 12, 0, NULL, NULL, false, buffer);
 
 	FMGL_API_PushFramebuffer(&fmglContext);
 }
@@ -170,9 +219,20 @@ void DrawDetectorLevel()
 {
 	char buffer[32];
 
-	sprintf(buffer, "Detector: %d", detectorLevel);
+	sprintf(buffer, "Detector: %04d", HalDetectorAverage);
 
-	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &fontSettings, 0, 16, NULL, NULL, false, buffer);
+	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &fontSettings, 12, 32, NULL, NULL, false, buffer);
+
+	FMGL_API_PushFramebuffer(&fmglContext);
+}
+
+void DrawAntennaMatching()
+{
+	char buffer[32];
+
+	sprintf(buffer, "Matching: %02d", antennaMatching);
+
+	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &fontSettings, 12, 16, NULL, NULL, false, buffer);
 
 	FMGL_API_PushFramebuffer(&fmglContext);
 }
@@ -180,6 +240,34 @@ void DrawDetectorLevel()
 uint32_t GetHzFromFreg(uint32_t freg)
 {
 	return (uint32_t)((float)Fmclk * (float)freg / (float)4294967296);
+}
+
+void DrawInputMode()
+{
+	char buffer[2];
+
+	sprintf(buffer, " ");
+	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &fontSettings, 0, 0, NULL, NULL, false, buffer);
+	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &fontSettings, 0, 16, NULL, NULL, false, buffer);
+
+	sprintf(buffer, ">");
+
+	uint16_t yPos;
+
+	switch (inputMode)
+	{
+		case ImFreq:
+			yPos = 0;
+		break;
+
+		case ImMatching:
+			yPos = 16;
+		break;
+	}
+
+	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &fontSettings, 0, yPos, NULL, NULL, false, buffer);
+
+	FMGL_API_PushFramebuffer(&fmglContext);
 }
 
 #pragma GCC diagnostic pop

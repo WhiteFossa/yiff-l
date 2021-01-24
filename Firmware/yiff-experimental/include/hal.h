@@ -27,6 +27,31 @@
  */
 
 /**
+ * Averaging over 256 detector measurements.
+ */
+#define HAL_DETECTOR_AVERAGING 10000
+
+/**
+ * Here we accumulating values from detector.
+ */
+uint32_t HalDetectorAccumulator;
+
+/**
+ * Counter for averaging
+ */
+uint16_t HalDetectorAveragingCounter;
+
+/**
+ * Averaged value of detector
+ */
+uint16_t HalDetectorAverage;
+
+/**
+ * Initialize hardware
+ */
+void HalInitHardware(void);
+
+/**
  * Initialize PLL and set after initialization frequency.
  */
 void HalInitPll(uint32_t frequency);
@@ -40,5 +65,17 @@ void HalSetPllFrequency(uint32_t frequency);
  * Set up detector ADC
  */
 void HalSetupADC();
+
+/**
+ * Initialize antenna matching unit
+ */
+void HalInitAntennaMatching();
+
+void HalSetAntennaMatching(uint8_t matching);
+
+/**
+ * Called when detector value is updated.
+ */
+void HalOnDetectorValueUpdated(uint16_t detectorValue);
 
 #endif /* INCLUDE_HAL_H_ */

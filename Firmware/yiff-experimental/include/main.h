@@ -41,6 +41,7 @@
 #include <fmgl.h>
 #include <terminusRegular12.h>
 #include <l2hal_ad9835.h>
+#include <hal.h>
 
 /* PLL-related stuff */
 #define Fmclk 50000000UL
@@ -57,6 +58,15 @@
 //#define FREGmax 1567663063UL  /* 18.25MHz */
 
 //#define FREGstep 107374UL /* 1.25KHz step */
+
+#define MIN_ANTENNA_MATCHING 0
+#define MAX_ANTENNA_MATCHING 31
+
+typedef enum InputMode
+{
+	ImFreq = 0,
+	ImMatching = 1
+};
 
 
 /**
@@ -75,9 +85,11 @@ FMGL_API_FontSettings fontSettings;
 uint32_t freg;
 
 /**
- * ADC (detector) level
+ * Antenna matching factor
  */
-uint16_t detectorLevel;
+uint8_t antennaMatching;
+
+enum InputMode inputMode;
 
 /* Callback function for encoder */
 void EncoderCallback(L2HAL_Encoders_EncoderStruct* encoderStruct, L2HAL_Encoders_Direction direction);
@@ -88,6 +100,10 @@ void EncoderButtonCallback(L2HAL_Buttons_ButtonStruct* button, GPIO_PinState new
 void DrawFrequencies();
 
 void DrawDetectorLevel();
+
+void DrawAntennaMatching();
+
+void DrawInputMode();
 
 uint32_t GetHzFromFreg(uint32_t freg);
 
