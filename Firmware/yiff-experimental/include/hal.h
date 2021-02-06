@@ -27,9 +27,9 @@
  */
 
 /**
- * Averaging over 256 detector measurements.
+ * Averaging over this number of detector measurements.
  */
-#define HAL_DETECTOR_AVERAGING 10000
+#define HAL_DETECTOR_AVERAGING 5000
 
 /**
  * Here we accumulating values from detector.

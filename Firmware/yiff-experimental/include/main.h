@@ -43,21 +43,23 @@
 #include <l2hal_ad9835.h>
 #include <hal.h>
 
-/* PLL-related stuff */
-#define Fmclk 50000000UL
+/* 3.5MHz or 144MHz*/
+#define USE_144
 
-/* 80m: 3.50-3.65 x 1*/
-#define FREGmin 300647711UL /* 3.50MHz */
-#define FREGmax 313532613UL  /* 3.65MHz */
+/* DDS master clock in KHz*/
+#define Fmclk 50000UL
 
-#define FREGstep 85899UL /* 1KHz step */
-
-
-/* 2m: 144-146 x 1 = 18.0 - 18.25 x 8*/
-//#define FREGmin 1546188227UL /* 18.00MHz */
-//#define FREGmax 1567663063UL  /* 18.25MHz */
-
-//#define FREGstep 107374UL /* 1.25KHz step */
+#ifndef USE_144
+	/* 80m: 3.50-3.65 x 1*/
+	#define FREGmin 300647711UL /* 3.50MHz */
+	#define FREGmax 313532613UL  /* 3.65MHz */
+	#define FREGstep 85899UL /* 1KHz step */
+#else
+	/* 2m: 144-146 x 1 = 18.0 - 18.25 x 8*/
+	#define FREGmin 1546188227UL /* 18.00MHz */
+	#define FREGmax 1567663063UL  /* 18.25MHz */
+	#define FREGstep 107374UL /* 1.25KHz step */
+#endif
 
 #define MIN_ANTENNA_MATCHING 0
 #define MAX_ANTENNA_MATCHING 31
@@ -93,6 +95,8 @@ uint16_t manipulationCounter;
 
 bool isManipulationOn;
 
+bool modulationFlag;
+
 enum InputMode inputMode;
 
 /* Callback function for encoder */
@@ -109,7 +113,7 @@ void DrawAntennaMatching();
 
 void DrawInputMode();
 
-uint32_t GetHzFromFreg(uint32_t freg);
+uint32_t GetKHzFromFreg(uint32_t freg);
 
 void MySysTickHandler(void);
 

@@ -114,6 +114,7 @@ int main(int argc, char* argv[])
 
 	manipulationCounter = 500;
 	isManipulationOn = false;
+	modulationFlag = false;
 
 	/* Registering systick handler */
 	L2HAL_SysTick_RegisterHandler(&MySysTickHandler);
@@ -220,7 +221,7 @@ void DrawFrequencies()
 	char buffer[32];
 
 	/* Current frequency */
-	sprintf(buffer, "Freq: %d Hz", GetHzFromFreg(freg));
+	sprintf(buffer, "Freq: %d KHz", GetKHzFromFreg(freg));
 	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &fontSettings, 12, 0, NULL, NULL, false, buffer);
 
 	FMGL_API_PushFramebuffer(&fmglContext);
@@ -248,9 +249,13 @@ void DrawAntennaMatching()
 	FMGL_API_PushFramebuffer(&fmglContext);
 }
 
-uint32_t GetHzFromFreg(uint32_t freg)
+uint32_t GetKHzFromFreg(uint32_t freg)
 {
+#ifndef USE_144
 	return (uint32_t)((float)Fmclk * (float)freg / (float)4294967296);
+#else
+	return (uint32_t)((float)8 * (float)Fmclk * (float)freg / (float)4294967296);
+#endif
 }
 
 void DrawInputMode()
@@ -283,6 +288,18 @@ void DrawInputMode()
 
 void MySysTickHandler(void)
 {
+#ifdef USE_144
+		modulationFlag = !modulationFlag;
+		if (isManipulationOn)
+		{
+			HalSwitchManipulator(modulationFlag);
+		}
+		else
+		{
+			HalSwitchManipulator(false);
+		}
+#endif
+
 	if (manipulationCounter > 0)
 	{
 		manipulationCounter --;
@@ -293,7 +310,9 @@ void MySysTickHandler(void)
 		manipulationCounter = 500;
 
 		isManipulationOn = !isManipulationOn;
+#ifndef USE_144
 		HalSwitchManipulator(isManipulationOn);
+#endif
 	}
 }
 

@@ -1,8 +1,78 @@
 /*
- * l2hal_ad9835.h
+	This file is part of Fossa's STM32 level 2 HAL.
+
+	STM32 level 2 HAL is free software:
+	you can redistribute it and/or modify it under the terms of the
+	GNU General Public License as published by the Free Software
+	Foundation, either version 3 of the License, or (at your option)
+	any later version.
+
+	STM32 level 2 HAL is distributed in the hope
+	that it will be useful, but WITHOUT ANY WARRANTY; without even
+	the implied warranty of MERCHANTABILITY or FITNESS FOR A
+	PARTICULAR PURPOSE.  See the GNU General Public License for more
+	details.
+
+	You should have received a copy of the GNU General Public License
+	along with STM32 level 2 HAL.
+
+	If not, see <http://www.gnu.org/licenses/>.
+
+	-------------------------------------------------------------------------
+
+	Created by White Fossa, also known as Artyom Vetrov.
+
+	Feel free to contact: whitefossa@gmail.com
+
+	Repository: https://github.com/WhiteFossa/stm32-l2hal
+
+	If repository above is not available, try my LiveJournal:
+	fossa-white.livejournal.com
+
+	or as last measure try to search for #WhiteFossa hashtag.
+
+	-------------------------------------------------------------------------
+ */
+
+/**
+ * @file
+ * @brief AD9835 DDS level 2 HAL driver.
+ * How to use this driver:
  *
- *  Created on: Dec 20, 2020
- *      Author: fossa
+ * 1) Set-up SPI using STM32 HAL.
+ *    Sample code:
+ *
+ *	void L2HAL_SetupSPI(void)
+ *	{
+ *		SPIHandle.Instance				 = SPI1;
+ *		SPIHandle.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_256;
+ *		SPIHandle.Init.Direction         = SPI_DIRECTION_2LINES;
+ *		SPIHandle.Init.CLKPhase          = SPI_PHASE_1EDGE;
+ *		SPIHandle.Init.CLKPolarity       = SPI_POLARITY_HIGH;
+ *		SPIHandle.Init.DataSize          = SPI_DATASIZE_8BIT;
+ *		SPIHandle.Init.FirstBit          = SPI_FIRSTBIT_MSB;
+ *		SPIHandle.Init.TIMode            = SPI_TIMODE_DISABLE;
+ *		SPIHandle.Init.CRCCalculation    = SPI_CRCCALCULATION_DISABLE;
+ *		SPIHandle.Init.CRCPolynomial     = 0;
+ *		SPIHandle.Init.NSS               = SPI_NSS_SOFT;
+ *		SPIHandle.Init.Mode = SPI_MODE_MASTER;
+ *
+ *		if(HAL_SPI_Init(&SPIHandle) != HAL_OK)
+ *		{
+ *			L2HAL_Error(Generic);
+ *		}
+ *	}
+ *
+ * 2) Create an instance of L2HAL_AD9835_ContextStruct struct and fill it with data, then call L2HAL_AD9835_Init():
+ *
+ * L2HAL_AD9835_Context.SPIHandle = &SPIHandle;
+ * L2HAL_AD9835_Context.FSYNCPort = GPIOA;
+ * L2HAL_AD9835_Context.FSYNCPin = GPIO_PIN_8;
+ * L2HAL_AD9835_Init(&L2HAL_AD9835_Context);
+ *
+ * 3) For example, specify desired frequency using (default) FREG0:
+ *
+ * L2HAL_AD9835_WriteFrequencyWord(&L2HAL_AD9835_Context, Freg0, frequency);
  */
 
 #ifndef L2HAL_DRIVERS_DDS_AD9835_INCLUDE_L2HAL_AD9835_H_
