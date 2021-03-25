@@ -630,7 +630,7 @@ $EndComp
 Wire Wire Line
 	7075 3725 7025 3725
 Text Notes 8775 3675 0    25   ~ 0
-Peak to peak (out):\n3.50MHz - 1V\n3.65MHz - 0.96V\n18.00MHz - 77mV\n18.25MHz - 77mV
+Peak to peak (out):\n3.50MHz - 0.96V\n3.65MHz - 0.96V\n18.00MHz - 77mV\n18.25MHz - 77mV
 $Comp
 L power:GND #PWR025
 U 1 1 5FE68D69
@@ -1248,7 +1248,7 @@ $EndComp
 Wire Wire Line
 	15075 3925 15075 3875
 Text Notes 15400 3775 0    50   ~ 0
-To ADC
+To ADC - PA3
 $Comp
 L Diode:1N47xxA D2
 U 1 1 5FF4FFB1
@@ -3569,9 +3569,9 @@ $EndComp
 Text Notes 18875 7200 0    50   ~ 0
 To 144MHz 50 Ohm antenna
 Text Notes 16775 6975 0    25   ~ 0
-8T\nD7\nd1.0
+8T\nD7\nd0.5
 Text Notes 18025 7450 0    25   ~ 0
-3T\nD3\nd1.0
+3T\nD3\nd0.5
 $Comp
 L Device:C C28
 U 1 1 607508C1

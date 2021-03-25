@@ -62,7 +62,7 @@
 #endif
 
 #define MIN_ANTENNA_MATCHING 0
-#define MAX_ANTENNA_MATCHING 31
+#define MAX_ANTENNA_MATCHING 63
 
 typedef enum InputMode
 {

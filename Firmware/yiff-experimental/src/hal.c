@@ -97,7 +97,7 @@ void HalInitAntennaMatching(void)
 
 	GPIO_InitTypeDef GPIO_InitStruct;
 
-	GPIO_InitStruct.Pin = GPIO_PIN_10 | GPIO_PIN_11 | GPIO_PIN_12 | GPIO_PIN_13 | GPIO_PIN_14;
+	GPIO_InitStruct.Pin = GPIO_PIN_9 | GPIO_PIN_10 | GPIO_PIN_11 | GPIO_PIN_12 | GPIO_PIN_13 | GPIO_PIN_14;
 	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
@@ -107,8 +107,8 @@ void HalInitAntennaMatching(void)
 
 void HalSetAntennaMatching(uint8_t matching)
 {
-	uint16_t tmp = ((uint16_t)matching) << 10;
-	GPIOB->ODR = tmp & 0b0111110000000000;
+	uint16_t tmp = ((uint16_t)matching) << 9;
+	GPIOB->ODR = tmp & 0b0111111000000000;
 }
 
 void HalInitManipulator(void)
