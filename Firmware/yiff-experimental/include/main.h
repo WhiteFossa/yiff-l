@@ -44,7 +44,7 @@
 #include <hal.h>
 
 /* 3.5MHz or 144MHz*/
-#define USE_144
+//#define USE_144
 
 /* DDS master clock in KHz*/
 #define Fmclk 50000UL
