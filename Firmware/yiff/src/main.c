@@ -71,7 +71,7 @@ int main(int argc, char* argv[])
 	/* Initializing font */
 	FMGL_API_Font font= FMGL_FontTerminusRegular12Init();
 
-	FMGL_API_XBMTransparencyMode transparencyMode = FMGL_XBMTransparencyModeNormal;
+	FMGL_API_XBMTransparencyMode transparencyMode = FMGL_XBMTransparencyModeTransparentInactive;
 
 	/* Common font settings */
 	commonFont.Font = &font;
@@ -81,6 +81,15 @@ int main(int argc, char* argv[])
 	commonFont.BackgroundColor = &OffColor;
 	commonFont.FontColor = &OnColor;
 	commonFont.Transparency = &transparencyMode;
+
+	/* Inverted common font */
+	invertedCommonFont.Font = &font;
+	invertedCommonFont.Scale = 1;
+	invertedCommonFont.CharactersSpacing = 0;
+	invertedCommonFont.LinesSpacing = 0;
+	invertedCommonFont.BackgroundColor = &OnColor;
+	invertedCommonFont.FontColor = &OffColor;
+	invertedCommonFont.Transparency = &transparencyMode;
 
 	/* Frequency font settings */
 	frequencyFont.Font = &font;
@@ -95,16 +104,6 @@ int main(int argc, char* argv[])
 	FMGL_API_ClearScreen(&fmglContext);
 	FMGL_API_PushFramebuffer(&fmglContext);
 
-	/* Test message */
-	FMGL_API_ClearScreen(&fmglContext);
-	char buffer[32];
-	sprintf(buffer, "Test");
-
-	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, 0, 112, NULL, NULL, false, buffer);
-
-	FMGL_API_PushFramebuffer(&fmglContext);
-
-
 	FoxState.BatteryLevel = 0.8;
 
 	FoxState.CurrentTime.Hours = 13;
@@ -115,12 +114,42 @@ int main(int argc, char* argv[])
 
 	sprintf(FoxState.Name, "Yiffiest Foxy #1");
 
-	FoxState.Frequency.Is144MHz = true;
-	FoxState.Frequency.FrequencyHz = 144000000;
+	FoxState.Frequency.Is144MHz = false;
+	FoxState.Frequency.FrequencyHz = 3500000;
 
 	FoxState.Code = Beacon;
 
+	FoxState.Cycle.IsContinuous = false;
+	FoxState.Cycle.TxTime.Hours = 0;
+	FoxState.Cycle.TxTime.Minutes = 1;
+	FoxState.Cycle.TxTime.Seconds = 0;
+	FoxState.Cycle.PauseTime.Hours = 0;
+	FoxState.Cycle.PauseTime.Minutes = 4;
+	FoxState.Cycle.PauseTime.Seconds = 0;
+
+	FoxState.EndingToneLength = 5;
+
+	FoxState.GlobalState.CurrentState = BeforeFinish;
+	FoxState.GlobalState.StateChangeTime.Hours = 14;
+	FoxState.GlobalState.StateChangeTime.Minutes = 00;
+	FoxState.GlobalState.StateChangeTime.Seconds = 00;
+
+	FoxState.CycleState.CycleState = Pause;
+	FoxState.CycleState.StateChangeTime.Hours = 13;
+	FoxState.CycleState.StateChangeTime.Minutes = 38;
+	FoxState.CycleState.StateChangeTime.Seconds = 00;
+
+	FoxState.Power = 3.0f;
+
 	DrawStatusDisplay(FoxState);
+
+	LeftButton.IsPressed = true;
+	sprintf(LeftButton.Text, "Menu");
+
+	RightButton.IsPressed = false;
+	sprintf(RightButton.Text, "Bt. off");
+
+	DrawButtons();
 
 	while(true)
 	{

@@ -56,6 +56,31 @@
 #define YHL_CODE_LINE2_TOP 34
 
 /**
+ * Cycle
+ */
+#define YHL_CYCLE_LEFT 0
+#define YHL_CYCLE_TOP 46
+
+/**
+ * Cycle state
+ */
+#define YHL_CYCLE_STATE_LEFT 0
+#define YHL_CYCLE_STATE_TOP 70
+
+
+/**
+ * Global state
+ */
+#define YHL_GLOBAL_STATE_LEFT 0
+#define YHL_GLOBAL_STATE_TOP 82
+
+/**
+ * Fox power
+ */
+#define YHL_POWER_LEFT 0
+#define YHL_POWER_TOP 94
+
+/**
  * Draw complete status display.
  */
 void DrawStatusDisplay(FoxStateStruct foxState);
@@ -91,5 +116,30 @@ uint16_t DrawFoxFrequency(FoxFrequencyStruct frequency);
  * availableWidth - width, available for code text.
  */
 void DrawFoxCode(FoxCodeEnum code, uint16_t availableWidth);
+
+/**
+ * Draw fox cycle.
+ */
+void DrawFoxCycle(FoxCycleStruct cycle);
+
+/**
+ * Draw ending tone length.
+ */
+void DrawEndingTone(uint8_t endingToneLength, FoxCycleStruct cycle);
+
+/**
+ * Draw fox cycle state.
+ */
+void DrawFoxCycleState(CycleStateStruct cycleState, Time currentTime, FoxCycleStruct cycle, GlobalFoxStateStruct globalState);
+
+/**
+ * Display global fox state.
+ */
+void DrawGlobalState(GlobalFoxStateStruct globalState, Time currentTime);
+
+/**
+ * Draw fox power.
+ */
+void DrawFoxPower(float power, FoxFrequencyStruct frequency);
 
 #endif /* INCLUDE_STATUSDISPLAY_H_ */

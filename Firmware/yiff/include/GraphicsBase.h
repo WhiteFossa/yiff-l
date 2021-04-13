@@ -22,6 +22,11 @@ FMGL_API_DriverContext fmglContext;
 FMGL_API_FontSettings commonFont;
 
 /**
+ * Inverted common font.
+ */
+FMGL_API_FontSettings invertedCommonFont;
+
+/**
  * Big font for displaying frequency.
  */
 FMGL_API_FontSettings frequencyFont;

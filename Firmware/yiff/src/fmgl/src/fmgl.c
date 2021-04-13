@@ -278,7 +278,13 @@ void FMGL_API_DrawRectangle(FMGL_API_DriverContext* context, uint16_t x1, uint16
 	}
 }
 
-void FMGL_API_DrawRectangleFilled(FMGL_API_DriverContext* context, uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, FMGL_API_ColorStruct borderColor, FMGL_API_ColorStruct fillColor)
+void FMGL_API_DrawRectangleFilled(FMGL_API_DriverContext* context,
+		uint16_t x1,
+		uint16_t y1,
+		uint16_t x2,
+		uint16_t y2,
+		FMGL_API_ColorStruct borderColor,
+		FMGL_API_ColorStruct fillColor)
 {
 	FMGL_API_ColorStruct activeColor = FMGL_API_GetActiveColor(context);
 

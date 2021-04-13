@@ -447,10 +447,12 @@ void L2HAL_SSD1327_DrawPixel(L2HAL_SSD1327_ContextStruct* context, uint16_t x, u
 
 	if (isMostSignificantNibble)
 	{
+		context->Framebuffer[index] &= 0x0FU;
 		context->Framebuffer[index] |= (context->ActiveColor & 0x0FU) << 4;
 	}
 	else
 	{
+		context->Framebuffer[index] &= 0xF0U;
 		context->Framebuffer[index] |= (context->ActiveColor & 0x0FU);
 	}
 }

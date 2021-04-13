@@ -24,12 +24,19 @@ void DrawStatusDisplay(FoxStateStruct foxState)
 	DrawFoxCode(foxState.Code, FMGL_API_GetDisplayWidth(&fmglContext) - frequencyTextWidth);
 
 	/* 4rd line */
-	char buffer[32];
-	sprintf(buffer, "Cycle: 01:00/05:00");
-	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, 0, 46, NULL, NULL, false, buffer);
+	DrawFoxCycle(foxState.Cycle);
 
-	sprintf(buffer, "01:33:37 till start");
-	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, 0, 58, NULL, NULL, false, buffer);
+	/* 5th line */
+	DrawEndingTone(foxState.EndingToneLength, foxState.Cycle);
+
+	/* 6th line */
+	DrawFoxCycleState(foxState.CycleState, foxState.CurrentTime, foxState.Cycle, foxState.GlobalState);
+
+	/* 7th line */
+	DrawGlobalState(foxState.GlobalState, foxState.CurrentTime);
+
+	/* 8th line */
+	DrawFoxPower(foxState.Power, foxState.Frequency);
 
 	FMGL_API_PushFramebuffer(&fmglContext);
 }
@@ -69,7 +76,7 @@ void DrawBattery(float level)
 void DrawCurrentTime(Time time)
 {
 	char buffer[16];
-	sprintf(buffer, "%02d:%02d:%02d", time.Hours, time.Minutes, time.Seconds);
+	TimeToHMS(time, buffer);
 	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, 66, 1, NULL, NULL, false, buffer);
 }
 
@@ -173,4 +180,137 @@ void DrawFoxCode(FoxCodeEnum code, uint16_t availableWidth)
 
 	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, lastPixel - (numberWidth + numberSpacing), YHL_CODE_LINE1_TOP, NULL, NULL, false, number);
 	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, lastPixel - (codeWidth + codeSpacing), YHL_CODE_LINE2_TOP, NULL, NULL, false, codeTxt);
+}
+
+void DrawFoxCycle(FoxCycleStruct cycle)
+{
+	char buffer[32];
+	char cycleTimeTxt[16];
+
+	if (cycle.IsContinuous)
+	{
+		sprintf(cycleTimeTxt, "continuous");
+	}
+	else
+	{
+		char TxTimeTxt[8];
+		char PauseTimeTxt[8];
+		TimeToMS(cycle.TxTime, TxTimeTxt);
+		TimeToMS(cycle.PauseTime, PauseTimeTxt);
+
+		sprintf(cycleTimeTxt, "%s/%s", TxTimeTxt, PauseTimeTxt);
+	}
+
+	sprintf(buffer, "Cycle: %s", cycleTimeTxt);
+	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, YHL_CYCLE_LEFT, YHL_CYCLE_TOP, NULL, NULL, false, buffer);
+}
+
+void DrawEndingTone(uint8_t endingToneLength, FoxCycleStruct cycle)
+{
+	char buffer[32];
+
+	if (cycle.IsContinuous)
+	{
+		sprintf(buffer, "Ending tone: N/A");
+		FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, 0, 58, NULL, NULL, false, buffer);
+		return;
+	}
+
+	sprintf(buffer, "Ending tone: %ds", endingToneLength);
+	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, 0, 58, NULL, NULL, false, buffer);
+}
+
+void DrawFoxCycleState(CycleStateStruct cycleState, Time currentTime, FoxCycleStruct cycle, GlobalFoxStateStruct globalState)
+{
+	if (BeforeFinish != globalState.CurrentState)
+	{
+		char buffer[32];
+		sprintf(buffer, "Waiting for start");
+		FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, YHL_CYCLE_STATE_LEFT, YHL_CYCLE_STATE_TOP, NULL, NULL, false, buffer);
+		return;
+	}
+
+	if (true == cycle.IsContinuous)
+	{
+		char buffer[32];
+		sprintf(buffer, "N/A: Continuous cycle");
+		FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, YHL_CYCLE_STATE_LEFT, YHL_CYCLE_STATE_TOP, NULL, NULL, false, buffer);
+		return;
+	}
+
+	uint32_t secondsTillAction = SecondsSinceDayBegin(cycleState.StateChangeTime) - SecondsSinceDayBegin(currentTime);
+	Time timeTillAction = TimeSinceDayBegin(secondsTillAction);
+
+	char timeBuffer[16];
+	TimeToHMS(timeTillAction, timeBuffer);
+
+	char actionBuffer[16];
+	switch(cycleState.CycleState)
+	{
+		case Tx:
+			sprintf(actionBuffer, "pause");
+		break;
+		case Pause:
+			sprintf(actionBuffer, "TX");
+		break;
+		default:
+			L2HAL_Error(Generic);
+		break;
+	}
+
+	char buffer[32];
+	sprintf(buffer, "%s till %s", timeBuffer, actionBuffer);
+
+	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, YHL_CYCLE_STATE_LEFT, YHL_CYCLE_STATE_TOP, NULL, NULL, false, buffer);
+}
+
+void DrawGlobalState(GlobalFoxStateStruct globalState, Time currentTime)
+{
+	if (Standby == globalState.CurrentState)
+	{
+		char buffer[32];
+		sprintf(buffer, "Standing by");
+		FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, YHL_GLOBAL_STATE_LEFT, YHL_GLOBAL_STATE_TOP, NULL, NULL, false, buffer);
+		return;
+	}
+
+	uint32_t secondsTillAction = SecondsSinceDayBegin(globalState.StateChangeTime) - SecondsSinceDayBegin(currentTime);
+	Time timeTillAction = TimeSinceDayBegin(secondsTillAction);
+
+	char timeBuffer[16];
+	TimeToHMS(timeTillAction, timeBuffer);
+
+	char actionBuffer[16];
+	switch(globalState.CurrentState)
+	{
+		case BeforeStart:
+			sprintf(actionBuffer, "start");
+		break;
+		case BeforeFinish:
+			sprintf(actionBuffer, "finish");
+		break;
+		default:
+			L2HAL_Error(Generic);
+		break;
+	}
+
+	char buffer[32];
+	sprintf(buffer, "%s till %s", timeBuffer, actionBuffer);
+
+	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, YHL_GLOBAL_STATE_LEFT, YHL_GLOBAL_STATE_TOP, NULL, NULL, false, buffer);
+}
+
+void DrawFoxPower(float power, FoxFrequencyStruct frequency)
+{
+	if (frequency.Is144MHz)
+	{
+		char buffer[32];
+		sprintf(buffer, "Power: N/A");
+		FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, YHL_POWER_LEFT, YHL_POWER_TOP, NULL, NULL, false, buffer);
+		return;
+	}
+
+	char buffer[32];
+	sprintf(buffer, "Power: %.2fW", power);
+	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, YHL_POWER_LEFT, YHL_POWER_TOP, NULL, NULL, false, buffer);
 }
