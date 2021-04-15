@@ -49,6 +49,8 @@ int main(int argc, char* argv[])
 	/* Setting up hardware */
 	L2HAL_Init();
 
+	InitRTC();
+
 	HAL_Delay(100);
 
 	/* Detecting display */
@@ -141,18 +143,15 @@ int main(int argc, char* argv[])
 
 	FoxState.Power = 3.0f;
 
-	DrawStatusDisplay(FoxState);
-
 	LeftButton.IsPressed = true;
 	sprintf(LeftButton.Text, "Menu");
 
 	RightButton.IsPressed = false;
 	sprintf(RightButton.Text, "Bt. off");
 
-	DrawButtons();
-
 	while(true)
 	{
+		RTC_Poll(&NewSecondCallback);
 	}
 
 	return 0;

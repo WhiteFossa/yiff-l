@@ -5,7 +5,7 @@
  *      Author: fossa
  */
 
-#include <Time.h>
+#include <main.h>
 
 void TimeToHMS(Time time, char* result)
 {
@@ -42,4 +42,13 @@ Time TimeSinceDayBegin(uint32_t seconds)
 	result.Seconds = seconds;
 
 	return result;
+}
+
+void NewSecondCallback()
+{
+	FoxState.CurrentTime.Hours = CurrentTime.Hours;
+	FoxState.CurrentTime.Minutes = CurrentTime.Minutes;
+	FoxState.CurrentTime.Seconds = CurrentTime.Seconds;
+
+	DrawStatusDisplay(FoxState);
 }

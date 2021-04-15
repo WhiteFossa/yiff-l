@@ -9,6 +9,9 @@
 
 void DrawStatusDisplay(FoxStateStruct foxState)
 {
+	/* Clear display */
+	FMGL_API_ClearScreen(&fmglContext);
+
 	FMGL_API_SetActiveColor(&fmglContext, OnColor);
 
 	/* 1st line */
@@ -37,6 +40,9 @@ void DrawStatusDisplay(FoxStateStruct foxState)
 
 	/* 8th line */
 	DrawFoxPower(foxState.Power, foxState.Frequency);
+
+	/* Buttons */
+	DrawButtons();
 
 	FMGL_API_PushFramebuffer(&fmglContext);
 }

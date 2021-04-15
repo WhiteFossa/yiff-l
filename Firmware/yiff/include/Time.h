@@ -38,4 +38,9 @@ uint32_t SecondsSinceDayBegin(Time time);
  */
 Time TimeSinceDayBegin(uint32_t seconds);
 
+/**
+ * Call this function on each new second.
+ */
+void NewSecondCallback();
+
 #endif /* INCLUDE_TIME_H_ */
