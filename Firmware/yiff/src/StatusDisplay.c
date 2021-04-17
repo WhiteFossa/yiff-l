@@ -9,12 +9,9 @@
 
 void DrawStatusDisplay(FoxStateStruct foxState)
 {
-	/* Clear display */
-//	FMGL_API_ClearScreen(&fmglContext);
-
 	FMGL_API_SetActiveColor(&fmglContext, OnColor);
 
-	uint16_t rightmostPixel = FMGL_API_GetDisplayWidth(&fmglContext) - 1;
+	uint16_t rightmostPixel = FMGL_API_GetDisplayWidth(&fmglContext) - 1U;
 
 	/* 1st line */
 	DrawBattery(foxState.BatteryLevel);
@@ -27,7 +24,7 @@ void DrawStatusDisplay(FoxStateStruct foxState)
 	/* 3rd line */
 	FMGL_API_DrawRectangleFilled(&fmglContext, 0, YHL_3RD_LINE_CLEAR_TOP, rightmostPixel, YHL_3RD_LINE_CLEAR_BOTTOM, OffColor, OffColor);
 	uint16_t frequencyTextWidth = DrawFoxFrequency(foxState.Frequency);
-	DrawFoxCode(foxState.Code, FMGL_API_GetDisplayWidth(&fmglContext) - frequencyTextWidth);
+	DrawFoxCode(foxState.Code, foxState.IsFast, FMGL_API_GetDisplayWidth(&fmglContext) - frequencyTextWidth);
 
 	/* 4rd line */
 	DrawFoxCycle(foxState.Cycle);
@@ -147,7 +144,7 @@ uint16_t DrawFoxFrequency(FoxFrequencyStruct frequency)
 }
 
 
-void DrawFoxCode(FoxCodeEnum code, uint16_t availableWidth)
+void DrawFoxCode(FoxCodeEnum code, bool isFast, uint16_t availableWidth)
 {
 	char number[16];
 	char codeTxt[16];
@@ -186,6 +183,19 @@ void DrawFoxCode(FoxCodeEnum code, uint16_t availableWidth)
 			L2HAL_Error(Generic);
 		break;
 	}
+
+	/* Adding fox speed */
+	char speed[8];
+	if (isFast)
+	{
+		sprintf(speed, "F");
+	}
+	else
+	{
+		sprintf(speed, "S");
+	}
+
+	sprintf(codeTxt, "%s:%s", codeTxt, speed);
 
 	/* Dry runs*/
 	uint16_t numberWidth;

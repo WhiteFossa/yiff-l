@@ -120,7 +120,8 @@ int main(int argc, char* argv[])
 	FoxState.Frequency.Is144MHz = false;
 	FoxState.Frequency.FrequencyHz = 3500000;
 
-	FoxState.Code = Beacon;
+	FoxState.Code = F1;
+	FoxState.IsFast = false;
 
 	FoxState.Cycle.IsContinuous = false;
 	FoxState.Cycle.TxTime.Hours = 0;

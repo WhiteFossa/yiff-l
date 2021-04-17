@@ -140,7 +140,7 @@ uint16_t DrawFoxFrequency(FoxFrequencyStruct frequency);
  * Draw fox code (two lines).
  * availableWidth - width, available for code text.
  */
-void DrawFoxCode(FoxCodeEnum code, uint16_t availableWidth);
+void DrawFoxCode(FoxCodeEnum code, bool isFast, uint16_t availableWidth);
 
 /**
  * Draw fox cycle.

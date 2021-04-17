@@ -76,18 +76,23 @@ int8_t CompareTimes(Time time1, Time time2)
 
 	if (seconds1 == seconds2)
 	{
-		return 0;
+		return TIMES_EQUAL;
 	}
 
 	if (seconds1 < seconds2)
 	{
-		return 1;
+		return TIME1_LESS;
 	}
 
-	return -1;
+	return TIME2_LESS;
 }
 
 Time AddTimes(Time time1, Time time2)
 {
 	return TimeSinceDayBegin(SecondsSinceDayBegin(time1) + SecondsSinceDayBegin(time2));
+}
+
+Time SubstractSeconds(Time time, uint32_t seconds)
+{
+	return TimeSinceDayBegin(SecondsSinceDayBegin(time) - seconds);
 }

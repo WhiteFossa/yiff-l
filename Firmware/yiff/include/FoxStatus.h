@@ -133,6 +133,11 @@ typedef struct
 	 * When state will be changed to the next one.
 	 */
 	Time StateChangeTime;
+
+	/**
+	 * True, if ending tone is being transmitted currently.
+	 */
+	bool IsEndingTone;
 }
 CycleStateStruct;
 
@@ -170,6 +175,11 @@ typedef struct
 	 * Fox code.
 	 */
 	FoxCodeEnum Code;
+
+	/**
+	 * Is fast fox?
+	 */
+	bool IsFast;
 
 	/**
 	 * Fox cycle settings.

@@ -46,7 +46,7 @@ void GSM_Tick()
 
 		case BeforeStart:
 
-			if (0 == comparisonResult)
+			if (TIMES_EQUAL == comparisonResult)
 			{
 				/* Starting */
 				FoxState.GlobalState.CurrentState = BeforeFinish;
@@ -59,7 +59,7 @@ void GSM_Tick()
 			break;
 
 		case BeforeFinish:
-			if (0 == comparisonResult)
+			if (TIMES_EQUAL == comparisonResult)
 			{
 				/* Finishing */
 				FoxState.GlobalState.CurrentState = Standby;

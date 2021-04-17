@@ -13,6 +13,9 @@ void CSM_Start()
 
 	FoxState.CycleState.CycleState = Tx;
 	FoxState.CycleState.StateChangeTime = AddTimes(currentTime, FoxState.Cycle.TxTime);
+
+	CSM_CalculateEndingToneStartTime();
+	FoxState.CycleState.IsEndingTone = false;
 }
 
 void CSM_Tick()
@@ -33,22 +36,49 @@ void CSM_Tick()
 	switch(FoxState.CycleState.CycleState)
 	{
 		case Tx:
-			if (comparisonResult == 0)
+			if (TIMES_EQUAL == comparisonResult)
 			{
 				FoxState.CycleState.CycleState = Pause;
 				FoxState.CycleState.StateChangeTime = AddTimes(currentTime, FoxState.Cycle.PauseTime);
 			}
+			else
+			{
+				if (TIME2_LESS == CompareTimes(currentTime, EndingToneStartTime))
+				{
+					/* Ending tone on */
+					FoxState.CycleState.IsEndingTone = true;
+				}
+			}
 			break;
 
 		case Pause:
-			if (comparisonResult == 0)
+			if (TIMES_EQUAL == comparisonResult)
 			{
 				FoxState.CycleState.CycleState = Tx;
 				FoxState.CycleState.StateChangeTime = AddTimes(currentTime, FoxState.Cycle.TxTime);
+
+				CSM_CalculateEndingToneStartTime();
+				FoxState.CycleState.IsEndingTone = false;
 			}
 			break;
 
 		default:
 			L2HAL_Error(Generic);
 	}
+
+}
+
+void CSM_CalculateEndingToneStartTime()
+{
+	if (FoxState.Cycle.IsContinuous)
+	{
+		return;
+	}
+
+	if (FoxState.CycleState.CycleState != Tx)
+	{
+		return;
+	}
+
+	EndingToneStartTime = SubstractSeconds(FoxState.CycleState.StateChangeTime, FoxState.EndingToneLength);
 }

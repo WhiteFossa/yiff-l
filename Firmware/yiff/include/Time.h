@@ -50,15 +50,20 @@ Time ToTime(RTC_TimeTypeDef rtcTime);
 
 /**
  * Compare two times.
- * -1 if time2 less than time1
- * 0 if time1 is equal to time2
- * 1 if time1 less than time2
  */
+#define TIME1_LESS 1
+#define TIMES_EQUAL 0
+#define TIME2_LESS -1
 int8_t CompareTimes(Time time1, Time time2);
 
 /**
  * Adds two times.
  */
 Time AddTimes(Time time1, Time time2);
+
+/**
+ * Substracts given amount of seconds from time.
+ */
+Time SubstractSeconds(Time time, uint32_t seconds);
 
 #endif /* INCLUDE_TIME_H_ */
