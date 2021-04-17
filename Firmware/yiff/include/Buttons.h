@@ -41,7 +41,7 @@ FoxButtonStruct RightButton;
 
 
 /**
- * Draw buttons
+ * Draw buttons (does not flush framebuffer, flush it yourself)
  */
 void DrawButtons();
 

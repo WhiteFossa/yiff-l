@@ -11,36 +11,30 @@ void DrawButtons()
 {
 	DrawButton(LeftButton, 0, 110, 59, 17);
 	DrawButton(RightButton, 68, 110, 59, 17);
-
-	FMGL_API_PushFramebuffer(&fmglContext);
 }
 
 void DrawButton(FoxButtonStruct button, uint16_t x, uint16_t y, uint16_t width, uint16_t height)
 {
 	FMGL_API_FontSettings font;
+	FMGL_API_ColorStruct fillColor;
 	if (button.IsPressed)
 	{
 		font = invertedCommonFont;
-		FMGL_API_DrawRectangleFilled(&fmglContext,
-			x,
-			y,
-			x + width,
-			y + height,
-			OnColor,
-			OnColor);
+		fillColor = OnColor;
 	}
 	else
 	{
 		font = commonFont;
-		FMGL_API_SetActiveColor(&fmglContext, OnColor);
-		FMGL_API_DrawRectangle(&fmglContext,
-			x,
-			y,
-			x + width,
-			y + height);
+		fillColor = OffColor;
 	}
 
-	FMGL_API_PushFramebuffer(&fmglContext);
+	FMGL_API_DrawRectangleFilled(&fmglContext,
+				x,
+				y,
+				x + width,
+				y + height,
+				OnColor,
+				fillColor);
 
 	/* Text dry run */
 	uint16_t textWidth, textHeight;

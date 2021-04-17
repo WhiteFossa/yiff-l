@@ -10,9 +10,11 @@
 void DrawStatusDisplay(FoxStateStruct foxState)
 {
 	/* Clear display */
-	FMGL_API_ClearScreen(&fmglContext);
+//	FMGL_API_ClearScreen(&fmglContext);
 
 	FMGL_API_SetActiveColor(&fmglContext, OnColor);
+
+	uint16_t rightmostPixel = FMGL_API_GetDisplayWidth(&fmglContext) - 1;
 
 	/* 1st line */
 	DrawBattery(foxState.BatteryLevel);
@@ -23,6 +25,7 @@ void DrawStatusDisplay(FoxStateStruct foxState)
 	DrawFoxName(foxState.Name);
 
 	/* 3rd line */
+	FMGL_API_DrawRectangleFilled(&fmglContext, 0, YHL_3RD_LINE_CLEAR_TOP, rightmostPixel, YHL_3RD_LINE_CLEAR_BOTTOM, OffColor, OffColor);
 	uint16_t frequencyTextWidth = DrawFoxFrequency(foxState.Frequency);
 	DrawFoxCode(foxState.Code, FMGL_API_GetDisplayWidth(&fmglContext) - frequencyTextWidth);
 
@@ -49,6 +52,14 @@ void DrawStatusDisplay(FoxStateStruct foxState)
 
 void DrawBattery(float level)
 {
+	FMGL_API_DrawRectangleFilled(&fmglContext,
+			YHL_BATTERY_LEFT,
+			YHL_BATTERY_TOP,
+			YHL_BATTERY_LEFT + YHL_BATTERY_CONTACT_WIDTH + YHL_BATTERY_MAIN_PART_WIDTH,
+			YHL_BATTERY_TOP + YHL_BATTERY_MAIN_PART_HEIGHT,
+			OffColor,
+			OffColor);
+
 	/* Outer rectangle*/
 	FMGL_API_DrawRectangle(&fmglContext,
 			YHL_BATTERY_LEFT + YHL_BATTERY_CONTACT_WIDTH,
@@ -81,9 +92,10 @@ void DrawBattery(float level)
 
 void DrawCurrentTime(Time time)
 {
+	FMGL_API_DrawRectangleFilled(&fmglContext, YHL_TIME_LEFT, YHL_TIME_TOP, YHL_TIME_CLEAR_RIGHT, YHL_TIME_CLEAR_BOTTOM, OffColor, OffColor);
 	char buffer[16];
 	TimeToHMS(time, buffer);
-	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, 66, 1, NULL, NULL, false, buffer);
+	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, YHL_TIME_LEFT, YHL_TIME_TOP, NULL, NULL, false, buffer);
 }
 
 void DrawTXStatus(bool isTXOn)
@@ -106,6 +118,8 @@ void DrawTXStatus(bool isTXOn)
 
 void DrawFoxName(char* name)
 {
+	FMGL_API_DrawRectangleFilled(&fmglContext, 0, YHL_FOX_NAME_CLEAR_TOP, FMGL_API_GetDisplayWidth(&fmglContext) - 1, YHL_FOX_NAME_CLEAR_BOTTOM, OffColor, OffColor);
+
 	uint16_t width;
 	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, 0, 0, &width, NULL, true, name);
 
@@ -190,6 +204,8 @@ void DrawFoxCode(FoxCodeEnum code, uint16_t availableWidth)
 
 void DrawFoxCycle(FoxCycleStruct cycle)
 {
+	FMGL_API_DrawRectangleFilled(&fmglContext, 0, YHL_CYCLE_CLEAR_TOP, FMGL_API_GetDisplayWidth(&fmglContext) - 1, YHL_CYCLE_CLEAR_BOTTOM, OffColor, OffColor);
+
 	char buffer[32];
 	char cycleTimeTxt[16];
 
@@ -213,21 +229,24 @@ void DrawFoxCycle(FoxCycleStruct cycle)
 
 void DrawEndingTone(uint8_t endingToneLength, FoxCycleStruct cycle)
 {
+	FMGL_API_DrawRectangleFilled(&fmglContext, 0, YHL_ENDING_TONE_CLEAR_TOP, FMGL_API_GetDisplayWidth(&fmglContext) - 1, YHL_ENDING_TONE_CLEAR_BOTTOM, OffColor, OffColor);
 	char buffer[32];
 
 	if (cycle.IsContinuous)
 	{
 		sprintf(buffer, "Ending tone: N/A");
-		FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, 0, 58, NULL, NULL, false, buffer);
+		FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, YHL_ENDING_TONE_LEFT, YHL_ENDING_TONE_TOP, NULL, NULL, false, buffer);
 		return;
 	}
 
 	sprintf(buffer, "Ending tone: %ds", endingToneLength);
-	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, 0, 58, NULL, NULL, false, buffer);
+	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, YHL_ENDING_TONE_LEFT, YHL_ENDING_TONE_TOP, NULL, NULL, false, buffer);
 }
 
 void DrawFoxCycleState(CycleStateStruct cycleState, Time currentTime, FoxCycleStruct cycle, GlobalFoxStateStruct globalState)
 {
+	FMGL_API_DrawRectangleFilled(&fmglContext, 0, YHL_CYCLE_STATE_CLEAR_TOP, FMGL_API_GetDisplayWidth(&fmglContext) - 1, YHL_CYCLE_STATE_CLEAR_BOTTOM, OffColor, OffColor);
+
 	if (BeforeFinish != globalState.CurrentState)
 	{
 		char buffer[32];
@@ -272,6 +291,8 @@ void DrawFoxCycleState(CycleStateStruct cycleState, Time currentTime, FoxCycleSt
 
 void DrawGlobalState(GlobalFoxStateStruct globalState, Time currentTime)
 {
+	FMGL_API_DrawRectangleFilled(&fmglContext, 0, YHL_GLOBAL_STATE_CLEAR_TOP, FMGL_API_GetDisplayWidth(&fmglContext) - 1, YHL_GLOBAL_STATE_CLEAR_BOTTOM, OffColor, OffColor);
+
 	if (Standby == globalState.CurrentState)
 	{
 		char buffer[32];
@@ -308,6 +329,8 @@ void DrawGlobalState(GlobalFoxStateStruct globalState, Time currentTime)
 
 void DrawFoxPower(float power, FoxFrequencyStruct frequency)
 {
+	FMGL_API_DrawRectangleFilled(&fmglContext, 0, YHL_POWER_CLEAR_TOP, FMGL_API_GetDisplayWidth(&fmglContext) - 1, YHL_POWER_CLEAR_BOTTOM, OffColor, OffColor);
+
 	if (frequency.Is144MHz)
 	{
 		char buffer[32];
@@ -317,6 +340,6 @@ void DrawFoxPower(float power, FoxFrequencyStruct frequency)
 	}
 
 	char buffer[32];
-	sprintf(buffer, "Power: %.2fW", power);
+	sprintf(buffer, "Power: %.1fW", power);
 	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, YHL_POWER_LEFT, YHL_POWER_TOP, NULL, NULL, false, buffer);
 }

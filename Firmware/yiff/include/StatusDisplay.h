@@ -28,6 +28,8 @@
 /**
  * Time position and sizes
  */
+#define YHL_TIME_CLEAR_RIGHT 115
+#define YHL_TIME_CLEAR_BOTTOM 11
 #define YHL_TIME_LEFT 66
 #define YHL_TIME_TOP 1
 
@@ -41,7 +43,15 @@
 /**
  * Fox name.
  */
+#define YHL_FOX_NAME_CLEAR_TOP 12
+#define YHL_FOX_NAME_CLEAR_BOTTOM 25
 #define YHL_FOX_NAME_TOP 13
+
+/**
+ * 3rd line clear params
+ */
+#define YHL_3RD_LINE_CLEAR_TOP 25
+#define YHL_3RD_LINE_CLEAR_BOTTOM 44
 
 /**
  * Frequency
@@ -58,25 +68,40 @@
 /**
  * Cycle
  */
+#define YHL_CYCLE_CLEAR_TOP 45
+#define YHL_CYCLE_CLEAR_BOTTOM 58
 #define YHL_CYCLE_LEFT 0
 #define YHL_CYCLE_TOP 46
 
 /**
+ * Ending tone
+ */
+#define YHL_ENDING_TONE_CLEAR_TOP 59
+#define YHL_ENDING_TONE_CLEAR_BOTTOM 70
+#define YHL_ENDING_TONE_LEFT 0
+#define YHL_ENDING_TONE_TOP 58
+
+/**
  * Cycle state
  */
+#define YHL_CYCLE_STATE_CLEAR_TOP 71
+#define YHL_CYCLE_STATE_CLEAR_BOTTOM 82
 #define YHL_CYCLE_STATE_LEFT 0
 #define YHL_CYCLE_STATE_TOP 70
-
 
 /**
  * Global state
  */
+#define YHL_GLOBAL_STATE_CLEAR_TOP 83
+#define YHL_GLOBAL_STATE_CLEAR_BOTTOM 94
 #define YHL_GLOBAL_STATE_LEFT 0
 #define YHL_GLOBAL_STATE_TOP 82
 
 /**
  * Fox power
  */
+#define YHL_POWER_CLEAR_TOP 95
+#define YHL_POWER_CLEAR_BOTTOM 107
 #define YHL_POWER_LEFT 0
 #define YHL_POWER_TOP 94
 
