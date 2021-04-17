@@ -71,6 +71,10 @@ void InitRTC()
 	}
 
 	PreviousSecond = 0U;
+
+	/* We have no listeners initially */
+	RtcListenersCount = 0;
+	RtcListeners = malloc(0);
 }
 
 void RTC_Poll(void (*callbackPtr)())
@@ -87,6 +91,26 @@ void RTC_Poll(void (*callbackPtr)())
 			L2HAL_Error(Generic);
 		}
 
-		callbackPtr();
+		/* Calling listeners */
+		for (uint8_t i = 0; i < RtcListenersCount; i++)
+		{
+			RtcListeners[i]();
+		}
 	}
+
+	PreviousSecond = CurrentTime.Seconds;
+}
+
+void RTC_AddListener(void (*listener)())
+{
+	if (255 == RtcListenersCount)
+	{
+		/* No more, please */
+		L2HAL_Error(Generic);
+	}
+
+	RtcListenersCount ++;
+	RtcListeners = realloc(RtcListeners, RtcListenersCount * sizeof(void*));
+
+	RtcListeners[RtcListenersCount - 1] = listener;
 }

@@ -46,9 +46,48 @@ Time TimeSinceDayBegin(uint32_t seconds)
 
 void NewSecondCallback()
 {
+	/* Global state machine */
+	GSM_Tick();
+
+	/* Cycle state machine */
+	CSM_Tick();
+
 	FoxState.CurrentTime.Hours = CurrentTime.Hours;
 	FoxState.CurrentTime.Minutes = CurrentTime.Minutes;
 	FoxState.CurrentTime.Seconds = CurrentTime.Seconds;
 
 	DrawStatusDisplay(FoxState);
+}
+
+Time ToTime(RTC_TimeTypeDef rtcTime)
+{
+	Time time;
+	time.Hours = rtcTime.Hours;
+	time.Minutes = rtcTime.Minutes;
+	time.Seconds = rtcTime.Seconds;
+
+	return time;
+}
+
+int8_t CompareTimes(Time time1, Time time2)
+{
+	int32_t seconds1 = SecondsSinceDayBegin(time1);
+	int32_t seconds2 = SecondsSinceDayBegin(time2);
+
+	if (seconds1 == seconds2)
+	{
+		return 0;
+	}
+
+	if (seconds1 < seconds2)
+	{
+		return 1;
+	}
+
+	return -1;
+}
+
+Time AddTimes(Time time1, Time time2)
+{
+	return TimeSinceDayBegin(SecondsSinceDayBegin(time1) + SecondsSinceDayBegin(time2));
 }

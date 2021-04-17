@@ -41,6 +41,8 @@
 #include <StatusDisplay.h>
 #include <Buttons.h>
 #include <RTC.h>
+#include <GlobalStateMachine.h>
+#include <CycleStateMachine.h>
 
 
 

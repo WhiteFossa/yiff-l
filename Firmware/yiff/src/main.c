@@ -106,6 +106,7 @@ int main(int argc, char* argv[])
 	FMGL_API_ClearScreen(&fmglContext);
 	FMGL_API_PushFramebuffer(&fmglContext);
 
+	/* Initial fox state*/
 	FoxState.BatteryLevel = 0.8;
 
 	FoxState.CurrentTime.Hours = 13;
@@ -131,8 +132,8 @@ int main(int argc, char* argv[])
 
 	FoxState.EndingToneLength = 5;
 
-	FoxState.GlobalState.CurrentState = BeforeFinish;
-	FoxState.GlobalState.StateChangeTime.Hours = 14;
+	FoxState.GlobalState.CurrentState = Standby;
+	FoxState.GlobalState.StateChangeTime.Hours = 00;
 	FoxState.GlobalState.StateChangeTime.Minutes = 00;
 	FoxState.GlobalState.StateChangeTime.Seconds = 00;
 
@@ -143,15 +144,33 @@ int main(int argc, char* argv[])
 
 	FoxState.Power = 3.0f;
 
-	LeftButton.IsPressed = true;
+	LeftButton.IsPressed = false;
 	sprintf(LeftButton.Text, "Menu");
 
 	RightButton.IsPressed = false;
 	sprintf(RightButton.Text, "Bt. off");
 
+	/* Adding seconds tick handler */
+	RTC_AddListener(&NewSecondCallback);
+
+	/* Debugging stuff begin */
+
+	Time st, et;
+	st.Hours = 0;
+	st.Minutes = 1;
+	st.Seconds = 0;
+
+	et.Hours = 0;
+	et.Minutes = 10;
+	et.Seconds = 0;
+
+	GSM_Program(st, et);
+
+	/* Debugging stuff end */
+
 	while(true)
 	{
-		RTC_Poll(&NewSecondCallback);
+		RTC_Poll();
 	}
 
 	return 0;

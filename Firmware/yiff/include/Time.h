@@ -43,4 +43,22 @@ Time TimeSinceDayBegin(uint32_t seconds);
  */
 void NewSecondCallback();
 
+/**
+ * Convert RTC time to our time.
+ */
+Time ToTime(RTC_TimeTypeDef rtcTime);
+
+/**
+ * Compare two times.
+ * -1 if time2 less than time1
+ * 0 if time1 is equal to time2
+ * 1 if time1 less than time2
+ */
+int8_t CompareTimes(Time time1, Time time2);
+
+/**
+ * Adds two times.
+ */
+Time AddTimes(Time time1, Time time2);
+
 #endif /* INCLUDE_TIME_H_ */

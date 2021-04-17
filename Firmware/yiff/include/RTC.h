@@ -21,6 +21,16 @@ RTC_HandleTypeDef RtcHandle;
 uint8_t PreviousSecond;
 
 /**
+ * This functions listens for new second event.
+ */
+void (**RtcListeners)();
+
+/**
+ * How many listeners we have.
+ */
+uint8_t RtcListenersCount;
+
+/**
  * Current date and time.
  */
 RTC_TimeTypeDef CurrentTime;
@@ -32,9 +42,13 @@ RTC_DateTypeDef CurrentDate;
 void InitRTC();
 
 /**
- * Call this function as fast as possible, providing callback function pointer to it.
- * Callback will be called when new second arrive.
+ * Call this function as often as possible.
  */
-void RTC_Poll(void (*callbackPtr)());
+void RTC_Poll();
+
+/**
+ * Call this function to add new listener. Listener will be called at the beginning of each new second.
+ */
+void RTC_AddListener(void (*listener)());
 
 #endif /* INCLUDE_RTC_H_ */
