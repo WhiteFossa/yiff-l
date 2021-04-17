@@ -9,6 +9,7 @@
 #define INCLUDE_CYCLESTATEMACHINE_H_
 
 #include <Time.h>
+#include <HardwareLogic.h>
 
 /**
  * Since this moment ending tone must be transmitted.

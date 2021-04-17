@@ -43,6 +43,8 @@
 #include <RTC.h>
 #include <GlobalStateMachine.h>
 #include <CycleStateMachine.h>
+#include <HAL.h>
+#include <HardwareLogic.h>
 
 
 

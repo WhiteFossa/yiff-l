@@ -48,6 +48,7 @@ int main(int argc, char* argv[])
 {
 	/* Setting up hardware */
 	L2HAL_Init();
+	HAL_IntiHardware();
 
 	InitRTC();
 
@@ -113,7 +114,7 @@ int main(int argc, char* argv[])
 	FoxState.CurrentTime.Minutes = 37;
 	FoxState.CurrentTime.Seconds = 30;
 
-	FoxState.IsTXOn = true;
+	FoxState.IsTXOn = false;
 
 	sprintf(FoxState.Name, "Yiffiest Foxy #1");
 
@@ -125,10 +126,10 @@ int main(int argc, char* argv[])
 
 	FoxState.Cycle.IsContinuous = false;
 	FoxState.Cycle.TxTime.Hours = 0;
-	FoxState.Cycle.TxTime.Minutes = 1;
-	FoxState.Cycle.TxTime.Seconds = 0;
+	FoxState.Cycle.TxTime.Minutes = 0;
+	FoxState.Cycle.TxTime.Seconds = 12;
 	FoxState.Cycle.PauseTime.Hours = 0;
-	FoxState.Cycle.PauseTime.Minutes = 4;
+	FoxState.Cycle.PauseTime.Minutes = 1;
 	FoxState.Cycle.PauseTime.Seconds = 0;
 
 	FoxState.EndingToneLength = 5;
@@ -139,8 +140,8 @@ int main(int argc, char* argv[])
 	FoxState.GlobalState.StateChangeTime.Seconds = 00;
 
 	FoxState.CycleState.CycleState = Pause;
-	FoxState.CycleState.StateChangeTime.Hours = 13;
-	FoxState.CycleState.StateChangeTime.Minutes = 38;
+	FoxState.CycleState.StateChangeTime.Hours = 00;
+	FoxState.CycleState.StateChangeTime.Minutes = 00;
 	FoxState.CycleState.StateChangeTime.Seconds = 00;
 
 	FoxState.Power = 3.0f;
@@ -158,8 +159,8 @@ int main(int argc, char* argv[])
 
 	Time st, et;
 	st.Hours = 0;
-	st.Minutes = 1;
-	st.Seconds = 0;
+	st.Minutes = 0;
+	st.Seconds = 10;
 
 	et.Hours = 0;
 	et.Minutes = 10;
