@@ -45,6 +45,7 @@
 #include <CycleStateMachine.h>
 #include <HAL.h>
 #include <HardwareLogic.h>
+#include <MorsePlayer.h>
 
 
 

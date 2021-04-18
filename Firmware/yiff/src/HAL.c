@@ -34,5 +34,4 @@ void HAL_SwitchManipulator(bool isTxOn)
 	}
 
 	FoxState.IsTXOn = isTxOn;
-	DrawStatusDisplay(FoxState);
 }

@@ -22,6 +22,11 @@ Time EndingToneStartTime;
 void CSM_Start();
 
 /**
+ * Stops cycle (needed to terminate transmission)
+ */
+void CSM_Stop();
+
+/**
  * Call it every second
  */
 void CSM_Tick();

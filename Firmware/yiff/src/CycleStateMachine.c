@@ -17,6 +17,14 @@ void CSM_Start()
 	CSM_CalculateEndingToneStartTime();
 	FoxState.CycleState.IsEndingTone = false;
 	ProcessManipulatorFoxStateChange();
+
+	MorsePlayerPlay(MorseGetFoxSequence());
+}
+
+void CSM_Stop()
+{
+	FoxState.CycleState.CycleState = Pause;
+	MorsePlayerStop();
 }
 
 void CSM_Tick()
@@ -43,6 +51,9 @@ void CSM_Tick()
 				FoxState.CycleState.StateChangeTime = AddTimes(currentTime, FoxState.Cycle.PauseTime);
 				FoxState.CycleState.IsEndingTone = false;
 				ProcessManipulatorFoxStateChange();
+
+				/* Stopping transmission */
+				MorsePlayerStop();
 			}
 			else
 			{
@@ -64,6 +75,9 @@ void CSM_Tick()
 				CSM_CalculateEndingToneStartTime();
 				FoxState.CycleState.IsEndingTone = false;
 				ProcessManipulatorFoxStateChange();
+
+				/* Starting transmission */
+				MorsePlayerPlay(MorseGetFoxSequence());
 			}
 			break;
 

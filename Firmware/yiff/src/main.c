@@ -50,7 +50,12 @@ int main(int argc, char* argv[])
 	L2HAL_Init();
 	HAL_IntiHardware();
 
+	/* Starting RTC */
 	InitRTC();
+
+	/* Registering morse player in SysTick handler */
+	MorsePlayerInit();
+	L2HAL_SysTick_RegisterHandler(&MorseTickMs);
 
 	HAL_Delay(100);
 
@@ -110,9 +115,9 @@ int main(int argc, char* argv[])
 	/* Initial fox state*/
 	FoxState.BatteryLevel = 0.8;
 
-	FoxState.CurrentTime.Hours = 13;
-	FoxState.CurrentTime.Minutes = 37;
-	FoxState.CurrentTime.Seconds = 30;
+	FoxState.CurrentTime.Hours = 0;
+	FoxState.CurrentTime.Minutes = 0;
+	FoxState.CurrentTime.Seconds = 0;
 
 	FoxState.IsTXOn = false;
 
@@ -121,15 +126,15 @@ int main(int argc, char* argv[])
 	FoxState.Frequency.Is144MHz = false;
 	FoxState.Frequency.FrequencyHz = 3500000;
 
-	FoxState.Code = F1;
-	FoxState.IsFast = false;
+	FoxState.Code = F5;
+	FoxState.IsFast = true;
 
 	FoxState.Cycle.IsContinuous = false;
 	FoxState.Cycle.TxTime.Hours = 0;
-	FoxState.Cycle.TxTime.Minutes = 0;
-	FoxState.Cycle.TxTime.Seconds = 12;
+	FoxState.Cycle.TxTime.Minutes = 1;
+	FoxState.Cycle.TxTime.Seconds = 0;
 	FoxState.Cycle.PauseTime.Hours = 0;
-	FoxState.Cycle.PauseTime.Minutes = 1;
+	FoxState.Cycle.PauseTime.Minutes = 4;
 	FoxState.Cycle.PauseTime.Seconds = 0;
 
 	FoxState.EndingToneLength = 5;
@@ -167,7 +172,6 @@ int main(int argc, char* argv[])
 	et.Seconds = 0;
 
 	GSM_Program(st, et);
-
 	/* Debugging stuff end */
 
 	while(true)

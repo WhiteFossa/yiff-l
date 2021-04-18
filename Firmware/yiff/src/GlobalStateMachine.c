@@ -63,6 +63,9 @@ void GSM_Tick()
 			{
 				/* Finishing */
 				FoxState.GlobalState.CurrentState = Standby;
+
+				/* Stopping cycle */
+				CSM_Stop();
 			}
 
 			break;

@@ -9,7 +9,7 @@
 
 void ProcessManipulatorFoxStateChange()
 {
-	if (FoxState.CycleState.IsEndingTone)
+	if (FoxState.IsMorseTx || FoxState.CycleState.IsEndingTone)
 	{
 		HAL_SwitchManipulator(true);
 	}

@@ -157,6 +157,11 @@ typedef struct
 	Time CurrentTime;
 
 	/**
+	 * True if transmitter must be on by morse player.
+	 */
+	bool IsMorseTx;
+
+	/**
 	 * True if transmitter is on.
 	 */
 	bool IsTXOn;
