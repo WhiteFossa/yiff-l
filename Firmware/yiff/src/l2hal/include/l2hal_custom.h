@@ -55,9 +55,23 @@
 #define I2C1_EV_IRQN_SUBPRIORITY 2
 
 /**
- * I2C bus handle.
+ * I2C2 interrupt priorities.
  */
-I2C_HandleTypeDef I2CHandle;
+#define I2C2_ER_IRQN_PRIORITY 0
+#define I2C2_ER_IRQN_SUBPRIORITY 1
+
+#define I2C2_EV_IRQN_PRIORITY 0
+#define I2C2_EV_IRQN_SUBPRIORITY 2
+
+/**
+ * I2C bus handle (connected to display).
+ */
+I2C_HandleTypeDef I2C_Display;
+
+/**
+ * I2C bus handle (connected to all other devices).
+ */
+I2C_HandleTypeDef I2C_Other;
 
 /**
  * Display driver context.
@@ -70,7 +84,7 @@ L2HAL_SSD1327_ContextStruct L2HAL_SSD1327_Context;
 void L2HAL_InitCustomHardware(void);
 
 /**
- * Settig up I2C for display.
+ * Settig up both I2C buses
  */
 void L2HAL_SetupI2C(void);
 
@@ -90,6 +104,9 @@ void HAL_I2C_MspDeInit(I2C_HandleTypeDef* hi2c);
 void I2C1_EV_IRQHandler(void);
 void I2C1_ER_IRQHandler(void);
 void HAL_I2C_MemTxCpltCallback(I2C_HandleTypeDef *hi2c);
+
+void I2C2_EV_IRQHandler(void);
+void I2C2_ER_IRQHandler(void);
 
 
 #endif /* L2HAL_INCLUDE_L2HAL_CUSTOM_H_ */

@@ -60,7 +60,7 @@ int main(int argc, char* argv[])
 	HAL_Delay(100);
 
 	/* Detecting display */
-	L2HAL_SSD1327_Context = L2HAL_SSD1327_DetectDisplay(&I2CHandle);
+	L2HAL_SSD1327_Context = L2HAL_SSD1327_DetectDisplay(&I2C_Display);
 	L2HAL_SSD1327_InitDisplay(&L2HAL_SSD1327_Context);
 
 	/* Colors */
@@ -172,6 +172,7 @@ int main(int argc, char* argv[])
 	et.Seconds = 0;
 
 	GSM_Program(st, et);
+
 	/* Debugging stuff end */
 
 	while(true)
