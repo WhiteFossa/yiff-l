@@ -7,7 +7,7 @@
 
 #include <main.h>
 
-void ProcessManipulatorFoxStateChange()
+void ProcessManipulatorFoxStateChange(void)
 {
 	if (FoxState.IsMorseTx || FoxState.CycleState.IsEndingTone)
 	{

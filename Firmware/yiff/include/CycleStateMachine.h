@@ -19,22 +19,22 @@ Time EndingToneStartTime;
 /**
  * Start cycle immediately.
  */
-void CSM_Start();
+void CSM_Start(void);
 
 /**
  * Stops cycle (needed to terminate transmission)
  */
-void CSM_Stop();
+void CSM_Stop(void);
 
 /**
  * Call it every second
  */
-void CSM_Tick();
+void CSM_Tick(void);
 
 /**
  * Calculates ending tone start time if fox in cyclic mode and current cycle state is TX.
  */
-void CSM_CalculateEndingToneStartTime();
+void CSM_CalculateEndingToneStartTime(void);
 
 
 #endif /* INCLUDE_CYCLESTATEMACHINE_H_ */

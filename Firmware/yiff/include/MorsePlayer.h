@@ -133,7 +133,7 @@ uint16_t MorsePlayerCurrentInterval;
 /**
  * Call it before starting to call MorseTickMs()
  */
-void MorsePlayerInit();
+void MorsePlayerInit(void);
 
 /**
  * Play this sequence
@@ -143,7 +143,7 @@ void MorsePlayerPlay(MorseElementEnum* sequenceToPlay);
 /**
  * Stops to play
  */
-void MorsePlayerStop();
+void MorsePlayerStop(void);
 
 /**
  * Call this each millisecond (precisely, from SysTick).
@@ -158,6 +158,6 @@ uint16_t MorseGetInterval(MorseElementEnum element);
 /**
  * Returns fox sequence depending on fox global state
  */
-MorseElementEnum* MorseGetFoxSequence();
+MorseElementEnum* MorseGetFoxSequence(void);
 
 #endif /* INCLUDE_MORSEPLAYER_H_ */

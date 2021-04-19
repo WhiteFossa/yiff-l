@@ -41,7 +41,7 @@ Time TimeSinceDayBegin(uint32_t seconds);
 /**
  * Call this function on each new second.
  */
-void NewSecondCallback();
+void NewSecondCallback(void);
 
 /**
  * Convert RTC time to our time.

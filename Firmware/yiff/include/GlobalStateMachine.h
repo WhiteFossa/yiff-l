@@ -23,12 +23,12 @@ Time GsmEndTime;
 /**
  * Call it every second
  */
-void GSM_Tick();
+void GSM_Tick(void);
 
 /**
  * Cancel current operation and move SM to Standby
  */
-void GSM_Cancel();
+void GSM_Cancel(void);
 
 /**
  * Program fox to start at given time and finish at given time

@@ -43,7 +43,7 @@ FoxButtonStruct RightButton;
 /**
  * Draw buttons (does not flush framebuffer, flush it yourself)
  */
-void DrawButtons();
+void DrawButtons(void);
 
 void DrawButton(FoxButtonStruct button, uint16_t x, uint16_t y, uint16_t width, uint16_t height);
 

@@ -9,6 +9,7 @@
 #define INCLUDE_RTC_H_
 
 #include <l2hal.h>
+#include <stdlib.h>
 
 /**
  * RTC handle
@@ -23,7 +24,7 @@ uint8_t PreviousSecond;
 /**
  * This functions listens for new second event.
  */
-void (**RtcListeners)();
+void (**RtcListeners)(void);
 
 /**
  * How many listeners we have.
@@ -39,16 +40,16 @@ RTC_DateTypeDef CurrentDate;
 /**
  * Initialize RTC
  */
-void InitRTC();
+void InitRTC(void);
 
 /**
  * Call this function as often as possible.
  */
-void RTC_Poll();
+void RTC_Poll(void);
 
 /**
  * Call this function to add new listener. Listener will be called at the beginning of each new second.
  */
-void RTC_AddListener(void (*listener)());
+void RTC_AddListener(void (*listener)(void));
 
 #endif /* INCLUDE_RTC_H_ */

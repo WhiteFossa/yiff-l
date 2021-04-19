@@ -11,7 +11,7 @@
 /**
  * Call it when manipulator-related parts of state changes
  */
-void ProcessManipulatorFoxStateChange();
+void ProcessManipulatorFoxStateChange(void);
 
 
 

@@ -41,7 +41,7 @@ void HAL_RTC_MspDeInit(RTC_HandleTypeDef *hrtc)
 	__HAL_RCC_RTC_DISABLE();
 }
 
-void InitRTC()
+void InitRTC(void)
 {
 	RtcHandle.Instance = RTC;
 	RtcHandle.Init.AsynchPrediv = RTC_AUTO_1_SECOND;
@@ -77,7 +77,7 @@ void InitRTC()
 	RtcListeners = malloc(0);
 }
 
-void RTC_Poll(void (*callbackPtr)())
+void RTC_Poll(void)
 {
 	if (HAL_RTC_GetTime(&RtcHandle, &CurrentTime, RTC_FORMAT_BIN) != HAL_OK)
 	{
@@ -101,7 +101,7 @@ void RTC_Poll(void (*callbackPtr)())
 	PreviousSecond = CurrentTime.Seconds;
 }
 
-void RTC_AddListener(void (*listener)())
+void RTC_AddListener(void (*listener)(void))
 {
 	if (255 == RtcListenersCount)
 	{

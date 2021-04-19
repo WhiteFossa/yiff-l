@@ -5,13 +5,13 @@
  *      Author: fossa
  */
 
-#include <StatusDisplay.h>
+#include <main.h>
 
 void DrawStatusDisplay(FoxStateStruct foxState)
 {
 	FMGL_API_SetActiveColor(&fmglContext, OnColor);
 
-	uint16_t rightmostPixel = FMGL_API_GetDisplayWidth(&fmglContext) - 1U;
+	uint16_t rightmostPixel = (uint16_t)(FMGL_API_GetDisplayWidth(&fmglContext) - 1U);
 
 	/* 1st line */
 	DrawBattery(foxState.BatteryLevel);
@@ -24,7 +24,7 @@ void DrawStatusDisplay(FoxStateStruct foxState)
 	/* 3rd line */
 	FMGL_API_DrawRectangleFilled(&fmglContext, 0, YHL_3RD_LINE_CLEAR_TOP, rightmostPixel, YHL_3RD_LINE_CLEAR_BOTTOM, OffColor, OffColor);
 	uint16_t frequencyTextWidth = DrawFoxFrequency(foxState.Frequency);
-	DrawFoxCode(foxState.Code, foxState.IsFast, FMGL_API_GetDisplayWidth(&fmglContext) - frequencyTextWidth);
+	DrawFoxCode(foxState.Code, foxState.IsFast, (uint16_t)(FMGL_API_GetDisplayWidth(&fmglContext) - frequencyTextWidth));
 
 	/* 4rd line */
 	DrawFoxCycle(foxState.Cycle);
@@ -74,11 +74,11 @@ void DrawBattery(float level)
 			OnColor);
 
 	/* Inner part */
-	float innerPartWidthF = (YHL_BATTERY_MAIN_PART_WIDTH - 2 * YHL_BATTERY_INNER_PART_SPACING) * level;
+	float innerPartWidthF = (YHL_BATTERY_MAIN_PART_WIDTH - 2U * YHL_BATTERY_INNER_PART_SPACING) * level;
 	if (innerPartWidthF > 0)
 	{
 		FMGL_API_DrawRectangleFilled(&fmglContext,
-			YHL_BATTERY_LEFT + YHL_BATTERY_CONTACT_WIDTH + YHL_BATTERY_MAIN_PART_WIDTH - YHL_BATTERY_INNER_PART_SPACING - floor(innerPartWidthF + 0.5),
+			(uint16_t)(YHL_BATTERY_LEFT + YHL_BATTERY_CONTACT_WIDTH + YHL_BATTERY_MAIN_PART_WIDTH - YHL_BATTERY_INNER_PART_SPACING - (uint16_t)floor(innerPartWidthF + 0.5f)),
 			YHL_BATTERY_TOP + YHL_BATTERY_INNER_PART_SPACING,
 			YHL_BATTERY_LEFT + YHL_BATTERY_CONTACT_WIDTH + YHL_BATTERY_MAIN_PART_WIDTH - YHL_BATTERY_INNER_PART_SPACING,
 			YHL_BATTERY_TOP + YHL_BATTERY_MAIN_PART_HEIGHT - YHL_BATTERY_INNER_PART_SPACING,
@@ -103,11 +103,11 @@ void DrawTXStatus(bool isTXOn)
 
 	if (isTXOn)
 	{
-		TXIcon.Raster = tx_on_bits;
+		TXIcon.Raster = (uint8_t*)tx_on_bits;
 	}
 	else
 	{
-		TXIcon.Raster = tx_off_bits;
+		TXIcon.Raster = (uint8_t*)tx_off_bits;
 	}
 
 	FMGL_API_RenderXBM(&fmglContext, &TXIcon, YHL_TX_STATUS_LEFT, YHL_TX_STATUS_TOP, 1, 1, OnColor, OffColor, FMGL_XBMTransparencyModeNormal);
@@ -115,23 +115,27 @@ void DrawTXStatus(bool isTXOn)
 
 void DrawFoxName(char* name)
 {
-	FMGL_API_DrawRectangleFilled(&fmglContext, 0, YHL_FOX_NAME_CLEAR_TOP, FMGL_API_GetDisplayWidth(&fmglContext) - 1, YHL_FOX_NAME_CLEAR_BOTTOM, OffColor, OffColor);
+	FMGL_API_DrawRectangleFilled(&fmglContext,
+			0,
+			YHL_FOX_NAME_CLEAR_TOP,
+			(uint16_t)(FMGL_API_GetDisplayWidth(&fmglContext) - 1U),
+			YHL_FOX_NAME_CLEAR_BOTTOM, OffColor, OffColor);
 
 	uint16_t width;
 	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, 0, 0, &width, NULL, true, name);
 
-	int16_t spacing = (FMGL_API_GetDisplayWidth(&fmglContext) - width) / 2;
+	int16_t spacing = (int16_t)((FMGL_API_GetDisplayWidth(&fmglContext) - width) / 2U);
 	if (spacing < 0)
 	{
 		spacing = 0;
 	}
 
-	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, spacing, YHL_FOX_NAME_TOP, NULL, NULL, false, name);
+	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, (uint16_t)spacing, YHL_FOX_NAME_TOP, NULL, NULL, false, name);
 }
 
 uint16_t DrawFoxFrequency(FoxFrequencyStruct frequency)
 {
-	float freqMHz = frequency.FrequencyHz / 1000000.0f;
+	float freqMHz = (float)frequency.FrequencyHz / 1000000.0f;
 
 	char buffer[16];
 	sprintf(buffer, "%.3f", freqMHz);
@@ -195,21 +199,22 @@ void DrawFoxCode(FoxCodeEnum code, bool isFast, uint16_t availableWidth)
 		sprintf(speed, "S");
 	}
 
-	sprintf(codeTxt, "%s:%s", codeTxt, speed);
+	char codeTxtWithSpeed[16];
+	sprintf(codeTxtWithSpeed, "%s:%s", codeTxt, speed);
 
 	/* Dry runs*/
 	uint16_t numberWidth;
 	uint16_t codeWidth;
 	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, 0, 0, &numberWidth, NULL, true, number);
-	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, 0, 0, &codeWidth, NULL, true, codeTxt);
+	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, 0, 0, &codeWidth, NULL, true, codeTxtWithSpeed);
 
-	uint16_t numberSpacing = (availableWidth - numberWidth) / 2;
-	uint16_t codeSpacing = (availableWidth - codeWidth) / 2;
+	uint16_t numberSpacing = (uint16_t)(availableWidth - numberWidth) / 2U;
+	uint16_t codeSpacing = (uint16_t)(availableWidth - codeWidth) / 2U;
 
-	uint16_t lastPixel = FMGL_API_GetDisplayWidth(&fmglContext) - 1;
+	uint16_t lastPixel = (uint16_t)(FMGL_API_GetDisplayWidth(&fmglContext) - 1U);
 
 	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, lastPixel - (numberWidth + numberSpacing), YHL_CODE_LINE1_TOP, NULL, NULL, false, number);
-	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, lastPixel - (codeWidth + codeSpacing), YHL_CODE_LINE2_TOP, NULL, NULL, false, codeTxt);
+	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, lastPixel - (codeWidth + codeSpacing), YHL_CODE_LINE2_TOP, NULL, NULL, false, codeTxtWithSpeed);
 }
 
 void DrawFoxCycle(FoxCycleStruct cycle)
@@ -339,7 +344,7 @@ void DrawGlobalState(GlobalFoxStateStruct globalState, Time currentTime)
 
 void DrawFoxPower(float power, FoxFrequencyStruct frequency)
 {
-	FMGL_API_DrawRectangleFilled(&fmglContext, 0, YHL_POWER_CLEAR_TOP, FMGL_API_GetDisplayWidth(&fmglContext) - 1, YHL_POWER_CLEAR_BOTTOM, OffColor, OffColor);
+	FMGL_API_DrawRectangleFilled(&fmglContext, 0, YHL_POWER_CLEAR_TOP, FMGL_API_GetDisplayWidth(&fmglContext) - 1U, YHL_POWER_CLEAR_BOTTOM, OffColor, OffColor);
 
 	if (frequency.Is144MHz)
 	{

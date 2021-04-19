@@ -7,7 +7,7 @@
 
 #include <main.h>
 
-void HAL_IntiHardware()
+void HAL_IntiHardware(void)
 {
 	/* Manipulator */
 	__HAL_RCC_GPIOB_CLK_ENABLE();

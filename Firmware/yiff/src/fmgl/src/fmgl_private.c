@@ -77,7 +77,7 @@ void FMGL_Priv_RenderSubstring(FMGL_API_DriverContext* context, FMGL_API_FontSet
 		uint16_t x, uint16_t* y, uint16_t scaledLineHeight, uint16_t* width, bool isDryRun, char* string)
 {
 	char* substr = AUX_Str_Substring(string, startPos, length);
-	uint16_t currWidth;
+	uint16_t currWidth = 0;
 	FMGL_API_RenderOneLineDumb(context, fontSettings, x, *y, &currWidth, isDryRun, substr);
 	AUX_Mem_SafeFree(substr);
 

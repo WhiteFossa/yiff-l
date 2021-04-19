@@ -31,20 +31,20 @@ Time TimeSinceDayBegin(uint32_t seconds)
 {
 	Time result;
 
-	result.Hours = seconds / 3600UL;
+	result.Hours = (uint8_t)(seconds / 3600UL);
 
 	seconds -= result.Hours * 3600UL;
 
-	result.Minutes = seconds / 60UL;
+	result.Minutes = (uint8_t)(seconds / 60UL);
 
 	seconds -= result.Minutes * 60UL;
 
-	result.Seconds = seconds;
+	result.Seconds = (uint8_t)seconds;
 
 	return result;
 }
 
-void NewSecondCallback()
+void NewSecondCallback(void)
 {
 	/* Global state machine */
 	GSM_Tick();
@@ -71,8 +71,8 @@ Time ToTime(RTC_TimeTypeDef rtcTime)
 
 int8_t CompareTimes(Time time1, Time time2)
 {
-	int32_t seconds1 = SecondsSinceDayBegin(time1);
-	int32_t seconds2 = SecondsSinceDayBegin(time2);
+	uint32_t seconds1 = SecondsSinceDayBegin(time1);
+	uint32_t seconds2 = SecondsSinceDayBegin(time2);
 
 	if (seconds1 == seconds2)
 	{

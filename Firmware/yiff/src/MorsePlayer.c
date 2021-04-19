@@ -7,7 +7,7 @@
 
 #include <main.h>
 
-void MorsePlayerInit()
+void MorsePlayerInit(void)
 {
 	MorsePlayerState = NotPlaying;
 }
@@ -26,7 +26,7 @@ void MorsePlayerPlay(MorseElementEnum* sequenceToPlay)
 	MorsePlayerState = TakingNext;
 }
 
-void MorsePlayerStop()
+void MorsePlayerStop(void)
 {
 	FoxState.IsMorseTx = false;
 	MorsePlayerState = NotPlaying;
@@ -102,43 +102,45 @@ uint16_t MorseGetInterval(MorseElementEnum element)
 
 		case DahTone:
 		case DahPause:
-			return timebase * 3U;
+			return (uint16_t)(timebase * 3U);
 
 		case EoS:
 			return 0;
 
 		default:
 			L2HAL_Error(Generic);
+			return 0; /* Will never happen */
 	}
 }
 
-MorseElementEnum* MorseGetFoxSequence()
+MorseElementEnum* MorseGetFoxSequence(void)
 {
 	switch(FoxState.Code)
 	{
 		case Finish:
-			return Morse_FoxFinish;
+			return (MorseElementEnum*)Morse_FoxFinish;
 
 		case F1:
-			return Morse_Fox1;
+			return (MorseElementEnum*)Morse_Fox1;
 
 		case F2:
-			return Morse_Fox2;
+			return (MorseElementEnum*)Morse_Fox2;
 
 		case F3:
-			return Morse_Fox3;
+			return (MorseElementEnum*)Morse_Fox3;
 
 		case F4:
-			return Morse_Fox4;
+			return (MorseElementEnum*)Morse_Fox4;
 
 		case F5:
-			return Morse_Fox5;
+			return (MorseElementEnum*)Morse_Fox5;
 
 		case Beacon:
-			return Morse_Beacon;
+			return (MorseElementEnum*)Morse_Beacon;
 
 		default:
 			L2HAL_Error(Generic);
+			return NULL; /* Will never happen */
 	}
 }
 

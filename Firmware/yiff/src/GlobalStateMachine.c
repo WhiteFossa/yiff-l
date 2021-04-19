@@ -7,7 +7,7 @@
 
 #include <main.h>
 
-void GSM_Cancel()
+void GSM_Cancel(void)
 {
 	FoxState.GlobalState.CurrentState = Standby;
 }
@@ -33,7 +33,7 @@ void GSM_Program(Time startTime, Time endTime)
 	FoxState.GlobalState.CurrentState = BeforeStart;
 }
 
-void GSM_Tick()
+void GSM_Tick(void)
 {
 	Time time = ToTime(CurrentTime);
 	int8_t comparisonResult = CompareTimes(time, FoxState.GlobalState.StateChangeTime);

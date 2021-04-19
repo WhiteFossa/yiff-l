@@ -7,7 +7,7 @@
 
 #include <main.h>
 
-void CSM_Start()
+void CSM_Start(void)
 {
 	Time currentTime = ToTime(CurrentTime);
 
@@ -21,13 +21,13 @@ void CSM_Start()
 	MorsePlayerPlay(MorseGetFoxSequence());
 }
 
-void CSM_Stop()
+void CSM_Stop(void)
 {
 	FoxState.CycleState.CycleState = Pause;
 	MorsePlayerStop();
 }
 
-void CSM_Tick()
+void CSM_Tick(void)
 {
 	if (FoxState.GlobalState.CurrentState != BeforeFinish)
 	{
@@ -87,7 +87,7 @@ void CSM_Tick()
 
 }
 
-void CSM_CalculateEndingToneStartTime()
+void CSM_CalculateEndingToneStartTime(void)
 {
 	if (FoxState.Cycle.IsContinuous)
 	{

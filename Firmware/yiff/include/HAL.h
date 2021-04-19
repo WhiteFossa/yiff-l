@@ -11,7 +11,7 @@
 /**
  * Init fox-specific hardware here
  */
-void HAL_IntiHardware();
+void HAL_IntiHardware(void);
 
 /**
  * Switch TX manipulator on of off

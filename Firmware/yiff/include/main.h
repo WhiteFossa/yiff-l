@@ -46,6 +46,7 @@
 #include <HAL.h>
 #include <HardwareLogic.h>
 #include <MorsePlayer.h>
+#include <math.h>
 
 
 
