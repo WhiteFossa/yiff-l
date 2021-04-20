@@ -213,13 +213,13 @@ void DrawFoxCode(FoxCodeEnum code, bool isFast, uint16_t availableWidth)
 
 	uint16_t lastPixel = (uint16_t)(FMGL_API_GetDisplayWidth(&fmglContext) - 1U);
 
-	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, lastPixel - (numberWidth + numberSpacing), YHL_CODE_LINE1_TOP, NULL, NULL, false, number);
-	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, lastPixel - (codeWidth + codeSpacing), YHL_CODE_LINE2_TOP, NULL, NULL, false, codeTxtWithSpeed);
+	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, (uint16_t)(lastPixel - (numberWidth + numberSpacing)), YHL_CODE_LINE1_TOP, NULL, NULL, false, number);
+	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, (uint16_t)(lastPixel - (codeWidth + codeSpacing)), YHL_CODE_LINE2_TOP, NULL, NULL, false, codeTxtWithSpeed);
 }
 
 void DrawFoxCycle(FoxCycleStruct cycle)
 {
-	FMGL_API_DrawRectangleFilled(&fmglContext, 0, YHL_CYCLE_CLEAR_TOP, FMGL_API_GetDisplayWidth(&fmglContext) - 1, YHL_CYCLE_CLEAR_BOTTOM, OffColor, OffColor);
+	FMGL_API_DrawRectangleFilled(&fmglContext, 0, YHL_CYCLE_CLEAR_TOP, (uint16_t)(FMGL_API_GetDisplayWidth(&fmglContext) - 1U), YHL_CYCLE_CLEAR_BOTTOM, OffColor, OffColor);
 
 	char buffer[32];
 	char cycleTimeTxt[16];
@@ -244,7 +244,14 @@ void DrawFoxCycle(FoxCycleStruct cycle)
 
 void DrawEndingTone(uint8_t endingToneLength, FoxCycleStruct cycle)
 {
-	FMGL_API_DrawRectangleFilled(&fmglContext, 0, YHL_ENDING_TONE_CLEAR_TOP, FMGL_API_GetDisplayWidth(&fmglContext) - 1, YHL_ENDING_TONE_CLEAR_BOTTOM, OffColor, OffColor);
+	FMGL_API_DrawRectangleFilled(&fmglContext,
+			0,
+			YHL_ENDING_TONE_CLEAR_TOP,
+			(uint16_t)(FMGL_API_GetDisplayWidth(&fmglContext) - 1U),
+			YHL_ENDING_TONE_CLEAR_BOTTOM,
+			OffColor,
+			OffColor);
+
 	char buffer[32];
 
 	if (cycle.IsContinuous)
@@ -260,7 +267,13 @@ void DrawEndingTone(uint8_t endingToneLength, FoxCycleStruct cycle)
 
 void DrawFoxCycleState(CycleStateStruct cycleState, Time currentTime, FoxCycleStruct cycle, GlobalFoxStateStruct globalState)
 {
-	FMGL_API_DrawRectangleFilled(&fmglContext, 0, YHL_CYCLE_STATE_CLEAR_TOP, FMGL_API_GetDisplayWidth(&fmglContext) - 1, YHL_CYCLE_STATE_CLEAR_BOTTOM, OffColor, OffColor);
+	FMGL_API_DrawRectangleFilled(&fmglContext,
+			0,
+			YHL_CYCLE_STATE_CLEAR_TOP,
+			(uint16_t)(FMGL_API_GetDisplayWidth(&fmglContext) - 1U),
+			YHL_CYCLE_STATE_CLEAR_BOTTOM,
+			OffColor,
+			OffColor);
 
 	if (BeforeFinish != globalState.CurrentState)
 	{
@@ -306,7 +319,13 @@ void DrawFoxCycleState(CycleStateStruct cycleState, Time currentTime, FoxCycleSt
 
 void DrawGlobalState(GlobalFoxStateStruct globalState, Time currentTime)
 {
-	FMGL_API_DrawRectangleFilled(&fmglContext, 0, YHL_GLOBAL_STATE_CLEAR_TOP, FMGL_API_GetDisplayWidth(&fmglContext) - 1, YHL_GLOBAL_STATE_CLEAR_BOTTOM, OffColor, OffColor);
+	FMGL_API_DrawRectangleFilled(&fmglContext,
+			0,
+			YHL_GLOBAL_STATE_CLEAR_TOP,
+			(uint16_t)(FMGL_API_GetDisplayWidth(&fmglContext) - 1U),
+			YHL_GLOBAL_STATE_CLEAR_BOTTOM,
+			OffColor,
+			OffColor);
 
 	if (Standby == globalState.CurrentState)
 	{
@@ -344,7 +363,13 @@ void DrawGlobalState(GlobalFoxStateStruct globalState, Time currentTime)
 
 void DrawFoxPower(float power, FoxFrequencyStruct frequency)
 {
-	FMGL_API_DrawRectangleFilled(&fmglContext, 0, YHL_POWER_CLEAR_TOP, FMGL_API_GetDisplayWidth(&fmglContext) - 1U, YHL_POWER_CLEAR_BOTTOM, OffColor, OffColor);
+	FMGL_API_DrawRectangleFilled(&fmglContext,
+			0,
+			YHL_POWER_CLEAR_TOP,
+			(uint16_t)(FMGL_API_GetDisplayWidth(&fmglContext) - 1U),
+			YHL_POWER_CLEAR_BOTTOM,
+			OffColor,
+			OffColor);
 
 	if (frequency.Is144MHz)
 	{
