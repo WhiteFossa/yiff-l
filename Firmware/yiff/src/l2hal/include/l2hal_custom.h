@@ -44,6 +44,7 @@
 #include <l2hal_ssd1327.h>
 #include <l2hal_buttons.h>
 #include <l2hal_encoders.h>
+#include <l2hal_24x.h>
 
 /**
  * I2C1 interrupt priorities.
@@ -77,6 +78,11 @@ I2C_HandleTypeDef I2C_Other;
  * Display driver context.
  */
 L2HAL_SSD1327_ContextStruct L2HAL_SSD1327_Context;
+
+/**
+ * EEPROM context
+ */
+L2HAL_24x_ContextStruct EEPROMContext;
 
 /**
  * Put custom hardware initialization stuff here,

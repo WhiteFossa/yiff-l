@@ -17,6 +17,7 @@ RM := rm -rf
 -include src/l2hal/mcu_dependent/mcus/stm32f103c8t6/drivers/input/buttons/src/subdir.mk
 -include src/l2hal/drivers/input/encoders/src/subdir.mk
 -include src/l2hal/drivers/input/buttons/src/subdir.mk
+-include src/l2hal/drivers/eeprom/24x/src/subdir.mk
 -include src/l2hal/drivers/display/ssd1327/src/subdir.mk
 -include src/l2hal/drivers/display/ssd1306/src/subdir.mk
 -include src/l2hal/drivers/dds/ad9835/src/subdir.mk
@@ -81,7 +82,7 @@ all: Yiff-HL.elf secondary-outputs
 Yiff-HL.elf: $(OBJS) $(USER_OBJS) makefile objects.mk $(OPTIONAL_TOOL_DEPS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: GNU ARM Cross C++ Linker'
-	arm-none-eabi-g++ -mcpu=cortex-m3 -mthumb -Og -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -flto -fno-move-loop-invariants -Wunused -Wuninitialized -Wall -Wextra -Wmissing-declarations -Wconversion -Wpointer-arith -Wpadded -Wshadow -Wlogical-op -Waggregate-return -Wfloat-equal  -g3 -T mem.ld -T libs.ld -T sections.ld -Xlinker --gc-sections -L"../ldscripts" -Wl,-Map,"Yiff-HL.map" --specs=nano.specs -u _printf_float -o "Yiff-HL.elf" $(OBJS) $(USER_OBJS) $(LIBS)
+	arm-none-eabi-g++ -mcpu=cortex-m3 -mthumb -Og -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -flto -fno-move-loop-invariants -Wunused -Wuninitialized -Wall -Wextra -Wmissing-declarations -Wconversion -Wpointer-arith -Wshadow -Wlogical-op -Wfloat-equal  -g3 -T mem.ld -T libs.ld -T sections.ld -Xlinker --gc-sections -L"../ldscripts" -Wl,-Map,"Yiff-HL.map" --specs=nano.specs -u _printf_float -o "Yiff-HL.elf" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 

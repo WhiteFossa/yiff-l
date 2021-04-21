@@ -173,6 +173,19 @@ int main(int argc, char* argv[])
 
 	GSM_Program(st, et);
 
+	EEPROMContext = L2HAL_24x_DetectEepromAtAddress(&I2C_Other, 0xA0, true, 64);
+
+	uint8_t writeBuffer[100];
+	for (uint8_t i = 0; i < 100; i++)
+	{
+		writeBuffer[i] = i;
+	}
+	L2HAL_24x_WriteData(&EEPROMContext, 15, writeBuffer, 100);
+
+	uint8_t eepromBuffer[128];
+	memset(eepromBuffer, 0, 128);
+	L2HAL_24x_ReadData(&EEPROMContext, 0x00, eepromBuffer, 128);
+
 	/* Debugging stuff end */
 
 	while(true)

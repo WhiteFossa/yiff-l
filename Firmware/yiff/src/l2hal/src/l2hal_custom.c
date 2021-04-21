@@ -129,7 +129,7 @@ void HAL_I2C_MspInit(I2C_HandleTypeDef *hi2c)
 
 		HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-		/* Second bus uses I2C interrupts exchange too */
+		/* Second bus may use I2C interrupts exchange too */
 		HAL_NVIC_SetPriority(I2C2_ER_IRQn, I2C2_ER_IRQN_PRIORITY, I2C2_ER_IRQN_SUBPRIORITY);
 		HAL_NVIC_EnableIRQ(I2C2_ER_IRQn);
 		HAL_NVIC_SetPriority(I2C2_EV_IRQn, I2C2_EV_IRQN_PRIORITY, I2C2_EV_IRQN_SUBPRIORITY);
