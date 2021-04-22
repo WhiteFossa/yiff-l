@@ -45,6 +45,7 @@
 #include <l2hal_buttons.h>
 #include <l2hal_encoders.h>
 #include <l2hal_24x.h>
+#include <l2hal_crc.h>
 
 /**
  * I2C1 interrupt priorities.
@@ -85,6 +86,11 @@ L2HAL_SSD1327_ContextStruct L2HAL_SSD1327_Context;
 L2HAL_24x_ContextStruct EEPROMContext;
 
 /**
+ * CRC calculator context
+ */
+L2HAL_CRCContextStruct CRC_Context;
+
+/**
  * Put custom hardware initialization stuff here,
  */
 void L2HAL_InitCustomHardware(void);
@@ -114,5 +120,10 @@ void HAL_I2C_MemTxCpltCallback(I2C_HandleTypeDef *hi2c);
 void I2C2_EV_IRQHandler(void);
 void I2C2_ER_IRQHandler(void);
 
+/**
+ * CRC calculator init and de-init
+ */
+void HAL_CRC_MspInit(CRC_HandleTypeDef *hcrc);
+void HAL_CRC_MspDeInit(CRC_HandleTypeDef *hcrc);
 
 #endif /* L2HAL_INCLUDE_L2HAL_CUSTOM_H_ */

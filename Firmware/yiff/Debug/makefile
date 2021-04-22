@@ -15,6 +15,7 @@ RM := rm -rf
 -include system/src/cmsis/subdir.mk
 -include src/l2hal/src/subdir.mk
 -include src/l2hal/mcu_dependent/mcus/stm32f103c8t6/drivers/input/buttons/src/subdir.mk
+-include src/l2hal/drivers/internal/crc/src/subdir.mk
 -include src/l2hal/drivers/input/encoders/src/subdir.mk
 -include src/l2hal/drivers/input/buttons/src/subdir.mk
 -include src/l2hal/drivers/eeprom/24x/src/subdir.mk

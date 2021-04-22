@@ -6,7 +6,7 @@
  */
 
 #ifndef INCLUDE_FOXSTATUS_H_
-#define INCLUDE_FOXSTATUS_H_
+#define INCLUDE_FOXSTATUS_H_G
 
 #include <Time.h>
 
@@ -34,13 +34,13 @@ FoxFrequencyStruct;
  */
 typedef enum
 {
-	Finish, /* MO */
-	F1, /* MOE */
-	F2, /* MOI */
-	F3, /* MOS */
-	F4, /* MOH */
-	F5, /* MO5 */
-	Beacon /* S */
+	Finish = 0, /* MO */
+	F1 = 1, /* MOE */
+	F2 = 2, /* MOI */
+	F3 = 3, /* MOS */
+	F4 = 4, /* MOH */
+	F5 = 5, /* MO5 */
+	Beacon = 6 /* S */
 }
 FoxCodeEnum;
 

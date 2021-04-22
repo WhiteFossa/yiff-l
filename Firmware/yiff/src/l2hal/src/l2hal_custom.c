@@ -184,3 +184,13 @@ void I2C2_ER_IRQHandler(void)
 {
 	HAL_I2C_ER_IRQHandler(&I2C_Other);
 }
+
+void HAL_CRC_MspInit(CRC_HandleTypeDef *hcrc)
+{
+	__HAL_RCC_CRC_CLK_ENABLE();
+}
+
+void HAL_CRC_MspDeInit(CRC_HandleTypeDef *hcrc)
+{
+	__HAL_RCC_CRC_CLK_DISABLE();
+}
