@@ -18,14 +18,40 @@
 #define YHL_MAX_PROFILES_COUNT 128U
 
 /**
- * EEPROM header (placed at EEPROM starting 1st byte
+ * Newly-generated profiles have this name
+ */
+#define YHL_DEFAULT_PROFILE_NAME "New profile"
+
+/**
+ * EEPROM constant header. It's structure must not change from version
+ * to version
  */
 typedef struct
 {
 	/**
-	 * EEPROM version, bump each time when structure changes
+	 * EEPROM version, bump each time when EEPROM structure changes
 	 */
-	uint16_t EEPROMVersion;
+	uint16_t Version;
+
+	/**
+	 * Absolute address of main header
+	 */
+	uint16_t HeaderAddress;
+
+	/**
+	 * CRC
+	 */
+	uint32_t CRCSum;
+}
+EEPROMConstantHeaderStruct;
+
+
+/**
+ * EEPROM header
+ */
+typedef struct
+{
+
 
 	/**
 	 * How many profiles do we have
@@ -54,7 +80,6 @@ EEPROMHeaderStruct;
  */
 typedef struct
 {
-
 	/**
 	 * Fox name.
 	 */
@@ -91,11 +116,6 @@ typedef struct
 	float Power;
 
 	/**
-	 * Is fox armed to start at given time
-	 */
-	bool IsFoxArmed;
-
-	/**
 	 * Fox will start at given time if armed.
 	 */
 	Time StartTime;
@@ -113,6 +133,16 @@ typedef struct
 }
 EEPROMProfileStruct;
 
+/**
+ * EEPROM constant header in its actual state
+ */
+EEPROMConstantHeaderStruct EEPROM_ConstantHeader;
+
+/**
+ * EEPROM header in its actual state
+ */
+EEPROMHeaderStruct EEPROM_Header;
+
 
 /**
  * Initialize EEPROM (call this if EEPROM Header CRC don't match).
@@ -120,18 +150,64 @@ EEPROMProfileStruct;
 void EEPROM_Format(void);
 
 /**
- * Write EEPROM header (it always go from 0x00 address in EEPROM)
+ * Write constant EEPROM header (it always go from 0x00 address in EEPROM)
  */
-void EEPROM_WriteHeader(EEPROMHeaderStruct* header);
+void EEPROM_WriteConstantHeader(EEPROMConstantHeaderStruct* constantHeader);
+
+/**
+ * Read constant EEPROM header (it always go from 0x00 address in EEPROM)
+ */
+void EEPROM_ReadConstantHeader(EEPROMConstantHeaderStruct* constantHeader);
+
+/**
+ * Check EEPROM constant header CRC.
+ */
+bool EEPROM_CheckConstantHeader(EEPROMConstantHeaderStruct* constantHeader);
+
+/**
+ * Write EEPROM header
+ */
+void EEPROM_WriteHeader(EEPROMHeaderStruct* header, uint16_t address);
 
 /**
  * Read EERPOM header
  */
-void EEPROM_ReadHeader(EEPROMHeaderStruct* header);
+void EEPROM_ReadHeader(EEPROMHeaderStruct* header, uint16_t address);
 
 /**
  * Check EEPROM header for CRC correctness. Returns true if CRC match.
  */
 bool EEPROM_CheckHeader(EEPROMHeaderStruct* header);
+
+/**
+ * Initializes EEPROM, formatting it if needed and loads data into global variables
+ */
+void EEPROM_Init(void);
+
+/**
+ * Read EEPROM headers into corresponding global variables and checks it.
+ * If headers are damaged then returns false.
+ */
+bool EEPROM_InitHeaders(void);
+
+/**
+ * Read profile from given address into given structure
+ */
+void EEPROM_ReadProfile(EEPROMProfileStruct* profile, uint16_t address);
+
+/**
+ * Checks profile and returns false if CRC is incorrect.
+ */
+bool EEPROM_CheckProfile(EEPROMProfileStruct* profile);
+
+/**
+ * Writes given profile at given address
+ */
+void EEPROM_WriteProfile(EEPROMProfileStruct* profile, uint16_t address);
+
+/**
+ * Doesn't write anything to EEPROM, just generates default profile
+ */
+EEPROMProfileStruct EEPROM_GenerateDefaultProfile(void);
 
 #endif /* INCLUDE_EEPROM_H_ */

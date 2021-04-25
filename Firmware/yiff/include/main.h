@@ -49,6 +49,11 @@
 #include <math.h>
 #include <EEPROM.h>
 
+/**
+ * EEPROM-related stuff
+ */
+#define YHL_EEPROM_ADDRESS 0xA0
+#define YHL_EEPROM_PAGE_SIZE 8
 
 
 #endif /* __MAIN_H */

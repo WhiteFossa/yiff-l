@@ -54,12 +54,16 @@ int main(int argc, char* argv[])
 	CRC_Context = L2HAL_CRC_Init();
 
 	/* Connecting to EEPROM */
-	EEPROMContext = L2HAL_24x_DetectEepromAtAddress(&I2C_Other, 0xA0, true, 64); /* 24C256 at A0h*/
+	/* 24C256 at A0h. Page size is no more than 8! Address overflow otherwise */
+	EEPROMContext = L2HAL_24x_DetectEepromAtAddress(&I2C_Other, YHL_EEPROM_ADDRESS, true, YHL_EEPROM_PAGE_SIZE);
 	if (!EEPROMContext.IsFound)
 	{
 		/* Unable to find EEPROM */
 		L2HAL_Error(Generic);
 	}
+
+	/* Initializing EEPROM data */
+	EEPROM_Init();
 
 	/* Starting RTC */
 	InitRTC();
@@ -183,13 +187,6 @@ int main(int argc, char* argv[])
 	et.Seconds = 0;
 
 	GSM_Program(st, et);
-
-	//EEPROM_Format();
-
-	EEPROMHeaderStruct header;
-	EEPROM_ReadHeader(&header);
-
-	volatile bool test = EEPROM_CheckHeader(&header);
 
 	/* Debugging stuff end */
 
