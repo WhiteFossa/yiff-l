@@ -17,6 +17,7 @@ void EEPROM_Format(void)
 
 	/* Writing main header */
 	EEPROMHeaderStruct defaultHeader;
+	sprintf(defaultHeader.Name, YHL_DEFAULT_FOX_NAME);
 	defaultHeader.NumberOfProfiles = 1;
 
 	/* Zero in profile address means "not allocated" */
@@ -109,6 +110,10 @@ void EEPROM_Init(void)
 			}
 		}
 	}
+
+	/* Loading current profile */
+	uint16_t profileAddress = EEPROM_Header.ProfilesAddresses[EEPROM_Header.ProfileInUse];
+	EEPROM_ReadProfile(&EEPROM_CurrentProfile, profileAddress);
 }
 
 bool EEPROM_InitHeaders(void)
@@ -192,4 +197,22 @@ EEPROMProfileStruct EEPROM_GenerateDefaultProfile(void)
 	result.CRCSum = 0;
 
 	return result;
+}
+
+EEPROM_LoadProfileIntoFoxState(FoxStateStruct* foxState, EEPROMProfileStruct* profile)
+{
+	GSM_Cancel();
+
+	foxState->Frequency = profile->Frequency;
+
+	foxState->Code = profile->Code;
+	foxState->IsFast = profile->IsFast;
+
+	foxState->Cycle = profile->Cycle;
+
+	foxState->EndingToneLength = profile->EndingToneLength;
+
+	foxState->Power = profile->Power;
+
+	GSM_Program(profile->StartTime, profile->EndTime);
 }

@@ -18,9 +18,19 @@
 #define YHL_MAX_PROFILES_COUNT 128U
 
 /**
+ * Max profile name length
+ */
+#define YHL_MAX_PROFILE_NAME_LENGTH 17U
+
+/**
  * Newly-generated profiles have this name
  */
 #define YHL_DEFAULT_PROFILE_NAME "New profile"
+
+/**
+ * Fox will have this name after EEPROM formatting
+ */
+#define YHL_DEFAULT_FOX_NAME "Yiffy foxy"
 
 /**
  * EEPROM constant header. It's structure must not change from version
@@ -51,7 +61,10 @@ EEPROMConstantHeaderStruct;
  */
 typedef struct
 {
-
+	/**
+	 * Fox name
+	 */
+	char Name[YHL_FOX_NAME_BUFFER_LENGTH];
 
 	/**
 	 * How many profiles do we have
@@ -81,9 +94,9 @@ EEPROMHeaderStruct;
 typedef struct
 {
 	/**
-	 * Fox name.
+	 * Profile name.
 	 */
-	char Name[YHL_FOX_NAME_BUFFER_LENGTH];
+	char Name[YHL_MAX_PROFILE_NAME_LENGTH];
 
 	/**
 	 * Fox frequency
@@ -143,6 +156,10 @@ EEPROMConstantHeaderStruct EEPROM_ConstantHeader;
  */
 EEPROMHeaderStruct EEPROM_Header;
 
+/**
+ * Current profile
+ */
+EEPROMProfileStruct EEPROM_CurrentProfile;
 
 /**
  * Initialize EEPROM (call this if EEPROM Header CRC don't match).
@@ -209,5 +226,10 @@ void EEPROM_WriteProfile(EEPROMProfileStruct* profile, uint16_t address);
  * Doesn't write anything to EEPROM, just generates default profile
  */
 EEPROMProfileStruct EEPROM_GenerateDefaultProfile(void);
+
+/**
+ * Load given profile into a fox state. Running fox is cancelled before load.
+ */
+EEPROM_LoadProfileIntoFoxState(FoxStateStruct* foxState, EEPROMProfileStruct* profile);
 
 #endif /* INCLUDE_EEPROM_H_ */

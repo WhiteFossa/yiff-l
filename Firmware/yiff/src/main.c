@@ -136,35 +136,8 @@ int main(int argc, char* argv[])
 
 	FoxState.IsTXOn = false;
 
-	sprintf(FoxState.Name, "Yiffiest Foxy #1");
-
-	FoxState.Frequency.Is144MHz = false;
-	FoxState.Frequency.FrequencyHz = 3500000;
-
-	FoxState.Code = F5;
-	FoxState.IsFast = true;
-
-	FoxState.Cycle.IsContinuous = false;
-	FoxState.Cycle.TxTime.Hours = 0;
-	FoxState.Cycle.TxTime.Minutes = 1;
-	FoxState.Cycle.TxTime.Seconds = 0;
-	FoxState.Cycle.PauseTime.Hours = 0;
-	FoxState.Cycle.PauseTime.Minutes = 4;
-	FoxState.Cycle.PauseTime.Seconds = 0;
-
-	FoxState.EndingToneLength = 5;
-
 	FoxState.GlobalState.CurrentState = Standby;
-	FoxState.GlobalState.StateChangeTime.Hours = 00;
-	FoxState.GlobalState.StateChangeTime.Minutes = 00;
-	FoxState.GlobalState.StateChangeTime.Seconds = 00;
-
 	FoxState.CycleState.CycleState = Pause;
-	FoxState.CycleState.StateChangeTime.Hours = 00;
-	FoxState.CycleState.StateChangeTime.Minutes = 00;
-	FoxState.CycleState.StateChangeTime.Seconds = 00;
-
-	FoxState.Power = 3.0f;
 
 	LeftButton.IsPressed = false;
 	sprintf(LeftButton.Text, "Menu");
@@ -172,21 +145,16 @@ int main(int argc, char* argv[])
 	RightButton.IsPressed = false;
 	sprintf(RightButton.Text, "Bt. off");
 
+	/* Loading non-profile-related data from EEPROM into fox state */
+	strcpy(FoxState.Name, EEPROM_Header.Name);
+
+	/* Loading current profile into fox state */
+	EEPROM_LoadProfileIntoFoxState(&FoxState, &EEPROM_CurrentProfile);
+
 	/* Adding seconds tick handler */
 	RTC_AddListener(&NewSecondCallback);
 
 	/* Debugging stuff begin */
-
-	Time st, et;
-	st.Hours = 0;
-	st.Minutes = 0;
-	st.Seconds = 10;
-
-	et.Hours = 0;
-	et.Minutes = 10;
-	et.Seconds = 0;
-
-	GSM_Program(st, et);
 
 	/* Debugging stuff end */
 
