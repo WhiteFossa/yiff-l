@@ -156,6 +156,12 @@ int main(int argc, char* argv[])
 
 	/* Debugging stuff begin */
 
+//	EEPROMProfileStruct profile = EEPROM_GetProfile(1);
+//	profile.Frequency.FrequencyHz = 3650000U;
+//	EEPROM_UpdateProfile(&profile, 1);
+
+//	EEPROM_SwitchProfile(0);
+
 	/* Debugging stuff end */
 
 	while(true)

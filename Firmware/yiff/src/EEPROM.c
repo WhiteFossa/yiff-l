@@ -199,7 +199,7 @@ EEPROMProfileStruct EEPROM_GenerateDefaultProfile(void)
 	return result;
 }
 
-EEPROM_LoadProfileIntoFoxState(FoxStateStruct* foxState, EEPROMProfileStruct* profile)
+void EEPROM_LoadProfileIntoFoxState(FoxStateStruct* foxState, EEPROMProfileStruct* profile)
 {
 	GSM_Cancel();
 
@@ -215,4 +215,76 @@ EEPROM_LoadProfileIntoFoxState(FoxStateStruct* foxState, EEPROMProfileStruct* pr
 	foxState->Power = profile->Power;
 
 	GSM_Program(profile->StartTime, profile->EndTime);
+}
+
+void EEPROM_UpdateHeader(void)
+{
+	EEPROM_WriteHeader(&EEPROM_Header, EEPROM_ConstantHeader.HeaderAddress);
+}
+
+void EEPROM_SwitchProfile(uint8_t profileId)
+{
+	if (profileId == EEPROM_Header.ProfileInUse)
+	{
+		return;
+	}
+
+	if (profileId >= EEPROM_Header.NumberOfProfiles)
+	{
+		L2HAL_Error(Generic);
+	}
+
+	EEPROM_Header.ProfileInUse = profileId;
+	EEPROM_UpdateHeader();
+
+	uint16_t profileAddress = EEPROM_Header.ProfilesAddresses[profileId];
+	EEPROM_ReadProfile(&EEPROM_CurrentProfile,profileAddress);
+	EEPROM_LoadProfileIntoFoxState(&FoxState, &EEPROM_CurrentProfile);
+}
+
+void EEPROM_AddProfile(void)
+{
+	if (EEPROM_Header.NumberOfProfiles == YHL_MAX_PROFILES_COUNT)
+	{
+		L2HAL_Error(Generic);
+	}
+
+	EEPROMProfileStruct newProfile = EEPROM_GenerateDefaultProfile();
+	uint16_t newProfileAddress = EEPROM_Header.ProfilesAddresses[EEPROM_Header.NumberOfProfiles - 1] + sizeof(EEPROMProfileStruct);
+	EEPROM_WriteProfile(&newProfile, newProfileAddress);
+
+	EEPROM_Header.NumberOfProfiles ++;
+	EEPROM_Header.ProfilesAddresses[EEPROM_Header.NumberOfProfiles - 1] = newProfileAddress;
+	EEPROM_UpdateHeader();
+}
+
+EEPROMProfileStruct EEPROM_GetProfile(uint8_t profileId)
+{
+	if (profileId >= EEPROM_Header.NumberOfProfiles)
+	{
+		L2HAL_Error(Generic);
+	}
+
+	EEPROMProfileStruct result;
+	uint16_t profileAddress = EEPROM_Header.ProfilesAddresses[profileId];
+	EEPROM_ReadProfile(&result, profileAddress);
+
+	return result;
+}
+
+void EEPROM_UpdateProfile(EEPROMProfileStruct* profile, uint8_t profileId)
+{
+	if (profileId >= EEPROM_Header.NumberOfProfiles)
+	{
+		L2HAL_Error(Generic);
+	}
+
+	uint16_t profileAddress = EEPROM_Header.ProfilesAddresses[profileId];
+	EEPROM_WriteProfile(profile, profileAddress);
+
+	if (profileId == EEPROM_Header.ProfileInUse)
+	{
+		EEPROM_ReadProfile(&EEPROM_CurrentProfile, profileAddress);
+		EEPROM_LoadProfileIntoFoxState(&FoxState, &EEPROM_CurrentProfile);
+	}
 }

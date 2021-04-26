@@ -230,6 +230,31 @@ EEPROMProfileStruct EEPROM_GenerateDefaultProfile(void);
 /**
  * Load given profile into a fox state. Running fox is cancelled before load.
  */
-EEPROM_LoadProfileIntoFoxState(FoxStateStruct* foxState, EEPROMProfileStruct* profile);
+void EEPROM_LoadProfileIntoFoxState(FoxStateStruct* foxState, EEPROMProfileStruct* profile);
+
+/**
+ * Updates EEPROM header from EEPROM_Header global variable.
+ */
+void EEPROM_UpdateHeader(void);
+
+/**
+ * Switch to given profile (if it's not active already).
+ */
+void EEPROM_SwitchProfile(uint8_t profileId);
+
+/**
+ * Generates new default profile and adds it to the end of profiles list.
+ */
+void EEPROM_AddProfile(void);
+
+/**
+ * Get profile with given number
+ */
+EEPROMProfileStruct EEPROM_GetProfile(uint8_t profileId);
+
+/**
+ * Update profile with given ID by given data. If this is current profile, then reloads it into fox state.
+ */
+void EEPROM_UpdateProfile(EEPROMProfileStruct* profile, uint8_t profileId);
 
 #endif /* INCLUDE_EEPROM_H_ */
