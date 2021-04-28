@@ -4063,5 +4063,53 @@ I2C2_SCL
 Text GLabel 9500 17275 0    50   Input ~ 0
 I2C2_SDA
 Text Notes 5725 16075 0    50   ~ 0
-Address = 50H
+Address = A0H
+$Comp
+L Connector:Conn_01x04_Female J?
+U 1 1 608B1D74
+P 6300 14975
+F 0 "J?" H 6192 14550 50  0000 C CNN
+F 1 "Conn_01x04_Female" H 6192 14641 50  0000 C CNN
+F 2 "" H 6300 14975 50  0001 C CNN
+F 3 "~" H 6300 14975 50  0001 C CNN
+	1    6300 14975
+	-1   0    0    1   
+$EndComp
+Text Notes 6150 15125 0    50   ~ 0
+RX
+Text Notes 6150 15025 0    50   ~ 0
+TX
+Text Notes 6125 14925 0    50   ~ 0
+GND
+Text Notes 6125 14825 0    50   ~ 0
+VCC
+Text Notes 5750 14975 0    50   ~ 0
+HC-06\nBluetooth
+$Comp
+L power:GND #PWR?
+U 1 1 6097477B
+P 6575 15175
+F 0 "#PWR?" H 6575 14925 50  0001 C CNN
+F 1 "GND" H 6580 15002 50  0000 C CNN
+F 2 "" H 6575 15175 50  0001 C CNN
+F 3 "" H 6575 15175 50  0001 C CNN
+	1    6575 15175
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6575 15175 6575 14875
+Wire Wire Line
+	6575 14875 6500 14875
+Text GLabel 6575 14775 2    50   Input ~ 0
+BT_5V
+Wire Wire Line
+	6575 14775 6500 14775
+Text GLabel 10350 15175 2    50   Input ~ 0
+BT_TX
+Text GLabel 10350 15275 2    50   Input ~ 0
+BT_RX
+Wire Wire Line
+	10350 15175 10250 15175
+Wire Wire Line
+	10350 15275 10250 15275
 $EndSCHEMATC

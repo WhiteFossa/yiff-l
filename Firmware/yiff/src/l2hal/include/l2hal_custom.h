@@ -90,6 +90,13 @@ L2HAL_24x_ContextStruct EEPROMContext;
  */
 L2HAL_CRCContextStruct CRC_Context;
 
+
+/**
+ * UART Handle
+ */
+UART_HandleTypeDef UART_Handle;
+
+
 /**
  * Put custom hardware initialization stuff here,
  */
@@ -125,5 +132,12 @@ void I2C2_ER_IRQHandler(void);
  */
 void HAL_CRC_MspInit(CRC_HandleTypeDef *hcrc);
 void HAL_CRC_MspDeInit(CRC_HandleTypeDef *hcrc);
+
+/**
+ * UART-related stuff
+ */
+void HAL_UART_MspInit(UART_HandleTypeDef *huart);
+void HAL_UART_MspDeInit(UART_HandleTypeDef *huart);
+void USART1_IRQHandler(void);
 
 #endif /* L2HAL_INCLUDE_L2HAL_CUSTOM_H_ */

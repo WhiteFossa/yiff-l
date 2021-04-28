@@ -48,12 +48,15 @@
 #include <MorsePlayer.h>
 #include <math.h>
 #include <EEPROM.h>
+#include <UART.h>
 
 /**
  * EEPROM-related stuff
  */
 #define YHL_EEPROM_ADDRESS 0xA0
 #define YHL_EEPROM_PAGE_SIZE 8
+
+void OnNewPacket(uint8_t packet[YHL_UART_PACKET_SIZE]);
 
 
 #endif /* __MAIN_H */

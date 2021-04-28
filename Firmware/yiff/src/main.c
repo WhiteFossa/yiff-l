@@ -154,22 +154,36 @@ int main(int argc, char* argv[])
 	/* Adding seconds tick handler */
 	RTC_AddListener(&NewSecondCallback);
 
+	/**
+	 * Starting to listen for commands
+	 */
+	UART_Init();
+	UART_StartListen(&OnNewPacket);
+
 	/* Debugging stuff begin */
-
-//	EEPROMProfileStruct profile = EEPROM_GetProfile(1);
-//	profile.Frequency.FrequencyHz = 3650000U;
-//	EEPROM_UpdateProfile(&profile, 1);
-
-//	EEPROM_SwitchProfile(0);
 
 	/* Debugging stuff end */
 
 	while(true)
 	{
+//		char buffer[32];
+		//UART_ReadBlocking(buffer, 4);
+//		sprintf(buffer, "Yiffy yiff");
+//		UART_SendSemiBlocking(buffer, 10);
+
 		RTC_Poll();
 	}
 
 	return 0;
+}
+
+void OnNewPacket(uint8_t packet[YHL_UART_PACKET_SIZE])
+{
+	for (uint8_t i = 0; i < 16; i++)
+	{
+		FoxState.Name[i] = packet[i];
+	}
+	FoxState.Name[16] = 0x00;
 }
 
 #pragma GCC diagnostic pop

@@ -81,6 +81,24 @@ void L2HAL_SetupI2C(void)
 		L2HAL_Error(Generic);
 	}
 
+	/* UART1 (for bluetooth) */
+	UART_Handle.Instance = USART1;
+	UART_Handle.Init.BaudRate = 115200;
+	UART_Handle.Init.WordLength = UART_WORDLENGTH_8B;
+	UART_Handle.Init.StopBits = UART_STOPBITS_1;
+	UART_Handle.Init.Parity = UART_PARITY_NONE;
+	UART_Handle.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+	UART_Handle.Init.Mode = UART_MODE_TX_RX;
+
+	if(HAL_UART_DeInit(&UART_Handle) != HAL_OK)
+	{
+		L2HAL_Error(Generic);
+	}
+
+	if(HAL_UART_Init(&UART_Handle) != HAL_OK)
+	{
+		L2HAL_Error(Generic);
+	}
 }
 
 void HAL_I2C_MspInit(I2C_HandleTypeDef *hi2c)
@@ -194,3 +212,51 @@ void HAL_CRC_MspDeInit(CRC_HandleTypeDef *hcrc)
 {
 	__HAL_RCC_CRC_CLK_DISABLE();
 }
+
+void HAL_UART_MspInit(UART_HandleTypeDef *huart)
+{
+	if (huart->Instance == USART1)
+	{
+		__HAL_RCC_USART1_CLK_ENABLE();
+
+		__HAL_RCC_GPIOA_CLK_ENABLE();
+
+		/* TX */
+		GPIO_InitTypeDef GPIO_InitStruct;
+		GPIO_InitStruct.Pin = GPIO_PIN_9;
+		GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+		GPIO_InitStruct.Pull = GPIO_PULLUP;
+		GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+		HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+		/* RX */
+		GPIO_InitStruct.Pin = GPIO_PIN_10;
+		GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+		GPIO_InitStruct.Pull = GPIO_PULLUP;
+		GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+		HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+		HAL_NVIC_SetPriority(USART1_IRQn, 0, 1);
+		HAL_NVIC_EnableIRQ(USART1_IRQn);
+	}
+}
+
+void HAL_UART_MspDeInit(UART_HandleTypeDef *huart)
+{
+	if (huart->Instance == USART1)
+	{
+		__HAL_RCC_USART1_FORCE_RESET();
+		__HAL_RCC_USART1_RELEASE_RESET();
+
+		HAL_GPIO_DeInit(GPIOA, GPIO_PIN_9);
+		HAL_GPIO_DeInit(GPIOA, GPIO_PIN_10);
+
+		HAL_NVIC_DisableIRQ(USART1_IRQn);
+	}
+}
+
+void USART1_IRQHandler(void)
+{
+	HAL_UART_IRQHandler(&UART_Handle);
+}
+
