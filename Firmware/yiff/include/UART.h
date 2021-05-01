@@ -17,6 +17,11 @@
 #define YHL_UART_BLOCKING_TRANSFER_TIMEOUT 1000000U
 
 /**
+ * If packet isn't received during this time, reset state machine
+ */
+#define YHL_UART_NON_BLOCKING_RX_TIMEOUT 1000U
+
+/**
  * Packet (i.e. command) size
  */
 #define YHL_UART_PACKET_SIZE 16
@@ -70,6 +75,11 @@ uint8_t UART_RxPacketBuffer[YHL_UART_PACKET_SIZE];
 uint8_t UART_RxPacketBufferIndex;
 
 /**
+ * Decreases each millisecond, when reaches 0, resets state machine to Listen state.
+ */
+uint16_t UART_RxTimeoutTimer;
+
+/**
  * Pointer to function, called when new packet received
  */
 void (*UART_OnNewPacket)(uint8_t packet[YHL_UART_PACKET_SIZE]);
@@ -120,5 +130,10 @@ void UART_ReadBlocking(uint8_t* buffer, uint8_t size);
  * otherwise second call will wait for transmission completion.
  */
 void UART_SendSemiBlocking(uint8_t* message, uint8_t size);
+
+/**
+ * Call this every millisecond
+ */
+void UART_Tick();
 
 #endif /* INCLUDE_UART_H_ */

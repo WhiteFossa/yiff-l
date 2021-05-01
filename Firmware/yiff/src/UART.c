@@ -7,6 +7,23 @@
 
 #include <main.h>
 
+void UART_Tick()
+{
+	if (UART_RxTimeoutTimer > 0)
+	{
+		UART_RxTimeoutTimer --;
+	}
+	else
+	{
+		if (InProgress == UART_PSMState)
+		{
+			/* Timeout, aborting ongoing packet reception. */
+			UART_PSMState = Listen;
+			UART_RxPacketBufferIndex = 0;
+		}
+	}
+}
+
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *UartHandle)
 {
 	if (UART_TransmissionInProgress)
@@ -27,6 +44,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *UartHandle)
 
 		case Listen:
 			/* First byte came */
+			UART_RxTimeoutTimer = YHL_UART_NON_BLOCKING_RX_TIMEOUT;
 			UART_RxPacketBuffer[UART_RxPacketBufferIndex] = UART_RxByteBuffer;
 			UART_RxPacketBufferIndex ++;
 
@@ -41,7 +59,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *UartHandle)
 			break;
 
 		case InProgress:
-
+			UART_RxTimeoutTimer = YHL_UART_NON_BLOCKING_RX_TIMEOUT;
 			UART_RxPacketBuffer[UART_RxPacketBufferIndex] = UART_RxByteBuffer;
 			UART_RxPacketBufferIndex ++;
 
@@ -72,6 +90,7 @@ void UART_StartListen(void (*onNewPacketFunction)(uint8_t packet[YHL_UART_PACKET
 {
 	UART_PSMState = Listen;
 	UART_RxPacketBufferIndex = 0;
+	UART_RxTimeoutTimer = YHL_UART_NON_BLOCKING_RX_TIMEOUT;
 	UART_OnNewPacket = onNewPacketFunction;
 
 	if(HAL_UART_Receive_IT(&UART_Handle, &UART_RxByteBuffer, 1) != HAL_OK)
@@ -117,6 +136,8 @@ void UART_Init(void)
 	UART_TransmissionInProgress = false;
 	UART_TxBuffer = NULL;
 	UART_PSMState = BeforeListen;
+
+	L2HAL_SysTick_RegisterHandler(&UART_Tick);
 }
 
 void UART_SendSemiBlocking(uint8_t* message, uint8_t size)
