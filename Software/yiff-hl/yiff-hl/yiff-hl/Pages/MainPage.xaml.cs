@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xamarin.Forms;
+﻿using Xamarin.Forms;
 
 namespace yiff_hl.Pages
 {
@@ -15,6 +9,8 @@ namespace yiff_hl.Pages
             InitializeComponent();
 
             btnConnectToFox.Clicked += (s, e) => Navigation.PushModalAsync(new ConnectToFoxPage());
+
+            btnFoxSettings.Clicked += (s, e) => Navigation.PushModalAsync(new FoxSettingsPage());
         }
     }
 }

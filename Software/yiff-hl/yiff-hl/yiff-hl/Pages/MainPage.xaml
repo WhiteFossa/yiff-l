@@ -5,9 +5,15 @@
              Title="Project YIFF-HL">
 
     <StackLayout>
-        <Label Text="Here will be main application screen" />
 
-        <Button x:Name="btnConnectToFox" Text="Connect to fox" />
+        <Button x:Name="btnConnectToFox"
+                Text="Connect to fox" 
+                HorizontalOptions="CenterAndExpand"/>
+
+        <Button x:Name="btnFoxSettings"
+                Text="Fox settings" 
+                HorizontalOptions="CenterAndExpand"/>
+
     </StackLayout>
 
 </ContentPage>

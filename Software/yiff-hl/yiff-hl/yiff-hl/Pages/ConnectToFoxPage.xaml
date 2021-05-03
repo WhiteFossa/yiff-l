@@ -2,26 +2,42 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="yiff_hl.Pages.ConnectToFoxPage"
-             Title="Connect to fox">
-    
+             Title="Connect to a fox">
+
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="Here will be Connect To Fox page"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+            <StackLayout
+                Orientation="Horizontal">
+
+                <Button x:Name="btnRefresh"
+                        Text="Refresh"
+                        Clicked="OnRefreshClicked" />
+
+            </StackLayout>
+
+            <ListView x:Name="bluetoothDevicesView"
+                      ItemsSource="{Binding BluetoothDevices}">
+                
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <TextCell Text="{Binding Name}"
+                                  Detail="{Binding MAC}"/>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
 
             <StackLayout
                 Orientation="Horizontal">
-                
+
                 <Button x:Name="btnOk"
                         Text="OK"
                         Clicked="OnOkClicked" />
-                
+
                 <Button x:Name="btnCancel"
                         Text="Cancel"
                         HorizontalOptions="EndAndExpand"
                         Clicked="OnCancelClicked" />
-                
+
             </StackLayout>
         </StackLayout>
     </ContentPage.Content>

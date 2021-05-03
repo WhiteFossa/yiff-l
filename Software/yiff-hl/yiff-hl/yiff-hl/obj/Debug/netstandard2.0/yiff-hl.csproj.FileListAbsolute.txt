@@ -13,3 +13,4 @@ C:\Non work\yiff-l\Software\yiff-hl\yiff-hl\yiff-hl\obj\Debug\netstandard2.0\ref
 C:\Non work\yiff-l\Software\yiff-hl\yiff-hl\yiff-hl\obj\Debug\netstandard2.0\yiff-hl.pdb
 C:\Non work\yiff-l\Software\yiff-hl\yiff-hl\yiff-hl\obj\Debug\netstandard2.0\yiff-hl.csprojAssemblyReference.cache
 C:\Non work\yiff-l\Software\yiff-hl\yiff-hl\yiff-hl\obj\Debug\netstandard2.0\Pages\ConnectToFoxPage.xaml.g.cs
+C:\Non work\yiff-l\Software\yiff-hl\yiff-hl\yiff-hl\obj\Debug\netstandard2.0\Pages\FoxSettingsPage.xaml.g.cs
