@@ -56,6 +56,11 @@
 #define YHL_EEPROM_ADDRESS 0xA0
 #define YHL_EEPROM_PAGE_SIZE 8
 
+/**
+ * Bluetooth-related stuff
+ */
+#define YHL_BLUETOOTH_PIN "0000"
+
 void OnNewPacket(uint8_t packet[YHL_UART_PACKET_SIZE]);
 
 

@@ -46,6 +46,7 @@
 #include <l2hal_encoders.h>
 #include <l2hal_24x.h>
 #include <l2hal_crc.h>
+#include <l2hal_hc06.h>
 
 /**
  * I2C1 interrupt priorities.
@@ -90,12 +91,15 @@ L2HAL_24x_ContextStruct EEPROMContext;
  */
 L2HAL_CRCContextStruct CRC_Context;
 
-
 /**
  * UART Handle
  */
 UART_HandleTypeDef UART_Handle;
 
+/**
+ * HC-06 context
+ */
+L2HAL_HC06_ContextStruct HC06_Context;
 
 /**
  * Put custom hardware initialization stuff here,
