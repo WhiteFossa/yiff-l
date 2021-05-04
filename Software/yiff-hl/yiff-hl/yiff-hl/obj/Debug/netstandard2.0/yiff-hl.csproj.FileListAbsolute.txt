@@ -14,3 +14,8 @@ C:\Non work\yiff-l\Software\yiff-hl\yiff-hl\yiff-hl\obj\Debug\netstandard2.0\yif
 C:\Non work\yiff-l\Software\yiff-hl\yiff-hl\yiff-hl\obj\Debug\netstandard2.0\yiff-hl.csprojAssemblyReference.cache
 C:\Non work\yiff-l\Software\yiff-hl\yiff-hl\yiff-hl\obj\Debug\netstandard2.0\Pages\ConnectToFoxPage.xaml.g.cs
 C:\Non work\yiff-l\Software\yiff-hl\yiff-hl\yiff-hl\obj\Debug\netstandard2.0\Pages\FoxSettingsPage.xaml.g.cs
+C:\Non work\yiff-l\Software\yiff-hl\yiff-hl\yiff-hl\bin\Debug\netstandard2.0\yiff-hl.Business.dll
+C:\Non work\yiff-l\Software\yiff-hl\yiff-hl\yiff-hl\bin\Debug\netstandard2.0\yiff-hl.Business.pdb
+C:\Non work\yiff-l\Software\yiff-hl\yiff-hl\yiff-hl\obj\Debug\netstandard2.0\yiff-hl.csproj.CopyComplete
+C:\Non work\yiff-l\Software\yiff-hl\yiff-hl\yiff-hl\bin\Debug\netstandard2.0\yiff-hl.Abstractions.dll
+C:\Non work\yiff-l\Software\yiff-hl\yiff-hl\yiff-hl\bin\Debug\netstandard2.0\yiff-hl.Abstractions.pdb

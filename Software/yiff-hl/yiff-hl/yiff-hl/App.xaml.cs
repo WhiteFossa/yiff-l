@@ -1,17 +1,19 @@
-﻿using System;
+﻿using Nancy.TinyIoc;
 using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
+using yiff_hl.Abstractions;
 using yiff_hl.Pages;
 
 namespace yiff_hl
 {
     public partial class App : Application
     {
+        public static TinyIoCContainer Container;
+
         public App()
         {
             InitializeComponent();
 
-            MainPage = new NavigationPage(new MainPage());
+            MainPage = new NavigationPage(new MainPage(Container.Resolve<IBluetoothDevicesLister>()));
         }
 
         protected override void OnStart()

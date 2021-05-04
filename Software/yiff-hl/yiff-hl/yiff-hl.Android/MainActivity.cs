@@ -1,9 +1,11 @@
-﻿using System;
-
+﻿
 using Android.App;
 using Android.Content.PM;
-using Android.Runtime;
 using Android.OS;
+using Android.Runtime;
+using Nancy.TinyIoc;
+using yiff_hl.Abstractions;
+using yiff_hl.Droid.Implementations;
 
 namespace yiff_hl.Droid
 {
@@ -12,6 +14,10 @@ namespace yiff_hl.Droid
     {
         protected override void OnCreate(Bundle savedInstanceState)
         {
+            // Registering IoC stuff
+            App.Container = new TinyIoCContainer();
+            App.Container.Register<IBluetoothDevicesLister, BluetoothDevicesLister>();
+
             base.OnCreate(savedInstanceState);
 
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);

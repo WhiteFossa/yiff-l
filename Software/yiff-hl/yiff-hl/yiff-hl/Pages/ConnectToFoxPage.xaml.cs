@@ -1,28 +1,28 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using yiff_hl.Abstractions;
 using yiff_hl.Data;
 
 namespace yiff_hl.Pages
 {
-	[XamlCompilation(XamlCompilationOptions.Compile)]
+    [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ConnectToFoxPage : ContentPage
     {
-        private ObservableCollection<BluetoothDevice> bluetoothDevices = new ObservableCollection<BluetoothDevice>();
+        private readonly IBluetoothDevicesLister bluetoothDevicesLister;
 
-        public ObservableCollection<BluetoothDevice> BluetoothDevices { get { return bluetoothDevices; } }
+        private ConnectToFoxModel connectToFoxModel = new ConnectToFoxModel();
 
-        public ConnectToFoxPage()
+        public ConnectToFoxPage(IBluetoothDevicesLister bluetoothDevicesLister)
         {
+            this.bluetoothDevicesLister = bluetoothDevicesLister;
+
             InitializeComponent();
 
-            BindingContext = this;
+            BindingContext = connectToFoxModel;
+
+            UpdateDevicesList();
         }
 
         public async void OnOkClicked(object sender, EventArgs args)
@@ -42,7 +42,18 @@ namespace yiff_hl.Pages
 
         public async void OnRefreshClicked(object sender, EventArgs args)
         {
-            bluetoothDevices.Add(new BluetoothDevice() { Name = "Test device", MAC ="00:01:02:03:04:05" });
+            UpdateDevicesList();
+        }
+
+        public void UpdateDevicesList()
+        {
+            var devices = bluetoothDevicesLister.ListPairedDevices();
+
+            connectToFoxModel.BluetoothDevices.Clear();
+            foreach (var device in devices)
+            {
+                connectToFoxModel.BluetoothDevices.Add(new BluetoothDevice() { Name = device.Name, MAC = device.MAC });
+            }
         }
     }
 }
