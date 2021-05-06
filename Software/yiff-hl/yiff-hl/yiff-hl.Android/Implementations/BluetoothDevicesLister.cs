@@ -1,8 +1,8 @@
 ﻿using Android.Bluetooth;
 using System.Collections.Generic;
 using System.Linq;
-using yiff_hl.Abstractions;
 using yiff_hl.Abstractions.DTOs;
+using yiff_hl.Abstractions.Interfaces;
 
 namespace yiff_hl.Droid.Implementations
 {
@@ -27,7 +27,7 @@ namespace yiff_hl.Droid.Implementations
 
             result.AddRange(adapter
                 .BondedDevices
-                .Select(d => new BluetoothDeviceDTO() { Name = d.Name, MAC = d.Address }));
+                .Select(d => new BluetoothDeviceDTO(d.Name, d.Address)));
 
             return result;
         }

@@ -2,8 +2,14 @@
 {
     public class BluetoothDeviceDTO
     {
-        public string Name { get; set; }
+        public BluetoothDeviceDTO(string name, string mac)
+        {
+            Name = name;
+            MAC = mac;
+        }
 
-        public string MAC { get; set; }
+        public string Name { get; }
+
+        public string MAC { get; }
     }
 }
