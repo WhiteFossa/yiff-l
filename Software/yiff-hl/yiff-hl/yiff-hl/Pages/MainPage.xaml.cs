@@ -1,5 +1,5 @@
 ﻿using Xamarin.Forms;
-using yiff_hl.Abstractions;
+using yiff_hl.Abstractions.Interfaces;
 
 namespace yiff_hl.Pages
 {

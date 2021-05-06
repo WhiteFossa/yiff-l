@@ -4,7 +4,7 @@ using Android.Content.PM;
 using Android.OS;
 using Android.Runtime;
 using Nancy.TinyIoc;
-using yiff_hl.Abstractions;
+using yiff_hl.Abstractions.Interfaces;
 using yiff_hl.Droid.Implementations;
 
 namespace yiff_hl.Droid

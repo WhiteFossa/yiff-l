@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Linq;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using yiff_hl.Abstractions;
+using yiff_hl.Abstractions.Interfaces;
 using yiff_hl.Data;
 
 namespace yiff_hl.Pages
@@ -23,11 +22,6 @@ namespace yiff_hl.Pages
             BindingContext = connectToFoxModel;
 
             UpdateDevicesList();
-        }
-
-        public async void OnOkClicked(object sender, EventArgs args)
-        {
-            await Navigation.PopModalAsync();
         }
 
         public async void OnCancelClicked(object sender, EventArgs args)
@@ -54,6 +48,14 @@ namespace yiff_hl.Pages
             {
                 connectToFoxModel.BluetoothDevices.Add(new BluetoothDevice() { Name = device.Name, MAC = device.MAC });
             }
+        }
+
+        public async void OnConnectClicked(object sender, EventArgs args)
+        {
+            var deviceName = ((BluetoothDevice)((Button)sender).CommandParameter).Name;
+            connectToFoxModel.SelectedDevice = deviceName;
+
+            await Navigation.PopModalAsync();
         }
     }
 }

@@ -10,5 +10,10 @@ namespace yiff_hl.Data
         private ObservableCollection<BluetoothDevice> bluetoothDevices = new ObservableCollection<BluetoothDevice>();
 
         public ObservableCollection<BluetoothDevice> BluetoothDevices { get { return bluetoothDevices; } }
+
+        /// <summary>
+        /// Name of selected bluetooth device
+        /// </summary>
+        public string SelectedDevice { get; set; }
     }
 }

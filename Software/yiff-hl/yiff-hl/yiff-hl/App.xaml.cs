@@ -1,6 +1,6 @@
 ﻿using Nancy.TinyIoc;
 using Xamarin.Forms;
-using yiff_hl.Abstractions;
+using yiff_hl.Abstractions.Interfaces;
 using yiff_hl.Pages;
 
 namespace yiff_hl
