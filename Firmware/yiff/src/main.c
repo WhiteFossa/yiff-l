@@ -168,8 +168,10 @@ int main(int argc, char* argv[])
 		L2HAL_Error(Generic);
 	}
 
+	/** Do not set name or pin, it leads to un-pairing
 	L2HAL_HC06_SetName(&HC06_Context, FoxState.Name);
 	L2HAL_HC06_SetPIN(&HC06_Context, YHL_BLUETOOTH_PIN);
+	*/
 
 	/**
 	 * Starting to listen for commands
@@ -200,6 +202,11 @@ void OnNewPacket(uint8_t packet[YHL_UART_PACKET_SIZE])
 		FoxState.Name[i] = packet[i];
 	}
 	FoxState.Name[16] = 0x00;
+
+	/* Sending back */
+	char message[32];
+	sprintf(message, "Fox says yiff!");
+	UART_SendSemiBlocking(message, 14);
 }
 
 #pragma GCC diagnostic pop
