@@ -41,7 +41,10 @@ namespace yiff_hl.Pages
 
         public void OnNewByteReceived(byte data)
         {
-            edMessagesFromFox.Text += ((char)data).ToString();
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                edMessagesFromFox.Text += ((char)data).ToString();
+            });
         }
     }
 }
