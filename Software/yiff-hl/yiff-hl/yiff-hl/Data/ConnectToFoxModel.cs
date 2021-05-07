@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using yiff_hl.Abstractions.Interfaces;
 
 namespace yiff_hl.Data
 {
@@ -15,5 +16,10 @@ namespace yiff_hl.Data
         /// Name of selected bluetooth device
         /// </summary>
         public string SelectedDevice { get; set; }
+
+        /// <summary>
+        /// Bluetooth communicator, it will live here, at least temporarily
+        /// </summary>
+        public IBluetoothCommunicator BluetoothCommunicator { get; set; }
     }
 }

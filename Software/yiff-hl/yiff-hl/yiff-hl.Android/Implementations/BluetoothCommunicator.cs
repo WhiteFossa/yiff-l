@@ -24,7 +24,9 @@ namespace yiff_hl.Droid.Implementations
 
         private List<byte> messageToSend;
 
-        private CancellationTokenSource cancellationToken { get; set; }
+        private CancellationTokenSource cancellationToken;
+
+        private Object locker = new Object();
 
         public void Connect()
         {
@@ -82,24 +84,32 @@ namespace yiff_hl.Droid.Implementations
                 var bufferedReader = new BufferedReader(reader);
                 var readBuffer = new char[1024]; // TODO: Set me to correct size
 
+                cancellationToken = new CancellationTokenSource();
+
                 while (!cancellationToken.IsCancellationRequested)
                 {
                     // Reading (non-blocking, because we need to send messages too)
                     if (bufferedReader.Ready())
                     {
-                        var readSize = bufferedReader.Read(readBuffer);
-                        for (var byteIndex = 0; byteIndex < readSize; byteIndex++)
+                        lock (locker)
                         {
-                            readDelegateInstance((byte)readBuffer[byteIndex]);
+                            var readSize = bufferedReader.Read(readBuffer);
+                            for (var byteIndex = 0; byteIndex < readSize; byteIndex++)
+                            {
+                                readDelegateInstance((byte)readBuffer[byteIndex]);
+                            }
                         }
                     }
 
                     // Sending
-                    if (messageToSend != null)
+                    lock (locker)
                     {
-                        socket.OutputStream.Write(messageToSend.ToArray(), 0, messageToSend.Count);
+                        if (messageToSend != null)
+                        {
+                            socket.OutputStream.Write(messageToSend.ToArray(), 0, messageToSend.Count);
 
-                        messageToSend = null;
+                            messageToSend = null;
+                        }
                     }
                 }
             }
@@ -122,8 +132,11 @@ namespace yiff_hl.Droid.Implementations
 
         public void SendMessage(IReadOnlyCollection<byte> message)
         {
-            messageToSend = message
-                .ToList();
+            lock (locker)
+            {
+                messageToSend = message
+                    .ToList();
+            }
         }
 
         public void SetDeviceName(string name)

@@ -6,15 +6,35 @@ using System.Threading.Tasks;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using yiff_hl.Abstractions.Interfaces;
 
 namespace yiff_hl.Pages
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class FoxSettingsPage : ContentPage
     {
-        public FoxSettingsPage()
+        private readonly IBluetoothCommunicator bluetoothCommunicator;
+
+        public FoxSettingsPage(IBluetoothCommunicator bluetoothCommunicator)
         {
+            this.bluetoothCommunicator = bluetoothCommunicator;
+
             InitializeComponent();
+        }
+
+        private void OnDisconnectClicked(object sender, EventArgs e)
+        {
+            bluetoothCommunicator.Disconnect();
+        }
+
+        private void OnSendMessageClicked(object sender, EventArgs e)
+        {
+            var message = "Yiffy yiff"
+                .ToCharArray()
+                .Select(ch => (byte)ch)
+                .ToList();
+
+            bluetoothCommunicator.SendMessage(message);
         }
     }
 }

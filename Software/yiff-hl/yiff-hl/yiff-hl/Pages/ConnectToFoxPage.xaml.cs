@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using yiff_hl.Abstractions.Interfaces;
@@ -13,9 +14,11 @@ namespace yiff_hl.Pages
 
         private ConnectToFoxModel connectToFoxModel = new ConnectToFoxModel();
 
-        public ConnectToFoxPage(IBluetoothDevicesLister bluetoothDevicesLister)
+        public ConnectToFoxPage(IBluetoothDevicesLister bluetoothDevicesLister,
+            IBluetoothCommunicator bluetoothCommunicator)
         {
             this.bluetoothDevicesLister = bluetoothDevicesLister;
+            connectToFoxModel.BluetoothCommunicator = bluetoothCommunicator;
 
             InitializeComponent();
 
@@ -56,6 +59,16 @@ namespace yiff_hl.Pages
             connectToFoxModel.SelectedDevice = deviceName;
 
             await Navigation.PopModalAsync();
+
+            // Connecting
+            connectToFoxModel.BluetoothCommunicator.SetDeviceName(connectToFoxModel.SelectedDevice);
+            connectToFoxModel.BluetoothCommunicator.SetReadDelegate(OnNewByte);
+            var communicatorThread = new Thread(new ThreadStart(connectToFoxModel.BluetoothCommunicator.Connect));
+            communicatorThread.Start();
+        }
+        public void OnNewByte(byte data)
+        {
+            int a = 10;
         }
     }
 }

@@ -29,7 +29,6 @@ namespace yiff_hl.Abstractions.Interfaces
         /// <summary>
         /// Send this bytes to device
         /// </summary>
-        /// <param name="message"></param>
         void SendMessage(IReadOnlyCollection<byte> message);
     }
 }

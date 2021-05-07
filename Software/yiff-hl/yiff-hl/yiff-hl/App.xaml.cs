@@ -13,7 +13,8 @@ namespace yiff_hl
         {
             InitializeComponent();
 
-            MainPage = new NavigationPage(new MainPage(Container.Resolve<IBluetoothDevicesLister>()));
+            MainPage = new NavigationPage(new MainPage(Container.Resolve<IBluetoothDevicesLister>(),
+                Container.Resolve<IBluetoothCommunicator>()));
         }
 
         protected override void OnStart()

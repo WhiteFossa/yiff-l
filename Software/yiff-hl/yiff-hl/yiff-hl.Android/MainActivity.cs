@@ -17,6 +17,7 @@ namespace yiff_hl.Droid
             // Registering IoC stuff
             App.Container = new TinyIoCContainer();
             App.Container.Register<IBluetoothDevicesLister, BluetoothDevicesLister>();
+            App.Container.Register<IBluetoothCommunicator, BluetoothCommunicator>();
 
             base.OnCreate(savedInstanceState);
 
