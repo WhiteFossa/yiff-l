@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="yiff_hl.Pages.ConnectToFoxPage"
+             Title="Connect to a fox">
+
+    <ContentPage.Content>
+        <StackLayout>
+            <StackLayout
+                Orientation="Horizontal">
+
+                <Button x:Name="btnRefresh"
+                        Text="Refresh"
+                        Clicked="OnRefreshClicked" />
+
+            </StackLayout>
+
+            <ListView x:Name="bluetoothDevicesView"
+                      ItemsSource="{Binding BluetoothDevices}">
+                
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="0.4*" />
+                                    <ColumnDefinition Width="0.4*" />
+                                    <ColumnDefinition Width="0.2*" />
+                                </Grid.ColumnDefinitions>
+                                
+                                <Label
+                                    Grid.Column="0"
+                                    Text="{Binding Name}" />
+                                
+                                <Label
+                                    Grid.Column="1"
+                                    Text="{Binding MAC}" />
+                                
+                                <Button
+                                    Grid.Column="2"
+                                    Text="Connect"
+                                    Clicked="OnConnectClicked"
+                                    CommandParameter="{Binding .}"/>
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <StackLayout
+                Orientation="Horizontal">
+
+                <Button x:Name="btnCancel"
+                        Text="Cancel"
+                        HorizontalOptions="EndAndExpand"
+                        Clicked="OnCancelClicked" />
+
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
