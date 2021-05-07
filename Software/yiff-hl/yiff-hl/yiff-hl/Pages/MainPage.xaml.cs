@@ -10,9 +10,11 @@ namespace yiff_hl.Pages
         {
             InitializeComponent();
 
-            btnConnectToFox.Clicked += (s, e) => Navigation.PushModalAsync(new ConnectToFoxPage(bluetoothDevicesLister, bluetoothCommunicator));
+            var connectToFoxPage = new ConnectToFoxPage(bluetoothDevicesLister, bluetoothCommunicator);
+            var foxSettingsPage = new FoxSettingsPage(bluetoothCommunicator);
 
-            btnFoxSettings.Clicked += (s, e) => Navigation.PushModalAsync(new FoxSettingsPage(bluetoothCommunicator));
+            btnConnectToFox.Clicked += (s, e) => Navigation.PushModalAsync(connectToFoxPage);
+            btnFoxSettings.Clicked += (s, e) => Navigation.PushModalAsync(foxSettingsPage);
         }
     }
 }

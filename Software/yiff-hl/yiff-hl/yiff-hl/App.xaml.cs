@@ -9,6 +9,8 @@ namespace yiff_hl
     {
         public static TinyIoCContainer Container;
 
+        public static OnNewByteReadDelegate NewByteReadDelegate;
+
         public App()
         {
             InitializeComponent();

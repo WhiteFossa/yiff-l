@@ -19,6 +19,8 @@ namespace yiff_hl.Pages
         {
             this.bluetoothCommunicator = bluetoothCommunicator;
 
+            App.NewByteReadDelegate = OnNewByteReceived;
+
             InitializeComponent();
         }
 
@@ -29,12 +31,17 @@ namespace yiff_hl.Pages
 
         private void OnSendMessageClicked(object sender, EventArgs e)
         {
-            var message = "Yiffy yiff"
+            var message = "Yiffy yiff yerff"
                 .ToCharArray()
                 .Select(ch => (byte)ch)
                 .ToList();
 
             bluetoothCommunicator.SendMessage(message);
+        }
+
+        public void OnNewByteReceived(byte data)
+        {
+            edMessagesFromFox.Text += ((char)data).ToString();
         }
     }
 }
