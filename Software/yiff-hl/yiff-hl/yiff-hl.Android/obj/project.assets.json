@@ -1664,6 +1664,9 @@
       "yiff-hl.Business/1.0.0": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
+        "dependencies": {
+          "yiff-hl.Abstractions": "1.0.0"
+        },
         "compile": {
           "bin/placeholder/yiff-hl.Business.dll": {}
         },
@@ -5973,7 +5976,8 @@
       "Xamarin.Essentials >= 1.6.1",
       "Xamarin.Forms >= 5.0.0.2012",
       "yiff-hl >= 1.0.0",
-      "yiff-hl.Abstractions >= 1.0.0"
+      "yiff-hl.Abstractions >= 1.0.0",
+      "yiff-hl.Business >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -6011,6 +6015,9 @@
           "projectReferences": {
             "C:\\Non work\\yiff-l\\Software\\yiff-hl\\yiff-hl.Abstractions\\yiff-hl.Abstractions.csproj": {
               "projectPath": "C:\\Non work\\yiff-l\\Software\\yiff-hl\\yiff-hl.Abstractions\\yiff-hl.Abstractions.csproj"
+            },
+            "C:\\Non work\\yiff-l\\Software\\yiff-hl\\yiff-hl.Business\\yiff-hl.Business.csproj": {
+              "projectPath": "C:\\Non work\\yiff-l\\Software\\yiff-hl\\yiff-hl.Business\\yiff-hl.Business.csproj"
             },
             "C:\\Non work\\yiff-l\\Software\\yiff-hl\\yiff-hl\\yiff-hl\\yiff-hl.csproj": {
               "projectPath": "C:\\Non work\\yiff-l\\Software\\yiff-hl\\yiff-hl\\yiff-hl\\yiff-hl.csproj"

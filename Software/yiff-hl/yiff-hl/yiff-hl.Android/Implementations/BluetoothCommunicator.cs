@@ -21,6 +21,8 @@ namespace yiff_hl.Droid.Implementations
 
         private Object locker = new Object();
 
+        private bool isConnected = false;
+
         public void Connect()
         {
             if (deviceName == null)
@@ -72,6 +74,8 @@ namespace yiff_hl.Droid.Implementations
                     throw new InvalidOperationException("Can't connect to remote device!");
                 }
 
+                isConnected = true;
+
                 // Endless loop start
                 var reader = new InputStreamReader(socket.InputStream);
                 var bufferedReader = new BufferedReader(reader);
@@ -112,6 +116,8 @@ namespace yiff_hl.Droid.Implementations
                 {
                     socket.Close();
                 }
+
+                isConnected = false;
             }
         }
 
@@ -121,6 +127,11 @@ namespace yiff_hl.Droid.Implementations
             {
                 cancellationToken.Cancel();
             }
+        }
+
+        public bool IsConnected()
+        {
+            return isConnected;
         }
 
         public void SendMessage(IReadOnlyCollection<byte> message)

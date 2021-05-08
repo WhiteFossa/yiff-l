@@ -14,10 +14,13 @@ namespace yiff_hl.Pages
     public partial class FoxSettingsPage : ContentPage
     {
         private readonly IBluetoothCommunicator bluetoothCommunicator;
+        private readonly IPacketsProcessor packetsProcessor;
 
-        public FoxSettingsPage(IBluetoothCommunicator bluetoothCommunicator)
+        public FoxSettingsPage(IBluetoothCommunicator bluetoothCommunicator,
+            IPacketsProcessor packetsProcessor)
         {
             this.bluetoothCommunicator = bluetoothCommunicator;
+            this.packetsProcessor = packetsProcessor;
 
             App.NewByteReadDelegate = OnNewByteReceived;
 
@@ -36,7 +39,7 @@ namespace yiff_hl.Pages
                 .Select(ch => (byte)ch)
                 .ToList();
 
-            bluetoothCommunicator.SendMessage(message);
+            packetsProcessor.SendPacket(message);
         }
 
         public void OnNewByteReceived(byte data)

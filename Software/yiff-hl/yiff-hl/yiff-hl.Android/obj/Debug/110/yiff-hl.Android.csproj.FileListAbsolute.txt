@@ -612,3 +612,7 @@ C:\Non work\yiff-l\Software\yiff-hl\yiff-hl\yiff-hl.Android\obj\Debug\110\stamp\
 C:\Non work\yiff-l\Software\yiff-hl\yiff-hl\yiff-hl.Android\obj\Debug\110\stamp\_GenerateJavaStubs.stamp
 C:\Non work\yiff-l\Software\yiff-hl\yiff-hl\yiff-hl.Android\obj\Debug\110\stamp\_GeneratePackageManagerJava.stamp
 C:\Non work\yiff-l\Software\yiff-hl\yiff-hl\yiff-hl.Android\obj\Debug\110\stamp\_ResolveLibraryProjectImports.stamp
+C:\Non work\yiff-l\Software\yiff-hl\yiff-hl\yiff-hl.Android\bin\Debug\yiff-hl.Business.dll
+C:\Non work\yiff-l\Software\yiff-hl\yiff-hl\yiff-hl.Android\bin\Debug\yiff-hl.Business.pdb
+C:\Non work\yiff-l\Software\yiff-hl\yiff-hl\yiff-hl.Android\obj\Debug\110\android\assets\yiff-hl.Business.dll
+C:\Non work\yiff-l\Software\yiff-hl\yiff-hl\yiff-hl.Android\obj\Debug\110\android\assets\yiff-hl.Business.pdb

@@ -60,6 +60,7 @@ public class MonoPackageManager_Resources {
 		"Xamarin.Google.Android.Material.dll",
 		"Xamarin.Google.Guava.ListenableFuture.dll",
 		"yiff-hl.Abstractions.dll",
+		"yiff-hl.Business.dll",
 		"yiff-hl.dll",
 	};
 	public static String[] Dependencies = new String[]{

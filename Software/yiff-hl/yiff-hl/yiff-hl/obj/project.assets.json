@@ -1014,6 +1014,9 @@
       "yiff-hl.Business/1.0.0": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
+        "dependencies": {
+          "yiff-hl.Abstractions": "1.0.0"
+        },
         "compile": {
           "bin/placeholder/yiff-hl.Business.dll": {}
         },

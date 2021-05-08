@@ -5,4 +5,8 @@
     <RootNamespace>yiff_hl.Business</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\yiff-hl.Abstractions\yiff-hl.Abstractions.csproj" />
+  </ItemGroup>
+
 </Project>

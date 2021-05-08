@@ -30,5 +30,10 @@ namespace yiff_hl.Abstractions.Interfaces
         /// Send this bytes to device
         /// </summary>
         void SendMessage(IReadOnlyCollection<byte> message);
+
+        /// <summary>
+        /// Returns true if connected to fox
+        /// </summary>
+        bool IsConnected();
     }
 }

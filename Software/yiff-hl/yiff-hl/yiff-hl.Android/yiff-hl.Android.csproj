@@ -96,6 +96,10 @@
       <Project>{4CCD510D-7176-4B71-9EE4-37832062CBCD}</Project>
       <Name>yiff-hl.Abstractions</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\yiff-hl.Business\yiff-hl.Business.csproj">
+      <Project>{57BEBB49-368F-4D47-91B0-09AEFA1C7B41}</Project>
+      <Name>yiff-hl.Business</Name>
+    </ProjectReference>
     <ProjectReference Include="..\yiff-hl\yiff-hl.csproj">
       <Project>{fefb3aed-1b6d-46e4-a304-af86e022d96a}</Project>
       <Name>yiff-hl</Name>

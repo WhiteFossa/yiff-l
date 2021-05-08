@@ -96,7 +96,11 @@
         "frameworks": {
           "netstandard2.0": {
             "targetAlias": "netstandard2.0",
-            "projectReferences": {}
+            "projectReferences": {
+              "C:\\Non work\\yiff-l\\Software\\yiff-hl\\yiff-hl.Abstractions\\yiff-hl.Abstractions.csproj": {
+                "projectPath": "C:\\Non work\\yiff-l\\Software\\yiff-hl\\yiff-hl.Abstractions\\yiff-hl.Abstractions.csproj"
+              }
+            }
           }
         },
         "warningProperties": {
