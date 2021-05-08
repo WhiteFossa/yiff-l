@@ -61,7 +61,7 @@
  */
 #define YHL_BLUETOOTH_PIN "0000"
 
-void OnNewPacket(uint8_t packet[YHL_UART_PACKET_SIZE]);
+void OnNewPacket(uint8_t size, uint8_t* packet);
 
 
 #endif /* __MAIN_H */

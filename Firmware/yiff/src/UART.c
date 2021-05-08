@@ -7,7 +7,7 @@
 
 #include <main.h>
 
-void UART_Tick()
+void UART_Tick(void)
 {
 	if (UART_RxTimeoutTimer > 0)
 	{
@@ -46,15 +46,20 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *UartHandle)
 			/* First byte came */
 			UART_RxTimeoutTimer = YHL_UART_NON_BLOCKING_RX_TIMEOUT;
 			UART_RxPacketBuffer[UART_RxPacketBufferIndex] = UART_RxByteBuffer;
-			UART_RxPacketBufferIndex ++;
 
+			/* Checking packet length */
+			UART_ExpectedPacketLength = UART_RxPacketBuffer[0]; /* Packet length is always in first byte*/
+			if (UART_ExpectedPacketLength < YHL_UART_PACKET_MIN_SIZE || UART_ExpectedPacketLength > YHL_UART_PACKET_MAX_SIZE)
+			{
+				UART_AskForNextByte();
+				return; /* Invalid packet */
+			}
+
+			/* Moving to next state*/
+			UART_RxPacketBufferIndex ++;
 			UART_PSMState = InProgress;
 
-			/* Asking for a next byte */
-			if(HAL_UART_Receive_IT(&UART_Handle, &UART_RxByteBuffer, 1) != HAL_OK)
-			{
-				L2HAL_Error(Generic);
-			}
+			UART_AskForNextByte();
 
 			break;
 
@@ -63,20 +68,19 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *UartHandle)
 			UART_RxPacketBuffer[UART_RxPacketBufferIndex] = UART_RxByteBuffer;
 			UART_RxPacketBufferIndex ++;
 
-			if (UART_RxPacketBufferIndex == YHL_UART_PACKET_SIZE)
+			if (UART_RxPacketBufferIndex == UART_ExpectedPacketLength)
 			{
 				/* We have a new packet */
 				UART_PSMState = Listen;
 				UART_RxPacketBufferIndex = 0;
 
-				(*UART_OnNewPacket)(UART_RxPacketBuffer);
+				uint8_t* packet = malloc(UART_ExpectedPacketLength);
+				memcpy(packet, UART_RxPacketBuffer, UART_ExpectedPacketLength);
+
+				(*UART_OnNewPacket)(UART_ExpectedPacketLength, packet);
 			}
 
-			/* Asking for next (or first) byte */
-			if(HAL_UART_Receive_IT(&UART_Handle, &UART_RxByteBuffer, 1) != HAL_OK)
-			{
-				L2HAL_Error(Generic);
-			}
+			UART_AskForNextByte();
 
 			break;
 
@@ -86,23 +90,20 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *UartHandle)
 	}
 }
 
-void UART_StartListen(void (*onNewPacketFunction)(uint8_t packet[YHL_UART_PACKET_SIZE]))
+void UART_StartListen(void (*onNewPacketFunction)(uint8_t packetLength, uint8_t* packet))
 {
 	UART_PSMState = Listen;
 	UART_RxPacketBufferIndex = 0;
+	UART_ExpectedPacketLength = 0;
 	UART_RxTimeoutTimer = YHL_UART_NON_BLOCKING_RX_TIMEOUT;
 	UART_OnNewPacket = onNewPacketFunction;
 
-	if(HAL_UART_Receive_IT(&UART_Handle, &UART_RxByteBuffer, 1) != HAL_OK)
-	{
-		L2HAL_Error(Generic);
-	}
+	UART_AskForNextByte();
 }
 
 void UART_AbortListen(void)
 {
 	UART_PSMState = BeforeListen;
-	UART_RxPacketBufferIndex = 0;
 
 	if (HAL_UART_AbortReceive(&UART_Handle) != HAL_OK)
 	{
@@ -149,6 +150,14 @@ void UART_SendSemiBlocking(uint8_t* message, uint8_t size)
 	memcpy(UART_TxBuffer, message, size);
 
 	if (HAL_UART_Transmit_IT(&UART_Handle, UART_TxBuffer, size) != HAL_OK)
+	{
+		L2HAL_Error(Generic);
+	}
+}
+
+void UART_AskForNextByte(void)
+{
+	if(HAL_UART_Receive_IT(&UART_Handle, &UART_RxByteBuffer, 1) != HAL_OK)
 	{
 		L2HAL_Error(Generic);
 	}

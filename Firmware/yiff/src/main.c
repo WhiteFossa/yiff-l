@@ -195,18 +195,11 @@ int main(int argc, char* argv[])
 	return 0;
 }
 
-void OnNewPacket(uint8_t packet[YHL_UART_PACKET_SIZE])
+void OnNewPacket(uint8_t size, uint8_t* packet)
 {
-	for (uint8_t i = 0; i < 16; i++)
-	{
-		FoxState.Name[i] = packet[i];
-	}
-	FoxState.Name[16] = 0x00;
-
 	/* Sending back */
-	char message[32];
-	sprintf(message, "Fox says yiff!");
-	UART_SendSemiBlocking(message, 14);
+	UART_SendSemiBlocking(packet, size);
+	free(packet);
 }
 
 #pragma GCC diagnostic pop

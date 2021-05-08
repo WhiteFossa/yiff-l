@@ -22,9 +22,10 @@
 #define YHL_UART_NON_BLOCKING_RX_TIMEOUT 1000U
 
 /**
- * Packet (i.e. command) size
+ * Possible packet sizes
  */
-#define YHL_UART_PACKET_SIZE 16
+#define YHL_UART_PACKET_MIN_SIZE 6
+#define YHL_UART_PACKET_MAX_SIZE 64
 
 /**
  * UART packets state machine state
@@ -67,7 +68,7 @@ uint8_t UART_RxByteBuffer;
 /**
  * Packet is being accumulated here
  */
-uint8_t UART_RxPacketBuffer[YHL_UART_PACKET_SIZE];
+uint8_t UART_RxPacketBuffer[YHL_UART_PACKET_MAX_SIZE];
 
 /**
  * Current byte within UART_RxPacketBuffer
@@ -80,9 +81,16 @@ uint8_t UART_RxPacketBufferIndex;
 uint16_t UART_RxTimeoutTimer;
 
 /**
- * Pointer to function, called when new packet received
+ * When first byte of packet is came, we are able to detect packet length. That length
+ * is stored here
  */
-void (*UART_OnNewPacket)(uint8_t packet[YHL_UART_PACKET_SIZE]);
+uint8_t UART_ExpectedPacketLength;
+
+/**
+ * Pointer to function, called when new packet received. DO NOT FORGET
+ * TO CALL free() ON PACKET AFTER PROCESSING
+ */
+void (*UART_OnNewPacket)(uint8_t packetFullLength, uint8_t* packet);
 
 /**
  * True if there is ongoing semiblocking transmission
@@ -105,9 +113,10 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *UartHandle);
 void UART_Init(void);
 
 /**
- * Call it to start to listen for incoming packets
+ * Call it to start to listen for incoming packets. Feed it with packet processing function.
+ * DO NOT FORGET TO CALL free() ON PACKET AFTER PROCESSING
  */
-void UART_StartListen(void (*onNewPacketFunction)(uint8_t packet[YHL_UART_PACKET_SIZE]));
+void UART_StartListen(void (*onNewPacketFunction)(uint8_t packetLength, uint8_t* packet));
 
 /**
  * Cancels listening
@@ -134,6 +143,11 @@ void UART_SendSemiBlocking(uint8_t* message, uint8_t size);
 /**
  * Call this every millisecond
  */
-void UART_Tick();
+void UART_Tick(void);
+
+/**
+ * Ask for next byte (private function)
+ */
+void UART_AskForNextByte(void);
 
 #endif /* INCLUDE_UART_H_ */
