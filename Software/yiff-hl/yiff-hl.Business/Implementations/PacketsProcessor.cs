@@ -35,8 +35,8 @@ namespace yiff_hl.Business.Implementations
             fullPacket.AddRange(payload);
 
             // CRC32
-            var crc = 0; // TODO: Implement me
-            fullPacket.AddRange(BitsHelper.ConvertIntToBytes(crc));
+            var crc = CRCGenerator.CalculateSTMCRC32(fullPacket);
+            fullPacket.AddRange(BitsHelper.ConvertUInt32ToBytes(crc));
 
             bluetoothCommunicator.SendMessage(fullPacket);
         }
