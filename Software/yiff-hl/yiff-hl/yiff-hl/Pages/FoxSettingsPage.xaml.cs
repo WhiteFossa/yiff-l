@@ -34,10 +34,12 @@ namespace yiff_hl.Pages
 
         private void OnSendMessageClicked(object sender, EventArgs e)
         {
-            var message = "Yiffy yiff yerff"
-                .ToCharArray()
-                .Select(ch => (byte)ch)
-                .ToList();
+            //var message = "Yiffy yiff yerf"
+            //    .ToCharArray()
+            //    .Select(ch => (byte)ch)
+            //    .ToList();
+
+            var message = new byte[] { 00, 00, 00 };
 
             packetsProcessor.SendPacket(message);
         }

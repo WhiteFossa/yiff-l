@@ -10,13 +10,7 @@ namespace yiff_hl.Business.Helpers
     {
         public static byte[] ConvertUInt32ToBytes(UInt32 data)
         {
-            byte[] result = BitConverter.GetBytes(data);
-            if (BitConverter.IsLittleEndian)
-            {
-                Array.Reverse(result);
-            }
-
-            return result;
+            return BitConverter.GetBytes(data);
         }
 
         public static UInt32 ConvertBytesToUint32(byte[] bytes)
@@ -24,11 +18,6 @@ namespace yiff_hl.Business.Helpers
             if (bytes.Length != 4)
             {
                 throw new ArgumentException("4 bytes are required", nameof(bytes));
-            }
-
-            if (BitConverter.IsLittleEndian)
-            {
-                Array.Reverse(bytes);
             }
 
             return BitConverter.ToUInt32(bytes, 0);
