@@ -49,6 +49,7 @@
 #include <math.h>
 #include <EEPROM.h>
 #include <UART.h>
+#include <PacketsProcessor.h>
 
 /**
  * EEPROM-related stuff
@@ -60,8 +61,6 @@
  * Bluetooth-related stuff
  */
 #define YHL_BLUETOOTH_PIN "0000"
-
-void OnNewPacket(uint8_t size, uint8_t* packet);
 
 
 #endif /* __MAIN_H */

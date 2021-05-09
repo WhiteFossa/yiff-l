@@ -176,7 +176,7 @@ int main(int argc, char* argv[])
 	/**
 	 * Starting to listen for commands
 	 */
-	UART_StartListen(&OnNewPacket);
+	UART_StartListen(&OnNewRawPacket);
 
 	/* Debugging stuff begin */
 
@@ -184,22 +184,10 @@ int main(int argc, char* argv[])
 
 	while(true)
 	{
-//		char buffer[32];
-		//UART_ReadBlocking(buffer, 4);
-//		sprintf(buffer, "Yiffy yiff");
-//		UART_SendSemiBlocking(buffer, 10);
-
 		RTC_Poll();
 	}
 
 	return 0;
-}
-
-void OnNewPacket(uint8_t size, uint8_t* packet)
-{
-	/* Sending back */
-	UART_SendSemiBlocking(packet, size);
-	free(packet);
 }
 
 #pragma GCC diagnostic pop
