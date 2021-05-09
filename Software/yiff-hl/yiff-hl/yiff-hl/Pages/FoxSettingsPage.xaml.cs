@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -10,7 +8,7 @@ using yiff_hl.Abstractions.Interfaces;
 
 namespace yiff_hl.Pages
 {
-	[XamlCompilation(XamlCompilationOptions.Compile)]
+    [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class FoxSettingsPage : ContentPage
     {
         private readonly IBluetoothCommunicator bluetoothCommunicator;
@@ -22,7 +20,8 @@ namespace yiff_hl.Pages
             this.bluetoothCommunicator = bluetoothCommunicator;
             this.packetsProcessor = packetsProcessor;
 
-            App.NewByteReadDelegate = OnNewByteReceived;
+            App.NewByteReadDelegate = packetsProcessor.NewByteReceived;
+            packetsProcessor.SetNewPacketReceived(OnNewPacketReceived);
 
             InitializeComponent();
         }
@@ -42,11 +41,15 @@ namespace yiff_hl.Pages
             packetsProcessor.SendPacket(message);
         }
 
-        public void OnNewByteReceived(byte data)
+        private void OnNewPacketReceived(IReadOnlyCollection<byte> payload)
         {
+            var message = new string(payload
+                .Select(b => (char)b)
+                .ToArray());
+
             Device.BeginInvokeOnMainThread(() =>
             {
-                edMessagesFromFox.Text += ((char)data).ToString();
+                edMessagesFromFox.Text += message;
             });
         }
     }
