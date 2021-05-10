@@ -11,6 +11,11 @@ namespace yiff_hl.Droid.Implementations
 {
     public class BluetoothCommunicator : IBluetoothCommunicator
     {
+        /// <summary>
+        /// Read no more then this amount
+        /// </summary>
+        private const int BufferSize = 1024;
+
         private string deviceName;
 
         private OnNewByteReadDelegate readDelegateInstance;
@@ -79,7 +84,7 @@ namespace yiff_hl.Droid.Implementations
                 // Endless loop start
                 var reader = new InputStreamReader(socket.InputStream);
                 var bufferedReader = new BufferedReader(reader);
-                var readBuffer = new char[1024]; // TODO: Set me to correct size
+                var readBuffer = new char[BufferSize];
 
                 cancellationToken = new CancellationTokenSource();
 
@@ -90,8 +95,9 @@ namespace yiff_hl.Droid.Implementations
                     {
                         lock (locker)
                         {
-                            var readSize = bufferedReader.Read(readBuffer);
-                            for (var byteIndex = 0; byteIndex < readSize; byteIndex++)
+                            var readSize = bufferedReader.Read(readBuffer, 0, BufferSize);
+                            for (
+                                var byteIndex = 0; byteIndex < readSize; byteIndex++)
                             {
                                 readDelegateInstance((byte)readBuffer[byteIndex]);
                             }
