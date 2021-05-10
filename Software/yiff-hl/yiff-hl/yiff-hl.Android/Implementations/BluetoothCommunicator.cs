@@ -96,8 +96,7 @@ namespace yiff_hl.Droid.Implementations
                         lock (locker)
                         {
                             var readSize = bufferedReader.Read(readBuffer, 0, BufferSize);
-                            for (
-                                var byteIndex = 0; byteIndex < readSize; byteIndex++)
+                            for (var byteIndex = 0; byteIndex < readSize; byteIndex++)
                             {
                                 readDelegateInstance((byte)readBuffer[byteIndex]);
                             }
