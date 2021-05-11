@@ -43,6 +43,16 @@ RTC_DateTypeDef CurrentDate;
 void InitRTC(void);
 
 /**
+ * Set current date
+ */
+void RTC_SetCurrentDate(RTC_DateTypeDef date);
+
+/**
+ * Set current time
+ */
+void RTC_SetCurrentTime(RTC_TimeTypeDef time);
+
+/**
  * Call this function as often as possible.
  */
 void RTC_Poll(void);

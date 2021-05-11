@@ -14,10 +14,29 @@
 #define YHL_PACKET_PROCESSOR_PAYLOAD_SIZE_DELTA 5U
 
 /**
+ * If first byte of payload is this byte, then it's a command to fox
+ */
+#define YHL_PACKET_PROCESSOR_COMMAND_TO_FOX 0x00U
+
+/**
+ * Packet payload with command to fox can't be shorter then this
+ */
+#define YHL_PACKET_PROCESSOR_MIN_COMMAND_TO_FOX_PAYLOAD_LENGTH 2U
+
+/**
  * Possible payload sizes
  */
 #define YHL_PACKET_PROCESSOR_MIN_PAYLOAD_SIZE 1U
 #define YHL_PACKET_PROCESSOR_MAX_PAYLOAD_SIZE 59U
+
+/**
+ * Possible commands to fox
+ */
+typedef enum
+{
+	SetDateAndTime = 0x00
+}
+CommandToFoxEnum;
 
 /**
  * Call this when new raw packet came from UART
@@ -30,8 +49,19 @@ void OnNewRawPacket(uint8_t size, uint8_t* packet);
 void OnNewPacket(uint8_t payloadSize, uint8_t* payload);
 
 /**
+ * Called when new command to fox came. Payload is not a packet payload, but packet payload except first byte
+ * (which is always YHL_PACKET_PROCESSOR_COMMAND_TO_FOX).
+ */
+void OnNewCommandToFox(uint8_t payloadSize, uint8_t* payload);
+
+/**
  * Sends packet to smartphone
  */
 void SendPacket(uint8_t payloadSize, uint8_t* payload);
+
+/**
+ * Called when command "Set date and time came"
+ */
+void OnSetDateAndTime(uint8_t payloadSize, uint8_t* payload);
 
 #endif /* INCLUDE_PACKETSPROCESSOR_H_ */

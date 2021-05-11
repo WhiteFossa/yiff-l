@@ -34,9 +34,108 @@ void OnNewRawPacket(uint8_t size, uint8_t* packet)
 
 void OnNewPacket(uint8_t payloadSize, uint8_t* payload)
 {
-	SendPacket(payloadSize, payload);
+	if (YHL_PACKET_PROCESSOR_COMMAND_TO_FOX == payload[0])
+	{
+		if (payloadSize >= YHL_PACKET_PROCESSOR_MIN_COMMAND_TO_FOX_PAYLOAD_LENGTH)
+		{
+			uint8_t commandPayloadSize = (uint8_t)(payloadSize - 1U);
+			uint8_t* commandPayload = malloc(commandPayloadSize);
+			memcpy(commandPayload, payload + 1, commandPayloadSize);
+			free(payload);
+
+			OnNewCommandToFox(commandPayloadSize, commandPayload);
+
+			return;
+		}
+	}
 
 	free(payload);
+}
+
+void OnNewCommandToFox(uint8_t payloadSize, uint8_t* payload)
+{
+	switch(payload[0])
+	{
+		case SetDateAndTime:
+
+			/* Set date and time */
+			OnSetDateAndTime(payloadSize, payload);
+			break;
+	}
+
+	free(payload);
+}
+
+void OnSetDateAndTime(uint8_t payloadSize, uint8_t* payload)
+{
+	bool isValid = true;
+
+	if (payloadSize != 8U)
+	{
+		isValid = false;
+	}
+
+	uint8_t year = payload[1];
+	if (year > 99U)
+	{
+		isValid = false;
+	}
+
+	uint8_t month = payload[2];
+	if (month < 1U || month > 12U)
+	{
+		isValid = false;
+	}
+
+	uint8_t dayOfMonth = payload[3];
+	if (dayOfMonth < 1U || dayOfMonth > 31U)
+	{
+		isValid = false;
+	}
+
+	uint8_t dayOfWeekRaw = payload[4];
+	if (dayOfWeekRaw < 1U || dayOfWeekRaw > 7U)
+	{
+		isValid = false;
+	}
+
+	uint8_t hour = payload[5];
+	if (hour > 23U)
+	{
+		isValid = false;
+	}
+
+	uint8_t minute = payload[6];
+	if (minute > 59U)
+	{
+		isValid = false;
+	}
+
+	uint8_t second = payload[7];
+	if (second > 59U)
+	{
+		isValid = false;
+	}
+
+	if (isValid)
+	{
+		RTC_DateTypeDef date;
+		date.Year = year;
+		date.Month = month;
+		date.Date = dayOfMonth;
+		date.WeekDay = RTC_WEEKDAY_FRIDAY; // TODO: Set me!
+		RTC_SetCurrentDate(date);
+
+		RTC_TimeTypeDef time;
+		time.Hours = hour;
+		time.Minutes = minute;
+		time.Seconds = second;
+		RTC_SetCurrentTime(time);
+	}
+//	else
+//	{
+//
+//	}
 }
 
 void SendPacket(uint8_t payloadSize, uint8_t* payload)

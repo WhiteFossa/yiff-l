@@ -55,26 +55,34 @@ void InitRTC(void)
 	CurrentDate.Month = RTC_MONTH_JANUARY;
 	CurrentDate.Date = 1U;
 	CurrentDate.WeekDay = RTC_WEEKDAY_FRIDAY;
-
-	if (HAL_RTC_SetDate(&RtcHandle, &CurrentDate, RTC_FORMAT_BIN) != HAL_OK)
-	{
-		L2HAL_Error(Generic);
-	}
+	RTC_SetCurrentDate(CurrentDate);
 
 	CurrentTime.Hours = 0U;
 	CurrentTime.Minutes = 0U;
 	CurrentTime.Seconds = 0U;
-
-	if (HAL_RTC_SetTime(&RtcHandle, &CurrentTime, RTC_FORMAT_BIN) != HAL_OK)
-	{
-		L2HAL_Error(Generic);
-	}
+	RTC_SetCurrentTime(CurrentTime);
 
 	PreviousSecond = 0U;
 
 	/* We have no listeners initially */
 	RtcListenersCount = 0;
 	RtcListeners = malloc(0);
+}
+
+void RTC_SetCurrentDate(RTC_DateTypeDef date)
+{
+	if (HAL_RTC_SetDate(&RtcHandle, &date, RTC_FORMAT_BIN) != HAL_OK)
+	{
+		L2HAL_Error(Generic);
+	}
+}
+
+void RTC_SetCurrentTime(RTC_TimeTypeDef time)
+{
+	if (HAL_RTC_SetTime(&RtcHandle, &time, RTC_FORMAT_BIN) != HAL_OK)
+	{
+		L2HAL_Error(Generic);
+	}
 }
 
 void RTC_Poll(void)
