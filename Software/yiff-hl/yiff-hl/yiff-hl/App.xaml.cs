@@ -17,7 +17,8 @@ namespace yiff_hl
 
             MainPage = new NavigationPage(new MainPage(Container.Resolve<IBluetoothDevicesLister>(),
                 Container.Resolve<IBluetoothCommunicator>(),
-                Container.Resolve<IPacketsProcessor>()));
+                Container.Resolve<IPacketsProcessor>(),
+                Container.Resolve<IGenericCommandWriter>()));
         }
 
         protected override void OnStart()

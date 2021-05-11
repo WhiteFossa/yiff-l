@@ -7,7 +7,8 @@ namespace yiff_hl.Pages
     {
         public MainPage(IBluetoothDevicesLister bluetoothDevicesLister,
             IBluetoothCommunicator bluetoothCommunicator,
-            IPacketsProcessor packetsProcessor)
+            IPacketsProcessor packetsProcessor,
+            IGenericCommandWriter genericCommandWriter)
         {
             InitializeComponent();
 
@@ -15,7 +16,8 @@ namespace yiff_hl.Pages
                 bluetoothCommunicator);
 
             var foxSettingsPage = new FoxSettingsPage(bluetoothCommunicator,
-                packetsProcessor);
+                packetsProcessor,
+                genericCommandWriter);
 
             btnConnectToFox.Clicked += (s, e) => Navigation.PushModalAsync(connectToFoxPage);
             btnFoxSettings.Clicked += (s, e) => Navigation.PushModalAsync(foxSettingsPage);

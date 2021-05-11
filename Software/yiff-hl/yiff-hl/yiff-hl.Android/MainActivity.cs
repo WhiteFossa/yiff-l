@@ -20,6 +20,7 @@ namespace yiff_hl.Droid
             App.Container.Register<IBluetoothDevicesLister, BluetoothDevicesLister>();
             App.Container.Register<IBluetoothCommunicator, BluetoothCommunicator>();
             App.Container.Register<IPacketsProcessor, PacketsProcessor>();
+            App.Container.Register<IGenericCommandWriter, GenericCommandWriter>();
 
             base.OnCreate(savedInstanceState);
 

@@ -5,6 +5,7 @@ using System.Linq;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using yiff_hl.Abstractions.Interfaces;
+using yiff_hl.Business.Implementations.Commands;
 
 namespace yiff_hl.Pages
 {
@@ -13,12 +14,15 @@ namespace yiff_hl.Pages
     {
         private readonly IBluetoothCommunicator bluetoothCommunicator;
         private readonly IPacketsProcessor packetsProcessor;
+        private readonly IGenericCommandWriter genericCommandWriter;
 
         public FoxSettingsPage(IBluetoothCommunicator bluetoothCommunicator,
-            IPacketsProcessor packetsProcessor)
+            IPacketsProcessor packetsProcessor,
+            IGenericCommandWriter genericCommandWriter)
         {
             this.bluetoothCommunicator = bluetoothCommunicator;
             this.packetsProcessor = packetsProcessor;
+            this.genericCommandWriter = genericCommandWriter;
 
             App.NewByteReadDelegate = packetsProcessor.NewByteReceived;
             packetsProcessor.SetNewPacketReceived(OnNewPacketReceived);
@@ -63,6 +67,18 @@ namespace yiff_hl.Pages
             {
                 edMessagesFromFox.Text += message;
             });
+        }
+
+        private void OnSetCurrentDateAndTime(object sender, EventArgs e)
+        {
+            SetCurrentDateAndTime();
+
+        }
+
+        private void SetCurrentDateAndTime()
+        {
+            var command = new SetDateAndTimeCommand(genericCommandWriter);
+            command.SendSetDateAndTimeCommand(DateTime.Now);
         }
     }
 }

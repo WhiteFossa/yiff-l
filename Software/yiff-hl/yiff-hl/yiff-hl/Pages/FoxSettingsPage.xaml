@@ -19,6 +19,11 @@
                 />
 
             <Button
+                Text="Set current date and time"
+                Clicked="OnSetCurrentDateAndTime"
+                />
+
+            <Button
                 Text="Disconnect"
                 Clicked="OnDisconnectClicked"
                 />
