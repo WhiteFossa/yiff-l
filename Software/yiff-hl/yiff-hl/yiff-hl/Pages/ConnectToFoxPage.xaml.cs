@@ -63,8 +63,7 @@ namespace yiff_hl.Pages
             // Connecting
             connectToFoxModel.BluetoothCommunicator.SetDeviceName(connectToFoxModel.SelectedDevice);
             connectToFoxModel.BluetoothCommunicator.SetReadDelegate(App.NewByteReadDelegate);
-            var communicatorThread = new Thread(new ThreadStart(connectToFoxModel.BluetoothCommunicator.Connect));
-            communicatorThread.Start();
+            connectToFoxModel.BluetoothCommunicator.Connect();
         }
     }
 }

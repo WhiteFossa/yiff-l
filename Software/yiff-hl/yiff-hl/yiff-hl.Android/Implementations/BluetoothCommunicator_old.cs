@@ -1,4 +1,5 @@
 ﻿using Android.Bluetooth;
+using Java.IO;
 using Java.Util;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using yiff_hl.Abstractions.Interfaces;
 
 namespace yiff_hl.Droid.Implementations
 {
-    public class BluetoothCommunicator : IBluetoothCommunicator
+    public class BluetoothCommunicator_old : IBluetoothCommunicator
     {
         /// <summary>
         /// Read no more then this amount
@@ -19,11 +20,13 @@ namespace yiff_hl.Droid.Implementations
 
         private OnNewByteReadDelegate readDelegateInstance;
 
+        private List<byte> messageToSend;
+
+        private CancellationTokenSource cancellationToken;
+
+        private Object locker = new Object();
+
         private bool isConnected = false;
-
-        private BluetoothSocket socket;
-
-        private Thread readerThread;
 
         public void Connect()
         {
@@ -58,6 +61,8 @@ namespace yiff_hl.Droid.Implementations
                 throw new InvalidOperationException($"Device with name { deviceName } not found!");
             }
 
+            BluetoothSocket socket = null;
+
             try
             {
                 socket = bluetoothDevice.CreateInsecureRfcommSocketToServiceRecord(UUID.FromString("00001101-0000-1000-8000-00805f9b34fb")); // What this magic UUID mean?
@@ -76,37 +81,57 @@ namespace yiff_hl.Droid.Implementations
 
                 isConnected = true;
 
-                // Starting reader thread
-                readerThread = new Thread(new ThreadStart(ReaderThreadRun));
-                readerThread.Start();
-            }
-            catch (Exception)
-            {
-                if (readerThread != null)
-                {
-                    readerThread.Abort();
-                }
+                // Endless loop start
+                var reader = new InputStreamReader(socket.InputStream);
+                var bufferedReader = new BufferedReader(reader);
+                var readBuffer = new char[BufferSize];
 
+                cancellationToken = new CancellationTokenSource();
+
+                while (!cancellationToken.IsCancellationRequested)
+                {
+                    // Reading (non-blocking, because we need to send messages too)
+                    if (bufferedReader.Ready())
+                    {
+                        lock (locker)
+                        {
+                            var readSize = bufferedReader.Read(readBuffer, 0, BufferSize);
+                            for (var byteIndex = 0; byteIndex < readSize; byteIndex++)
+                            {
+                                readDelegateInstance((byte)readBuffer[byteIndex]);
+                            }
+                        }
+                    }
+
+                    // Sending
+                    lock (locker)
+                    {
+                        if (messageToSend != null)
+                        {
+                            socket.OutputStream.Write(messageToSend.ToArray(), 0, messageToSend.Count);
+
+                            messageToSend = null;
+                        }
+                    }
+                }
+            }
+            finally
+            {
                 if (socket != null)
                 {
                     socket.Close();
                 }
+
+                isConnected = false;
             }
         }
 
         public void Disconnect()
         {
-            if (readerThread != null)
+            if (cancellationToken != null)
             {
-                readerThread.Abort();
+                cancellationToken.Cancel();
             }
-
-            if (socket != null)
-            {
-                socket.Close();
-            }
-
-            isConnected = false;
         }
 
         public bool IsConnected()
@@ -116,7 +141,11 @@ namespace yiff_hl.Droid.Implementations
 
         public void SendMessage(IReadOnlyCollection<byte> message)
         {
-            socket.OutputStream.Write(message.ToArray(), 0, message.Count);
+            lock (locker)
+            {
+                messageToSend = message
+                    .ToList();
+            }
         }
 
         public void SetDeviceName(string name)
@@ -129,23 +158,6 @@ namespace yiff_hl.Droid.Implementations
         {
             _ = readDelegate ?? throw new ArgumentNullException(nameof(readDelegate));
             readDelegateInstance = readDelegate;
-        }
-
-        /// <summary>
-        /// Entry point for reader thread
-        /// </summary>
-        private void ReaderThreadRun()
-        {
-            var buffer = new byte[BufferSize];
-            while(true)
-            {
-                var readSize = socket.InputStream.Read(buffer, 0, BufferSize);
-
-                for (var i = 0; i < readSize; i++)
-                {
-                    readDelegateInstance(buffer[i]);
-                }
-            }
         }
     }
 }
