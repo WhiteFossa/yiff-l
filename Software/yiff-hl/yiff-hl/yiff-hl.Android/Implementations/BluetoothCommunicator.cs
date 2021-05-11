@@ -82,25 +82,17 @@ namespace yiff_hl.Droid.Implementations
             }
             catch (Exception)
             {
-                if (readerThread != null)
-                {
-                    readerThread.Abort();
-                }
-
                 if (socket != null)
                 {
                     socket.Close();
                 }
+
+                throw;
             }
         }
 
         public void Disconnect()
         {
-            if (readerThread != null)
-            {
-                readerThread.Abort();
-            }
-
             if (socket != null)
             {
                 socket.Close();
@@ -139,11 +131,19 @@ namespace yiff_hl.Droid.Implementations
             var buffer = new byte[BufferSize];
             while(true)
             {
-                var readSize = socket.InputStream.Read(buffer, 0, BufferSize);
-
-                for (var i = 0; i < readSize; i++)
+                try
                 {
-                    readDelegateInstance(buffer[i]);
+                    var readSize = socket.InputStream.Read(buffer, 0, BufferSize);
+
+                    for (var i = 0; i < readSize; i++)
+                    {
+                        readDelegateInstance(buffer[i]);
+                    }
+                }
+                catch (Exception)
+                {
+                    // Exceptions occurs when socket is getting closed on disconnect
+                    return;
                 }
             }
         }

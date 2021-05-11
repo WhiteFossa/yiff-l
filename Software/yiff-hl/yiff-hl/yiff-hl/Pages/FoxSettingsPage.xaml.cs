@@ -28,12 +28,24 @@ namespace yiff_hl.Pages
 
         private void OnDisconnectClicked(object sender, EventArgs e)
         {
+            Disconnect();
+        }
+
+        protected override bool OnBackButtonPressed()
+        {
+            Disconnect();
+            return base.OnBackButtonPressed();
+        }
+
+        private void Disconnect()
+        {
             bluetoothCommunicator.Disconnect();
+            Navigation.PopModalAsync();
         }
 
         private void OnSendMessageClicked(object sender, EventArgs e)
         {
-            var message = "Yiffy yiff yerf"
+            var message = "Yiff yiff yerf!!!"
                 .ToCharArray()
                 .Select(ch => (byte)ch)
                 .ToList();
