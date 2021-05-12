@@ -117,13 +117,15 @@ void OnSetDateAndTime(uint8_t payloadSize, uint8_t* payload)
 		isValid = false;
 	}
 
+	uint8_t result;
+
 	if (isValid)
 	{
 		RTC_DateTypeDef date;
 		date.Year = year;
 		date.Month = month;
 		date.Date = dayOfMonth;
-		date.WeekDay = RTC_WEEKDAY_FRIDAY; // TODO: Set me!
+		date.WeekDay = GetWeekdayFromDayNumber(dayOfWeekRaw);
 		RTC_SetCurrentDate(date);
 
 		RTC_TimeTypeDef time;
@@ -131,11 +133,17 @@ void OnSetDateAndTime(uint8_t payloadSize, uint8_t* payload)
 		time.Minutes = minute;
 		time.Seconds = second;
 		RTC_SetCurrentTime(time);
+
+		/* Everything is OK */
+		result = 0x00;
 	}
-//	else
-//	{
-//
-//	}
+	else
+	{
+		/* Validation failed */
+		result = 0x01;
+	}
+
+	SendResponse(SetDateAndTime, 1, &result);
 }
 
 void SendPacket(uint8_t payloadSize, uint8_t* payload)
@@ -156,4 +164,18 @@ void SendPacket(uint8_t payloadSize, uint8_t* payload)
 
 	UART_SendSemiBlocking(fullPacket, fullPacketSize);
 	free(fullPacket);
+}
+
+void SendResponse(CommandToFoxEnum responseTo, uint8_t payloadSize, uint8_t* payload)
+{
+	uint8_t fullPayloadSize = payloadSize + 2; /* +2 because one byte is response marker, another is command to what we respond */
+	uint8_t* fullPayload = malloc(fullPayload);
+
+	fullPayload[0] = YHL_PACKET_PROCESSOR_RESPONSE_FROM_FOX;
+	fullPayload[1] = responseTo;
+
+	memcpy(fullPayload + 2, payload, payloadSize);
+
+	SendPacket(fullPayloadSize, fullPayload);
+	free(fullPayload);
 }

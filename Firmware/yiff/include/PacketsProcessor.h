@@ -19,6 +19,11 @@
 #define YHL_PACKET_PROCESSOR_COMMAND_TO_FOX 0x00U
 
 /**
+ * Start response with this byte
+ */
+#define YHL_PACKET_PROCESSOR_RESPONSE_FROM_FOX 0x01U
+
+/**
  * Packet payload with command to fox can't be shorter then this
  */
 #define YHL_PACKET_PROCESSOR_MIN_COMMAND_TO_FOX_PAYLOAD_LENGTH 2U
@@ -58,6 +63,11 @@ void OnNewCommandToFox(uint8_t payloadSize, uint8_t* payload);
  * Sends packet to smartphone
  */
 void SendPacket(uint8_t payloadSize, uint8_t* payload);
+
+/**
+ * Send response to given command
+ */
+void SendResponse(CommandToFoxEnum responseTo, uint8_t payloadSize, uint8_t* payload);
 
 /**
  * Called when command "Set date and time came"

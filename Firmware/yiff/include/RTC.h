@@ -62,4 +62,9 @@ void RTC_Poll(void);
  */
 void RTC_AddListener(void (*listener)(void));
 
+/**
+ * Returns weekday based on day number. Monday is 1, Sunday is 7
+ */
+uint8_t GetWeekdayFromDayNumber(uint8_t dayNumber);
+
 #endif /* INCLUDE_RTC_H_ */

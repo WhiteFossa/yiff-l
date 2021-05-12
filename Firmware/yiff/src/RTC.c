@@ -122,3 +122,36 @@ void RTC_AddListener(void (*listener)(void))
 
 	RtcListeners[RtcListenersCount - 1] = listener;
 }
+
+uint8_t GetWeekdayFromDayNumber(uint8_t dayNumber)
+{
+	switch (dayNumber)
+	{
+		case 1U:
+			return RTC_WEEKDAY_MONDAY;
+
+		case 2U:
+			return RTC_WEEKDAY_TUESDAY;
+
+		case 3U:
+			return RTC_WEEKDAY_WEDNESDAY;
+
+		case 4U:
+			return RTC_WEEKDAY_THURSDAY;
+
+		case 5U:
+			return RTC_WEEKDAY_FRIDAY;
+
+		case 6U:
+			return RTC_WEEKDAY_SATURDAY;
+
+		case 7U:
+			return RTC_WEEKDAY_SUNDAY;
+
+		default:
+			L2HAL_Error(Generic);
+
+			return 0; /* Never will be reached */
+	}
+}
+
