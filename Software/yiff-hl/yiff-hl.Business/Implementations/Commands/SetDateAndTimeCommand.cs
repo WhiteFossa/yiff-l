@@ -1,18 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using yiff_hl.Abstractions.Enums;
 using yiff_hl.Abstractions.Interfaces;
 
 namespace yiff_hl.Business.Implementations.Commands
 {
+    public delegate void OnSetDateAndTimeResponseDelegate(bool isSuccessfull);
+
     public class SetDateAndTimeCommand
     {
-        private readonly IGenericCommandWriter commandWriter;
+        private readonly IPacketsProcessor packetsProcessor;
+        private OnSetDateAndTimeResponseDelegate onSetDateAndTimeResponse;
 
-        public SetDateAndTimeCommand(IGenericCommandWriter commandWriter)
+        public SetDateAndTimeCommand(IPacketsProcessor packetsProcessor)
         {
-            this.commandWriter = commandWriter;
+            this.packetsProcessor = packetsProcessor;
+
+            packetsProcessor.SetOnSetDateAndTimeResponse(OnSetCurrentDateAndTimeResponse);
         }
 
         public void SendSetDateAndTimeCommand(DateTime time)
@@ -40,7 +45,40 @@ namespace yiff_hl.Business.Implementations.Commands
             // 8th byte - second
             payload.Add((byte)time.Second);
 
-            commandWriter.SendCommand(CommandType.SetDateAndTime, payload);
+            packetsProcessor.SendCommand(CommandType.SetDateAndTime, payload);
+        }
+
+        private void OnSetCurrentDateAndTimeResponse(IReadOnlyCollection<byte> payload)
+        {
+            if (payload.Count != 1)
+            {
+                return;
+            }
+
+            bool isSuccessfull;
+            switch (payload.ElementAt(0))
+            {
+                case 0:
+                    isSuccessfull = true;
+                    break;
+
+                case 1:
+                    isSuccessfull = false;
+                    break;
+
+                default:
+                    return;
+            }
+
+            if (onSetDateAndTimeResponse != null)
+            {
+                onSetDateAndTimeResponse(isSuccessfull);
+            }
+        }
+
+        public void SetResponseDelegate(OnSetDateAndTimeResponseDelegate onSetDateAndTimeResponse)
+        {
+            this.onSetDateAndTimeResponse = onSetDateAndTimeResponse;
         }
 
         private byte GetDayOfWeek(DayOfWeek dow)

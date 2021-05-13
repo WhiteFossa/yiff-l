@@ -14,18 +14,14 @@ namespace yiff_hl.Pages
     {
         private readonly IBluetoothCommunicator bluetoothCommunicator;
         private readonly IPacketsProcessor packetsProcessor;
-        private readonly IGenericCommandWriter genericCommandWriter;
 
         public FoxSettingsPage(IBluetoothCommunicator bluetoothCommunicator,
-            IPacketsProcessor packetsProcessor,
-            IGenericCommandWriter genericCommandWriter)
+            IPacketsProcessor packetsProcessor)
         {
             this.bluetoothCommunicator = bluetoothCommunicator;
             this.packetsProcessor = packetsProcessor;
-            this.genericCommandWriter = genericCommandWriter;
 
             App.NewByteReadDelegate = packetsProcessor.NewByteReceived;
-            packetsProcessor.SetNewPacketReceived(OnNewPacketReceived);
 
             InitializeComponent();
         }
@@ -47,38 +43,25 @@ namespace yiff_hl.Pages
             Navigation.PopModalAsync();
         }
 
-        private void OnSendMessageClicked(object sender, EventArgs e)
-        {
-            var message = "Yiff yiff yerf!!!"
-                .ToCharArray()
-                .Select(ch => (byte)ch)
-                .ToList();
-
-            packetsProcessor.SendPacket(message);
-        }
-
-        private void OnNewPacketReceived(IReadOnlyCollection<byte> payload)
-        {
-            var message = new string(payload
-                .Select(b => (char)b)
-                .ToArray());
-
-            Device.BeginInvokeOnMainThread(() =>
-            {
-                edMessagesFromFox.Text += message;
-            });
-        }
-
         private void OnSetCurrentDateAndTime(object sender, EventArgs e)
         {
             SetCurrentDateAndTime();
-
         }
 
         private void SetCurrentDateAndTime()
         {
-            var command = new SetDateAndTimeCommand(genericCommandWriter);
+            var command = new SetDateAndTimeCommand(packetsProcessor);
+            command.SetResponseDelegate(OnSetCurrentDateAndTimeResponse);
             command.SendSetDateAndTimeCommand(DateTime.Now);
+        }
+
+        private void OnSetCurrentDateAndTimeResponse(bool isSuccess)
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                var message = isSuccess ? "Fox clock synchronized" : "Failed to synchronize fox clock";
+                DisplayAlert("Clock synchronization", message, "OK");
+            });
         }
     }
 }

@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
+using yiff_hl.Abstractions.Enums;
 
 namespace yiff_hl.Abstractions.Interfaces
 {
     /// <summary>
-    /// Delegate, which called when new correct packet received
+    /// Delegate for responses to commands. Payload is just a response payload, whithout
+    /// response marker and command code
     /// </summary>
-    public delegate void OnNewPacketReceivedDelegate(IReadOnlyCollection<byte> payload);
+    public delegate void OnResponseDelegate(IReadOnlyCollection<byte> payload);
 
     /// <summary>
     /// Interface to work with packets
@@ -17,15 +19,14 @@ namespace yiff_hl.Abstractions.Interfaces
         /// </summary>
         void SendPacket(IReadOnlyCollection<byte> payload);
 
+        void SendCommand(CommandType command, IReadOnlyCollection<byte> commandPayload);
+
         /// <summary>
         /// Call this when new byte arrive
         /// </summary>
-        /// <param name="data"></param>
         void NewByteReceived(byte data);
 
-        /// <summary>
-        /// Call this to set new packet processing method.
-        /// </summary>
-        void SetNewPacketReceived(OnNewPacketReceivedDelegate onNewPacketReceivedDelegate);
+        void SetOnSetDateAndTimeResponse(OnResponseDelegate onSetDateAndTimeResponse);
+
     }
 }

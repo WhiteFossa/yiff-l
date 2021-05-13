@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using Xamarin.Forms;
 using yiff_hl.Abstractions.Interfaces;
 
 namespace yiff_hl.Droid.Implementations
@@ -140,7 +141,7 @@ namespace yiff_hl.Droid.Implementations
                         readDelegateInstance(buffer[i]);
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     // Exceptions occurs when socket is getting closed on disconnect
                     return;

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using yiff_hl.Abstractions.Enums;
 using yiff_hl.Abstractions.Interfaces;
 using yiff_hl.Business.Helpers;
 
@@ -15,6 +17,8 @@ namespace yiff_hl.Business.Implementations
         private const int MinPayloadLength = 1;
         private const int MaxPayloadLength = 59;
 
+        private OnResponseDelegate onSetDateAndTimeResponse = null;
+
         private enum ReceiverState
         {
             WaitingForFirstByte,
@@ -28,8 +32,6 @@ namespace yiff_hl.Business.Implementations
         private int expectedPacketLength;
 
         private readonly IBluetoothCommunicator bluetoothCommunicator;
-
-        private OnNewPacketReceivedDelegate onNewPacketReceivedDelegate;
 
         public PacketsProcessor(IBluetoothCommunicator bluetoothCommunicator)
         {
@@ -96,18 +98,13 @@ namespace yiff_hl.Business.Implementations
                 return;
             }
 
-            if (onNewPacketReceivedDelegate == null)
-            {
-                throw new InvalidOperationException("Call SetNewPacketReceived() first.");
-            }
-
             var payloadLength = packetAsList[0] - AddToPacketLenght;
 
             var payload = packetAsList
                 .GetRange(1, payloadLength)
                 .AsReadOnly();
 
-            onNewPacketReceivedDelegate(payload);
+            OnPacketReceived(payload);
         }
 
         public void SendPacket(IReadOnlyCollection<byte> payload)
@@ -137,10 +134,76 @@ namespace yiff_hl.Business.Implementations
             bluetoothCommunicator.SendMessage(fullPacket);
         }
 
-        public void SetNewPacketReceived(OnNewPacketReceivedDelegate onNewPacketReceivedDelegate)
+        public void OnPacketReceived(IReadOnlyCollection<byte> payload)
         {
-            _ = onNewPacketReceivedDelegate ?? throw new ArgumentNullException(nameof(onNewPacketReceivedDelegate));
-            this.onNewPacketReceivedDelegate = onNewPacketReceivedDelegate;
+            // First byte is packet type
+            var payloadType = (PayloadType)payload.ElementAt(0);
+
+            var payloadWithoutType = payload
+                .ToList()
+                .GetRange(1, payload.Count - 1)
+                .AsReadOnly();
+
+            switch(payloadType)
+            {
+                case PayloadType.CommandToFox:
+                    return; // We can't receive command from fox
+
+                case PayloadType.ResponseToCommand:
+                    OnNewResponseToCommand(payloadWithoutType);
+                    break;
+
+                case PayloadType.EventFromFox:
+                    OnNewEventFromFox(payloadWithoutType);
+                    break;
+            }
+        }
+
+        private void OnNewResponseToCommand(IReadOnlyCollection<byte> payload)
+        {
+            var responseTo = (CommandType)payload.ElementAt(0);
+
+            var responsePayload = payload
+                .ToList()
+                .GetRange(1, payload.Count - 1)
+                .AsReadOnly();
+
+            switch(responseTo)
+            {
+                // Set date and time response
+                case CommandType.SetDateAndTime:
+
+                    if (onSetDateAndTimeResponse == null)
+                    {
+                        throw new InvalidOperationException("Call SetOnSetDateAndTimeResponse() first!");
+                    }
+
+                    onSetDateAndTimeResponse(responsePayload);
+                    return;
+
+                default:
+                    return; // We get some junk
+            }
+        }
+
+        private void OnNewEventFromFox(IReadOnlyCollection<byte> payload)
+        {
+
+        }
+
+        public void SendCommand(CommandType command, IReadOnlyCollection<byte> commandPayload)
+        {
+            var resultPayload = new List<byte>();
+            resultPayload.Add((byte)PayloadType.CommandToFox);
+            resultPayload.Add((byte)command);
+            resultPayload.AddRange(commandPayload);
+
+            SendPacket(resultPayload);
+        }
+
+        public void SetOnSetDateAndTimeResponse(OnResponseDelegate onSetDateAndTimeResponse)
+        {
+            this.onSetDateAndTimeResponse = onSetDateAndTimeResponse ?? throw new ArgumentNullException(nameof(onSetDateAndTimeResponse));
         }
     }
 }

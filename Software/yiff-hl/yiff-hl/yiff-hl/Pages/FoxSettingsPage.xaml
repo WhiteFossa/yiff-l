@@ -6,18 +6,6 @@
     <ContentPage.Content>
         <StackLayout>
             
-            <Label Text="Here will be fox settings" />
-
-            <Editor
-                x:Name="edMessagesFromFox"
-                Placeholder="MessagesFromFox"
-                HeightRequest="200" />
-
-            <Button
-                Text="Send message"
-                Clicked="OnSendMessageClicked"
-                />
-
             <Button
                 Text="Set current date and time"
                 Clicked="OnSetCurrentDateAndTime"
