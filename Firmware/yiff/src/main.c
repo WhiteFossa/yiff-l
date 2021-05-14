@@ -152,7 +152,10 @@ int main(int argc, char* argv[])
 	EEPROM_LoadProfileIntoFoxState(&FoxState, &EEPROM_CurrentProfile);
 
 	/* Adding seconds tick handler */
-	RTC_AddListener(&NewSecondCallback);
+	RTC_AddOnNewSecondListener(&NewSecondCallback);
+
+	/* Adding handlers to correct fox state after date/time change */
+	RTC_AddOnDateOrTimeChangeListener(&FoxState_CorrectDateTime);
 
 	/**
 	 * Setting up UART

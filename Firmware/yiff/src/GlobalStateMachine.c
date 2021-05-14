@@ -48,12 +48,7 @@ void GSM_Tick(void)
 
 			if (TIMES_EQUAL == comparisonResult)
 			{
-				/* Starting */
-				FoxState.GlobalState.CurrentState = BeforeFinish;
-				FoxState.GlobalState.StateChangeTime = GsmEndTime;
-
-				/* Starting cycle */
-				CSM_Start();
+				GSM_StartFox();
 			}
 
 			break;
@@ -61,16 +56,84 @@ void GSM_Tick(void)
 		case BeforeFinish:
 			if (TIMES_EQUAL == comparisonResult)
 			{
-				/* Finishing */
-				FoxState.GlobalState.CurrentState = Standby;
-
-				/* Stopping cycle */
-				CSM_Stop();
+				GSM_StopFox();
 			}
 
 			break;
 
 		default:
 			L2HAL_Error(Generic);
+	}
+}
+
+void GSM_StartFox(void)
+{
+	/* Starting */
+	FoxState.GlobalState.CurrentState = BeforeFinish;
+	FoxState.GlobalState.StateChangeTime = GsmEndTime;
+
+	/* Starting cycle */
+	CSM_Start();
+}
+
+void GSM_StopFox(void)
+{
+	/* Finishing */
+	FoxState.GlobalState.CurrentState = Standby;
+
+	/* Stopping cycle */
+	CSM_Stop();
+}
+
+void GSM_FixStateAfterTimeChange(void)
+{
+	int8_t comparisonResult;
+
+	switch(FoxState.GlobalState.CurrentState)
+	{
+		case Standby:
+			/* No need to do anything */
+			break;
+
+		case BeforeStart:
+			comparisonResult = CompareTimes(FoxState.CurrentTime, GsmStartTime);
+
+			if (TIME1_LESS == comparisonResult)
+			{
+				return;
+			}
+			else
+			{
+				/* >= start time*/
+				comparisonResult = CompareTimes(FoxState.CurrentTime, GsmEndTime);
+
+				if (TIME1_LESS == comparisonResult)
+				{
+					/* < end time, starting the fox */
+					GSM_StartFox();
+				}
+				else
+				{
+					GSM_StopFox();
+				}
+			}
+
+
+			break;
+
+		case BeforeFinish:
+
+			comparisonResult = CompareTimes(FoxState.CurrentTime, GsmEndTime);
+
+			if (TIME1_LESS == comparisonResult)
+			{
+				return;
+			}
+			else
+			{
+				GSM_StopFox();
+			}
+
+			break;
 	}
 }

@@ -35,5 +35,22 @@ void GSM_Cancel(void);
  */
 void GSM_Program(Time startTime, Time endTime);
 
+/**
+ * Call this to fix global state machine state after sudden time change (i.e. setting fox time from phone)
+ */
+void GSM_FixStateAfterTimeChange(void);
+
+
+/* Private stuff goes below */
+
+/**
+ * Start the fox and move machine into BeforeFinish state.
+ */
+void GSM_StartFox(void);
+
+/**
+ * Stop the fox and move machine into Standby state.
+ */
+void GSM_StopFox(void);
 
 #endif /* INCLUDE_GLOBALSTATEMACHINE_H_ */

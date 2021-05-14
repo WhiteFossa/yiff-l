@@ -22,14 +22,24 @@ RTC_HandleTypeDef RtcHandle;
 uint8_t PreviousSecond;
 
 /**
- * This functions listens for new second event.
- */
-void (**RtcListeners)(void);
-
-/**
  * How many listeners we have.
  */
-uint8_t RtcListenersCount;
+uint8_t RtcOnNewSecondListenersCount;
+
+/**
+ * This functions listens for new second event.
+ */
+void (**RtcOnNewSecondListeners)(void);
+
+/**
+ * How many date and time change listeners we have.
+ */
+uint8_t RtcDateAndTimeChangeListenersCount;
+
+/**
+ * This functions listens for date and time change
+ */
+void (**RtcDateAndTimeChangeListeners)(void);
 
 /**
  * Current date and time.
@@ -60,11 +70,25 @@ void RTC_Poll(void);
 /**
  * Call this function to add new listener. Listener will be called at the beginning of each new second.
  */
-void RTC_AddListener(void (*listener)(void));
+void RTC_AddOnNewSecondListener(void (*listener)(void));
 
 /**
  * Returns weekday based on day number. Monday is 1, Sunday is 7
  */
 uint8_t GetWeekdayFromDayNumber(uint8_t dayNumber);
+
+/**
+ * Call this function to add new change date or time listener. Listeners are called immediately after RTC_Set_CurrentDate()
+ * or RTC_SetCurrentTime() calls.
+ */
+void RTC_AddOnDateOrTimeChangeListener(void (*listener)(void));
+
+
+/* Private stuff goes below */
+
+/**
+ * Call on date or time change listeners
+ */
+void RTC_CallOnDateOrTimeChangeListeners(void);
 
 #endif /* INCLUDE_RTC_H_ */

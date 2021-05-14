@@ -218,5 +218,10 @@ FoxStateStruct;
  */
 FoxStateStruct FoxState;
 
+/**
+ * Call this after updating RTC date and time
+ */
+void FoxState_CorrectDateTime(void);
+
 
 #endif /* INCLUDE_FOXSTATUS_H_ */

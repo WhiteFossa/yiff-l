@@ -65,8 +65,18 @@ void InitRTC(void)
 	PreviousSecond = 0U;
 
 	/* We have no listeners initially */
-	RtcListenersCount = 0;
-	RtcListeners = malloc(0);
+	RtcOnNewSecondListenersCount = 0;
+	RtcOnNewSecondListeners = malloc(0);
+	RtcDateAndTimeChangeListenersCount = 0;
+	RtcDateAndTimeChangeListeners = malloc(0);
+}
+
+void RTC_CallOnDateOrTimeChangeListeners(void)
+{
+	for (uint8_t i = 0; i < RtcDateAndTimeChangeListenersCount; i++)
+	{
+		RtcDateAndTimeChangeListeners[i]();
+	}
 }
 
 void RTC_SetCurrentDate(RTC_DateTypeDef date)
@@ -75,6 +85,9 @@ void RTC_SetCurrentDate(RTC_DateTypeDef date)
 	{
 		L2HAL_Error(Generic);
 	}
+
+	CurrentDate = date;
+	RTC_CallOnDateOrTimeChangeListeners();
 }
 
 void RTC_SetCurrentTime(RTC_TimeTypeDef time)
@@ -83,6 +96,9 @@ void RTC_SetCurrentTime(RTC_TimeTypeDef time)
 	{
 		L2HAL_Error(Generic);
 	}
+
+	CurrentTime = time;
+	RTC_CallOnDateOrTimeChangeListeners();
 }
 
 void RTC_Poll(void)
@@ -100,27 +116,40 @@ void RTC_Poll(void)
 		}
 
 		/* Calling listeners */
-		for (uint8_t i = 0; i < RtcListenersCount; i++)
+		for (uint8_t i = 0; i < RtcOnNewSecondListenersCount; i++)
 		{
-			RtcListeners[i]();
+			RtcOnNewSecondListeners[i]();
 		}
 	}
 
 	PreviousSecond = CurrentTime.Seconds;
 }
 
-void RTC_AddListener(void (*listener)(void))
+void RTC_AddOnNewSecondListener(void (*listener)(void))
 {
-	if (255 == RtcListenersCount)
+	if (255 == RtcOnNewSecondListenersCount)
 	{
 		/* No more, please */
 		L2HAL_Error(Generic);
 	}
 
-	RtcListenersCount ++;
-	RtcListeners = realloc(RtcListeners, RtcListenersCount * sizeof(void*));
+	RtcOnNewSecondListenersCount ++;
+	RtcOnNewSecondListeners = realloc(RtcOnNewSecondListeners, RtcOnNewSecondListenersCount * sizeof(void*));
 
-	RtcListeners[RtcListenersCount - 1] = listener;
+	RtcOnNewSecondListeners[RtcOnNewSecondListenersCount - 1] = listener;
+}
+
+void RTC_AddOnDateOrTimeChangeListener(void (*listener)(void))
+{
+	if (255 == RtcDateAndTimeChangeListenersCount)
+	{
+		L2HAL_Error(Generic);
+	}
+
+	RtcDateAndTimeChangeListenersCount ++;
+	RtcDateAndTimeChangeListeners = realloc(RtcDateAndTimeChangeListeners, RtcDateAndTimeChangeListenersCount * sizeof(void*));
+
+	RtcDateAndTimeChangeListeners[RtcDateAndTimeChangeListenersCount - 1] = listener;
 }
 
 uint8_t GetWeekdayFromDayNumber(uint8_t dayNumber)
