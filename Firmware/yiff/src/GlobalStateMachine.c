@@ -29,14 +29,20 @@ void GSM_Program(Time startTime, Time endTime)
 	GsmStartTime = startTime;
 	GsmEndTime = endTime;
 
+	GSM_MoveToBeforeStart();
+}
+
+void GSM_MoveToBeforeStart(void)
+{
 	FoxState.GlobalState.StateChangeTime = GsmStartTime;
 	FoxState.GlobalState.CurrentState = BeforeStart;
+
+	CSM_Stop();
 }
 
 void GSM_Tick(void)
 {
-	Time time = ToTime(CurrentTime);
-	int8_t comparisonResult = CompareTimes(time, FoxState.GlobalState.StateChangeTime);
+	int8_t comparisonResult = CompareTimes(FoxState.CurrentTime, FoxState.GlobalState.StateChangeTime);
 
 	switch (FoxState.GlobalState.CurrentState)
 	{
@@ -87,53 +93,66 @@ void GSM_StopFox(void)
 
 void GSM_FixStateAfterTimeChange(void)
 {
-	int8_t comparisonResult;
+	int8_t compResStartTime = CompareTimes(FoxState.CurrentTime, GsmStartTime);
+	int8_t compResEndTime = CompareTimes(FoxState.CurrentTime, GsmEndTime);
+
+	bool timeLStartTime = TIME1_LESS == compResStartTime; /* T < StartTime */
+	bool timeGEEndTime = TIME2_LESS == compResEndTime || TIMES_EQUAL == compResEndTime; /* T >= EndTime */
 
 	switch(FoxState.GlobalState.CurrentState)
 	{
 		case Standby:
-			/* No need to do anything */
-			break;
+			if (timeLStartTime)
+			{
+				/* T < StartTime -> BeforeStart */
+				GSM_MoveToBeforeStart();
+				return;
+			}
+
+			if (timeGEEndTime)
+			{
+				/* T >= EndTime -> Standby */
+				return;
+			}
+
+			/* StartTime <= T < EndTime -> BeforeFinish */
+			GSM_StartFox();
+			return;
 
 		case BeforeStart:
-			comparisonResult = CompareTimes(FoxState.CurrentTime, GsmStartTime);
-
-			if (TIME1_LESS == comparisonResult)
+			if (timeLStartTime)
 			{
+				/* T < StartTime -> BeforeStart */
 				return;
 			}
-			else
-			{
-				/* >= start time*/
-				comparisonResult = CompareTimes(FoxState.CurrentTime, GsmEndTime);
 
-				if (TIME1_LESS == comparisonResult)
-				{
-					/* < end time, starting the fox */
-					GSM_StartFox();
-				}
-				else
-				{
-					GSM_StopFox();
-				}
+			if (timeGEEndTime)
+			{
+				/* T >= EndTime -> Standby */
+				GSM_StopFox();
+				return;
 			}
 
-
-			break;
+			/* StartTime <= T < EndTime -> BeforeFinish */
+			GSM_StartFox();
+			return;
 
 		case BeforeFinish:
-
-			comparisonResult = CompareTimes(FoxState.CurrentTime, GsmEndTime);
-
-			if (TIME1_LESS == comparisonResult)
+			if (timeLStartTime)
 			{
+				/* T < StartTime -> BeforeStart */
+				GSM_MoveToBeforeStart();
 				return;
 			}
-			else
+
+			if (timeGEEndTime)
 			{
+				/* T >= EndTime -> Standby */
 				GSM_StopFox();
+				return;
 			}
 
-			break;
+			/* StartTime <= T < EndTime -> BeforeFinish */
+			return;
 	}
 }

@@ -214,15 +214,6 @@ void EEPROM_LoadProfileIntoFoxState(FoxStateStruct* foxState, EEPROMProfileStruc
 
 	foxState->Power = profile->Power;
 
-	// TODO: Remove me
-//	profile->StartTime.Hours = 16;
-//	profile->StartTime.Minutes = 0;
-//	profile->StartTime.Seconds = 0;
-//
-//	profile->EndTime.Hours = 17;
-//	profile->EndTime.Minutes = 0;
-//	profile->EndTime.Seconds = 0;
-
 	GSM_Program(profile->StartTime, profile->EndTime);
 }
 

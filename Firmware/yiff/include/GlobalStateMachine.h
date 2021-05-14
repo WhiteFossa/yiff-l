@@ -53,4 +53,9 @@ void GSM_StartFox(void);
  */
 void GSM_StopFox(void);
 
+/**
+ * Stops the fox and move machine into BeforeStart state
+ */
+void GSM_MoveToBeforeStart(void);
+
 #endif /* INCLUDE_GLOBALSTATEMACHINE_H_ */

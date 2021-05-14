@@ -24,6 +24,7 @@ void CSM_Start(void)
 void CSM_Stop(void)
 {
 	FoxState.CycleState.CycleState = Pause;
+	FoxState.CycleState.IsEndingTone = false;
 	MorsePlayerStop();
 }
 
