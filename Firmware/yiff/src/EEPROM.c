@@ -214,7 +214,10 @@ void EEPROM_LoadProfileIntoFoxState(FoxStateStruct* foxState, EEPROMProfileStruc
 
 	foxState->Power = profile->Power;
 
-	GSM_Program(profile->StartTime, profile->EndTime);
+	foxState->GlobalState.StartTime = profile->StartTime;
+	foxState->GlobalState.EndTime = profile->EndTime;
+
+	GSM_Program();
 }
 
 void EEPROM_UpdateHeader(void)

@@ -12,29 +12,25 @@ void GSM_Cancel(void)
 	FoxState.GlobalState.CurrentState = Standby;
 }
 
-void GSM_Program(Time startTime, Time endTime)
+void GSM_Program()
 {
-	if (CompareTimes(startTime, endTime) != 1)
+	if (CompareTimes(FoxState.GlobalState.StartTime, FoxState.GlobalState.EndTime) != 1)
 	{
 		L2HAL_Error(Generic);
 	}
 
-	Time time = ToTime(CurrentTime);
-	if ((CompareTimes(startTime, time) != -1) && (CompareTimes(time, endTime) != -1))
+	if ((CompareTimes(FoxState.GlobalState.StartTime, FoxState.CurrentTime) != -1) && (CompareTimes(FoxState.CurrentTime, FoxState.GlobalState.EndTime) != -1))
 	{
 		/* Current time can't be between start time and end time*/
 		L2HAL_Error(Generic);
 	}
-
-	GsmStartTime = startTime;
-	GsmEndTime = endTime;
 
 	GSM_MoveToBeforeStart();
 }
 
 void GSM_MoveToBeforeStart(void)
 {
-	FoxState.GlobalState.StateChangeTime = GsmStartTime;
+	FoxState.GlobalState.StateChangeTime = FoxState.GlobalState.StartTime;
 	FoxState.GlobalState.CurrentState = BeforeStart;
 
 	CSM_Stop();
@@ -76,7 +72,7 @@ void GSM_StartFox(void)
 {
 	/* Starting */
 	FoxState.GlobalState.CurrentState = BeforeFinish;
-	FoxState.GlobalState.StateChangeTime = GsmEndTime;
+	FoxState.GlobalState.StateChangeTime = FoxState.GlobalState.EndTime;
 
 	/* Starting cycle */
 	CSM_Start();
@@ -93,8 +89,8 @@ void GSM_StopFox(void)
 
 void GSM_FixStateAfterTimeChange(void)
 {
-	int8_t compResStartTime = CompareTimes(FoxState.CurrentTime, GsmStartTime);
-	int8_t compResEndTime = CompareTimes(FoxState.CurrentTime, GsmEndTime);
+	int8_t compResStartTime = CompareTimes(FoxState.CurrentTime, FoxState.GlobalState.StartTime);
+	int8_t compResEndTime = CompareTimes(FoxState.CurrentTime, FoxState.GlobalState.EndTime);
 
 	bool timeLStartTime = TIME1_LESS == compResStartTime; /* T < StartTime */
 	bool timeGEEndTime = TIME2_LESS == compResEndTime || TIMES_EQUAL == compResEndTime; /* T >= EndTime */

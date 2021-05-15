@@ -94,6 +94,16 @@ GlobalFoxStateEnum;
 typedef struct
 {
 	/**
+	 * When fox will turn on.
+	 */
+	Time StartTime;
+
+	/**
+	 * When fox will turn off.
+	 */
+	Time EndTime;
+
+	/**
 	 * Current global fox state.
 	 */
 	GlobalFoxStateEnum CurrentState;

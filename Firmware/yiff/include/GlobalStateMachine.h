@@ -11,16 +11,6 @@
 #include <Time.h>
 
 /**
- * When fox will turn on.
- */
-Time GsmStartTime;
-
-/**
- * When fox will turn off.
- */
-Time GsmEndTime;
-
-/**
  * Call it every second
  */
 void GSM_Tick(void);
@@ -31,9 +21,9 @@ void GSM_Tick(void);
 void GSM_Cancel(void);
 
 /**
- * Program fox to start at given time and finish at given time
+ * Program fox to start and finish at FoxState.GlobalState.StartTime and FoxState.GlobalState.EndTime
  */
-void GSM_Program(Time startTime, Time endTime);
+void GSM_Program();
 
 /**
  * Call this to fix global state machine state after sudden time change (i.e. setting fox time from phone)
