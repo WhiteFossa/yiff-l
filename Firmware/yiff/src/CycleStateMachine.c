@@ -9,10 +9,8 @@
 
 void CSM_Start(void)
 {
-	Time currentTime = ToTime(CurrentTime);
-
 	FoxState.CycleState.CycleState = Tx;
-	FoxState.CycleState.StateChangeTime = AddTimes(currentTime, FoxState.Cycle.TxTime);
+	FoxState.CycleState.StateChangeTime = AddTimes(FoxState.CurrentTime, FoxState.Cycle.TxTime);
 
 	CSM_CalculateEndingToneStartTime();
 	FoxState.CycleState.IsEndingTone = false;
@@ -40,8 +38,7 @@ void CSM_Tick(void)
 		return;
 	}
 
-	Time currentTime = ToTime(CurrentTime);
-	int8_t comparisonResult = CompareTimes(currentTime, FoxState.CycleState.StateChangeTime);
+	int8_t comparisonResult = CompareTimes(FoxState.CurrentTime, FoxState.CycleState.StateChangeTime);
 
 	switch(FoxState.CycleState.CycleState)
 	{
@@ -49,7 +46,7 @@ void CSM_Tick(void)
 			if (TIMES_EQUAL == comparisonResult)
 			{
 				FoxState.CycleState.CycleState = Pause;
-				FoxState.CycleState.StateChangeTime = AddTimes(currentTime, FoxState.Cycle.PauseTime);
+				FoxState.CycleState.StateChangeTime = AddTimes(FoxState.CurrentTime, FoxState.Cycle.PauseTime);
 				FoxState.CycleState.IsEndingTone = false;
 				ProcessManipulatorFoxStateChange();
 
@@ -58,7 +55,7 @@ void CSM_Tick(void)
 			}
 			else
 			{
-				if (TIME2_LESS == CompareTimes(currentTime, EndingToneStartTime))
+				if (TIME2_LESS == CompareTimes(FoxState.CurrentTime, EndingToneStartTime))
 				{
 					/* Ending tone on */
 					FoxState.CycleState.IsEndingTone = true;
@@ -71,7 +68,7 @@ void CSM_Tick(void)
 			if (TIMES_EQUAL == comparisonResult)
 			{
 				FoxState.CycleState.CycleState = Tx;
-				FoxState.CycleState.StateChangeTime = AddTimes(currentTime, FoxState.Cycle.TxTime);
+				FoxState.CycleState.StateChangeTime = AddTimes(FoxState.CurrentTime, FoxState.Cycle.TxTime);
 
 				CSM_CalculateEndingToneStartTime();
 				FoxState.CycleState.IsEndingTone = false;
