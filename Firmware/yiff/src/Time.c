@@ -46,16 +46,17 @@ Time TimeSinceDayBegin(uint32_t seconds)
 
 void NewSecondCallback(void)
 {
+	FoxState.CurrentTime.Hours = CurrentTime.Hours;
+	FoxState.CurrentTime.Minutes = CurrentTime.Minutes;
+	FoxState.CurrentTime.Seconds = CurrentTime.Seconds;
+
 	/* Global state machine */
 	GSM_Tick();
 
 	/* Cycle state machine */
 	CSM_Tick();
 
-	FoxState.CurrentTime.Hours = CurrentTime.Hours;
-	FoxState.CurrentTime.Minutes = CurrentTime.Minutes;
-	FoxState.CurrentTime.Seconds = CurrentTime.Seconds;
-
+	/* Redraw display */
 	DrawStatusDisplay(FoxState);
 }
 
