@@ -12,6 +12,4 @@ void FoxState_CorrectDateTime(void)
 	FoxState.CurrentTime.Hours = CurrentTime.Hours;
 	FoxState.CurrentTime.Minutes = CurrentTime.Minutes;
 	FoxState.CurrentTime.Seconds = CurrentTime.Seconds;
-
-	GSM_FixStateAfterTimeChange();
 }

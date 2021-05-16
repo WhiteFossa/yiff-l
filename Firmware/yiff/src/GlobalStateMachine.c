@@ -7,6 +7,11 @@
 
 #include <main.h>
 
+void GSM_Init(void)
+{
+	GSM_Cancel();
+}
+
 void GSM_Cancel(void)
 {
 	FoxState.GlobalState.CurrentState = Standby;
@@ -19,13 +24,32 @@ void GSM_Program(void)
 		L2HAL_Error(Generic);
 	}
 
-	if ((CompareTimes(FoxState.GlobalState.StartTime, FoxState.CurrentTime) != TIME2_LESS) && (CompareTimes(FoxState.CurrentTime, FoxState.GlobalState.EndTime) != TIME2_LESS))
+	GSM_MoveToBeforeStart();
+}
+
+void GSM_Tick(void)
+{
+	GlobalFoxStateEnum newGlobalState = GSM_GetExpectedState();
+
+	if (newGlobalState == FoxState.GlobalState.CurrentState)
 	{
-		/* Current time can't be between start time and end time*/
-		L2HAL_Error(Generic);
+		return;
 	}
 
-	GSM_MoveToBeforeStart();
+	switch(newGlobalState)
+	{
+		case BeforeStart:
+			GSM_MoveToBeforeStart();
+			break;
+
+		case BeforeFinish:
+			GSM_StartFox();
+			break;
+
+		case Standby:
+			GSM_StopFox();
+			break;
+	}
 }
 
 void GSM_MoveToBeforeStart(void)
@@ -34,38 +58,6 @@ void GSM_MoveToBeforeStart(void)
 	FoxState.GlobalState.CurrentState = BeforeStart;
 
 	CSM_Stop();
-}
-
-void GSM_Tick(void)
-{
-	int8_t comparisonResult = CompareTimes(FoxState.CurrentTime, FoxState.GlobalState.StateChangeTime);
-
-	switch (FoxState.GlobalState.CurrentState)
-	{
-		case Standby:
-			/* It's impossible to get out from standby on timer */
-			break;
-
-		case BeforeStart:
-
-			if (TIMES_EQUAL == comparisonResult)
-			{
-				GSM_StartFox();
-			}
-
-			break;
-
-		case BeforeFinish:
-			if (TIMES_EQUAL == comparisonResult)
-			{
-				GSM_StopFox();
-			}
-
-			break;
-
-		default:
-			L2HAL_Error(Generic);
-	}
 }
 
 void GSM_StartFox(void)
@@ -87,68 +79,23 @@ void GSM_StopFox(void)
 	CSM_Stop();
 }
 
-void GSM_FixStateAfterTimeChange(void)
+GlobalFoxStateEnum GSM_GetExpectedState(void)
 {
 	int8_t compResStartTime = CompareTimes(FoxState.CurrentTime, FoxState.GlobalState.StartTime);
 	int8_t compResEndTime = CompareTimes(FoxState.CurrentTime, FoxState.GlobalState.EndTime);
 
-	bool timeLStartTime = TIME1_LESS == compResStartTime; /* T < StartTime */
-	bool timeGEEndTime = TIME2_LESS == compResEndTime || TIMES_EQUAL == compResEndTime; /* T >= EndTime */
-
-	switch(FoxState.GlobalState.CurrentState)
+	if (TIME1_LESS == compResStartTime)
 	{
-		case Standby:
-			if (timeLStartTime)
-			{
-				/* T < StartTime -> BeforeStart */
-				GSM_MoveToBeforeStart();
-				return;
-			}
-
-			if (timeGEEndTime)
-			{
-				/* T >= EndTime -> Standby */
-				return;
-			}
-
-			/* StartTime <= T < EndTime -> BeforeFinish */
-			GSM_StartFox();
-			return;
-
-		case BeforeStart:
-			if (timeLStartTime)
-			{
-				/* T < StartTime -> BeforeStart */
-				return;
-			}
-
-			if (timeGEEndTime)
-			{
-				/* T >= EndTime -> Standby */
-				GSM_StopFox();
-				return;
-			}
-
-			/* StartTime <= T < EndTime -> BeforeFinish */
-			GSM_StartFox();
-			return;
-
-		case BeforeFinish:
-			if (timeLStartTime)
-			{
-				/* T < StartTime -> BeforeStart */
-				GSM_MoveToBeforeStart();
-				return;
-			}
-
-			if (timeGEEndTime)
-			{
-				/* T >= EndTime -> Standby */
-				GSM_StopFox();
-				return;
-			}
-
-			/* StartTime <= T < EndTime -> BeforeFinish */
-			return;
+		/* Current time < Start time -> Before start */
+		return BeforeStart;
 	}
+
+	if (TIME1_LESS == compResEndTime)
+	{
+		/* Start time <= Current time < End time */
+		return BeforeFinish;
+	}
+
+	return Standby;
 }
+

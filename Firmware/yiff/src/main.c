@@ -145,6 +145,10 @@ int main(int argc, char* argv[])
 	RightButton.IsPressed = false;
 	sprintf(RightButton.Text, "Bt. off");
 
+	/* Initializing state machines */
+	GSM_Init();
+	CSM_Init();
+
 	/* Loading non-profile-related data from EEPROM into fox state */
 	strcpy(FoxState.Name, EEPROM_Header.Name);
 

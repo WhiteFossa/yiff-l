@@ -7,6 +7,11 @@
 
 #include <main.h>
 
+void CSM_Init(void)
+{
+	CSM_Stop();
+}
+
 void CSM_Start(void)
 {
 	CSM_Cycle_StartTx(0);
@@ -36,42 +41,28 @@ void CSM_Tick(void)
 		L2HAL_Error(Generic);
 	}
 
-	volatile CycleStateEnum newState = CSM_GetStateByCycleTime(timeSinceCycleStart);
+	CycleStateEnum newState = CSM_GetStateByCycleTime(timeSinceCycleStart);
 
-	if (newState == FoxState.CycleState.CycleState)
+	if (newState != FoxState.CycleState.CycleState)
 	{
-		return;
+		switch(newState)
+		{
+			case Tx:
+				CSM_Cycle_StartTx((uint16_t)timeSinceCycleStart);
+				break;
+
+			case EndingTone:
+				CSM_Cycle_StartEndingTone((uint16_t)timeSinceCycleStart);
+				break;
+
+			case Pause:
+				CSM_Cycle_StartPause((uint16_t)timeSinceCycleStart);
+				break;
+		}
 	}
 
-	switch(newState)
-	{
-		case Tx:
-			CSM_Cycle_StartTx((uint16_t)timeSinceCycleStart);
-			break;
-
-		case EndingTone:
-			CSM_Cycle_StartEndingTone((uint16_t)timeSinceCycleStart);
-			break;
-
-		case Pause:
-			CSM_Cycle_StartPause((uint16_t)timeSinceCycleStart);
-			break;
-	}
-}
-
-void CSM_CalculateEndingToneStartTime(void)
-{
-	if (FoxState.Cycle.IsContinuous)
-	{
-		return;
-	}
-
-	if (FoxState.CycleState.CycleState != Tx)
-	{
-		return;
-	}
-
-	EndingToneStartTime = SubtractSeconds(FoxState.CycleState.StateChangeTime, FoxState.EndingToneLength);
+	/* After state switch */
+	CSM_RecalculateStateChangeTime(timeSinceCycleStart);
 }
 
 int16_t CSM_GetCycleTime(void)
@@ -113,12 +104,9 @@ CycleStateEnum CSM_GetStateByCycleTime(int16_t cycleTime)
 void CSM_Cycle_StartTx(uint16_t timeSinceCycleBegin)
 {
 	FoxState.CycleState.CycleState = Tx;
-
-	Time remainder = SubtractSeconds(FoxState.Cycle.TxTime, timeSinceCycleBegin);
-	FoxState.CycleState.StateChangeTime = AddTimes(FoxState.CurrentTime, remainder);
-
 	FoxState.CycleState.IsEndingTone = false;
 	ProcessManipulatorFoxStateChange();
+	CSM_RecalculateStateChangeTime(timeSinceCycleBegin);
 
 	/* Starting transmission */
 	MorsePlayerPlay(MorseGetFoxSequence());
@@ -127,25 +115,36 @@ void CSM_Cycle_StartTx(uint16_t timeSinceCycleBegin)
 void CSM_Cycle_StartEndingTone(uint16_t timeSinceCycleBegin)
 {
 	FoxState.CycleState.CycleState = EndingTone;
-
-	/* For the case of jumping inside ending tone*/
-	Time remainder = SubtractSeconds(FoxState.Cycle.TxTime, timeSinceCycleBegin);
-	FoxState.CycleState.StateChangeTime = AddTimes(FoxState.CurrentTime, remainder);
-
 	FoxState.CycleState.IsEndingTone = true;
+	CSM_RecalculateStateChangeTime(timeSinceCycleBegin);
 	ProcessManipulatorFoxStateChange();
 }
 
 void CSM_Cycle_StartPause(uint16_t timeSinceCycleBegin)
 {
 	FoxState.CycleState.CycleState = Pause;
-
-	Time remainder = SubtractSeconds(AddTimes(FoxState.Cycle.TxTime, FoxState.Cycle.PauseTime), timeSinceCycleBegin);
-	FoxState.CycleState.StateChangeTime = AddTimes(FoxState.CurrentTime, remainder);
-
 	FoxState.CycleState.IsEndingTone = false;
+	CSM_RecalculateStateChangeTime(timeSinceCycleBegin);
 	ProcessManipulatorFoxStateChange();
 
 	/* Stopping transmission */
 	MorsePlayerStop();
+}
+
+void CSM_RecalculateStateChangeTime(uint16_t timeSinceCycleBegin)
+{
+	Time remainder;
+	switch(FoxState.CycleState.CycleState)
+	{
+		case Tx:
+		case EndingTone:
+			remainder = SubtractSeconds(FoxState.Cycle.TxTime, timeSinceCycleBegin);
+			break;
+
+		case Pause:
+			remainder = SubtractSeconds(AddTimes(FoxState.Cycle.TxTime, FoxState.Cycle.PauseTime), timeSinceCycleBegin);
+			break;
+	}
+
+	FoxState.CycleState.StateChangeTime = AddTimes(FoxState.CurrentTime, remainder);
 }

@@ -291,8 +291,7 @@ void DrawFoxCycleState(CycleStateStruct cycleState, Time currentTime, FoxCycleSt
 		return;
 	}
 
-	uint32_t secondsTillAction = SecondsSinceDayBegin(cycleState.StateChangeTime) - SecondsSinceDayBegin(currentTime);
-	Time timeTillAction = TimeSinceDayBegin(secondsTillAction);
+	Time timeTillAction = SubtractTimes(cycleState.StateChangeTime, currentTime);
 
 	char timeBuffer[16];
 	TimeToHMS(timeTillAction, timeBuffer);

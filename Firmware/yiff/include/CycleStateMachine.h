@@ -11,10 +11,8 @@
 #include <Time.h>
 #include <HardwareLogic.h>
 
-/**
- * Since this moment ending tone must be transmitted.
- */
-Time EndingToneStartTime;
+/* Initialize cycle state machine */
+void CSM_Init(void);
 
 /**
  * Start cycle immediately.
@@ -32,11 +30,6 @@ void CSM_Stop(void);
 void CSM_Tick(void);
 
 /* Private stuff goes below */
-
-/**
- * Calculates ending tone start time if fox in cyclic mode and current cycle state is TX.
- */
-void CSM_CalculateEndingToneStartTime(void);
 
 /**
  * Get time inside a cycle (e.g. 0 when new cycle just started). Returns -1 if fox not in cycle
@@ -62,5 +55,10 @@ void CSM_Cycle_StartEndingTone(uint16_t timeSinceCycleBegin);
  * Start pause
  */
 void CSM_Cycle_StartPause(uint16_t timeSinceCycleBegin);
+
+/**
+ * Calculates next state change time
+ */
+void CSM_RecalculateStateChangeTime(uint16_t timeSinceCycleBegin);
 
 #endif /* INCLUDE_CYCLESTATEMACHINE_H_ */

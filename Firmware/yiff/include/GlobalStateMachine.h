@@ -11,6 +11,11 @@
 #include <Time.h>
 
 /**
+ * Initialize state machine
+ */
+void GSM_Init(void);
+
+/**
  * Call it every second
  */
 void GSM_Tick(void);
@@ -25,13 +30,13 @@ void GSM_Cancel(void);
  */
 void GSM_Program(void);
 
-/**
- * Call this to fix global state machine state after sudden time change (i.e. setting fox time from phone)
- */
-void GSM_FixStateAfterTimeChange(void);
-
 
 /* Private stuff goes below */
+
+/**
+ * Stops the fox and move machine into BeforeStart state
+ */
+void GSM_MoveToBeforeStart(void);
 
 /**
  * Start the fox and move machine into BeforeFinish state.
@@ -44,8 +49,8 @@ void GSM_StartFox(void);
 void GSM_StopFox(void);
 
 /**
- * Stops the fox and move machine into BeforeStart state
+ * Returns expected state based on current time
  */
-void GSM_MoveToBeforeStart(void);
+GlobalFoxStateEnum GSM_GetExpectedState(void);
 
 #endif /* INCLUDE_GLOBALSTATEMACHINE_H_ */
