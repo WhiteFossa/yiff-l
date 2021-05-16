@@ -92,7 +92,12 @@ Time AddTimes(Time time1, Time time2)
 	return TimeSinceDayBegin(SecondsSinceDayBegin(time1) + SecondsSinceDayBegin(time2));
 }
 
-Time SubstractSeconds(Time time, uint32_t seconds)
+Time SubtractSeconds(Time time, uint32_t seconds)
 {
 	return TimeSinceDayBegin(SecondsSinceDayBegin(time) - seconds);
+}
+
+Time SubtractTimes(Time time1, Time time2)
+{
+	return SubtractSeconds(time1, SecondsSinceDayBegin(time2));
 }

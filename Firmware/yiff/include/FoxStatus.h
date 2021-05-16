@@ -126,6 +126,11 @@ typedef enum
 	Tx,
 
 	/**
+	 * Transmitting end tone
+	 */
+	EndingTone,
+
+	/**
 	 * Pause
 	 */
 	Pause

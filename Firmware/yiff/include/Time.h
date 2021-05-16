@@ -62,8 +62,13 @@ int8_t CompareTimes(Time time1, Time time2);
 Time AddTimes(Time time1, Time time2);
 
 /**
- * Substracts given amount of seconds from time.
+ * Subtract two times.
  */
-Time SubstractSeconds(Time time, uint32_t seconds);
+Time SubtractTimes(Time time1, Time time2);
+
+/**
+ * Subtracts given amount of seconds from time.
+ */
+Time SubtractSeconds(Time time, uint32_t seconds);
 
 #endif /* INCLUDE_TIME_H_ */

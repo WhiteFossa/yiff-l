@@ -12,14 +12,14 @@ void GSM_Cancel(void)
 	FoxState.GlobalState.CurrentState = Standby;
 }
 
-void GSM_Program()
+void GSM_Program(void)
 {
-	if (CompareTimes(FoxState.GlobalState.StartTime, FoxState.GlobalState.EndTime) != 1)
+	if (CompareTimes(FoxState.GlobalState.StartTime, FoxState.GlobalState.EndTime) != TIME1_LESS)
 	{
 		L2HAL_Error(Generic);
 	}
 
-	if ((CompareTimes(FoxState.GlobalState.StartTime, FoxState.CurrentTime) != -1) && (CompareTimes(FoxState.CurrentTime, FoxState.GlobalState.EndTime) != -1))
+	if ((CompareTimes(FoxState.GlobalState.StartTime, FoxState.CurrentTime) != TIME2_LESS) && (CompareTimes(FoxState.CurrentTime, FoxState.GlobalState.EndTime) != TIME2_LESS))
 	{
 		/* Current time can't be between start time and end time*/
 		L2HAL_Error(Generic);

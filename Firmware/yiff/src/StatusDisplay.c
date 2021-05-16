@@ -301,6 +301,7 @@ void DrawFoxCycleState(CycleStateStruct cycleState, Time currentTime, FoxCycleSt
 	switch(cycleState.CycleState)
 	{
 		case Tx:
+		case EndingTone:
 			sprintf(actionBuffer, "pause");
 		break;
 		case Pause:

@@ -214,6 +214,15 @@ void EEPROM_LoadProfileIntoFoxState(FoxStateStruct* foxState, EEPROMProfileStruc
 
 	foxState->Power = profile->Power;
 
+	// TODO: Remove me, debug
+	profile->StartTime.Hours = 0;
+	profile->StartTime.Minutes = 1;
+	profile->StartTime.Seconds = 0;
+
+	profile->EndTime.Hours = 0;
+	profile->EndTime.Minutes = 7;
+	profile->EndTime.Seconds = 0;
+
 	foxState->GlobalState.StartTime = profile->StartTime;
 	foxState->GlobalState.EndTime = profile->EndTime;
 

@@ -23,7 +23,7 @@ void GSM_Cancel(void);
 /**
  * Program fox to start and finish at FoxState.GlobalState.StartTime and FoxState.GlobalState.EndTime
  */
-void GSM_Program();
+void GSM_Program(void);
 
 /**
  * Call this to fix global state machine state after sudden time change (i.e. setting fox time from phone)

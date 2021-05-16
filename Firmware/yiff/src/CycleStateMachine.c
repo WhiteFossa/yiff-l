@@ -9,21 +9,12 @@
 
 void CSM_Start(void)
 {
-	FoxState.CycleState.CycleState = Tx;
-	FoxState.CycleState.StateChangeTime = AddTimes(FoxState.CurrentTime, FoxState.Cycle.TxTime);
-
-	CSM_CalculateEndingToneStartTime();
-	FoxState.CycleState.IsEndingTone = false;
-	ProcessManipulatorFoxStateChange();
-
-	MorsePlayerPlay(MorseGetFoxSequence());
+	CSM_Cycle_StartTx(0);
 }
 
 void CSM_Stop(void)
 {
-	FoxState.CycleState.CycleState = Pause;
-	FoxState.CycleState.IsEndingTone = false;
-	MorsePlayerStop();
+	CSM_Cycle_StartPause(0);
 }
 
 void CSM_Tick(void)
@@ -38,51 +29,34 @@ void CSM_Tick(void)
 		return;
 	}
 
-	int8_t comparisonResult = CompareTimes(FoxState.CurrentTime, FoxState.CycleState.StateChangeTime);
+	int16_t timeSinceCycleStart = CSM_GetCycleTime();
 
-	switch(FoxState.CycleState.CycleState)
+	if (timeSinceCycleStart < 0)
+	{
+		L2HAL_Error(Generic);
+	}
+
+	volatile CycleStateEnum newState = CSM_GetStateByCycleTime(timeSinceCycleStart);
+
+	if (newState == FoxState.CycleState.CycleState)
+	{
+		return;
+	}
+
+	switch(newState)
 	{
 		case Tx:
-			if (TIMES_EQUAL == comparisonResult)
-			{
-				FoxState.CycleState.CycleState = Pause;
-				FoxState.CycleState.StateChangeTime = AddTimes(FoxState.CurrentTime, FoxState.Cycle.PauseTime);
-				FoxState.CycleState.IsEndingTone = false;
-				ProcessManipulatorFoxStateChange();
+			CSM_Cycle_StartTx((uint16_t)timeSinceCycleStart);
+			break;
 
-				/* Stopping transmission */
-				MorsePlayerStop();
-			}
-			else
-			{
-				if (TIME2_LESS == CompareTimes(FoxState.CurrentTime, EndingToneStartTime))
-				{
-					/* Ending tone on */
-					FoxState.CycleState.IsEndingTone = true;
-					ProcessManipulatorFoxStateChange();
-				}
-			}
+		case EndingTone:
+			CSM_Cycle_StartEndingTone((uint16_t)timeSinceCycleStart);
 			break;
 
 		case Pause:
-			if (TIMES_EQUAL == comparisonResult)
-			{
-				FoxState.CycleState.CycleState = Tx;
-				FoxState.CycleState.StateChangeTime = AddTimes(FoxState.CurrentTime, FoxState.Cycle.TxTime);
-
-				CSM_CalculateEndingToneStartTime();
-				FoxState.CycleState.IsEndingTone = false;
-				ProcessManipulatorFoxStateChange();
-
-				/* Starting transmission */
-				MorsePlayerPlay(MorseGetFoxSequence());
-			}
+			CSM_Cycle_StartPause((uint16_t)timeSinceCycleStart);
 			break;
-
-		default:
-			L2HAL_Error(Generic);
 	}
-
 }
 
 void CSM_CalculateEndingToneStartTime(void)
@@ -97,5 +71,81 @@ void CSM_CalculateEndingToneStartTime(void)
 		return;
 	}
 
-	EndingToneStartTime = SubstractSeconds(FoxState.CycleState.StateChangeTime, FoxState.EndingToneLength);
+	EndingToneStartTime = SubtractSeconds(FoxState.CycleState.StateChangeTime, FoxState.EndingToneLength);
+}
+
+int16_t CSM_GetCycleTime(void)
+{
+	if (TIME1_LESS == CompareTimes(FoxState.CurrentTime, FoxState.GlobalState.StartTime))
+	{
+		return -1; /* Fox not in cycle */
+	}
+
+	uint32_t secondsSinceFoxStart = SecondsSinceDayBegin(SubtractTimes(FoxState.CurrentTime, FoxState.GlobalState.StartTime));
+
+	uint32_t cycleLength = SecondsSinceDayBegin(AddTimes(FoxState.Cycle.TxTime, FoxState.Cycle.PauseTime));
+
+	return secondsSinceFoxStart % cycleLength;
+}
+
+CycleStateEnum CSM_GetStateByCycleTime(int16_t cycleTime)
+{
+	Time timeSinceCycleStart = TimeSinceDayBegin(cycleTime);
+	Time endingToneStartTime = SubtractSeconds(FoxState.Cycle.TxTime, FoxState.EndingToneLength);
+	Time pauseStartTime = FoxState.Cycle.TxTime;
+
+	if (TIME1_LESS == CompareTimes(timeSinceCycleStart, endingToneStartTime))
+	{
+		/* Current Time < Ending Tone Start Time -> TX*/
+		return Tx;
+	}
+
+	if ((TIME1_LESS == CompareTimes(endingToneStartTime, timeSinceCycleStart))
+			&& (TIME1_LESS == CompareTimes(timeSinceCycleStart, pauseStartTime)))
+	{
+		/* Ending Tone Start Time < Current Time < Pause Start Time -> Ending tone*/
+		return EndingTone;
+	}
+
+	return Pause;
+}
+
+void CSM_Cycle_StartTx(uint16_t timeSinceCycleBegin)
+{
+	FoxState.CycleState.CycleState = Tx;
+
+	Time remainder = SubtractSeconds(FoxState.Cycle.TxTime, timeSinceCycleBegin);
+	FoxState.CycleState.StateChangeTime = AddTimes(FoxState.CurrentTime, remainder);
+
+	FoxState.CycleState.IsEndingTone = false;
+	ProcessManipulatorFoxStateChange();
+
+	/* Starting transmission */
+	MorsePlayerPlay(MorseGetFoxSequence());
+}
+
+void CSM_Cycle_StartEndingTone(uint16_t timeSinceCycleBegin)
+{
+	FoxState.CycleState.CycleState = EndingTone;
+
+	/* For the case of jumping inside ending tone*/
+	Time remainder = SubtractSeconds(FoxState.Cycle.TxTime, timeSinceCycleBegin);
+	FoxState.CycleState.StateChangeTime = AddTimes(FoxState.CurrentTime, remainder);
+
+	FoxState.CycleState.IsEndingTone = true;
+	ProcessManipulatorFoxStateChange();
+}
+
+void CSM_Cycle_StartPause(uint16_t timeSinceCycleBegin)
+{
+	FoxState.CycleState.CycleState = Pause;
+
+	Time remainder = SubtractSeconds(AddTimes(FoxState.Cycle.TxTime, FoxState.Cycle.PauseTime), timeSinceCycleBegin);
+	FoxState.CycleState.StateChangeTime = AddTimes(FoxState.CurrentTime, remainder);
+
+	FoxState.CycleState.IsEndingTone = false;
+	ProcessManipulatorFoxStateChange();
+
+	/* Stopping transmission */
+	MorsePlayerStop();
 }
