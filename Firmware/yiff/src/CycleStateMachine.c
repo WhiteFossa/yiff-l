@@ -100,10 +100,10 @@ CycleStateEnum CSM_GetStateByCycleTime(int16_t cycleTime)
 		return Tx;
 	}
 
-	if ((TIME1_LESS == CompareTimes(endingToneStartTime, timeSinceCycleStart))
+	if ((TIME2_LESS != CompareTimes(endingToneStartTime, timeSinceCycleStart))
 			&& (TIME1_LESS == CompareTimes(timeSinceCycleStart, pauseStartTime)))
 	{
-		/* Ending Tone Start Time < Current Time < Pause Start Time -> Ending tone*/
+		/* Ending Tone Start Time <= Current Time < Pause Start Time -> Ending tone*/
 		return EndingTone;
 	}
 
