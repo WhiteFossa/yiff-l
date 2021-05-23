@@ -104,5 +104,25 @@ namespace yiff_hl.Pages
                 DisplayAlert("Fox name", $"Fox name: {name}", "OK");
             });
         }
+
+        private void OnGetProfilesCountClicked(object sender, EventArgs e)
+        {
+            GetProfilesCount();
+        }
+
+        private void GetProfilesCount()
+        {
+            var command = new GetProfilesCountCommand(packetsProcessor);
+            command.SetResponseDelegate(OnGetProfilesCountResponse);
+            command.SendGetProfilesCountCommand();
+        }
+
+        private void OnGetProfilesCountResponse(int count)
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                DisplayAlert("Profiles count", $"Profiles count: {count}", "OK");
+            });
+        }
     }
 }

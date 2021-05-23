@@ -20,6 +20,7 @@ namespace yiff_hl.Business.Implementations
         private OnResponseDelegate onSetDateAndTimeResponse = null;
         private OnResponseDelegate onSetFoxNameResponse = null;
         private OnResponseDelegate onGetFoxNameResponse = null;
+        private OnResponseDelegate onGetProfilesCountResponse = null;
 
         private enum ReceiverState
         {
@@ -205,6 +206,17 @@ namespace yiff_hl.Business.Implementations
                     onGetFoxNameResponse(responsePayload);
                     return;
 
+                // Get profiles count
+                case CommandType.GetProfilesCount:
+
+                    if (onGetProfilesCountResponse == null)
+                    {
+                        throw new InvalidOperationException("Call SetOnGetProfilesCountResponse() first!");
+                    }
+
+                    onGetProfilesCountResponse(responsePayload);
+                    return;
+
                 default:
                     return; // We get some junk
             }
@@ -238,6 +250,11 @@ namespace yiff_hl.Business.Implementations
         public void SetOnGetFoxNameResponse(OnResponseDelegate onGetFoxNameResponse)
         {
             this.onGetFoxNameResponse = onGetFoxNameResponse ?? throw new ArgumentNullException(nameof(onGetFoxNameResponse));
+        }
+
+        public void SetOnGetProfilesCountResponse(OnResponseDelegate onGetProfilesCountResponse)
+        {
+            this.onGetProfilesCountResponse = onGetProfilesCountResponse ?? throw new ArgumentNullException(nameof(onGetProfilesCountResponse));
         }
     }
 }

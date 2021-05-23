@@ -29,6 +29,11 @@
                 />
 
             <Button
+                Text="Get profiles count"
+                Clicked="OnGetProfilesCountClicked"
+                />
+
+            <Button
                 Text="Disconnect"
                 Clicked="OnDisconnectClicked"
                 />
