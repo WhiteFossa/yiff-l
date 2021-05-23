@@ -194,21 +194,26 @@ int main(int argc, char* argv[])
 		RTC_Poll();
 
 		/* Processing possible updates from smartphone */
-		if (FoxStateNameChanged)
-		{
-			strcpy(EEPROM_Header.Name, FoxState.Name);
-			EEPROM_UpdateHeader();
-
-			// TODO: Restart HC-06 when hardware will be ready
-
-			uint8_t response = 0x00;
-			SendResponse(SetName, 1, &response);
-
-			FoxStateNameChanged = false;
-		}
+		Main_ProcessFoxNameChange();
 	}
 
 	return 0;
+}
+
+void Main_ProcessFoxNameChange(void)
+{
+	if (FoxStateNameChanged)
+	{
+		strcpy(EEPROM_Header.Name, FoxState.Name);
+		EEPROM_UpdateHeader();
+
+		// TODO: Restart HC-06 when hardware will be ready
+
+		uint8_t response = 0x00;
+		SendResponse(SetName, 1, &response);
+
+		FoxStateNameChanged = false;
+	}
 }
 
 #pragma GCC diagnostic pop

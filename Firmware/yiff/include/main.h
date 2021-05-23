@@ -62,5 +62,10 @@
  */
 #define YHL_BLUETOOTH_PIN "0000"
 
+/**
+ * Checks if fox name changed and if so, then saves it into EEPROM and bluetooth module
+ */
+void Main_ProcessFoxNameChange(void);
+
 
 #endif /* __MAIN_H */
