@@ -84,5 +84,25 @@ namespace yiff_hl.Pages
                 DisplayAlert("Name change", message, "OK");
             });
         }
+
+        private void OnGetFoxNameClicked(object sender, EventArgs e)
+        {
+            GetFoxName();
+        }
+
+        private void GetFoxName()
+        {
+            var command = new GetFoxNameCommand(packetsProcessor);
+            command.SetResponseDelegate(OnGetFoxNameResponse);
+            command.SendGetFoxNameCommand();
+        }
+
+        private void OnGetFoxNameResponse(string name)
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                DisplayAlert("Fox name", $"Fox name: {name}", "OK");
+            });
+        }
     }
 }

@@ -38,11 +38,11 @@ namespace yiff_hl.Business.Implementations.Commands
 
             var payload = new List<byte>();
 
-            // 2th (from 0th) byte - year
+            // 2th (from 0th) byte - name length
             payload.Add((byte)(name.Length));
 
             // 3th - 35th bytes - name
-            var nameBytes = ASCIIEncoding.ASCII.GetBytes(name);
+            var nameBytes = Encoding.ASCII.GetBytes(name);
             payload.AddRange(nameBytes);
 
             packetsProcessor.SendCommand(CommandType.SetFoxName, payload);
@@ -50,6 +50,11 @@ namespace yiff_hl.Business.Implementations.Commands
 
         private void OnSetFoxNameResponse(IReadOnlyCollection<byte> payload)
         {
+            if (onSetFoxNameResponse == null)
+            {
+                return;
+            }
+
             if (payload.Count != 1)
             {
                 return;
@@ -70,10 +75,7 @@ namespace yiff_hl.Business.Implementations.Commands
                     return;
             }
 
-            if (onSetFoxNameResponse != null)
-            {
-                onSetFoxNameResponse(isSuccessfull);
-            }
+            onSetFoxNameResponse(isSuccessfull);
         }
     }
 }

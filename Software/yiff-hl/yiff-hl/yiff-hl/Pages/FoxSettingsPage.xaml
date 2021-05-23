@@ -11,13 +11,21 @@
                 Clicked="OnSetCurrentDateAndTimeClicked"
                 />
 
-            <Editor
-                Placeholder="Enter fox name"
-                x:Name="edFoxName" />
+            <StackLayout
+                Orientation="Horizontal">
+                <Editor
+                    Placeholder="Enter fox name"
+                    x:Name="edFoxName" />
+
+                <Button
+                    Text="Set fox name"
+                    Clicked="OnSetFoxNameClicked"
+                    />
+            </StackLayout>
 
             <Button
-                Text="Set fox name"
-                Clicked="OnSetFoxNameClicked"
+                Text="Get fox name"
+                Clicked="OnGetFoxNameClicked"
                 />
 
             <Button

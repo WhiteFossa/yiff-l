@@ -19,6 +19,7 @@ namespace yiff_hl.Business.Implementations
 
         private OnResponseDelegate onSetDateAndTimeResponse = null;
         private OnResponseDelegate onSetFoxNameResponse = null;
+        private OnResponseDelegate onGetFoxNameResponse = null;
 
         private enum ReceiverState
         {
@@ -193,6 +194,17 @@ namespace yiff_hl.Business.Implementations
                     onSetFoxNameResponse(responsePayload);
                     return;
 
+                // Get fox name response
+                case CommandType.GetFoxName:
+
+                    if (onGetFoxNameResponse == null)
+                    {
+                        throw new InvalidOperationException("Call SetOnGetFoxNameResponse() first!");
+                    }
+
+                    onGetFoxNameResponse(responsePayload);
+                    return;
+
                 default:
                     return; // We get some junk
             }
@@ -221,6 +233,11 @@ namespace yiff_hl.Business.Implementations
         public void SetOnSetFoxNameResponse(OnResponseDelegate onSetFoxNameResponse)
         {
             this.onSetFoxNameResponse = onSetFoxNameResponse ?? throw new ArgumentNullException(nameof(onSetFoxNameResponse));
+        }
+
+        public void SetOnGetFoxNameResponse(OnResponseDelegate onGetFoxNameResponse)
+        {
+            this.onGetFoxNameResponse = onGetFoxNameResponse ?? throw new ArgumentNullException(nameof(onGetFoxNameResponse));
         }
     }
 }

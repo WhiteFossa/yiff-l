@@ -30,6 +30,7 @@ namespace yiff_hl.Abstractions.Interfaces
 
         void SetOnSetDateAndTimeResponse(OnResponseDelegate onSetDateAndTimeResponse);
         void SetOnSetFoxNameResponse(OnResponseDelegate onSetFoxNameResponse);
+        void SetOnGetFoxNameResponse(OnResponseDelegate onGetFoxNameResponse);
 
         #endregion
 
