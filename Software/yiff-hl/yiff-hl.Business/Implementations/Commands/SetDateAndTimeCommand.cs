@@ -50,6 +50,11 @@ namespace yiff_hl.Business.Implementations.Commands
 
         private void OnSetCurrentDateAndTimeResponse(IReadOnlyCollection<byte> payload)
         {
+            if (onSetDateAndTimeResponse == null)
+            {
+                return;
+            }
+
             if (payload.Count != 1)
             {
                 return;
@@ -70,10 +75,7 @@ namespace yiff_hl.Business.Implementations.Commands
                     return;
             }
 
-            if (onSetDateAndTimeResponse != null)
-            {
-                onSetDateAndTimeResponse(isSuccessfull);
-            }
+            onSetDateAndTimeResponse(isSuccessfull);
         }
 
         public void SetResponseDelegate(OnSetDateAndTimeResponseDelegate onSetDateAndTimeResponse)

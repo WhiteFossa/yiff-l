@@ -7,6 +7,8 @@
     {
         SetDateAndTime = 0x00,
 
-        SetFoxName = 0x01
+        SetFoxName = 0x01,
+
+        GetFoxName = 0x02
     }
 }
