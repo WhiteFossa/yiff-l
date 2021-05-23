@@ -57,15 +57,18 @@ void OnNewCommandToFox(uint8_t payloadSize, uint8_t* payload)
 	switch(payload[0])
 	{
 		case SetDateAndTime:
-
 			/* Set date and time */
 			OnSetDateAndTime(payloadSize, payload);
 			break;
 
 		case SetName:
-
 			/* Set fox name */
 			OnSetName(payloadSize, payload);
+			break;
+
+		case GetName:
+			/* Get fox name */
+			OnGetName(payloadSize, payload);
 			break;
 	}
 
@@ -183,6 +186,19 @@ void OnSetName(uint8_t payloadSize, uint8_t* payload)
 	}
 }
 
+void OnGetName(uint8_t payloadSize, uint8_t* payload)
+{
+	uint8_t nameLength = (uint8_t)strlen(FoxState.Name);
+	uint8_t responseSize = (uint8_t)(nameLength + 1U);
+
+	uint8_t* response = malloc(responseSize);
+	response[0] = nameLength;
+	memcpy(&response[1], FoxState.Name, nameLength);
+
+	SendResponse(GetName, responseSize, response);
+	free(response);
+}
+
 void SendPacket(uint8_t payloadSize, uint8_t* payload)
 {
 	if (payloadSize < YHL_PACKET_PROCESSOR_MIN_PAYLOAD_SIZE || payloadSize > YHL_PACKET_PROCESSOR_MAX_PAYLOAD_SIZE)
@@ -206,7 +222,7 @@ void SendPacket(uint8_t payloadSize, uint8_t* payload)
 void SendResponse(CommandToFoxEnum responseTo, uint8_t payloadSize, uint8_t* payload)
 {
 	uint8_t fullPayloadSize = payloadSize + 2; /* +2 because one byte is response marker, another is command to what we respond */
-	uint8_t* fullPayload = malloc(fullPayload);
+	uint8_t* fullPayload = malloc(fullPayloadSize);
 
 	fullPayload[0] = YHL_PACKET_PROCESSOR_RESPONSE_FROM_FOX;
 	fullPayload[1] = responseTo;
