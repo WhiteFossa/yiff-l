@@ -43,7 +43,9 @@ typedef enum
 
 	SetName = 0x01,
 
-	GetName = 0x02
+	GetName = 0x02,
+
+	GetProfilesCount = 0x03
 }
 CommandToFoxEnum;
 
@@ -87,5 +89,10 @@ void OnSetName(uint8_t payloadSize, uint8_t* payload);
  * Called when command "Get fox name" comes
  */
 void OnGetName(uint8_t payloadSize, uint8_t* payload);
+
+/**
+ * Called when command "Get profiles count" comes
+ */
+void OnGetProfilesCount(uint8_t payloadSize, uint8_t* payload);
 
 #endif /* INCLUDE_PACKETSPROCESSOR_H_ */

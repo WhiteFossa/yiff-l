@@ -70,6 +70,11 @@ void OnNewCommandToFox(uint8_t payloadSize, uint8_t* payload)
 			/* Get fox name */
 			OnGetName(payloadSize, payload);
 			break;
+
+		case GetProfilesCount:
+			/* Get profiles count */
+			OnGetProfilesCount(payloadSize, payload);
+			break;
 	}
 
 	free(payload);
@@ -197,6 +202,12 @@ void OnGetName(uint8_t payloadSize, uint8_t* payload)
 
 	SendResponse(GetName, responseSize, response);
 	free(response);
+}
+
+void OnGetProfilesCount(uint8_t payloadSize, uint8_t* payload)
+{
+	uint8_t response = EEPROM_Header.NumberOfProfiles;
+	SendResponse(GetProfilesCount, 1, &response);
 }
 
 void SendPacket(uint8_t payloadSize, uint8_t* payload)
