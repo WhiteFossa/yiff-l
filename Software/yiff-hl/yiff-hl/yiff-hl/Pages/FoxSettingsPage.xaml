@@ -8,7 +8,16 @@
             
             <Button
                 Text="Set current date and time"
-                Clicked="OnSetCurrentDateAndTime"
+                Clicked="OnSetCurrentDateAndTimeClicked"
+                />
+
+            <Editor
+                Placeholder="Enter fox name"
+                x:Name="edFoxName" />
+
+            <Button
+                Text="Set fox name"
+                Clicked="OnSetFoxNameClicked"
                 />
 
             <Button

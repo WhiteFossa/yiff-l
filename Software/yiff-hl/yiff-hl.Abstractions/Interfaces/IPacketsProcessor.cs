@@ -26,7 +26,12 @@ namespace yiff_hl.Abstractions.Interfaces
         /// </summary>
         void NewByteReceived(byte data);
 
+        #region Responses to commands
+
         void SetOnSetDateAndTimeResponse(OnResponseDelegate onSetDateAndTimeResponse);
+        void SetOnSetFoxNameResponse(OnResponseDelegate onSetFoxNameResponse);
+
+        #endregion
 
     }
 }

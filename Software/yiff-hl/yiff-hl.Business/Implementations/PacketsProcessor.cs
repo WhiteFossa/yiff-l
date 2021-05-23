@@ -18,6 +18,7 @@ namespace yiff_hl.Business.Implementations
         private const int MaxPayloadLength = 59;
 
         private OnResponseDelegate onSetDateAndTimeResponse = null;
+        private OnResponseDelegate onSetFoxNameResponse = null;
 
         private enum ReceiverState
         {
@@ -181,6 +182,17 @@ namespace yiff_hl.Business.Implementations
                     onSetDateAndTimeResponse(responsePayload);
                     return;
 
+                // Set fox name response
+                case CommandType.SetFoxName:
+
+                    if (onSetFoxNameResponse == null)
+                    {
+                        throw new InvalidOperationException("Call SetOnSetFoxNameResponse() first!");
+                    }
+
+                    onSetFoxNameResponse(responsePayload);
+                    return;
+
                 default:
                     return; // We get some junk
             }
@@ -204,6 +216,11 @@ namespace yiff_hl.Business.Implementations
         public void SetOnSetDateAndTimeResponse(OnResponseDelegate onSetDateAndTimeResponse)
         {
             this.onSetDateAndTimeResponse = onSetDateAndTimeResponse ?? throw new ArgumentNullException(nameof(onSetDateAndTimeResponse));
+        }
+
+        public void SetOnSetFoxNameResponse(OnResponseDelegate onSetFoxNameResponse)
+        {
+            this.onSetFoxNameResponse = onSetFoxNameResponse ?? throw new ArgumentNullException(nameof(onSetFoxNameResponse));
         }
     }
 }

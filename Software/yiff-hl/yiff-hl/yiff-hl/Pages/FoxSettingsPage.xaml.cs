@@ -43,7 +43,7 @@ namespace yiff_hl.Pages
             Navigation.PopModalAsync();
         }
 
-        private void OnSetCurrentDateAndTime(object sender, EventArgs e)
+        private void OnSetCurrentDateAndTimeClicked(object sender, EventArgs e)
         {
             SetCurrentDateAndTime();
         }
@@ -61,6 +61,27 @@ namespace yiff_hl.Pages
             {
                 var message = isSuccess ? "Fox clock synchronized" : "Failed to synchronize fox clock";
                 DisplayAlert("Clock synchronization", message, "OK");
+            });
+        }
+
+        private void OnSetFoxNameClicked(object sender, EventArgs e)
+        {
+            SetFoxName();
+        }
+
+        private void SetFoxName()
+        {
+            var command = new SetFoxNameCommand(packetsProcessor);
+            command.SetResponseDelegate(OnSetFoxNameResponse);
+            command.SendSetFoxNameCommand(edFoxName.Text);
+        }
+
+        private void OnSetFoxNameResponse(bool isSuccess)
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                var message = isSuccess ? "Fox name set" : "Failed to set fox name";
+                DisplayAlert("Name change", message, "OK");
             });
         }
     }

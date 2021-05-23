@@ -5,6 +5,8 @@
     /// </summary>
     public enum CommandType
     {
-        SetDateAndTime = 0x00
+        SetDateAndTime = 0x00,
+
+        SetFoxName = 0x01
     }
 }

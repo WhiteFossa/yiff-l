@@ -24,7 +24,7 @@ namespace yiff_hl.Business.Implementations.Commands
         {
             var payload = new List<byte>();
 
-            // 2th byte - year
+            // 2th (from 0th) byte - year
             payload.Add((byte)(time.Year - 2000));
 
             // 3th byte - month
