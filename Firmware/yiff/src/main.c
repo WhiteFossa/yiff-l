@@ -192,6 +192,20 @@ int main(int argc, char* argv[])
 	while(true)
 	{
 		RTC_Poll();
+
+		/* Processing possible updates from smartphone */
+		if (FoxStateNameChanged)
+		{
+			strcpy(EEPROM_Header.Name, FoxState.Name);
+			EEPROM_UpdateHeader();
+
+			// TODO: Restart HC-06 when hardware will be ready
+
+			uint8_t response = 0x00;
+			SendResponse(SetName, 1, &response);
+
+			FoxStateNameChanged = false;
+		}
 	}
 
 	return 0;

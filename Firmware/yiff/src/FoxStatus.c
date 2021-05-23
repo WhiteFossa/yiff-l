@@ -7,6 +7,11 @@
 
 #include <main.h>
 
+void FoxState_Init(void)
+{
+	FoxStateNameChanged = false;
+}
+
 void FoxState_CorrectDateTime(void)
 {
 	FoxState.CurrentTime.Hours = CurrentTime.Hours;

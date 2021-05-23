@@ -39,7 +39,9 @@
  */
 typedef enum
 {
-	SetDateAndTime = 0x00
+	SetDateAndTime = 0x00,
+
+	SetName = 0x01
 }
 CommandToFoxEnum;
 
@@ -70,8 +72,13 @@ void SendPacket(uint8_t payloadSize, uint8_t* payload);
 void SendResponse(CommandToFoxEnum responseTo, uint8_t payloadSize, uint8_t* payload);
 
 /**
- * Called when command "Set date and time came"
+ * Called when command "Set date and time" came
  */
 void OnSetDateAndTime(uint8_t payloadSize, uint8_t* payload);
+
+/**
+ * Called when command "Set fox name" came
+ */
+void OnSetName(uint8_t payloadSize, uint8_t* payload);
 
 #endif /* INCLUDE_PACKETSPROCESSOR_H_ */

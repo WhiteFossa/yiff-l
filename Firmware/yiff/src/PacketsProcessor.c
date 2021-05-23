@@ -61,6 +61,12 @@ void OnNewCommandToFox(uint8_t payloadSize, uint8_t* payload)
 			/* Set date and time */
 			OnSetDateAndTime(payloadSize, payload);
 			break;
+
+		case SetName:
+
+			/* Set fox name */
+			OnSetName(payloadSize, payload);
+			break;
 	}
 
 	free(payload);
@@ -118,7 +124,6 @@ void OnSetDateAndTime(uint8_t payloadSize, uint8_t* payload)
 	}
 
 	uint8_t result;
-
 	if (isValid)
 	{
 		RTC_DateTypeDef date;
@@ -144,6 +149,38 @@ void OnSetDateAndTime(uint8_t payloadSize, uint8_t* payload)
 	}
 
 	SendResponse(SetDateAndTime, 1, &result);
+}
+
+void OnSetName(uint8_t payloadSize, uint8_t* payload)
+{
+	bool isValid = true;
+
+	uint8_t nameLength = payload[1];
+
+	if (nameLength < 1 || nameLength > 32)
+	{
+		isValid = false;
+	}
+
+	if (payloadSize != nameLength + 2)
+	{
+		isValid = false;
+	}
+
+	if (isValid)
+	{
+		memcpy(FoxState.Name, &payload[2], nameLength);
+		FoxState.Name[nameLength] = 0x00;
+
+		/* Response will be sent from main thread */
+		FoxStateNameChanged = true;
+	}
+	else
+	{
+		/* Validation failed */
+		uint8_t result = 0x01;
+		SendResponse(SetName, 1, &result);
+	}
 }
 
 void SendPacket(uint8_t payloadSize, uint8_t* payload)

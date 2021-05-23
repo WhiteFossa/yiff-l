@@ -234,6 +234,16 @@ FoxStateStruct;
 FoxStateStruct FoxState;
 
 /**
+ * If true, then fox name just changed, we need to write it to EEPROM from the main thread
+ */
+bool FoxStateNameChanged;
+
+/**
+ * Call this before any operations with fox state
+ */
+void FoxState_Init(void);
+
+/**
  * Call this after updating RTC date and time
  */
 void FoxState_CorrectDateTime(void);
