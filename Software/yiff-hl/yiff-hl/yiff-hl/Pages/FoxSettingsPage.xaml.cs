@@ -124,5 +124,25 @@ namespace yiff_hl.Pages
                 DisplayAlert("Profiles count", $"Profiles count: {count}", "OK");
             });
         }
+
+        private void OnGetProfileNameClicked(object sender, EventArgs e)
+        {
+            GetProfileName(int.Parse(edProfileId.Text));
+        }
+
+        private void GetProfileName(int profileId)
+        {
+            var command = new GetProfileNameCommand(packetsProcessor);
+            command.SetResponseDelegate(OnGetProfileNameResponse);
+            command.SendGetProfileNameCommand(profileId);
+        }
+
+        private void OnGetProfileNameResponse(bool isSuccessful, int profileId, string name)
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                DisplayAlert("Profile name", $"Is successful: {isSuccessful}, ID: {profileId}, Name: {name}", "OK");
+            });
+        }
     }
 }

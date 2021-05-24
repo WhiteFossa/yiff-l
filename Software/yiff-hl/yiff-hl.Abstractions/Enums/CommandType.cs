@@ -11,6 +11,8 @@
 
         GetFoxName = 0x02,
 
-        GetProfilesCount = 0x03
+        GetProfilesCount = 0x03,
+
+        GetProfileName = 0x04
     }
 }

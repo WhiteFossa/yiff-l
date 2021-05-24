@@ -32,6 +32,7 @@ namespace yiff_hl.Abstractions.Interfaces
         void SetOnSetFoxNameResponse(OnResponseDelegate onSetFoxNameResponse);
         void SetOnGetFoxNameResponse(OnResponseDelegate onGetFoxNameResponse);
         void SetOnGetProfilesCountResponse(OnResponseDelegate onGetProfilesCountResponse);
+        void SetOnGetProfileNameResponse(OnResponseDelegate onGetProfileNameResponse);
 
         #endregion
 

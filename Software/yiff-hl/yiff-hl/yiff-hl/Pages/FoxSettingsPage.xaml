@@ -28,10 +28,32 @@
                 Clicked="OnGetFoxNameClicked"
                 />
 
-            <Button
-                Text="Get profiles count"
-                Clicked="OnGetProfilesCountClicked"
-                />
+            <Frame
+                BackgroundColor="DarkSlateGray">
+                <StackLayout>
+                    <Label
+                        Text="Profiles"
+                        />
+
+                    <Button
+                        Text="Get profiles count"
+                        Clicked="OnGetProfilesCountClicked"
+                        />
+
+                    <StackLayout
+                        Orientation="Horizontal">
+                        <Editor
+                            Placeholder="Enter profile ID"
+                            x:Name="edProfileId"/>
+
+                        <Button
+                            Text="Get profile name"
+                            Clicked="OnGetProfileNameClicked"
+                            />
+                    </StackLayout>
+                </StackLayout>
+            </Frame>
+
 
             <Button
                 Text="Disconnect"

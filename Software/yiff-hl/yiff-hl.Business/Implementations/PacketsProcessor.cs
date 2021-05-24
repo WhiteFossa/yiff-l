@@ -21,6 +21,7 @@ namespace yiff_hl.Business.Implementations
         private OnResponseDelegate onSetFoxNameResponse = null;
         private OnResponseDelegate onGetFoxNameResponse = null;
         private OnResponseDelegate onGetProfilesCountResponse = null;
+        private OnResponseDelegate onGetProfileNameResponse = null;
 
         private enum ReceiverState
         {
@@ -175,50 +176,49 @@ namespace yiff_hl.Business.Implementations
             {
                 // Set date and time response
                 case CommandType.SetDateAndTime:
-
-                    if (onSetDateAndTimeResponse == null)
-                    {
-                        throw new InvalidOperationException("Call SetOnSetDateAndTimeResponse() first!");
-                    }
+                    CheckOnResponseDelegate(onSetDateAndTimeResponse);
 
                     onSetDateAndTimeResponse(responsePayload);
                     return;
 
                 // Set fox name response
                 case CommandType.SetFoxName:
-
-                    if (onSetFoxNameResponse == null)
-                    {
-                        throw new InvalidOperationException("Call SetOnSetFoxNameResponse() first!");
-                    }
+                    CheckOnResponseDelegate(onSetFoxNameResponse);
 
                     onSetFoxNameResponse(responsePayload);
                     return;
 
                 // Get fox name response
                 case CommandType.GetFoxName:
-
-                    if (onGetFoxNameResponse == null)
-                    {
-                        throw new InvalidOperationException("Call SetOnGetFoxNameResponse() first!");
-                    }
+                    CheckOnResponseDelegate(onGetFoxNameResponse);
 
                     onGetFoxNameResponse(responsePayload);
                     return;
 
                 // Get profiles count
                 case CommandType.GetProfilesCount:
-
-                    if (onGetProfilesCountResponse == null)
-                    {
-                        throw new InvalidOperationException("Call SetOnGetProfilesCountResponse() first!");
-                    }
+                    CheckOnResponseDelegate(onGetProfilesCountResponse);
 
                     onGetProfilesCountResponse(responsePayload);
                     return;
 
+                // Get profile name
+                case CommandType.GetProfileName:
+                    CheckOnResponseDelegate(onGetProfileNameResponse);
+
+                    onGetProfileNameResponse(responsePayload);
+                    return;
+
                 default:
                     return; // We get some junk
+            }
+        }
+
+        private void CheckOnResponseDelegate(OnResponseDelegate del)
+        {
+            if (del == null)
+            {
+                throw new InvalidOperationException();
             }
         }
 
@@ -255,6 +255,11 @@ namespace yiff_hl.Business.Implementations
         public void SetOnGetProfilesCountResponse(OnResponseDelegate onGetProfilesCountResponse)
         {
             this.onGetProfilesCountResponse = onGetProfilesCountResponse ?? throw new ArgumentNullException(nameof(onGetProfilesCountResponse));
+        }
+
+        public void SetOnGetProfileNameResponse(OnResponseDelegate onGetProfileNameResponse)
+        {
+            this.onGetProfileNameResponse = onGetProfileNameResponse ?? throw new ArgumentNullException(nameof(onGetProfileNameResponse));
         }
     }
 }
