@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using yiff_hl.Abstractions.Enums;
 using yiff_hl.Abstractions.Interfaces;
+using yiff_hl.Business.Implementations.Commands.Helpers;
 
 namespace yiff_hl.Business.Implementations.Commands
 {
@@ -53,22 +54,10 @@ namespace yiff_hl.Business.Implementations.Commands
                 return;
             }
 
-            bool isSuccessful;
-            switch (payload.ElementAt(0))
-            {
-                case 0:
-                    isSuccessful = true;
-                    break;
-                case 1:
-                    isSuccessful = false;
-                    break;
-                default:
-                    return;
-            }
-
-            if (!isSuccessful)
+            if (!CommandsHelper.IsSuccessful(payload.ElementAt(0)))
             {
                 onGetProfileNameResponse(false, 0, String.Empty);
+                return;
             }
 
             var profileId = (int)payload.ElementAt(1);
