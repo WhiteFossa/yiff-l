@@ -291,3 +291,13 @@ void EEPROM_UpdateProfile(EEPROMProfileStruct* profile, uint8_t profileId)
 		EEPROM_LoadProfileIntoFoxState(&FoxState, &EEPROM_CurrentProfile);
 	}
 }
+
+bool EEPROM_IsProfileIdValid(uint8_t profileId)
+{
+	if (profileId > EEPROM_Header.NumberOfProfiles - 1U)
+	{
+		return false;
+	}
+
+	return true;
+}

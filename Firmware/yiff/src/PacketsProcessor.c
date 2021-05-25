@@ -75,6 +75,11 @@ void OnNewCommandToFox(uint8_t payloadSize, uint8_t* payload)
 			/* Get profiles count */
 			OnGetProfilesCount(payloadSize, payload);
 			break;
+
+		case GetProfileName:
+			/* Get profile name */
+			OnGetProfileName(payloadSize, payload);
+			break;
 	}
 
 	free(payload);
@@ -148,12 +153,12 @@ void OnSetDateAndTime(uint8_t payloadSize, uint8_t* payload)
 		RTC_SetCurrentTime(time);
 
 		/* Everything is OK */
-		result = 0x00;
+		result = YHL_PACKET_PROCESSOR_SUCCESS;
 	}
 	else
 	{
 		/* Validation failed */
-		result = 0x01;
+		result = YHL_PACKET_PROCESSOR_FAILURE;
 	}
 
 	SendResponse(SetDateAndTime, 1, &result);
@@ -186,7 +191,7 @@ void OnSetName(uint8_t payloadSize, uint8_t* payload)
 	else
 	{
 		/* Validation failed */
-		uint8_t result = 0x01;
+		uint8_t result = YHL_PACKET_PROCESSOR_FAILURE;
 		SendResponse(SetName, 1, &result);
 	}
 }
@@ -208,6 +213,49 @@ void OnGetProfilesCount(uint8_t payloadSize, uint8_t* payload)
 {
 	uint8_t response = EEPROM_Header.NumberOfProfiles;
 	SendResponse(GetProfilesCount, 1, &response);
+}
+
+void OnGetProfileName(uint8_t payloadSize, uint8_t* payload)
+{
+	bool isValid = true;
+
+	if (payloadSize != 2)
+	{
+		isValid = false;
+	}
+
+	uint8_t profileId = payload[1];
+	if (!EEPROM_IsProfileIdValid(profileId))
+	{
+		isValid = false;
+	}
+
+	if (isValid)
+	{
+		EEPROMProfileStruct profile = EEPROM_GetProfile(profileId);
+		uint8_t nameLength = strlen(profile.Name);
+		uint8_t responseLength = nameLength + 3;
+
+		uint8_t* response = malloc(responseLength);
+
+		response[0] = YHL_PACKET_PROCESSOR_SUCCESS;
+		response[1] = profileId;
+		response[2] = nameLength;
+		memcpy(&response[3], profile.Name, nameLength);
+
+		SendResponse(GetProfileName, responseLength, response);
+		free(response);
+	}
+	else
+	{
+		uint8_t response[4];
+		response[0] = YHL_PACKET_PROCESSOR_FAILURE; /* Not successful */
+		response[1] = 0x00; /* Meaningless profile */
+		response[2] = 1; /* Which name is 1 character long */
+		response[3] = ' '; /* And it's a space */
+
+		SendResponse(GetProfileName, 4, response);
+	}
 }
 
 void SendPacket(uint8_t payloadSize, uint8_t* payload)

@@ -209,7 +209,7 @@ void Main_ProcessFoxNameChange(void)
 
 		// TODO: Restart HC-06 when hardware will be ready
 
-		uint8_t response = 0x00;
+		uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
 		SendResponse(SetName, 1, &response);
 
 		FoxStateNameChanged = false;

@@ -35,6 +35,12 @@
 #define YHL_PACKET_PROCESSOR_MAX_PAYLOAD_SIZE 59U
 
 /**
+ * Responses to requests
+ */
+#define YHL_PACKET_PROCESSOR_SUCCESS 0x00
+#define YHL_PACKET_PROCESSOR_FAILURE 0x01
+
+/**
  * Possible commands to fox
  */
 typedef enum
@@ -45,7 +51,9 @@ typedef enum
 
 	GetName = 0x02,
 
-	GetProfilesCount = 0x03
+	GetProfilesCount = 0x03,
+
+	GetProfileName = 0x04
 }
 CommandToFoxEnum;
 
@@ -94,5 +102,10 @@ void OnGetName(uint8_t payloadSize, uint8_t* payload);
  * Called when command "Get profiles count" comes
  */
 void OnGetProfilesCount(uint8_t payloadSize, uint8_t* payload);
+
+/**
+ * Called when command "Get profile name" comes
+ */
+void OnGetProfileName(uint8_t payloadSize, uint8_t* payload);
 
 #endif /* INCLUDE_PACKETSPROCESSOR_H_ */

@@ -257,4 +257,9 @@ EEPROMProfileStruct EEPROM_GetProfile(uint8_t profileId);
  */
 void EEPROM_UpdateProfile(EEPROMProfileStruct* profile, uint8_t profileId);
 
+/**
+ * Checks, if given profile ID valid or not
+ */
+bool EEPROM_IsProfileIdValid(uint8_t profileId);
+
 #endif /* INCLUDE_EEPROM_H_ */
