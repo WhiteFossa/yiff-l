@@ -32,13 +32,8 @@ typedef struct
 }
 FoxButtonStruct;
 
-/**
- * Buttons text
- */
-FoxButtonStruct LeftButton;
-FoxButtonStruct RightButton;
-
-
+extern FoxButtonStruct LeftButton;
+extern FoxButtonStruct RightButton;
 
 /**
  * Draw buttons (does not flush framebuffer, flush it yourself)

@@ -50,15 +50,10 @@ typedef enum
 }
 MorsePlayerSMStateEnum;
 
-/**
- *  Sequence to play
- */
-MorseElementEnum* MorseSequenceToPlay;
-
-/**
- * Current element in sequence
- */
-MorseElementEnum* MorseCurrentElement;
+extern MorseElementEnum* MorseSequenceToPlay;
+extern MorseElementEnum* MorseCurrentElement;
+extern MorsePlayerSMStateEnum MorsePlayerState;
+extern uint16_t MorsePlayerCurrentInterval;
 
 /**
  * Finish fox sequence
@@ -120,15 +115,6 @@ static const MorseElementEnum Morse_Beacon[] = {
 		DitTone, DitPause, DitTone, DitPause, DitTone, /* ... */
 		DahPause, DahPause, DahPause, EoS };
 
-/**
- * State machine state
- */
-MorsePlayerSMStateEnum MorsePlayerState;
-
-/**
- * Morse player current interval in milliseconds
- */
-uint16_t MorsePlayerCurrentInterval;
 
 /**
  * Call it before starting to call MorseTickMs()

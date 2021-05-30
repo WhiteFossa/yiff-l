@@ -42,7 +42,7 @@
 #pragma GCC diagnostic ignored "-Wmissing-declarations"
 #pragma GCC diagnostic ignored "-Wreturn-type"
 
-#include "main.h"
+#include <main.h>
 
 int main(int argc, char* argv[])
 {

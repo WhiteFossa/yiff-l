@@ -5,7 +5,7 @@
  *      Author: fossa
  */
 
-#include <main.h>
+#include <UART.h>
 
 void UART_Tick(void)
 {

@@ -146,20 +146,11 @@ typedef struct
 }
 EEPROMProfileStruct;
 
-/**
- * EEPROM constant header in its actual state
- */
-EEPROMConstantHeaderStruct EEPROM_ConstantHeader;
 
-/**
- * EEPROM header in its actual state
- */
-EEPROMHeaderStruct EEPROM_Header;
+extern EEPROMConstantHeaderStruct EEPROM_ConstantHeader;
+extern EEPROMHeaderStruct EEPROM_Header;
+extern EEPROMProfileStruct EEPROM_CurrentProfile;
 
-/**
- * Current profile
- */
-EEPROMProfileStruct EEPROM_CurrentProfile;
 
 /**
  * Initialize EEPROM (call this if EEPROM Header CRC don't match).

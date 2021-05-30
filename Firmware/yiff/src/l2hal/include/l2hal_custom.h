@@ -67,41 +67,6 @@
 #define I2C2_EV_IRQN_SUBPRIORITY 2
 
 /**
- * I2C bus handle (connected to display).
- */
-I2C_HandleTypeDef I2C_Display;
-
-/**
- * I2C bus handle (connected to all other devices).
- */
-I2C_HandleTypeDef I2C_Other;
-
-/**
- * Display driver context.
- */
-L2HAL_SSD1327_ContextStruct L2HAL_SSD1327_Context;
-
-/**
- * EEPROM context
- */
-L2HAL_24x_ContextStruct EEPROMContext;
-
-/**
- * CRC calculator context
- */
-L2HAL_CRCContextStruct CRC_Context;
-
-/**
- * UART Handle
- */
-UART_HandleTypeDef UART_Handle;
-
-/**
- * HC-06 context
- */
-L2HAL_HC06_ContextStruct HC06_Context;
-
-/**
  * Put custom hardware initialization stuff here,
  */
 void L2HAL_InitCustomHardware(void);

@@ -38,6 +38,7 @@ void DrawStatusDisplay(FoxStateStruct foxState)
 	/* 7th line */
 	DrawGlobalState(foxState.GlobalState, foxState.CurrentTime);
 
+
 	/* 8th line */
 	DrawFoxPower(foxState.Power, foxState.Frequency);
 

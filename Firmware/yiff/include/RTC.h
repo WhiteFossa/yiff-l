@@ -11,41 +11,15 @@
 #include <l2hal.h>
 #include <stdlib.h>
 
-/**
- * RTC handle
- */
-RTC_HandleTypeDef RtcHandle;
+extern RTC_HandleTypeDef RtcHandle;
+extern uint8_t PreviousSecond;
+extern uint8_t RtcOnNewSecondListenersCount;
+extern void (**RtcOnNewSecondListeners)(void);
+extern uint8_t RtcDateAndTimeChangeListenersCount;
+extern void (**RtcDateAndTimeChangeListeners)(void);
+extern RTC_TimeTypeDef CurrentTime;
+extern RTC_DateTypeDef CurrentDate;
 
-/**
- * Second number at the moment of previous call of RTC_Poll();
- */
-uint8_t PreviousSecond;
-
-/**
- * How many listeners we have.
- */
-uint8_t RtcOnNewSecondListenersCount;
-
-/**
- * This functions listens for new second event.
- */
-void (**RtcOnNewSecondListeners)(void);
-
-/**
- * How many date and time change listeners we have.
- */
-uint8_t RtcDateAndTimeChangeListenersCount;
-
-/**
- * This functions listens for date and time change
- */
-void (**RtcDateAndTimeChangeListeners)(void);
-
-/**
- * Current date and time.
- */
-RTC_TimeTypeDef CurrentTime;
-RTC_DateTypeDef CurrentDate;
 
 /**
  * Initialize RTC

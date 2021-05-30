@@ -229,16 +229,6 @@ typedef struct
 FoxStateStruct;
 
 /**
- * Fox state
- */
-FoxStateStruct FoxState;
-
-/**
- * If true, then fox name just changed, we need to write it to EEPROM from the main thread
- */
-bool FoxStateNameChanged;
-
-/**
  * Call this before any operations with fox state
  */
 void FoxState_Init(void);

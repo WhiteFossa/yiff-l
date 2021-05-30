@@ -53,9 +53,11 @@ const uint8_t* FMGL_FontTerminusRegular12GetCharacterRaster(uint8_t character)
 
 FMGL_API_Font FMGL_FontTerminusRegular12Init(void)
 {
-	FMGL_FontTerminusRegular12.Height = FMGL_FONT_TERMINUS_REGULAR_12_CHARACTER_HEIGHT;
-	FMGL_FontTerminusRegular12.GetCharacterWidth = &FMGL_FontTerminusRegular12GetCharacterWidth;
-	FMGL_FontTerminusRegular12.GetCharacterRaster = &FMGL_FontTerminusRegular12GetCharacterRaster;
+	FMGL_API_Font font;
 
-	return FMGL_FontTerminusRegular12;
+	font.Height = FMGL_FONT_TERMINUS_REGULAR_12_CHARACTER_HEIGHT;
+	font.GetCharacterWidth = &FMGL_FontTerminusRegular12GetCharacterWidth;
+	font.GetCharacterRaster = &FMGL_FontTerminusRegular12GetCharacterRaster;
+
+	return font;
 }

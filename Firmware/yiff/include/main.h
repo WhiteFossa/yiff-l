@@ -50,6 +50,7 @@
 #include <EEPROM.h>
 #include <UART.h>
 #include <PacketsProcessor.h>
+#include <terminusRegular12.h>
 
 /**
  * EEPROM-related stuff
@@ -61,6 +62,17 @@
  * Bluetooth-related stuff
  */
 #define YHL_BLUETOOTH_PIN "0000"
+
+extern I2C_HandleTypeDef I2C_Display;
+extern I2C_HandleTypeDef I2C_Other;
+extern L2HAL_SSD1327_ContextStruct L2HAL_SSD1327_Context;
+extern L2HAL_24x_ContextStruct EEPROMContext;
+extern L2HAL_CRCContextStruct CRC_Context;
+extern UART_HandleTypeDef UART_Handle;
+extern L2HAL_HC06_ContextStruct HC06_Context;
+extern FoxStateStruct FoxState;
+extern bool FoxStateNameChanged;
+
 
 /**
  * Checks if fox name changed and if so, then saves it into EEPROM and bluetooth module

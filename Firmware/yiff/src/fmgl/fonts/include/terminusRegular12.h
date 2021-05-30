@@ -84,11 +84,6 @@ uint16_t FMGL_FontTerminusRegular12GetCharacterWidth (uint8_t character);
 const uint8_t* FMGL_FontTerminusRegular12GetCharacterRaster(uint8_t character);
 
 /**
- * Basic font settings.
- */
-FMGL_API_Font FMGL_FontTerminusRegular12;
-
-/**
  * Characters rasters.
  */
 static const uint8_t FMGL_FontTerminusRegular12Characters[FMGL_FONT_TERMINUS_REGULAR_12_CHARACTERS_TABLE_LENGTH][FMGL_FONT_TERMINUS_REGULAR_12_CHARACTER_HEIGHT] =
