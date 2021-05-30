@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using yiff_hl.Abstractions.Enums;
 using yiff_hl.Abstractions.Interfaces;
+using yiff_hl.Business.Implementations.Commands.Helpers;
 
 namespace yiff_hl.Business.Implementations.Commands
 {
@@ -60,22 +61,7 @@ namespace yiff_hl.Business.Implementations.Commands
                 return;
             }
 
-            bool isSuccessfull;
-            switch (payload.ElementAt(0))
-            {
-                case 0:
-                    isSuccessfull = true;
-                    break;
-
-                case 1:
-                    isSuccessfull = false;
-                    break;
-
-                default:
-                    return;
-            }
-
-            onSetFoxNameResponse(isSuccessfull);
+            onSetFoxNameResponse(CommandsHelper.IsSuccessful(payload.ElementAt(0)));
         }
     }
 }
