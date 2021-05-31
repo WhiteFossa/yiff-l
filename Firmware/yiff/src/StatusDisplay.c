@@ -139,7 +139,7 @@ uint16_t DrawFoxFrequency(FoxFrequencyStruct frequency)
 	float freqMHz = (float)frequency.FrequencyHz / 1000000.0f;
 
 	char buffer[16];
-	sprintf(buffer, "%.3f", freqMHz);
+	snprintf(buffer, 16, "%.3f", freqMHz);
 
 	uint16_t width;
 

@@ -51,6 +51,7 @@
 #include <UART.h>
 #include <PacketsProcessor.h>
 #include <terminusRegular12.h>
+#include <printf.h>
 
 /**
  * EEPROM-related stuff

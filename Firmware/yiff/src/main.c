@@ -43,6 +43,7 @@
 #pragma GCC diagnostic ignored "-Wreturn-type"
 
 #include <main.h>
+#include <printf.h>
 
 int main(int argc, char* argv[])
 {
