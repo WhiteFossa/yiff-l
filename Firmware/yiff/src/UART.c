@@ -6,6 +6,7 @@
  */
 
 #include <UART.h>
+#include <UARTPrivate.h>
 
 void UART_Tick(void)
 {

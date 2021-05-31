@@ -14,6 +14,11 @@
 #include <EEPROM.h>
 #include <UART.h>
 
+
+/******************************
+* Hardware handles goes below *
+*******************************/
+
 /**
  * I2C bus handle (connected to display).
  */
@@ -48,6 +53,11 @@ UART_HandleTypeDef UART_Handle;
  * HC-06 context
  */
 L2HAL_HC06_ContextStruct HC06_Context;
+
+
+/****************************
+* Graphics stuff goes below *
+*****************************/
 
 /**
  * Font to use
@@ -84,6 +94,11 @@ FMGL_API_ColorStruct OffColor;
  */
 FMGL_API_ColorStruct OnColor;
 
+
+/***********************
+* Fox stuff goes below *
+************************/
+
 /**
  * Fox state
  */
@@ -101,62 +116,6 @@ FoxButtonStruct LeftButton;
 FoxButtonStruct RightButton;
 
 /**
- * RTC handle
- */
-RTC_HandleTypeDef RtcHandle;
-
-/**
- * Second number at the moment of previous call of RTC_Poll();
- */
-uint8_t PreviousSecond;
-
-/**
- * How many listeners we have.
- */
-uint8_t RtcOnNewSecondListenersCount;
-
-/**
- * This functions listens for new second event.
- */
-void (**RtcOnNewSecondListeners)(void);
-
-/**
- * How many date and time change listeners we have.
- */
-uint8_t RtcDateAndTimeChangeListenersCount;
-
-/**
- * This functions listens for date and time change.
- */
-void (**RtcDateAndTimeChangeListeners)(void);
-
-/**
- * Current date and time.
- */
-RTC_TimeTypeDef CurrentTime;
-RTC_DateTypeDef CurrentDate;
-
-/**
- *  Sequence to play
- */
-MorseElementEnum* MorseSequenceToPlay;
-
-/**
- * Current element in sequence
- */
-MorseElementEnum* MorseCurrentElement;
-
-/**
- * State machine state
- */
-MorsePlayerSMStateEnum MorsePlayerState;
-
-/**
- * Morse player current interval in milliseconds
- */
-uint16_t MorsePlayerCurrentInterval;
-
-/**
  * EEPROM constant header in its actual state
  */
 EEPROMConstantHeaderStruct EEPROM_ConstantHeader;
@@ -171,52 +130,5 @@ EEPROMHeaderStruct EEPROM_Header;
  */
 EEPROMProfileStruct EEPROM_CurrentProfile;
 
-
-/**
- * Packets state machine state
- */
-UART_PacketsSMStateEnum UART_PSMState;
-
-/**
- * Transmission buffer (of dynamic size)
- */
-uint8_t* UART_TxBuffer;
-
-/**
- * Rx buffer (we work byte-by-byte, so 1 byte is enough)
- */
-uint8_t UART_RxByteBuffer;
-
-/**
- * Packet is being accumulated here
- */
-uint8_t UART_RxPacketBuffer[YHL_UART_PACKET_MAX_SIZE];
-
-/**
- * Current byte within UART_RxPacketBuffer
- */
-uint8_t UART_RxPacketBufferIndex;
-
-/**
- * Decreases each millisecond, when reaches 0, resets state machine to Listen state.
- */
-uint16_t UART_RxTimeoutTimer;
-
-/**
- * When first byte of packet is came, we are able to detect packet length. That length
- * is stored here
- */
-uint8_t UART_ExpectedPacketLength;
-
-/**
- * Pointer to function, called when new packet received. DO NOT FORGET
- * TO CALL free() ON PACKET AFTER PROCESSING
- */
-void (*UART_OnNewPacket)(uint8_t packetFullLength, uint8_t* packet);
-
-/**
- * True if there is ongoing semiblocking transmission
- */
-volatile bool UART_TransmissionInProgress;
 
 #endif /* INCLUDE_GLOBALVARIABLES_H_ */

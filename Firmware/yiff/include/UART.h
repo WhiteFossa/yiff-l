@@ -52,8 +52,6 @@ typedef enum
 }
 UART_PacketsSMStateEnum;
 
-
-extern UART_PacketsSMStateEnum UART_PSMState;
 extern uint8_t* UART_TxBuffer;
 extern uint8_t UART_RxByteBuffer;
 extern uint8_t UART_RxPacketBuffer[YHL_UART_PACKET_MAX_SIZE];

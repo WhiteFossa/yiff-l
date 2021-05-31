@@ -6,6 +6,7 @@
  */
 
 #include <main.h>
+#include <TimePrivate.h>
 
 void TimeToHMS(Time time, char* result)
 {

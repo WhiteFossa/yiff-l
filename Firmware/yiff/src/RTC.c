@@ -6,6 +6,7 @@
  */
 
 #include <RTC.h>
+#include <RTCPrivate.h>
 
 void HAL_RTC_MspInit(RTC_HandleTypeDef *hrtc)
 {

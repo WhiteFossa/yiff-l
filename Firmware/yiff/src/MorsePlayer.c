@@ -6,6 +6,7 @@
  */
 
 #include <main.h>
+#include <MorsePlayerPrivate.h>
 
 void MorsePlayerInit(void)
 {
