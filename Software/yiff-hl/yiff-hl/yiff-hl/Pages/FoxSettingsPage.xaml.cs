@@ -176,35 +176,29 @@ namespace yiff_hl.Pages
         {
             pkProfiles.Items.Clear();
 
-            // Profiles count
-            var command = new GetProfilesCountCommand(packetsProcessor);
-            command.SetResponseDelegate(OnGetProfilesCountInEnumerateProfilesResponse);
-            command.SendGetProfilesCountCommand();
-        }
-
-        private void OnGetProfilesCountInEnumerateProfilesResponse(int count)
-        {
-            Device.BeginInvokeOnMainThread(() =>
-            {
-                var profilesCount = count;
-
-                // Getting profiles names
-                for (var profileId = 0; profileId < profilesCount; profileId ++)
-                {
-                    var command = new GetProfileNameCommand(packetsProcessor);
-                    command.SetResponseDelegate(OnGetProfileNameResponseInEnumerateProfiles);
-                    command.SendGetProfileNameCommand(profileId);
-                }
-            });
+            // Getting first profile name
+            var command = new GetProfileNameCommand(packetsProcessor);
+            command.SetResponseDelegate(OnGetProfileNameResponseInEnumerateProfiles);
+            command.SendGetProfileNameCommand(0);
         }
 
         private void OnGetProfileNameResponseInEnumerateProfiles(bool isSuccessful, int profileId, string name)
         {
             Device.BeginInvokeOnMainThread(() =>
             {
-                pkProfiles.Items.Add(name);
+                if (isSuccessful)
+                {
+                    pkProfiles.Items.Add(name);
 
-                pkProfiles.SelectedIndex = 0;
+                    if (profileId == 0)
+                    {
+                        pkProfiles.SelectedIndex = 0;
+                    }
+
+                    var command = new GetProfileNameCommand(packetsProcessor);
+                    command.SetResponseDelegate(OnGetProfileNameResponseInEnumerateProfiles);
+                    command.SendGetProfileNameCommand(profileId + 1);
+                }
             });
         }
 
