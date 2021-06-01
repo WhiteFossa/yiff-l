@@ -209,5 +209,36 @@ namespace yiff_hl.Pages
         }
 
         #endregion
+
+        #region Add new profile
+
+        private void OnAddNewProfileClicked(object sender, EventArgs e)
+        {
+            AddNewProfile();
+        }
+
+        private void AddNewProfile()
+        {
+            var command = new AddNewProfileCommand(packetsProcessor);
+            command.SetResponseDelegate(OnAddNewProfileResponse);
+            command.SendAddNewProfileCommand();
+        }
+
+        private void OnAddNewProfileResponse(bool isSuccessful)
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                if (!isSuccessful)
+                {
+                    DisplayAlert("Add new profile", "Failed to add new profile", "OK");
+                    return;
+                }
+
+                EnumerateProfiles();
+                DisplayAlert("Add new profile", "New profile added", "OK");
+            });
+        }
+
+        #endregion
     }
 }

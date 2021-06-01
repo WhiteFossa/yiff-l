@@ -61,6 +61,10 @@
                             Text="Enumerate profiles"
                             Clicked="OnEnumerateProfilesClicked" />
                     </StackLayout>
+
+                    <Button
+                        Text="Add new profile"
+                        Clicked="OnAddNewProfileClicked" />
                 </StackLayout>
             </Frame>
 

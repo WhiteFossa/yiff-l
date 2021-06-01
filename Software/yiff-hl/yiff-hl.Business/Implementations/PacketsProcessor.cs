@@ -22,6 +22,7 @@ namespace yiff_hl.Business.Implementations
         private OnResponseDelegate onGetFoxNameResponse = null;
         private OnResponseDelegate onGetProfilesCountResponse = null;
         private OnResponseDelegate onGetProfileNameResponse = null;
+        private OnResponseDelegate onAddNewProfileResponse = null;
 
         private enum ReceiverState
         {
@@ -209,6 +210,13 @@ namespace yiff_hl.Business.Implementations
                     onGetProfileNameResponse(responsePayload);
                     return;
 
+                // Add new profile
+                case CommandType.AddNewProfile:
+                    CheckOnResponseDelegate(onAddNewProfileResponse);
+
+                    onAddNewProfileResponse(responsePayload);
+                    return;
+
                 default:
                     return; // We get some junk
             }
@@ -260,6 +268,11 @@ namespace yiff_hl.Business.Implementations
         public void SetOnGetProfileNameResponse(OnResponseDelegate onGetProfileNameResponse)
         {
             this.onGetProfileNameResponse = onGetProfileNameResponse ?? throw new ArgumentNullException(nameof(onGetProfileNameResponse));
+        }
+
+        public void SetOnAddNewProfileResponse(OnResponseDelegate onAddNewProfileResponse)
+        {
+            this.onAddNewProfileResponse = onAddNewProfileResponse ?? throw new ArgumentNullException(nameof(onAddNewProfileResponse));
         }
     }
 }

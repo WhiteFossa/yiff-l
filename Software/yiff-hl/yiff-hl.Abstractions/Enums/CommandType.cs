@@ -13,6 +13,8 @@
 
         GetProfilesCount = 0x03,
 
-        GetProfileName = 0x04
+        GetProfileName = 0x04,
+
+        AddNewProfile = 0x05
     }
 }
