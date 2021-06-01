@@ -51,6 +51,16 @@
                             Clicked="OnGetProfileNameClicked"
                             />
                     </StackLayout>
+
+                    <StackLayout Orientation="Horizontal">
+                        <Picker
+                            x:Name="pkProfiles"
+                            WidthRequest="200" />
+
+                        <Button
+                            Text="Enumerate profiles"
+                            Clicked="OnEnumerateProfilesClicked" />
+                    </StackLayout>
                 </StackLayout>
             </Frame>
 

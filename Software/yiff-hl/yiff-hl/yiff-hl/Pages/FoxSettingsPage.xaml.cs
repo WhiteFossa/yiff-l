@@ -43,6 +43,8 @@ namespace yiff_hl.Pages
             Navigation.PopModalAsync();
         }
 
+        #region Set date and time
+
         private void OnSetCurrentDateAndTimeClicked(object sender, EventArgs e)
         {
             SetCurrentDateAndTime();
@@ -63,6 +65,10 @@ namespace yiff_hl.Pages
                 DisplayAlert("Clock synchronization", message, "OK");
             });
         }
+
+        #endregion
+
+        #region Set fox name
 
         private void OnSetFoxNameClicked(object sender, EventArgs e)
         {
@@ -85,6 +91,10 @@ namespace yiff_hl.Pages
             });
         }
 
+        #endregion
+
+        #region Get fox name
+
         private void OnGetFoxNameClicked(object sender, EventArgs e)
         {
             GetFoxName();
@@ -104,6 +114,10 @@ namespace yiff_hl.Pages
                 DisplayAlert("Fox name", $"Fox name: {name}", "OK");
             });
         }
+
+        #endregion
+
+        #region Get profiles count
 
         private void OnGetProfilesCountClicked(object sender, EventArgs e)
         {
@@ -125,6 +139,10 @@ namespace yiff_hl.Pages
             });
         }
 
+        #endregion
+
+        #region Get profile name
+
         private void OnGetProfileNameClicked(object sender, EventArgs e)
         {
             GetProfileName(int.Parse(edProfileId.Text));
@@ -144,5 +162,52 @@ namespace yiff_hl.Pages
                 DisplayAlert("Profile name", $"Is successful: {isSuccessful}, ID: {profileId}, Name: {name}", "OK");
             });
         }
+
+        #endregion
+
+        #region Enumerate profiles
+
+        private void OnEnumerateProfilesClicked(object sender, EventArgs e)
+        {
+            EnumerateProfiles();
+        }
+
+        private void EnumerateProfiles()
+        {
+            pkProfiles.Items.Clear();
+
+            // Profiles count
+            var command = new GetProfilesCountCommand(packetsProcessor);
+            command.SetResponseDelegate(OnGetProfilesCountInEnumerateProfilesResponse);
+            command.SendGetProfilesCountCommand();
+        }
+
+        private void OnGetProfilesCountInEnumerateProfilesResponse(int count)
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                var profilesCount = count;
+
+                // Getting profiles names
+                for (var profileId = 0; profileId < profilesCount; profileId ++)
+                {
+                    var command = new GetProfileNameCommand(packetsProcessor);
+                    command.SetResponseDelegate(OnGetProfileNameResponseInEnumerateProfiles);
+                    command.SendGetProfileNameCommand(profileId);
+                }
+            });
+        }
+
+        private void OnGetProfileNameResponseInEnumerateProfiles(bool isSuccessful, int profileId, string name)
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                pkProfiles.Items.Add(name);
+
+                pkProfiles.SelectedIndex = 0;
+            });
+        }
+
+        #endregion
     }
 }
