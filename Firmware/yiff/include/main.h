@@ -72,13 +72,19 @@ extern L2HAL_CRCContextStruct CRC_Context;
 extern UART_HandleTypeDef UART_Handle;
 extern L2HAL_HC06_ContextStruct HC06_Context;
 extern FoxStateStruct FoxState;
-extern bool FoxStateNameChanged;
+extern PendingCommandsFlagsStruct PendingCommandsFlags;
 
 
 /**
  * Checks if fox name changed and if so, then saves it into EEPROM and bluetooth module
  */
 void Main_ProcessFoxNameChange(void);
+
+
+/**
+ * Checks if we need to add new profile and if so adds it.
+ */
+void Main_ProcessNewProfileAdd(void);
 
 
 #endif /* __MAIN_H */

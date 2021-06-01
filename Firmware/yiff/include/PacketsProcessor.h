@@ -8,6 +8,10 @@
 #ifndef INCLUDE_PACKETSPROCESSOR_H_
 #define INCLUDE_PACKETSPROCESSOR_H_
 
+#include <Commands.h>
+
+extern PendingCommandsFlagsStruct PendingCommandsFlags;
+
 /**
  * Packet size minus this value is payload size
  */
@@ -53,7 +57,9 @@ typedef enum
 
 	GetProfilesCount = 0x03,
 
-	GetProfileName = 0x04
+	GetProfileName = 0x04,
+
+	AddNewProfile = 0x05
 }
 CommandToFoxEnum;
 
@@ -107,5 +113,10 @@ void OnGetProfilesCount(uint8_t payloadSize, uint8_t* payload);
  * Called when command "Get profile name" comes
  */
 void OnGetProfileName(uint8_t payloadSize, uint8_t* payload);
+
+/**
+ * Called when command "Add new profile" comes
+ */
+void OnAddNewProfile(uint8_t payloadSize, uint8_t* payload);
 
 #endif /* INCLUDE_PACKETSPROCESSOR_H_ */

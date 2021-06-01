@@ -13,6 +13,7 @@
 #include <MorsePlayer.h>
 #include <EEPROM.h>
 #include <UART.h>
+#include <Commands.h>
 
 
 /******************************
@@ -105,9 +106,9 @@ FMGL_API_ColorStruct OnColor;
 FoxStateStruct FoxState;
 
 /**
- * If true, then fox name just changed, we need to write it to EEPROM from the main thread
+ * Flags, set when commands are pending
  */
-bool FoxStateNameChanged;
+PendingCommandsFlagsStruct PendingCommandsFlags;
 
 /**
  * Buttons text

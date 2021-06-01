@@ -9,7 +9,8 @@
 
 void FoxState_Init(void)
 {
-	FoxStateNameChanged = false;
+	PendingCommandsFlags.FoxStateNameChanged = false;
+	PendingCommandsFlags.NeedToAddNewProfile = false;
 }
 
 void FoxState_CorrectDateTime(void)

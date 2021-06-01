@@ -80,6 +80,11 @@ void OnNewCommandToFox(uint8_t payloadSize, uint8_t* payload)
 			/* Get profile name */
 			OnGetProfileName(payloadSize, payload);
 			break;
+
+		case AddNewProfile:
+			/* Add new profile */
+			OnAddNewProfile(payloadSize, payload);
+			break;
 	}
 
 	free(payload);
@@ -186,7 +191,7 @@ void OnSetName(uint8_t payloadSize, uint8_t* payload)
 		FoxState.Name[nameLength] = 0x00;
 
 		/* Response will be sent from main thread */
-		FoxStateNameChanged = true;
+		PendingCommandsFlags.FoxStateNameChanged = true;
 	}
 	else
 	{
@@ -256,6 +261,31 @@ void OnGetProfileName(uint8_t payloadSize, uint8_t* payload)
 
 		SendResponse(GetProfileName, 4, response);
 	}
+}
+
+void OnAddNewProfile(uint8_t payloadSize, uint8_t* payload)
+{
+	bool canWeAdd = true;
+
+	if (payloadSize != 1)
+	{
+		canWeAdd = false;
+	}
+
+	if (YHL_MAX_PROFILES_COUNT == EEPROM_Header.NumberOfProfiles)
+	{
+		canWeAdd = false;
+	}
+
+	if (!canWeAdd)
+	{
+		uint8_t result = YHL_PACKET_PROCESSOR_FAILURE;
+		SendResponse(AddNewProfile, 1, &result);
+		return;
+	}
+
+	/* Response will be sent from main thread */
+	PendingCommandsFlags.NeedToAddNewProfile = true;
 }
 
 void SendPacket(uint8_t payloadSize, uint8_t* payload)

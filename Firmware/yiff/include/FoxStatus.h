@@ -9,6 +9,9 @@
 #define INCLUDE_FOXSTATUS_H_G
 
 #include <Time.h>
+#include <Commands.h>
+
+extern PendingCommandsFlagsStruct PendingCommandsFlags;
 
 #define YHL_FOX_NAME_BUFFER_LENGTH 33
 

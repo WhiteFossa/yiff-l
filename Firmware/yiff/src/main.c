@@ -196,6 +196,7 @@ int main(int argc, char* argv[])
 
 		/* Processing possible updates from smartphone */
 		Main_ProcessFoxNameChange();
+		Main_ProcessNewProfileAdd();
 	}
 
 	return 0;
@@ -203,7 +204,7 @@ int main(int argc, char* argv[])
 
 void Main_ProcessFoxNameChange(void)
 {
-	if (FoxStateNameChanged)
+	if (PendingCommandsFlags.FoxStateNameChanged)
 	{
 		strcpy(EEPROM_Header.Name, FoxState.Name);
 		EEPROM_UpdateHeader();
@@ -213,7 +214,20 @@ void Main_ProcessFoxNameChange(void)
 		uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
 		SendResponse(SetName, 1, &response);
 
-		FoxStateNameChanged = false;
+		PendingCommandsFlags.FoxStateNameChanged = false;
+	}
+}
+
+void Main_ProcessNewProfileAdd(void)
+{
+	if (PendingCommandsFlags.NeedToAddNewProfile)
+	{
+		EEPROM_AddProfile();
+
+		uint8_t result = YHL_PACKET_PROCESSOR_SUCCESS;
+		SendResponse(AddNewProfile, 1, &result);
+
+		PendingCommandsFlags.NeedToAddNewProfile = false;
 	}
 }
 
