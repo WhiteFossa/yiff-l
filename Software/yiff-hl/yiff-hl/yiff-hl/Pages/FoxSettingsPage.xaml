@@ -63,6 +63,10 @@
                     </StackLayout>
 
                     <Button
+                        Text="Get current profile ID"
+                        Clicked="OnGetCurrentProfileIdClicked" />
+
+                    <Button
                         Text="Add new profile"
                         Clicked="OnAddNewProfileClicked" />
                 </StackLayout>

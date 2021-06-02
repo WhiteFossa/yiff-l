@@ -15,6 +15,15 @@ namespace yiff_hl.Pages
         private readonly IBluetoothCommunicator bluetoothCommunicator;
         private readonly IPacketsProcessor packetsProcessor;
 
+        private class CurrentProfile
+        {
+            public int Id { get; set; }
+
+            public string Name { get; set; }
+        }
+
+        private CurrentProfile currentProfile;
+
         public FoxSettingsPage(IBluetoothCommunicator bluetoothCommunicator,
             IPacketsProcessor packetsProcessor)
         {
@@ -230,6 +239,30 @@ namespace yiff_hl.Pages
 
                 EnumerateProfiles();
                 DisplayAlert("Add new profile", "New profile added", "OK");
+            });
+        }
+
+        #endregion
+
+        #region Get current profile ID
+
+        private void OnGetCurrentProfileIdClicked(object sender, EventArgs e)
+        {
+            GetCurrentProfileId();
+        }
+
+        private void GetCurrentProfileId()
+        {
+            var command = new GetCurrentProfileIdCommand(packetsProcessor);
+            command.SetResponseDelegate(OnGetCurrentProfileIdResponse);
+            command.SendGetCurrentProfileIdCommand();
+        }
+
+        private void OnGetCurrentProfileIdResponse(int profileId)
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                DisplayAlert("Current profile ID", $"Current profile ID: {profileId}", "OK");
             });
         }
 

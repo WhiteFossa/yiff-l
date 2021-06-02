@@ -23,6 +23,7 @@ namespace yiff_hl.Business.Implementations
         private OnResponseDelegate onGetProfilesCountResponse = null;
         private OnResponseDelegate onGetProfileNameResponse = null;
         private OnResponseDelegate onAddNewProfileResponse = null;
+        private OnResponseDelegate onGetCurrentProfileIdResponse = null;
 
         private enum ReceiverState
         {
@@ -217,6 +218,13 @@ namespace yiff_hl.Business.Implementations
                     onAddNewProfileResponse(responsePayload);
                     return;
 
+                // Get current profile ID
+                case CommandType.GetCurrentProfileId:
+                    CheckOnResponseDelegate(onGetCurrentProfileIdResponse);
+
+                    onGetCurrentProfileIdResponse(responsePayload);
+                    return;
+
                 default:
                     return; // We get some junk
             }
@@ -273,6 +281,11 @@ namespace yiff_hl.Business.Implementations
         public void SetOnAddNewProfileResponse(OnResponseDelegate onAddNewProfileResponse)
         {
             this.onAddNewProfileResponse = onAddNewProfileResponse ?? throw new ArgumentNullException(nameof(onAddNewProfileResponse));
+        }
+
+        public void SetOnGetCurrentProfileIdResponse(OnResponseDelegate onGetCurrentProfileIdResponse)
+        {
+            this.onGetCurrentProfileIdResponse = onGetCurrentProfileIdResponse ?? throw new ArgumentNullException(nameof(onGetCurrentProfileIdResponse));
         }
     }
 }
