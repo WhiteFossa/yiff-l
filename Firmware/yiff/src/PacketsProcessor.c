@@ -85,6 +85,11 @@ void OnNewCommandToFox(uint8_t payloadSize, uint8_t* payload)
 			/* Add new profile */
 			OnAddNewProfile(payloadSize, payload);
 			break;
+
+		case GetCurrentProfileId:
+			/* Get current profile ID*/
+			OnGetCurrentProfileId(payloadSize, payload);
+			break;
 	}
 
 	free(payload);
@@ -286,6 +291,18 @@ void OnAddNewProfile(uint8_t payloadSize, uint8_t* payload)
 
 	/* Response will be sent from main thread */
 	PendingCommandsFlags.NeedToAddNewProfile = true;
+}
+
+void OnGetCurrentProfileId(uint8_t payloadSize, uint8_t* payload)
+{
+	if (payloadSize != 1)
+	{
+		/* Just ignoring incorrect command */
+		return;
+	}
+
+	uint8_t response = EEPROM_Header.ProfileInUse;
+	SendResponse(GetCurrentProfileId, 1, response);
 }
 
 void SendPacket(uint8_t payloadSize, uint8_t* payload)

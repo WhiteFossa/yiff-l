@@ -59,7 +59,9 @@ typedef enum
 
 	GetProfileName = 0x04,
 
-	AddNewProfile = 0x05
+	AddNewProfile = 0x05,
+
+	GetCurrentProfileId = 0x06
 }
 CommandToFoxEnum;
 
@@ -118,5 +120,10 @@ void OnGetProfileName(uint8_t payloadSize, uint8_t* payload);
  * Called when command "Add new profile" comes
  */
 void OnAddNewProfile(uint8_t payloadSize, uint8_t* payload);
+
+/**
+ * Called when command "Get current profile ID" comes
+ */
+void OnGetCurrentProfileId(uint8_t payloadSize, uint8_t* payload);
 
 #endif /* INCLUDE_PACKETSPROCESSOR_H_ */
