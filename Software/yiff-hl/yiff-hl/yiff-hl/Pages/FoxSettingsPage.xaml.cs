@@ -15,14 +15,16 @@ namespace yiff_hl.Pages
         private readonly IBluetoothCommunicator bluetoothCommunicator;
         private readonly IPacketsProcessor packetsProcessor;
 
-        private class CurrentProfile
+        private class Profile
         {
             public int Id { get; set; }
+
+            public int Index { get; set; }
 
             public string Name { get; set; }
         }
 
-        private CurrentProfile currentProfile;
+        private List<Profile> profiles = new List<Profile>();
 
         public FoxSettingsPage(IBluetoothCommunicator bluetoothCommunicator,
             IPacketsProcessor packetsProcessor)
@@ -184,6 +186,7 @@ namespace yiff_hl.Pages
         private void EnumerateProfiles()
         {
             pkProfiles.Items.Clear();
+            profiles.Clear();
 
             // Getting first profile name
             var command = new GetProfileNameCommand(packetsProcessor);
@@ -197,17 +200,32 @@ namespace yiff_hl.Pages
             {
                 if (isSuccessful)
                 {
+                    profiles.Add(new Profile() { Index = pkProfiles.Items.Count, Id = profileId, Name = name });
                     pkProfiles.Items.Add(name);
-
-                    if (profileId == 0)
-                    {
-                        pkProfiles.SelectedIndex = 0;
-                    }
 
                     var command = new GetProfileNameCommand(packetsProcessor);
                     command.SetResponseDelegate(OnGetProfileNameResponseInEnumerateProfiles);
                     command.SendGetProfileNameCommand(profileId + 1);
                 }
+                else
+                {
+                    // Enumeration completed, asking for active profile
+                    var command = new GetCurrentProfileIdCommand(packetsProcessor);
+                    command.SetResponseDelegate(OnGetCurrentProfileIdResponseInEnumerateProfiles);
+                    command.SendGetCurrentProfileIdCommand();
+                }
+            });
+        }
+
+        private void OnGetCurrentProfileIdResponseInEnumerateProfiles(int profileId)
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                var index = profiles
+                    .First(p => p.Id == profileId)
+                    .Index;
+
+                pkProfiles.SelectedIndex = index;
             });
         }
 
