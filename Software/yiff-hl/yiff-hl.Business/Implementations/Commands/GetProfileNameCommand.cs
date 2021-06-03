@@ -15,9 +15,6 @@ namespace yiff_hl.Business.Implementations.Commands
         private const int MinNameLength = 1;
         private const int MaxNameLength = 16;
 
-        private const int MinProfileId = 0;
-        private const int MaxProfileId = 255;
-
         private readonly IPacketsProcessor packetsProcessor;
         private OnGetProfileNameResponseDelegate onGetProfileNameResponse;
 
@@ -34,7 +31,7 @@ namespace yiff_hl.Business.Implementations.Commands
 
         public void SendGetProfileNameCommand(int id)
         {
-            if (id < MinProfileId || id > MaxProfileId)
+            if (id < Constants.MinProfileId || id > Constants.MaxProfileId)
             {
                 throw new ArgumentException("Invalid profile ID", nameof(id));
             }

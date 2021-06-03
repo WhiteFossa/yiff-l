@@ -63,6 +63,10 @@
                     </StackLayout>
 
                     <Button
+                            Text="Switch to profile"
+                            Clicked="OnSwitchToProfileClicked" />
+
+                    <Button
                         Text="Get current profile ID"
                         Clicked="OnGetCurrentProfileIdClicked" />
 

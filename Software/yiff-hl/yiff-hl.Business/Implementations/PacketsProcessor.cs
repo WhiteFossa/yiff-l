@@ -24,6 +24,7 @@ namespace yiff_hl.Business.Implementations
         private OnResponseDelegate onGetProfileNameResponse = null;
         private OnResponseDelegate onAddNewProfileResponse = null;
         private OnResponseDelegate onGetCurrentProfileIdResponse = null;
+        private OnResponseDelegate onSwitchToProfileResponse = null;
 
         private enum ReceiverState
         {
@@ -225,6 +226,13 @@ namespace yiff_hl.Business.Implementations
                     onGetCurrentProfileIdResponse(responsePayload);
                     return;
 
+                // Switch to profile
+                case CommandType.SwitchToProfile:
+                    CheckOnResponseDelegate(onSwitchToProfileResponse);
+
+                    onSwitchToProfileResponse(responsePayload);
+                    return;
+
                 default:
                     return; // We get some junk
             }
@@ -286,6 +294,11 @@ namespace yiff_hl.Business.Implementations
         public void SetOnGetCurrentProfileIdResponse(OnResponseDelegate onGetCurrentProfileIdResponse)
         {
             this.onGetCurrentProfileIdResponse = onGetCurrentProfileIdResponse ?? throw new ArgumentNullException(nameof(onGetCurrentProfileIdResponse));
+        }
+
+        public void SetOnSwitchToProfileResponse(OnResponseDelegate onSwitchToProfileResponse)
+        {
+            this.onSwitchToProfileResponse = onSwitchToProfileResponse ?? throw new ArgumentNullException(nameof(onSwitchToProfileResponse));
         }
     }
 }

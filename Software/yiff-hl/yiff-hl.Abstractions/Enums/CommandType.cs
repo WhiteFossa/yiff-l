@@ -17,6 +17,8 @@
 
         AddNewProfile = 0x05,
 
-        GetCurrentProfileId = 0x06
+        GetCurrentProfileId = 0x06,
+
+        SwitchToProfile = 0x07
     }
 }

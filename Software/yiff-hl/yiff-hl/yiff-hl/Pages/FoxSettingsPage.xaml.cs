@@ -285,5 +285,34 @@ namespace yiff_hl.Pages
         }
 
         #endregion
+
+        #region Switch to profile
+
+        private void OnSwitchToProfileClicked(object sender, EventArgs e)
+        {
+            var profileId = profiles
+                .First(p => p.Index == pkProfiles.SelectedIndex)
+                .Id;
+
+            SwitchProfile(profileId);
+        }
+
+        private void SwitchProfile(int profileId)
+        {
+            var command = new SwitchToProfileCommand(packetsProcessor);
+            command.SetResponseDelegate(OnSwitchToProfileResponse);
+            command.SendSwitchToProfileCommand(profileId);
+        }
+
+        private void OnSwitchToProfileResponse(bool isSuccess)
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                var message = isSuccess ? "Switched successfully" : "Failed to switch profile";
+                DisplayAlert("Switch profile", message, "OK");
+            });
+        }
+
+        #endregion
     }
 }
