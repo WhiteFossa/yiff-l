@@ -73,6 +73,7 @@ extern UART_HandleTypeDef UART_Handle;
 extern L2HAL_HC06_ContextStruct HC06_Context;
 extern FoxStateStruct FoxState;
 extern PendingCommandsFlagsStruct PendingCommandsFlags;
+extern uint8_t SwitchToThisProfileId;
 
 
 /**
@@ -80,11 +81,15 @@ extern PendingCommandsFlagsStruct PendingCommandsFlags;
  */
 void Main_ProcessFoxNameChange(void);
 
-
 /**
  * Checks if we need to add new profile and if so adds it.
  */
 void Main_ProcessNewProfileAdd(void);
+
+/**
+ * Checks if we need to switch profile and if so - does it
+ */
+void Main_ProcessProfileSwitch(void);
 
 
 #endif /* __MAIN_H */

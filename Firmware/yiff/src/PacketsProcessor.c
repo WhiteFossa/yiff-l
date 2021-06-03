@@ -90,6 +90,11 @@ void OnNewCommandToFox(uint8_t payloadSize, uint8_t* payload)
 			/* Get current profile ID*/
 			OnGetCurrentProfileId(payloadSize, payload);
 			break;
+
+		case SwitchProfile:
+			/* Switch profile */
+			OnSwitchProfile(payloadSize, payload);
+			break;
 	}
 
 	free(payload);
@@ -303,6 +308,33 @@ void OnGetCurrentProfileId(uint8_t payloadSize, uint8_t* payload)
 
 	uint8_t response = EEPROM_Header.ProfileInUse;
 	SendResponse(GetCurrentProfileId, 1, response);
+}
+
+void OnSwitchProfile(uint8_t payloadSize, uint8_t* payload)
+{
+	bool isValid = true;
+
+	if (payloadSize != 2)
+	{
+		isValid = false;
+	}
+
+	uint8_t profileId = payload[1];
+	if (!EEPROM_IsProfileIdValid(profileId))
+	{
+		isValid = false;
+	}
+
+	if (isValid)
+	{
+		SwitchToThisProfileId = profileId;
+		PendingCommandsFlags.NeedToSwitchProfile = true;
+	}
+	else
+	{
+		uint8_t result = YHL_PACKET_PROCESSOR_FAILURE;
+		SendResponse(SwitchProfile, 1, &result);
+	}
 }
 
 void SendPacket(uint8_t payloadSize, uint8_t* payload)

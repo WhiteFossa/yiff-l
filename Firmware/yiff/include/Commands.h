@@ -22,6 +22,11 @@ typedef struct
 	 * If true, then we need to add new profile in main thread
 	 */
 	bool NeedToAddNewProfile;
+
+	/**
+	 * If true, then we need to switch profile to one in SwitchToThisProfileId
+	 */
+	bool NeedToSwitchProfile;
 }
 PendingCommandsFlagsStruct;
 

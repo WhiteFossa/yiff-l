@@ -197,6 +197,7 @@ int main(int argc, char* argv[])
 		/* Processing possible updates from smartphone */
 		Main_ProcessFoxNameChange();
 		Main_ProcessNewProfileAdd();
+		Main_ProcessProfileSwitch();
 	}
 
 	return 0;
@@ -228,6 +229,19 @@ void Main_ProcessNewProfileAdd(void)
 		SendResponse(AddNewProfile, 1, &result);
 
 		PendingCommandsFlags.NeedToAddNewProfile = false;
+	}
+}
+
+void Main_ProcessProfileSwitch(void)
+{
+	if (PendingCommandsFlags.NeedToSwitchProfile)
+	{
+		EEPROM_SwitchProfile(SwitchToThisProfileId);
+
+		uint8_t result = YHL_PACKET_PROCESSOR_SUCCESS;
+		SendResponse(SwitchProfile, 1, &result);
+
+		PendingCommandsFlags.NeedToSwitchProfile = false;
 	}
 }
 

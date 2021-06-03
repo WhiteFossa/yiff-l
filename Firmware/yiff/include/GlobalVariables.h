@@ -106,11 +106,6 @@ FMGL_API_ColorStruct OnColor;
 FoxStateStruct FoxState;
 
 /**
- * Flags, set when commands are pending
- */
-PendingCommandsFlagsStruct PendingCommandsFlags;
-
-/**
  * Buttons text
  */
 FoxButtonStruct LeftButton;
@@ -131,5 +126,19 @@ EEPROMHeaderStruct EEPROM_Header;
  */
 EEPROMProfileStruct EEPROM_CurrentProfile;
 
+
+/**********************
+* Commands goes below *
+***********************/
+
+/**
+ * Flags, set when commands are pending
+ */
+PendingCommandsFlagsStruct PendingCommandsFlags;
+
+/**
+ * When SwitchToProfile command issued, take new profile ID from this variable
+ */
+uint8_t SwitchToThisProfileId;
 
 #endif /* INCLUDE_GLOBALVARIABLES_H_ */
