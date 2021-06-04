@@ -100,6 +100,11 @@ void OnNewCommandToFox(uint8_t payloadSize, uint8_t* payload)
 			/* Set profile name */
 			OnSetProfileName(payloadSize, payload);
 			break;
+
+		case GetFrequency:
+			/* Get frequency */
+			OnGetFrequency(payloadSize, payload);
+			break;
 	}
 
 	free(payload);
@@ -372,6 +377,23 @@ void OnSetProfileName(uint8_t payloadSize, uint8_t* payload)
 		uint8_t result = YHL_PACKET_PROCESSOR_FAILURE;
 		SendResponse(SetProfileName, 1, &result);
 	}
+}
+
+void OnGetFrequency(uint8_t payloadSize, uint8_t* payload)
+{
+	uint8_t response[5];
+
+	if (FoxState.Frequency.Is144MHz)
+	{
+		response[0] = 0x01;
+	}
+	else
+	{
+		response[0] = 0x00;
+	}
+
+	memcpy(&response[1], (uint8_t*)&FoxState.Frequency.FrequencyHz, 4);
+	SendResponse(GetFrequency, 5, response);
 }
 
 void SendPacket(uint8_t payloadSize, uint8_t* payload)
