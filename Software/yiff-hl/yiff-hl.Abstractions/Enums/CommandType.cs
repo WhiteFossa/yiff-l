@@ -21,6 +21,8 @@
 
         SwitchToProfile = 0x07,
 
-        SetProfileName = 0x08
+        SetProfileName = 0x08,
+
+        GetFrequency = 0x09
     }
 }

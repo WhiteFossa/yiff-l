@@ -85,6 +85,36 @@
                     Clicked="OnSetProfileNameClicked"
                     />
 
+            <Frame
+                BackgroundColor="DarkSlateGray">
+
+                <StackLayout>
+                    <Label
+                        Text="Frequency"
+                        />
+
+                    <StackLayout
+                        Orientation="Horizontal">
+                        <CheckBox
+                            x:Name="cbIs144"
+                            />
+
+                        <Label
+                            Text="Is 144MHz?"
+                            />
+                    </StackLayout>
+
+                    <Editor
+                        x:Name="edFrequency"
+                        />
+
+                    <Button
+                        Text="Get frequency"
+                        Clicked="OnGetFrequencyClicked"
+                        />
+                </StackLayout>
+            </Frame>
+
             <Button
                 Text="Disconnect"
                 Clicked="OnDisconnectClicked"

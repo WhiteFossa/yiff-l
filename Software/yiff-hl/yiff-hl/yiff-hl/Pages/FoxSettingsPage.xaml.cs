@@ -339,5 +339,30 @@ namespace yiff_hl.Pages
         }
 
         #endregion
+
+        #region Get frequency
+
+        private void OnGetFrequencyClicked(object sender, EventArgs e)
+        {
+            GetFrequency();
+        }
+
+        private void GetFrequency()
+        {
+            var command = new GetFrequencyCommand(packetsProcessor);
+            command.SetResponseDelegate(OnGetFrequencyResponse);
+            command.SendGetFrequencyCommand();
+        }
+
+        private void OnGetFrequencyResponse(bool is144Mhz, uint frequency)
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                cbIs144.IsChecked = is144Mhz;
+                edFrequency.Text = $"{frequency}";
+            });
+        }
+
+        #endregion
     }
 }

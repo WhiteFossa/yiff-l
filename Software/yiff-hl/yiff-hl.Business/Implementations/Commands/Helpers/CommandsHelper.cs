@@ -18,5 +18,10 @@ namespace yiff_hl.Business.Implementations.Commands.Helpers
         {
             return successByte == 0x00;
         }
+
+        public static bool ToBool(byte data)
+        {
+            return data != 0x00;
+        }
     }
 }
