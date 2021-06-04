@@ -8,28 +8,28 @@ using yiff_hl.Business.Implementations.Commands.Helpers;
 
 namespace yiff_hl.Business.Implementations.Commands
 {
-    public delegate void OnSetFoxNameResponseDelegate(bool isSuccessfull);
+    public delegate void OnSetProfileNameResponseDelegate(bool isSuccessfull);
 
-    public class SetFoxNameCommand
+    public class SetProfileNameCommand
     {
         private const int MinNameLength = 1;
-        private const int MaxNameLength = 32;
+        private const int MaxNameLength = 16;
 
         private readonly IPacketsProcessor packetsProcessor;
-        private OnSetFoxNameResponseDelegate onSetFoxNameResponse;
+        private OnSetProfileNameResponseDelegate onSetProfileNameResponse;
 
-        public SetFoxNameCommand(IPacketsProcessor packetsProcessor)
+        public SetProfileNameCommand(IPacketsProcessor packetsProcessor)
         {
             this.packetsProcessor = packetsProcessor;
-            packetsProcessor.SetOnSetFoxNameResponse(OnSetFoxNameResponse);
+            packetsProcessor.SetOnSetProfileNameResponse(OnSetProfileNameResponse);
         }
 
-        public void SetResponseDelegate(OnSetFoxNameResponseDelegate onSetFoxNameResponse)
+        public void SetResponseDelegate(OnSetProfileNameResponseDelegate onSetProfileNameResponse)
         {
-            this.onSetFoxNameResponse = onSetFoxNameResponse;
+            this.onSetProfileNameResponse = onSetProfileNameResponse;
         }
 
-        public void SendSetFoxNameCommand(string name)
+        public void SendSetProfileNameCommand(string name)
         {
             if (name.Length < MinNameLength || name.Length > MaxNameLength)
             {
@@ -41,16 +41,16 @@ namespace yiff_hl.Business.Implementations.Commands
             // 2th (from 0th) byte - name length
             payload.Add((byte)(name.Length));
 
-            // 3th - 35th bytes - name
+            // 3th - 18th bytes - name
             var nameBytes = Encoding.ASCII.GetBytes(name);
             payload.AddRange(nameBytes);
 
-            packetsProcessor.SendCommand(CommandType.SetFoxName, payload);
+            packetsProcessor.SendCommand(CommandType.SetProfileName, payload);
         }
 
-        private void OnSetFoxNameResponse(IReadOnlyCollection<byte> payload)
+        private void OnSetProfileNameResponse(IReadOnlyCollection<byte> payload)
         {
-            if (onSetFoxNameResponse == null)
+            if (onSetProfileNameResponse == null)
             {
                 return;
             }
@@ -60,7 +60,7 @@ namespace yiff_hl.Business.Implementations.Commands
                 return;
             }
 
-            onSetFoxNameResponse(CommandsHelper.IsSuccessful(payload.ElementAt(0)));
+            onSetProfileNameResponse(CommandsHelper.IsSuccessful(payload.ElementAt(0)));
         }
     }
 }

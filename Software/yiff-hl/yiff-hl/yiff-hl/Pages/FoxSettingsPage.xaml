@@ -76,6 +76,14 @@
                 </StackLayout>
             </Frame>
 
+            <Editor
+                    Placeholder="Enter profile name"
+                    x:Name="edProfileName" />
+
+            <Button
+                    Text="Set profile name"
+                    Clicked="OnSetProfileNameClicked"
+                    />
 
             <Button
                 Text="Disconnect"

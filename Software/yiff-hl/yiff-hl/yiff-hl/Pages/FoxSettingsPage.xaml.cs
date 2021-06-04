@@ -314,5 +314,30 @@ namespace yiff_hl.Pages
         }
 
         #endregion
+
+        #region Set profile name
+
+        private void OnSetProfileNameClicked(object sender, EventArgs e)
+        {
+            SetProfileName(edProfileName.Text);
+        }
+
+        private void SetProfileName(string name)
+        {
+            var command = new SetProfileNameCommand(packetsProcessor);
+            command.SetResponseDelegate(OnSetProfileNameResponse);
+            command.SendSetProfileNameCommand(name);
+        }
+
+        private void OnSetProfileNameResponse(bool isSuccess)
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                var message = isSuccess ? "Profile name set" : "Failed to set profile name";
+                DisplayAlert("Set profile name", message, "OK");
+            });
+        }
+
+        #endregion
     }
 }

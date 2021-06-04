@@ -36,6 +36,7 @@ namespace yiff_hl.Abstractions.Interfaces
         void SetOnAddNewProfileResponse(OnResponseDelegate onAddNewProfileResponse);
         void SetOnGetCurrentProfileIdResponse(OnResponseDelegate onGetCurrentProfileIdResponse);
         void SetOnSwitchToProfileResponse(OnResponseDelegate onSwitchToProfileResponse);
+        void SetOnSetProfileNameResponse(OnResponseDelegate onSetProfileNameResponse);
 
 
         #endregion

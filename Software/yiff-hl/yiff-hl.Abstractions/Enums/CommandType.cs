@@ -19,6 +19,8 @@
 
         GetCurrentProfileId = 0x06,
 
-        SwitchToProfile = 0x07
+        SwitchToProfile = 0x07,
+
+        SetProfileName = 0x08
     }
 }
