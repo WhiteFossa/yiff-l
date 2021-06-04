@@ -63,6 +63,9 @@ int main(int argc, char* argv[])
 		L2HAL_Error(Generic);
 	}
 
+	// TODO: Uncomment me to force EEPROM format
+	//EEPROM_Format();
+
 	/* Initializing EEPROM data */
 	EEPROM_Init();
 
@@ -198,6 +201,7 @@ int main(int argc, char* argv[])
 		Main_ProcessFoxNameChange();
 		Main_ProcessNewProfileAdd();
 		Main_ProcessProfileSwitch();
+		Main_ProcessSetProfileName();
 	}
 
 	return 0;
@@ -242,6 +246,22 @@ void Main_ProcessProfileSwitch(void)
 		SendResponse(SwitchProfile, 1, &result);
 
 		PendingCommandsFlags.NeedToSwitchProfile = false;
+	}
+}
+
+void Main_ProcessSetProfileName(void)
+{
+	if (PendingCommandsFlags.NeedToSetProfileName)
+	{
+		strcpy(EEPROM_CurrentProfile.Name, SetThisProfileName);
+		EEPROM_UpdateCurrentProfile();
+
+		// TODO: Apply frequency change to hardware
+
+		uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
+		SendResponse(SetProfileName, 1, &response);
+
+		PendingCommandsFlags.NeedToSetProfileName = false;
 	}
 }
 

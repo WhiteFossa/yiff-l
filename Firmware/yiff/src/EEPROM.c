@@ -301,3 +301,8 @@ bool EEPROM_IsProfileIdValid(uint8_t profileId)
 
 	return true;
 }
+
+void EEPROM_UpdateCurrentProfile()
+{
+	EEPROM_UpdateProfile(&EEPROM_CurrentProfile, EEPROM_Header.ProfileInUse);
+}

@@ -74,6 +74,7 @@ extern L2HAL_HC06_ContextStruct HC06_Context;
 extern FoxStateStruct FoxState;
 extern PendingCommandsFlagsStruct PendingCommandsFlags;
 extern uint8_t SwitchToThisProfileId;
+extern char SetThisProfileName[YHL_MAX_PROFILE_NAME_LENGTH];
 
 
 /**
@@ -90,6 +91,11 @@ void Main_ProcessNewProfileAdd(void);
  * Checks if we need to switch profile and if so - does it
  */
 void Main_ProcessProfileSwitch(void);
+
+/**
+ * Checks if we need to set profile name and sets it if needed
+ */
+void Main_ProcessSetProfileName(void);
 
 
 #endif /* __MAIN_H */

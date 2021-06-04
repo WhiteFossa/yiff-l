@@ -95,6 +95,11 @@ void OnNewCommandToFox(uint8_t payloadSize, uint8_t* payload)
 			/* Switch profile */
 			OnSwitchProfile(payloadSize, payload);
 			break;
+
+		case SetProfileName:
+			/* Set profile name */
+			OnSetProfileName(payloadSize, payload);
+			break;
 	}
 
 	free(payload);
@@ -307,7 +312,7 @@ void OnGetCurrentProfileId(uint8_t payloadSize, uint8_t* payload)
 	}
 
 	uint8_t response = EEPROM_Header.ProfileInUse;
-	SendResponse(GetCurrentProfileId, 1, response);
+	SendResponse(GetCurrentProfileId, 1, &response);
 }
 
 void OnSwitchProfile(uint8_t payloadSize, uint8_t* payload)
@@ -334,6 +339,38 @@ void OnSwitchProfile(uint8_t payloadSize, uint8_t* payload)
 	{
 		uint8_t result = YHL_PACKET_PROCESSOR_FAILURE;
 		SendResponse(SwitchProfile, 1, &result);
+	}
+}
+
+void OnSetProfileName(uint8_t payloadSize, uint8_t* payload)
+{
+	bool isValid = true;
+
+	uint8_t nameLength = payload[1];
+
+	if (nameLength < 1 || nameLength > 16)
+	{
+		isValid = false;
+	}
+
+	if (payloadSize != nameLength + 2)
+	{
+		isValid = false;
+	}
+
+	if (isValid)
+	{
+		memcpy(SetThisProfileName, &payload[2], nameLength);
+		SetThisProfileName[nameLength] = 0x00;
+
+		/* Response will be sent from main thread */
+		PendingCommandsFlags.NeedToSetProfileName = true;
+	}
+	else
+	{
+		/* Validation failed */
+		uint8_t result = YHL_PACKET_PROCESSOR_FAILURE;
+		SendResponse(SetProfileName, 1, &result);
 	}
 }
 

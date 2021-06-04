@@ -253,4 +253,9 @@ void EEPROM_UpdateProfile(EEPROMProfileStruct* profile, uint8_t profileId);
  */
 bool EEPROM_IsProfileIdValid(uint8_t profileId);
 
+/**
+ * Save current profile to EEPROM
+ */
+void EEPROM_UpdateCurrentProfile(void);
+
 #endif /* INCLUDE_EEPROM_H_ */

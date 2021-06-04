@@ -27,6 +27,11 @@ typedef struct
 	 * If true, then we need to switch profile to one in SwitchToThisProfileId
 	 */
 	bool NeedToSwitchProfile;
+
+	/**
+	 * If true, then we need to set current profile name to SetThisProfileName
+	 */
+	bool NeedToSetProfileName;
 }
 PendingCommandsFlagsStruct;
 

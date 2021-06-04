@@ -141,4 +141,9 @@ PendingCommandsFlagsStruct PendingCommandsFlags;
  */
 uint8_t SwitchToThisProfileId;
 
+/**
+ * When set profile name command issued, take new profile name from this variable
+ */
+char SetThisProfileName[YHL_MAX_PROFILE_NAME_LENGTH];
+
 #endif /* INCLUDE_GLOBALVARIABLES_H_ */

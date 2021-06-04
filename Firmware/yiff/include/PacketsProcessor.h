@@ -63,7 +63,9 @@ typedef enum
 
 	GetCurrentProfileId = 0x06,
 
-	SwitchProfile = 0x07
+	SwitchProfile = 0x07,
+
+	SetProfileName = 0x08
 }
 CommandToFoxEnum;
 
@@ -132,5 +134,10 @@ void OnGetCurrentProfileId(uint8_t payloadSize, uint8_t* payload);
  * Called when command "Switch profile" comes
  */
 void OnSwitchProfile(uint8_t payloadSize, uint8_t* payload);
+
+/**
+ * Called when command "Set profile name" comes
+ */
+void OnSetProfileName(uint8_t payloadSize, uint8_t* payload);
 
 #endif /* INCLUDE_PACKETSPROCESSOR_H_ */
