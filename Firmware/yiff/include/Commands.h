@@ -32,6 +32,11 @@ typedef struct
 	 * If true, then we need to set current profile name to SetThisProfileName
 	 */
 	bool NeedToSetProfileName;
+
+	/**
+	 * If true, then we need to update frequency
+	 */
+	bool NeedToSetFrequency;
 }
 PendingCommandsFlagsStruct;
 

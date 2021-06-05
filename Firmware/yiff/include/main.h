@@ -97,5 +97,10 @@ void Main_ProcessProfileSwitch(void);
  */
 void Main_ProcessSetProfileName(void);
 
+/**
+ * Checks if we need to set frequency and sets it if needed
+ */
+void Main_ProcessSetFrequency(void);
+
 
 #endif /* __MAIN_H */

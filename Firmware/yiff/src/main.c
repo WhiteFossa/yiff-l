@@ -195,13 +195,14 @@ int main(int argc, char* argv[])
 
 	while(true)
 	{
-		RTC_Poll();
-
 		/* Processing possible updates from smartphone */
 		Main_ProcessFoxNameChange();
 		Main_ProcessNewProfileAdd();
 		Main_ProcessProfileSwitch();
 		Main_ProcessSetProfileName();
+		Main_ProcessSetFrequency();
+
+		RTC_Poll();
 	}
 
 	return 0;
@@ -256,12 +257,26 @@ void Main_ProcessSetProfileName(void)
 		strcpy(EEPROM_CurrentProfile.Name, SetThisProfileName);
 		EEPROM_UpdateCurrentProfile();
 
-		// TODO: Apply frequency change to hardware
-
 		uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
 		SendResponse(SetProfileName, 1, &response);
 
 		PendingCommandsFlags.NeedToSetProfileName = false;
+	}
+}
+
+void Main_ProcessSetFrequency(void)
+{
+	if (PendingCommandsFlags.NeedToSetFrequency)
+	{
+		// TODO: Apply frequency change to hardware
+
+		EEPROM_CurrentProfile.Frequency = FoxState.Frequency;
+		EEPROM_UpdateCurrentProfile();
+
+		uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
+		SendResponse(SetFrequency, 1, &response);
+
+		PendingCommandsFlags.NeedToSetFrequency = false;
 	}
 }
 

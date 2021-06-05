@@ -16,6 +16,15 @@ extern PendingCommandsFlagsStruct PendingCommandsFlags;
 #define YHL_FOX_NAME_BUFFER_LENGTH 33
 
 /**
+ * Allowed frequencies
+ */
+#define YHL_MIN_80M_FREQUENCY 3500000
+#define YHL_MAX_80M_FREQUENCY 3650000
+#define YHL_MIN_2M_FREQUENCY 144000000
+#define YHL_MAX_2M_FREQUENCY 146000000
+
+
+/**
  * Fox frequency
  */
 typedef struct
@@ -240,6 +249,11 @@ void FoxState_Init(void);
  * Call this after updating RTC date and time
  */
 void FoxState_CorrectDateTime(void);
+
+/**
+ * Checks if given frequency valid or not
+ */
+bool FoxState_IsFrequencyValid(bool is144MHz, uint32_t frequency);
 
 
 #endif /* INCLUDE_FOXSTATUS_H_ */

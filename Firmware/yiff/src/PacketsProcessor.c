@@ -105,6 +105,11 @@ void OnNewCommandToFox(uint8_t payloadSize, uint8_t* payload)
 			/* Get frequency */
 			OnGetFrequency(payloadSize, payload);
 			break;
+
+		case SetFrequency:
+			/* Set frequency */
+			OnSetFrequency(payloadSize, payload);
+			break;
 	}
 
 	free(payload);
@@ -383,17 +388,63 @@ void OnGetFrequency(uint8_t payloadSize, uint8_t* payload)
 {
 	uint8_t response[5];
 
-	if (FoxState.Frequency.Is144MHz)
-	{
-		response[0] = 0x01;
-	}
-	else
-	{
-		response[0] = 0x00;
-	}
+	response[0] = FromBool(FoxState.Frequency.Is144MHz);
 
 	memcpy(&response[1], (uint8_t*)&FoxState.Frequency.FrequencyHz, 4);
 	SendResponse(GetFrequency, 5, response);
+}
+
+void OnSetFrequency(uint8_t payloadSize, uint8_t* payload)
+{
+	bool isValid = true;
+
+	if (payloadSize != 6)
+	{
+		isValid = false;
+	}
+
+	bool is144MHz = ToBool(payload[1]);
+	uint32_t frequency = *((uint32_t*)&payload[2]);
+
+	if (!FoxState_IsFrequencyValid(is144MHz, frequency))
+	{
+		isValid = false;
+	}
+
+	if (!isValid)
+	{
+		uint8_t result = YHL_PACKET_PROCESSOR_FAILURE;
+		SendResponse(SetFrequency, 1, &result);
+	}
+
+	FoxState.Frequency.Is144MHz = is144MHz;
+	FoxState.Frequency.FrequencyHz = frequency;
+
+	PendingCommandsFlags.NeedToSetFrequency = true;
+}
+
+uint8_t FromBool(bool data)
+{
+	if (data)
+	{
+		return 0x01;
+	}
+	else
+	{
+		return 0x00;
+	}
+}
+
+bool ToBool(uint8_t data)
+{
+	if (0x00 == data)
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
 }
 
 void SendPacket(uint8_t payloadSize, uint8_t* payload)
