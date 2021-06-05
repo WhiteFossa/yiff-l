@@ -37,6 +37,11 @@ typedef struct
 	 * If true, then we need to update frequency
 	 */
 	bool NeedToSetFrequency;
+
+	/**
+	 * If true, then we need to update fox code
+	 */
+	bool NeedToSetCode;
 }
 PendingCommandsFlagsStruct;
 

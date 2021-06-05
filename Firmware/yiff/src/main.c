@@ -201,6 +201,7 @@ int main(int argc, char* argv[])
 		Main_ProcessProfileSwitch();
 		Main_ProcessSetProfileName();
 		Main_ProcessSetFrequency();
+		Main_ProcessSetCode();
 
 		RTC_Poll();
 	}
@@ -277,6 +278,20 @@ void Main_ProcessSetFrequency(void)
 		SendResponse(SetFrequency, 1, &response);
 
 		PendingCommandsFlags.NeedToSetFrequency = false;
+	}
+}
+
+void Main_ProcessSetCode(void)
+{
+	if (PendingCommandsFlags.NeedToSetCode)
+	{
+		EEPROM_CurrentProfile.Code = FoxState.Code;
+		EEPROM_UpdateCurrentProfile();
+
+		uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
+		SendResponse(SetCode, 1, &response);
+
+		PendingCommandsFlags.NeedToSetCode = false;
 	}
 }
 

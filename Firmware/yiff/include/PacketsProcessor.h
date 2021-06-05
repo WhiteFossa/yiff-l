@@ -71,7 +71,9 @@ typedef enum
 
 	SetFrequency = 0x0A,
 
-	GetCode = 0x0B
+	GetCode = 0x0B,
+
+	SetCode = 0x0C
 }
 CommandToFoxEnum;
 
@@ -160,6 +162,11 @@ void OnSetFrequency(uint8_t payloadSize, uint8_t* payload);
  * Called when command "Get code" comes
  */
 void OnGetCode(uint8_t payloadSize, uint8_t* payload);
+
+/**
+ * Called when command "Set code" comes
+ */
+void OnSetCode(uint8_t payloadSize, uint8_t* payload);
 
 /**
  * Returns 0x00 if false, 0x01 if true

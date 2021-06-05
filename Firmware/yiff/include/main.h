@@ -102,5 +102,10 @@ void Main_ProcessSetProfileName(void);
  */
 void Main_ProcessSetFrequency(void);
 
+/**
+ * Updates fox code if we need to update it
+ */
+void Main_ProcessSetCode(void);
+
 
 #endif /* __MAIN_H */

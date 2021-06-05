@@ -115,6 +115,11 @@ void OnNewCommandToFox(uint8_t payloadSize, uint8_t* payload)
 			/* Get fox code */
 			OnGetCode(payloadSize, payload);
 			break;
+
+		case SetCode:
+			/* Set fox code */
+			OnSetCode(payloadSize, payload);
+			break;
 	}
 
 	free(payload);
@@ -432,6 +437,32 @@ void OnGetCode(uint8_t payloadSize, uint8_t* payload)
 {
 	uint8_t response = FoxState.Code;
 	SendResponse(GetCode, 1, &response);
+}
+
+void OnSetCode(uint8_t payloadSize, uint8_t* payload)
+{
+	bool isValid = true;
+
+	if (payloadSize != 2)
+	{
+		isValid = false;
+	}
+
+	uint8_t code = payload[1];
+
+	if (code > Beacon) /* Always set to last member of FoxCodeEnum */
+	{
+		isValid = false;
+	}
+
+	if (!isValid)
+	{
+		uint8_t result = YHL_PACKET_PROCESSOR_FAILURE;
+		SendResponse(SetFrequency, 1, &result);
+	}
+
+	FoxState.Code = (FoxCodeEnum)code;
+	PendingCommandsFlags.NeedToSetCode = true;
 }
 
 uint8_t FromBool(bool data)
