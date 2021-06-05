@@ -132,75 +132,81 @@ void OnSetDateAndTime(uint8_t payloadSize, uint8_t* payload)
 	if (payloadSize != 8U)
 	{
 		isValid = false;
+		goto OnSetDateAndTime_Validate;
 	}
 
 	uint8_t year = payload[1];
 	if (year > 99U)
 	{
 		isValid = false;
+		goto OnSetDateAndTime_Validate;
 	}
 
 	uint8_t month = payload[2];
 	if (month < 1U || month > 12U)
 	{
 		isValid = false;
+		goto OnSetDateAndTime_Validate;
 	}
 
 	uint8_t dayOfMonth = payload[3];
 	if (dayOfMonth < 1U || dayOfMonth > 31U)
 	{
 		isValid = false;
+		goto OnSetDateAndTime_Validate;
 	}
 
 	uint8_t dayOfWeekRaw = payload[4];
 	if (dayOfWeekRaw < 1U || dayOfWeekRaw > 7U)
 	{
 		isValid = false;
+		goto OnSetDateAndTime_Validate;
 	}
 
 	uint8_t hour = payload[5];
 	if (hour > 23U)
 	{
 		isValid = false;
+		goto OnSetDateAndTime_Validate;
 	}
 
 	uint8_t minute = payload[6];
 	if (minute > 59U)
 	{
 		isValid = false;
+		goto OnSetDateAndTime_Validate;
 	}
 
 	uint8_t second = payload[7];
 	if (second > 59U)
 	{
 		isValid = false;
+		goto OnSetDateAndTime_Validate;
 	}
 
-	uint8_t result;
-	if (isValid)
+OnSetDateAndTime_Validate:
+	if (!isValid)
 	{
-		RTC_DateTypeDef date;
-		date.Year = year;
-		date.Month = month;
-		date.Date = dayOfMonth;
-		date.WeekDay = GetWeekdayFromDayNumber(dayOfWeekRaw);
-		RTC_SetCurrentDate(date);
-
-		RTC_TimeTypeDef time;
-		time.Hours = hour;
-		time.Minutes = minute;
-		time.Seconds = second;
-		RTC_SetCurrentTime(time);
-
-		/* Everything is OK */
-		result = YHL_PACKET_PROCESSOR_SUCCESS;
-	}
-	else
-	{
-		/* Validation failed */
-		result = YHL_PACKET_PROCESSOR_FAILURE;
+		uint8_t result = YHL_PACKET_PROCESSOR_FAILURE;
+		SendResponse(SetDateAndTime, 1, &result);
+		return;
 	}
 
+	RTC_DateTypeDef date;
+	date.Year = year;
+	date.Month = month;
+	date.Date = dayOfMonth;
+	date.WeekDay = GetWeekdayFromDayNumber(dayOfWeekRaw);
+	RTC_SetCurrentDate(date);
+
+	RTC_TimeTypeDef time;
+	time.Hours = hour;
+	time.Minutes = minute;
+	time.Seconds = second;
+	RTC_SetCurrentTime(time);
+
+	/* Everything is OK */
+	uint8_t result = YHL_PACKET_PROCESSOR_SUCCESS;
 	SendResponse(SetDateAndTime, 1, &result);
 }
 
@@ -213,27 +219,28 @@ void OnSetName(uint8_t payloadSize, uint8_t* payload)
 	if (nameLength < 1 || nameLength > 32)
 	{
 		isValid = false;
+		goto OnSetName_Validate;
 	}
 
 	if (payloadSize != nameLength + 2)
 	{
 		isValid = false;
+		goto OnSetName_Validate;
 	}
 
-	if (isValid)
+OnSetName_Validate:
+	if (!isValid)
 	{
-		memcpy(FoxState.Name, &payload[2], nameLength);
-		FoxState.Name[nameLength] = 0x00;
-
-		/* Response will be sent from main thread */
-		PendingCommandsFlags.FoxStateNameChanged = true;
-	}
-	else
-	{
-		/* Validation failed */
 		uint8_t result = YHL_PACKET_PROCESSOR_FAILURE;
 		SendResponse(SetName, 1, &result);
+		return;
 	}
+
+	memcpy(FoxState.Name, &payload[2], nameLength);
+	FoxState.Name[nameLength] = 0x00;
+
+	/* Response will be sent from main thread */
+	PendingCommandsFlags.FoxStateNameChanged = true;
 }
 
 void OnGetName(uint8_t payloadSize, uint8_t* payload)
@@ -262,31 +269,18 @@ void OnGetProfileName(uint8_t payloadSize, uint8_t* payload)
 	if (payloadSize != 2)
 	{
 		isValid = false;
+		goto OnGetProfileName_Validate;
 	}
 
 	uint8_t profileId = payload[1];
 	if (!EEPROM_IsProfileIdValid(profileId))
 	{
 		isValid = false;
+		goto OnGetProfileName_Validate;
 	}
 
-	if (isValid)
-	{
-		EEPROMProfileStruct profile = EEPROM_GetProfile(profileId);
-		uint8_t nameLength = strlen(profile.Name);
-		uint8_t responseLength = nameLength + 3;
-
-		uint8_t* response = malloc(responseLength);
-
-		response[0] = YHL_PACKET_PROCESSOR_SUCCESS;
-		response[1] = profileId;
-		response[2] = nameLength;
-		memcpy(&response[3], profile.Name, nameLength);
-
-		SendResponse(GetProfileName, responseLength, response);
-		free(response);
-	}
-	else
+OnGetProfileName_Validate:
+	if (!isValid)
 	{
 		uint8_t response[4];
 		response[0] = YHL_PACKET_PROCESSOR_FAILURE; /* Not successful */
@@ -295,7 +289,22 @@ void OnGetProfileName(uint8_t payloadSize, uint8_t* payload)
 		response[3] = ' '; /* And it's a space */
 
 		SendResponse(GetProfileName, 4, response);
+		return;
 	}
+
+	EEPROMProfileStruct profile = EEPROM_GetProfile(profileId);
+	uint8_t nameLength = strlen(profile.Name);
+	uint8_t responseLength = nameLength + 3;
+
+	uint8_t* response = malloc(responseLength);
+
+	response[0] = YHL_PACKET_PROCESSOR_SUCCESS;
+	response[1] = profileId;
+	response[2] = nameLength;
+	memcpy(&response[3], profile.Name, nameLength);
+
+	SendResponse(GetProfileName, responseLength, response);
+	free(response);
 }
 
 void OnAddNewProfile(uint8_t payloadSize, uint8_t* payload)
@@ -305,13 +314,16 @@ void OnAddNewProfile(uint8_t payloadSize, uint8_t* payload)
 	if (payloadSize != 1)
 	{
 		canWeAdd = false;
+		goto OnAddNewProfile_Validate;
 	}
 
 	if (YHL_MAX_PROFILES_COUNT == EEPROM_Header.NumberOfProfiles)
 	{
 		canWeAdd = false;
+		goto OnAddNewProfile_Validate;
 	}
 
+OnAddNewProfile_Validate:
 	if (!canWeAdd)
 	{
 		uint8_t result = YHL_PACKET_PROCESSOR_FAILURE;
@@ -342,24 +354,26 @@ void OnSwitchProfile(uint8_t payloadSize, uint8_t* payload)
 	if (payloadSize != 2)
 	{
 		isValid = false;
+		goto OnSwitchProfile_Validate;
 	}
 
 	uint8_t profileId = payload[1];
 	if (!EEPROM_IsProfileIdValid(profileId))
 	{
 		isValid = false;
+		goto OnSwitchProfile_Validate;
 	}
 
-	if (isValid)
-	{
-		SwitchToThisProfileId = profileId;
-		PendingCommandsFlags.NeedToSwitchProfile = true;
-	}
-	else
+OnSwitchProfile_Validate:
+	if (!isValid)
 	{
 		uint8_t result = YHL_PACKET_PROCESSOR_FAILURE;
 		SendResponse(SwitchProfile, 1, &result);
+		return;
 	}
+
+	SwitchToThisProfileId = profileId;
+	PendingCommandsFlags.NeedToSwitchProfile = true;
 }
 
 void OnSetProfileName(uint8_t payloadSize, uint8_t* payload)
@@ -371,27 +385,25 @@ void OnSetProfileName(uint8_t payloadSize, uint8_t* payload)
 	if (nameLength < 1 || nameLength > 16)
 	{
 		isValid = false;
+		goto OnSetProfileName_Validate;
 	}
 
 	if (payloadSize != nameLength + 2)
 	{
 		isValid = false;
+		goto OnSetProfileName_Validate;
 	}
 
-	if (isValid)
+OnSetProfileName_Validate:
+	if (!isValid)
 	{
-		memcpy(SetThisProfileName, &payload[2], nameLength);
-		SetThisProfileName[nameLength] = 0x00;
-
-		/* Response will be sent from main thread */
-		PendingCommandsFlags.NeedToSetProfileName = true;
-	}
-	else
-	{
-		/* Validation failed */
 		uint8_t result = YHL_PACKET_PROCESSOR_FAILURE;
 		SendResponse(SetProfileName, 1, &result);
+		return;
 	}
+
+	/* Response will be sent from main thread */
+	PendingCommandsFlags.NeedToSetProfileName = true;
 }
 
 void OnGetFrequency(uint8_t payloadSize, uint8_t* payload)
@@ -411,6 +423,7 @@ void OnSetFrequency(uint8_t payloadSize, uint8_t* payload)
 	if (payloadSize != 6)
 	{
 		isValid = false;
+		goto OnSetFrequency_Validate;
 	}
 
 	bool is144MHz = ToBool(payload[1]);
@@ -419,12 +432,15 @@ void OnSetFrequency(uint8_t payloadSize, uint8_t* payload)
 	if (!FoxState_IsFrequencyValid(is144MHz, frequency))
 	{
 		isValid = false;
+		goto OnSetFrequency_Validate;
 	}
 
+OnSetFrequency_Validate:
 	if (!isValid)
 	{
 		uint8_t result = YHL_PACKET_PROCESSOR_FAILURE;
 		SendResponse(SetFrequency, 1, &result);
+		return;
 	}
 
 	FoxState.Frequency.Is144MHz = is144MHz;
@@ -446,6 +462,7 @@ void OnSetCode(uint8_t payloadSize, uint8_t* payload)
 	if (payloadSize != 2)
 	{
 		isValid = false;
+		goto OnSetCode_Validate;
 	}
 
 	uint8_t code = payload[1];
@@ -453,12 +470,15 @@ void OnSetCode(uint8_t payloadSize, uint8_t* payload)
 	if (code > Beacon) /* Always set to last member of FoxCodeEnum */
 	{
 		isValid = false;
+		goto OnSetCode_Validate;
 	}
 
+OnSetCode_Validate:
 	if (!isValid)
 	{
 		uint8_t result = YHL_PACKET_PROCESSOR_FAILURE;
 		SendResponse(SetFrequency, 1, &result);
+		return;
 	}
 
 	FoxState.Code = (FoxCodeEnum)code;
