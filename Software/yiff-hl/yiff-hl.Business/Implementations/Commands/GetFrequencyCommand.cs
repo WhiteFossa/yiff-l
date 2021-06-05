@@ -7,7 +7,7 @@ using yiff_hl.Business.Implementations.Commands.Helpers;
 
 namespace yiff_hl.Business.Implementations.Commands
 {
-    public delegate void OnGetFrequencyResponseDelegate(bool is144MHz, uint frequency);
+    public delegate void OnGetFrequencyResponseDelegate(bool is144MHz, int frequency);
 
     public class GetFrequencyCommand
     {
@@ -51,7 +51,7 @@ namespace yiff_hl.Business.Implementations.Commands
 
             var frequency = BitConverter.ToUInt32(frequencyBytes, 0);
 
-            onGetFrequencyResponse(is144MHz, frequency);
+            onGetFrequencyResponse(is144MHz, (int)frequency);
         }
     }
 }

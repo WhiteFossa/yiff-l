@@ -23,6 +23,8 @@
 
         SetProfileName = 0x08,
 
-        GetFrequency = 0x09
+        GetFrequency = 0x09,
+
+        SetFrequency = 0x0A
     }
 }

@@ -112,6 +112,10 @@
                         Text="Get frequency"
                         Clicked="OnGetFrequencyClicked"
                         />
+
+                    <Button
+                        Text="Set frequency"
+                        Clicked="OnSetFrequencyClicked"/>
                 </StackLayout>
             </Frame>
 

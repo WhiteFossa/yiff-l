@@ -354,12 +354,37 @@ namespace yiff_hl.Pages
             command.SendGetFrequencyCommand();
         }
 
-        private void OnGetFrequencyResponse(bool is144Mhz, uint frequency)
+        private void OnGetFrequencyResponse(bool is144Mhz, int frequency)
         {
             Device.BeginInvokeOnMainThread(() =>
             {
                 cbIs144.IsChecked = is144Mhz;
                 edFrequency.Text = $"{frequency}";
+            });
+        }
+
+        #endregion
+
+        #region Set frequency
+
+        private void OnSetFrequencyClicked(object sender, EventArgs e)
+        {
+            SetFrequency(cbIs144.IsChecked, int.Parse(edFrequency.Text));
+        }
+
+        private void SetFrequency(bool is144MHz, int frequency)
+        {
+            var command = new SetFrequencyCommand(packetsProcessor);
+            command.SetResponseDelegate(OnSetFrequencyResponse);
+            command.SendSetFrequencyCommand(is144MHz, frequency);
+        }
+
+        private void OnSetFrequencyResponse(bool isSuccess)
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                var message = isSuccess ? "Frequency set" : "Failed to set frequency";
+                DisplayAlert("Set frequency", message, "OK");
             });
         }
 
