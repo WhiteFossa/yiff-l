@@ -110,6 +110,11 @@ void OnNewCommandToFox(uint8_t payloadSize, uint8_t* payload)
 			/* Set frequency */
 			OnSetFrequency(payloadSize, payload);
 			break;
+
+		case GetCode:
+			/* Get fox code */
+			OnGetCode(payloadSize, payload);
+			break;
 	}
 
 	free(payload);
@@ -421,6 +426,12 @@ void OnSetFrequency(uint8_t payloadSize, uint8_t* payload)
 	FoxState.Frequency.FrequencyHz = frequency;
 
 	PendingCommandsFlags.NeedToSetFrequency = true;
+}
+
+void OnGetCode(uint8_t payloadSize, uint8_t* payload)
+{
+	uint8_t response = FoxState.Code;
+	SendResponse(GetCode, 1, &response);
 }
 
 uint8_t FromBool(bool data)
