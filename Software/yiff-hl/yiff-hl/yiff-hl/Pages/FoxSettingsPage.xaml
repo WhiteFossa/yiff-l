@@ -135,6 +135,11 @@
                         <Button
                             Text="Get code"
                             Clicked="OnGetCodeClicked"/>
+
+                        <Button
+                            Text="Set code"
+                            Clicked="OnSetCodeClicked"
+                            />
                     </StackLayout>
 
                 </Frame>

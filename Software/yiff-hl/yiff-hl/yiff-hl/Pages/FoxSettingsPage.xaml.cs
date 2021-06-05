@@ -423,5 +423,30 @@ namespace yiff_hl.Pages
         }
 
         #endregion
+
+        #region Set code
+
+        private void OnSetCodeClicked(object sender, EventArgs e)
+        {
+            SetCode((FoxCode)pkCode.SelectedIndex);
+        }
+
+        private void SetCode(FoxCode code)
+        {
+            var command = new SetCodeCommand(packetsProcessor);
+            command.SetResponseDelegate(OnSetCodeResponse);
+            command.SendSetCodeCommand(code);
+        }
+
+        private void OnSetCodeResponse(bool isSuccess)
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                var message = isSuccess ? "Code set" : "Failed to set code";
+                DisplayAlert("Set code", message, "OK");
+            });
+        }
+
+        #endregion
     }
 }

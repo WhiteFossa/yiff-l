@@ -27,6 +27,8 @@
 
         SetFrequency = 0x0A,
 
-        GetCode = 0x0B
+        GetCode = 0x0B,
+
+        SetCode = 0x0C
     }
 }
