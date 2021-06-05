@@ -203,6 +203,9 @@ int main(int argc, char* argv[])
 		Main_ProcessSetFrequency();
 		Main_ProcessSetCode();
 
+		/* Flush profile changes to EEPROM, must be called last in sequence */
+		Main_FlushProfileToEEPROM();
+
 		RTC_Poll();
 	}
 
@@ -256,7 +259,7 @@ void Main_ProcessSetProfileName(void)
 	if (PendingCommandsFlags.NeedToSetProfileName)
 	{
 		strcpy(EEPROM_CurrentProfile.Name, SetThisProfileName);
-		EEPROM_UpdateCurrentProfile();
+		PendingCommandsFlags.NeedToFlushCurrentProfileToEEPROM = true;
 
 		uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
 		SendResponse(SetProfileName, 1, &response);
@@ -272,7 +275,7 @@ void Main_ProcessSetFrequency(void)
 		// TODO: Apply frequency change to hardware
 
 		EEPROM_CurrentProfile.Frequency = FoxState.Frequency;
-		EEPROM_UpdateCurrentProfile();
+		PendingCommandsFlags.NeedToFlushCurrentProfileToEEPROM = true;
 
 		uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
 		SendResponse(SetFrequency, 1, &response);
@@ -286,12 +289,22 @@ void Main_ProcessSetCode(void)
 	if (PendingCommandsFlags.NeedToSetCode)
 	{
 		EEPROM_CurrentProfile.Code = FoxState.Code;
-		EEPROM_UpdateCurrentProfile();
+		PendingCommandsFlags.NeedToFlushCurrentProfileToEEPROM = true;
 
 		uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
 		SendResponse(SetCode, 1, &response);
 
 		PendingCommandsFlags.NeedToSetCode = false;
+	}
+}
+
+void Main_FlushProfileToEEPROM(void)
+{
+	if (PendingCommandsFlags.NeedToFlushCurrentProfileToEEPROM)
+	{
+		EEPROM_UpdateCurrentProfile();
+
+		PendingCommandsFlags.NeedToFlushCurrentProfileToEEPROM = false;
 	}
 }
 

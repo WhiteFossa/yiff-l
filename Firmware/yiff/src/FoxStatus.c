@@ -9,8 +9,15 @@
 
 void FoxState_Init(void)
 {
+	PendingCommandsFlags.NeedToFlushCurrentProfileToEEPROM = false; /* At load current profile is actual */
+
 	PendingCommandsFlags.FoxStateNameChanged = false;
 	PendingCommandsFlags.NeedToAddNewProfile = false;
+	PendingCommandsFlags.NeedToSwitchProfile = false;
+	PendingCommandsFlags.NeedToSetProfileName = false;
+	PendingCommandsFlags.NeedToSetFrequency = false;
+	PendingCommandsFlags.NeedToSetCode = false;
+
 }
 
 void FoxState_CorrectDateTime(void)

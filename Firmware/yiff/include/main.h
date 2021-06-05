@@ -107,5 +107,9 @@ void Main_ProcessSetFrequency(void);
  */
 void Main_ProcessSetCode(void);
 
+/**
+ * Flushes current profile changes into EEPROM if needed
+ */
+void Main_FlushProfileToEEPROM(void);
 
 #endif /* __MAIN_H */
