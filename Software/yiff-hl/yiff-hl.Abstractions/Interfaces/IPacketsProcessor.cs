@@ -39,6 +39,7 @@ namespace yiff_hl.Abstractions.Interfaces
         void SetOnSetProfileNameResponse(OnResponseDelegate onSetProfileNameResponse);
         void SetOnGetFrequencyResponse(OnResponseDelegate onGetFrequencyResponse);
         void SetOnSetFrequencyResponse(OnResponseDelegate onSetFrequencyResponse);
+        void SetOnGetCodeResponse(OnResponseDelegate onGetCodeResponse);
 
 
         #endregion

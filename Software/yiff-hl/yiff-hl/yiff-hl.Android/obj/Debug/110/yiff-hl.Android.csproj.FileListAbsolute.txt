@@ -12,7 +12,6 @@ C:\Non work\yiff-l\Software\yiff-hl\yiff-hl\yiff-hl.Android\bin\Debug\yiff-hl.pd
 C:\Non work\yiff-l\Software\yiff-hl\yiff-hl\yiff-hl.Android\obj\Debug\110\MonoAndroid,Version=v11.0.AssemblyAttributes.cs
 C:\Non work\yiff-l\Software\yiff-hl\yiff-hl\yiff-hl.Android\obj\Debug\110\build.props
 C:\Non work\yiff-l\Software\yiff-hl\yiff-hl\yiff-hl.Android\obj\Debug\110\adb.props
-C:\Non work\yiff-l\Software\yiff-hl\yiff-hl\yiff-hl.Android\obj\Debug\110\yiff-hl.Android.csprojAssemblyReference.cache
 C:\Non work\yiff-l\Software\yiff-hl\yiff-hl\yiff-hl.Android\obj\Debug\110\stamp\_BuildLibraryImportsCache.stamp
 C:\Non work\yiff-l\Software\yiff-hl\yiff-hl\yiff-hl.Android\obj\Debug\110\res.flag
 C:\Non work\yiff-l\Software\yiff-hl\yiff-hl\yiff-hl.Android\obj\Debug\110\lp\44\jl\files.cache
@@ -616,3 +615,4 @@ C:\Non work\yiff-l\Software\yiff-hl\yiff-hl\yiff-hl.Android\bin\Debug\yiff-hl.Bu
 C:\Non work\yiff-l\Software\yiff-hl\yiff-hl\yiff-hl.Android\bin\Debug\yiff-hl.Business.pdb
 C:\Non work\yiff-l\Software\yiff-hl\yiff-hl\yiff-hl.Android\obj\Debug\110\android\assets\yiff-hl.Business.dll
 C:\Non work\yiff-l\Software\yiff-hl\yiff-hl\yiff-hl.Android\obj\Debug\110\android\assets\yiff-hl.Business.pdb
+C:\Non work\yiff-l\Software\yiff-hl\yiff-hl\yiff-hl.Android\obj\Debug\110\yiff-hl.Android.csproj.AssemblyReference.cache

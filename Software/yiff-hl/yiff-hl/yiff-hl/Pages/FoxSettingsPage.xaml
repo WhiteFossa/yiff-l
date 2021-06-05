@@ -4,125 +4,146 @@
              x:Class="yiff_hl.Pages.FoxSettingsPage"
              Title="Fox settings">
     <ContentPage.Content>
-        <StackLayout>
-            
-            <Button
+        <ScrollView>
+            <StackLayout>
+
+                <Button
                 Text="Set current date and time"
                 Clicked="OnSetCurrentDateAndTimeClicked"
                 />
 
-            <StackLayout
+                <StackLayout
                 Orientation="Horizontal">
-                <Editor
+                    <Editor
                     Placeholder="Enter fox name"
                     x:Name="edFoxName" />
 
-                <Button
+                    <Button
                     Text="Set fox name"
                     Clicked="OnSetFoxNameClicked"
                     />
-            </StackLayout>
+                </StackLayout>
 
-            <Button
+                <Button
                 Text="Get fox name"
                 Clicked="OnGetFoxNameClicked"
                 />
 
-            <Frame
+                <Frame
                 BackgroundColor="DarkSlateGray">
-                <StackLayout>
-                    <Label
+                    <StackLayout>
+                        <Label
                         Text="Profiles"
                         />
 
-                    <Button
+                        <Button
                         Text="Get profiles count"
                         Clicked="OnGetProfilesCountClicked"
                         />
 
-                    <StackLayout
+                        <StackLayout
                         Orientation="Horizontal">
-                        <Editor
+                            <Editor
                             Placeholder="Enter profile ID"
                             x:Name="edProfileId"/>
 
-                        <Button
+                            <Button
                             Text="Get profile name"
                             Clicked="OnGetProfileNameClicked"
                             />
-                    </StackLayout>
+                        </StackLayout>
 
-                    <StackLayout Orientation="Horizontal">
-                        <Picker
+                        <StackLayout Orientation="Horizontal">
+                            <Picker
                             x:Name="pkProfiles"
                             WidthRequest="200" />
 
-                        <Button
+                            <Button
                             Text="Enumerate profiles"
                             Clicked="OnEnumerateProfilesClicked" />
-                    </StackLayout>
+                        </StackLayout>
 
-                    <Button
+                        <Button
                             Text="Switch to profile"
                             Clicked="OnSwitchToProfileClicked" />
 
-                    <Button
+                        <Button
                         Text="Get current profile ID"
                         Clicked="OnGetCurrentProfileIdClicked" />
 
-                    <Button
+                        <Button
                         Text="Add new profile"
                         Clicked="OnAddNewProfileClicked" />
-                </StackLayout>
-            </Frame>
+                    </StackLayout>
+                </Frame>
 
-            <Editor
+                <Editor
                     Placeholder="Enter profile name"
                     x:Name="edProfileName" />
 
-            <Button
+                <Button
                     Text="Set profile name"
                     Clicked="OnSetProfileNameClicked"
                     />
 
-            <Frame
+                <Frame
                 BackgroundColor="DarkSlateGray">
 
-                <StackLayout>
-                    <Label
+                    <StackLayout>
+                        <Label
                         Text="Frequency"
                         />
 
-                    <StackLayout
+                        <StackLayout
                         Orientation="Horizontal">
-                        <CheckBox
+                            <CheckBox
                             x:Name="cbIs144"
                             />
 
-                        <Label
+                            <Label
                             Text="Is 144MHz?"
                             />
+                        </StackLayout>
+
+                        <Editor
+                            x:Name="edFrequency"
+                            />
+
+                        <Button
+                            Text="Get frequency"
+                            Clicked="OnGetFrequencyClicked"
+                            />
+
+                        <Button
+                            Text="Set frequency"
+                            Clicked="OnSetFrequencyClicked"/>
+                    </StackLayout>
+                </Frame>
+
+                <Frame
+                BackgroundColor="DarkSlateGray">
+
+                    <StackLayout>
+                        <Label
+                        Text="Code"
+                        />
+
+                        <Picker
+                        x:Name="pkCode"
+                        WidthRequest="200" />
+
+                        <Button
+                            Text="Get code"
+                            Clicked="OnGetCodeClicked"/>
                     </StackLayout>
 
-                    <Editor
-                        x:Name="edFrequency"
-                        />
+                </Frame>
 
-                    <Button
-                        Text="Get frequency"
-                        Clicked="OnGetFrequencyClicked"
-                        />
-
-                    <Button
-                        Text="Set frequency"
-                        Clicked="OnSetFrequencyClicked"/>
-                </StackLayout>
-            </Frame>
-
-            <Button
+                <Button
                 Text="Disconnect"
                 Clicked="OnDisconnectClicked"
                 />
-        </StackLayout>
+            </StackLayout>
+        </ScrollView>
     </ContentPage.Content>
 </ContentPage>

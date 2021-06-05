@@ -4,6 +4,7 @@ using System.Linq;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using yiff_hl.Abstractions.Enums;
 using yiff_hl.Abstractions.Interfaces;
 using yiff_hl.Business.Implementations.Commands;
 
@@ -35,6 +36,15 @@ namespace yiff_hl.Pages
             App.NewByteReadDelegate = packetsProcessor.NewByteReceived;
 
             InitializeComponent();
+
+            // Fox codes
+            pkCode.Items.Add("Finish");
+            pkCode.Items.Add("Fox #1");
+            pkCode.Items.Add("Fox #2");
+            pkCode.Items.Add("Fox #3");
+            pkCode.Items.Add("Fox #4");
+            pkCode.Items.Add("Fox #5");
+            pkCode.Items.Add("Beacon");
         }
 
         private void OnDisconnectClicked(object sender, EventArgs e)
@@ -385,6 +395,30 @@ namespace yiff_hl.Pages
             {
                 var message = isSuccess ? "Frequency set" : "Failed to set frequency";
                 DisplayAlert("Set frequency", message, "OK");
+            });
+        }
+
+        #endregion
+
+        #region Get code
+
+        private void OnGetCodeClicked(object sender, EventArgs e)
+        {
+            GetCode();
+        }
+
+        private void GetCode()
+        {
+            var command = new GetCodeCommand(packetsProcessor);
+            command.SetResponseDelegate(OnGetCodeResponse);
+            command.SendGetCodeCommand();
+        }
+
+        private void OnGetCodeResponse(FoxCode code)
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                pkCode.SelectedIndex = (int)code;
             });
         }
 
