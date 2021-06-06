@@ -77,7 +77,9 @@ typedef enum
 
 	GetSpeed = 0x0D,
 
-	SetSpeed = 0x0E
+	SetSpeed = 0x0E,
+
+	GetCycle = 0x0F
 }
 CommandToFoxEnum;
 
@@ -181,6 +183,11 @@ void OnSetCode(uint8_t payloadSize, uint8_t* payload);
  * Called when command "Get speed" comes
  */
 void OnGetSpeed(uint8_t payloadSize, uint8_t* payload);
+
+/**
+ * Called when command "Get cycle parameters" comes
+ */
+void OnGetCycle(uint8_t payloadSize, uint8_t* payload);
 
 /**
  * Returns 0x00 if false, 0x01 if true

@@ -130,6 +130,11 @@ void OnNewCommandToFox(uint8_t payloadSize, uint8_t* payload)
 			/* Set fox speed */
 			OnSetSpeed(payloadSize, payload);
 			break;
+
+		case GetCycle:
+			/* Get cycle parameters */
+			OnGetCycle(payloadSize, payload);
+			break;
 	}
 
 	free(payload);
@@ -535,6 +540,26 @@ OnSetSpeed_Validate:
 		SendResponse(SetSpeed, 1, &result);
 		return;
 	}
+}
+
+void OnGetCycle(uint8_t payloadSize, uint8_t* payload)
+{
+	if (payloadSize != 1)
+	{
+		return;
+	}
+
+	uint8_t response[5];
+
+	response[0] = FromBool(FoxState.Cycle.IsContinuous);
+
+	uint16_t txTimeInSeconds = (uint16_t)SecondsSinceDayBegin(FoxState.Cycle.TxTime);
+	memcpy(&response[1], (uint8_t*)&txTimeInSeconds, 2);
+
+	uint16_t pauseTimeInSeconds = (uint16_t)SecondsSinceDayBegin(FoxState.Cycle.PauseTime);
+	memcpy(&response[3], (uint8_t*)&pauseTimeInSeconds, 2);
+
+	SendResponse(GetCycle, 5, response);
 }
 
 uint8_t FromBool(bool data)
