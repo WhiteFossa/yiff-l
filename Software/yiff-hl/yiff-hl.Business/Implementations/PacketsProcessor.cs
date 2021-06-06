@@ -298,6 +298,13 @@ namespace yiff_hl.Business.Implementations
                     onGetCycleResponse(responsePayload);
                     break;
 
+                // Set cycle parameters
+                case CommandType.SetCycle:
+                    CheckOnResponseDelegate(onSetCycleResponse);
+
+                    onSetCycleResponse(responsePayload);
+                    break;
+
                 default:
                     return; // We've got some junk
             }
