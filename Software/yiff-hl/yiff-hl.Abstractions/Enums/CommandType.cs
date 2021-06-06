@@ -33,6 +33,8 @@
 
         GetSpeed = 0x0D,
 
-        SetSpeed = 0x0E
+        SetSpeed = 0x0E,
+
+        GetCycle = 0x0F
     }
 }

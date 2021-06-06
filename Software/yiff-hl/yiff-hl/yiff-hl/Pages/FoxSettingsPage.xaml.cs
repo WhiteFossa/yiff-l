@@ -497,5 +497,31 @@ namespace yiff_hl.Pages
         }
 
         #endregion
+
+        #region Get cycle
+
+        private void OnGetCycleClicked(object sender, EventArgs e)
+        {
+            GetCycle();
+        }
+
+        private void GetCycle()
+        {
+            var command = new GetCycleCommand(packetsProcessor);
+            command.SetResponseDelegate(OnGetCycleResponse);
+            command.SendGetCycleCommand();
+        }
+
+        private void OnGetCycleResponse(bool isContinuous, TimeSpan txTime, TimeSpan pauseTime)
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                cbIsContinuous.IsChecked = isContinuous;
+                edTxTime.Text = $"{ txTime.TotalSeconds }";
+                edPauseTime.Text = $"{ pauseTime.TotalSeconds }";
+            });
+        }
+
+        #endregion
     }
 }

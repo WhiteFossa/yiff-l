@@ -32,6 +32,7 @@ namespace yiff_hl.Business.Implementations
         private OnResponseDelegate onSetCodeResponse;
         private OnResponseDelegate onGetSpeedResponse;
         private OnResponseDelegate onSetSpeedResponse;
+        private OnResponseDelegate onGetCycleResponse;
 
         private enum ReceiverState
         {
@@ -289,8 +290,15 @@ namespace yiff_hl.Business.Implementations
                     onSetSpeedResponse(responsePayload);
                     break;
 
+                // Get cycle parameters
+                case CommandType.GetCycle:
+                    CheckOnResponseDelegate(onGetCycleResponse);
+
+                    onGetCycleResponse(responsePayload);
+                    break;
+
                 default:
-                    return; // We get some junk
+                    return; // We've got some junk
             }
         }
 
@@ -390,6 +398,11 @@ namespace yiff_hl.Business.Implementations
         public void SetOnSetSpeedResponse(OnResponseDelegate onSetSpeedResponse)
         {
             this.onSetSpeedResponse = onSetSpeedResponse ?? throw new ArgumentNullException(nameof(onSetSpeedResponse));
+        }
+
+        public void SetOnGetCycleResponse(OnResponseDelegate onGetCycleResponse)
+        {
+            this.onGetCycleResponse = onGetCycleResponse ?? throw new ArgumentNullException(nameof(onGetCycleResponse));
         }
     }
 }

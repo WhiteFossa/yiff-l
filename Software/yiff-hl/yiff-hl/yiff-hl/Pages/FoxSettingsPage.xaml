@@ -121,12 +121,12 @@
                 </Frame>
 
                 <Frame
-                BackgroundColor="DarkSlateGray">
+                    BackgroundColor="DarkSlateGray">
 
                     <StackLayout>
                         <Label
-                        Text="Code"
-                        />
+                            Text="Code"
+                            />
 
                         <Picker
                         x:Name="pkCode"
@@ -163,7 +163,58 @@
                             Clicked="OnSetSpeedClicked"
                             />
                     </StackLayout>
+                </Frame>
 
+                <Frame
+                    BackgroundColor="DarkSlateGray">
+
+                    <StackLayout>
+                        <Label
+                            Text="Cycle"
+                            />
+
+                        <StackLayout
+                            Orientation="Horizontal">
+
+                            <CheckBox
+                                x:Name="cbIsContinuous"
+                            />
+
+                            <Label
+                                Text="Is continuous?"
+                            />
+                        </StackLayout>
+
+                        <StackLayout
+                            Orientation="Horizontal">
+                            
+                            <Editor
+                                x:Name="edTxTime"
+                                WidthRequest="100"
+                                />
+
+                            <Label
+                                Text="TX time" />
+                        </StackLayout>
+
+                        <StackLayout
+                            Orientation="Horizontal">
+
+                            <Editor
+                                x:Name="edPauseTime"
+                                WidthRequest="100"
+                                />
+
+                            <Label
+                                Text="Pause time" />
+                        </StackLayout>
+
+                        <Button
+                            Text="Get cycle parameters"
+                            Clicked="OnGetCycleClicked"
+                            />
+                        
+                    </StackLayout>
                 </Frame>
 
                 <Button
