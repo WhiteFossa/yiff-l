@@ -75,7 +75,9 @@ typedef enum
 
 	SetCode = 0x0C,
 
-	GetSpeed = 0x0D
+	GetSpeed = 0x0D,
+
+	SetSpeed = 0x0E
 }
 CommandToFoxEnum;
 
@@ -166,6 +168,11 @@ void OnSetFrequency(uint8_t payloadSize, uint8_t* payload);
 void OnGetCode(uint8_t payloadSize, uint8_t* payload);
 
 /**
+ * Called when command "Set speed" comes
+ */
+void OnSetSpeed(uint8_t payloadSize, uint8_t* payload);
+
+/**
  * Called when command "Set code" comes
  */
 void OnSetCode(uint8_t payloadSize, uint8_t* payload);
@@ -184,5 +191,10 @@ uint8_t FromBool(bool data);
  * If 0x00 then returns false, otherwise - true
  */
 bool ToBool(uint8_t data);
+
+/**
+ * If 0x00 or 0x01 returns true, otherwise false
+ */
+bool IsBool(uint8_t data);
 
 #endif /* INCLUDE_PACKETSPROCESSOR_H_ */

@@ -125,6 +125,11 @@ void OnNewCommandToFox(uint8_t payloadSize, uint8_t* payload)
 			/* Get fox speed */
 			OnGetSpeed(payloadSize, payload);
 			break;
+
+		case SetSpeed:
+			/* Set fox speed */
+			OnSetSpeed(payloadSize, payload);
+			break;
 	}
 
 	free(payload);
@@ -501,6 +506,37 @@ void OnGetSpeed(uint8_t payloadSize, uint8_t* payload)
 	SendResponse(GetSpeed, 1, &result);
 }
 
+void OnSetSpeed(uint8_t payloadSize, uint8_t* payload)
+{
+
+	bool isValid = true;
+
+	if (payloadSize != 2)
+	{
+		isValid = false;
+		goto OnSetSpeed_Validate;
+	}
+
+	uint8_t speedByte = payload[1];
+
+	if (!IsBool(speedByte))
+	{
+		isValid = false;
+		goto OnSetSpeed_Validate;
+	}
+
+	FoxState.IsFast = ToBool(speedByte);
+	PendingCommandsFlags.NeedToSetSpeed = true;
+
+OnSetSpeed_Validate:
+	if (!isValid)
+	{
+		uint8_t result = YHL_PACKET_PROCESSOR_FAILURE;
+		SendResponse(SetSpeed, 1, &result);
+		return;
+	}
+}
+
 uint8_t FromBool(bool data)
 {
 	if (data)
@@ -524,6 +560,16 @@ bool ToBool(uint8_t data)
 	{
 		return true;
 	}
+}
+
+bool IsBool(uint8_t data)
+{
+	if (0x00 == data || 0x01 == data)
+	{
+		return true;
+	}
+
+	return false;
 }
 
 void SendPacket(uint8_t payloadSize, uint8_t* payload)

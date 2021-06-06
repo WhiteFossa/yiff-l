@@ -17,6 +17,7 @@ void FoxState_Init(void)
 	PendingCommandsFlags.NeedToSetProfileName = false;
 	PendingCommandsFlags.NeedToSetFrequency = false;
 	PendingCommandsFlags.NeedToSetCode = false;
+	PendingCommandsFlags.NeedToSetSpeed = false;
 
 }
 

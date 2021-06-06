@@ -47,6 +47,11 @@ typedef struct
 	 * If true, then we need to update fox code
 	 */
 	bool NeedToSetCode;
+
+	/**
+	 * If true, then we need to update fox speed
+	 */
+	bool NeedToSetSpeed;
 }
 PendingCommandsFlagsStruct;
 

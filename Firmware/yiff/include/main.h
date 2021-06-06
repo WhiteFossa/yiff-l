@@ -108,6 +108,11 @@ void Main_ProcessSetFrequency(void);
 void Main_ProcessSetCode(void);
 
 /**
+ * Updates fox speed if needed
+ */
+void Main_ProcessSetSpeed(void);
+
+/**
  * Flushes current profile changes into EEPROM if needed
  */
 void Main_FlushProfileToEEPROM(void);
