@@ -17,20 +17,21 @@ namespace yiff_hl.Business.Implementations
         private const int MinPayloadLength = 1;
         private const int MaxPayloadLength = 59;
 
-        private OnResponseDelegate onSetDateAndTimeResponse = null;
-        private OnResponseDelegate onSetFoxNameResponse = null;
-        private OnResponseDelegate onGetFoxNameResponse = null;
-        private OnResponseDelegate onGetProfilesCountResponse = null;
-        private OnResponseDelegate onGetProfileNameResponse = null;
-        private OnResponseDelegate onAddNewProfileResponse = null;
-        private OnResponseDelegate onGetCurrentProfileIdResponse = null;
-        private OnResponseDelegate onSwitchToProfileResponse = null;
-        private OnResponseDelegate onSetProfileNameResponse = null;
-        private OnResponseDelegate onGetFrequencyResponse = null;
-        private OnResponseDelegate onSetFrequencyResponse = null;
-        private OnResponseDelegate onGetCodeResponse = null;
-        private OnResponseDelegate onSetCodeResponse = null;
-        private OnResponseDelegate onGetSpeedResponse = null;
+        private OnResponseDelegate onSetDateAndTimeResponse;
+        private OnResponseDelegate onSetFoxNameResponse;
+        private OnResponseDelegate onGetFoxNameResponse;
+        private OnResponseDelegate onGetProfilesCountResponse;
+        private OnResponseDelegate onGetProfileNameResponse;
+        private OnResponseDelegate onAddNewProfileResponse;
+        private OnResponseDelegate onGetCurrentProfileIdResponse;
+        private OnResponseDelegate onSwitchToProfileResponse;
+        private OnResponseDelegate onSetProfileNameResponse;
+        private OnResponseDelegate onGetFrequencyResponse;
+        private OnResponseDelegate onSetFrequencyResponse;
+        private OnResponseDelegate onGetCodeResponse;
+        private OnResponseDelegate onSetCodeResponse;
+        private OnResponseDelegate onGetSpeedResponse;
+        private OnResponseDelegate onSetSpeedResponse;
 
         private enum ReceiverState
         {
@@ -281,6 +282,13 @@ namespace yiff_hl.Business.Implementations
                     onGetSpeedResponse(responsePayload);
                     break;
 
+                // Set speed
+                case CommandType.SetSpeed:
+                    CheckOnResponseDelegate(onSetSpeedResponse);
+
+                    onSetSpeedResponse(responsePayload);
+                    break;
+
                 default:
                     return; // We get some junk
             }
@@ -377,6 +385,11 @@ namespace yiff_hl.Business.Implementations
         public void SetOnGetSpeedResponse(OnResponseDelegate onGetSpeedResponse)
         {
             this.onGetSpeedResponse = onGetSpeedResponse ?? throw new ArgumentNullException(nameof(onGetSpeedResponse));
+        }
+
+        public void SetOnSetSpeedResponse(OnResponseDelegate onSetSpeedResponse)
+        {
+            this.onSetSpeedResponse = onSetSpeedResponse ?? throw new ArgumentNullException(nameof(onSetSpeedResponse));
         }
     }
 }

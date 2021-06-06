@@ -155,7 +155,13 @@
 
                         <Button
                             Text="Get speed"
-                            Clicked="OnGetSpeedClicked" />
+                            Clicked="OnGetSpeedClicked"
+                            />
+
+                        <Button
+                            Text="Set speed"
+                            Clicked="OnSetSpeedClicked"
+                            />
                     </StackLayout>
 
                 </Frame>

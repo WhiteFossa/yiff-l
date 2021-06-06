@@ -12,8 +12,6 @@ namespace yiff_hl.Business.Implementations.Commands.Helpers
         /// <summary>
         /// Determines if command was successful or not
         /// </summary>
-        /// <param name="successByte"></param>
-        /// <returns></returns>
         public static bool IsSuccessful(byte successByte)
         {
             return successByte == 0x00;
@@ -22,6 +20,11 @@ namespace yiff_hl.Business.Implementations.Commands.Helpers
         public static bool ToBool(byte data)
         {
             return data != 0x00;
+        }
+
+        public static byte FromBool(bool data)
+        {
+            return data ? (byte)0x01 : (byte)0x00;
         }
     }
 }

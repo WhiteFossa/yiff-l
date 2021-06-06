@@ -31,6 +31,8 @@
 
         SetCode = 0x0C,
 
-        GetSpeed = 0x0D
+        GetSpeed = 0x0D,
+
+        SetSpeed = 0x0E
     }
 }

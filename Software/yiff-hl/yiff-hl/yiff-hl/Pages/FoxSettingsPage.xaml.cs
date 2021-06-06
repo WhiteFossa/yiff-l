@@ -472,5 +472,30 @@ namespace yiff_hl.Pages
         }
 
         #endregion
+
+        #region Set speed
+
+        private void OnSetSpeedClicked(object sender, EventArgs e)
+        {
+            SetSpeed(cbIsFast.IsChecked);
+        }
+
+        private void SetSpeed(bool isFast)
+        {
+            var command = new SetSpeedCommand(packetsProcessor);
+            command.SetResponseDelegate(OnSetSpeedResponse);
+            command.SendSetSpeedCommand(isFast);
+        }
+
+        private void OnSetSpeedResponse(bool isSuccess)
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                var message = isSuccess ? "Speed set" : "Failed to set speed";
+                DisplayAlert("Set speed", message, "OK");
+            });
+        }
+
+        #endregion
     }
 }
