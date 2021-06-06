@@ -29,6 +29,8 @@
 
         GetCode = 0x0B,
 
-        SetCode = 0x0C
+        SetCode = 0x0C,
+
+        GetSpeed = 0x0D
     }
 }

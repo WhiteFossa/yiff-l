@@ -41,6 +41,7 @@ namespace yiff_hl.Abstractions.Interfaces
         void SetOnSetFrequencyResponse(OnResponseDelegate onSetFrequencyResponse);
         void SetOnGetCodeResponse(OnResponseDelegate onGetCodeResponse);
         void SetOnSetCodeResponse(OnResponseDelegate onSetCodeResponse);
+        void SetOnGetSpeedResponse(OnResponseDelegate onGetSpeedResponse);
 
 
         #endregion

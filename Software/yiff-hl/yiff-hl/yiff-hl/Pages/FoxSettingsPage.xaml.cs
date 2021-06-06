@@ -448,5 +448,29 @@ namespace yiff_hl.Pages
         }
 
         #endregion
+
+        #region Get speed
+
+        private void OnGetSpeedClicked(object sender, EventArgs e)
+        {
+            GetSpeed();
+        }
+
+        private void GetSpeed()
+        {
+            var command = new GetSpeedCommand(packetsProcessor);
+            command.SetResponseDelegate(OnGetSpeedResponse);
+            command.SendGetSpeedCommand();
+        }
+
+        private void OnGetSpeedResponse(bool isFast)
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                cbIsFast.IsChecked = isFast;
+            });
+        }
+
+        #endregion
     }
 }

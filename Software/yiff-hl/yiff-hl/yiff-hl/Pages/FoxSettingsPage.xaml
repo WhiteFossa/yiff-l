@@ -140,6 +140,22 @@
                             Text="Set code"
                             Clicked="OnSetCodeClicked"
                             />
+
+                        <StackLayout
+                            Orientation="Horizontal">
+
+                            <CheckBox
+                                x:Name="cbIsFast"
+                            />
+
+                            <Label
+                                Text="Is fast?"
+                            />
+                        </StackLayout>
+
+                        <Button
+                            Text="Get speed"
+                            Clicked="OnGetSpeedClicked" />
                     </StackLayout>
 
                 </Frame>
