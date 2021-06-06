@@ -120,6 +120,11 @@ void OnNewCommandToFox(uint8_t payloadSize, uint8_t* payload)
 			/* Set fox code */
 			OnSetCode(payloadSize, payload);
 			break;
+
+		case GetSpeed:
+			/* Get fox speed */
+			OnGetSpeed(payloadSize, payload);
+			break;
 	}
 
 	free(payload);
@@ -485,6 +490,17 @@ OnSetCode_Validate:
 	PendingCommandsFlags.NeedToSetCode = true;
 }
 
+void OnGetSpeed(uint8_t payloadSize, uint8_t* payload)
+{
+	if (payloadSize != 1)
+	{
+		return;
+	}
+
+	uint8_t result = ToBool(FoxState.IsFast);
+	SendResponse(GetSpeed, 1, &result);
+}
+
 uint8_t FromBool(bool data)
 {
 	if (data)
@@ -496,6 +512,7 @@ uint8_t FromBool(bool data)
 		return 0x00;
 	}
 }
+
 
 bool ToBool(uint8_t data)
 {

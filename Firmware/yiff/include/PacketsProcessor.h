@@ -73,7 +73,9 @@ typedef enum
 
 	GetCode = 0x0B,
 
-	SetCode = 0x0C
+	SetCode = 0x0C,
+
+	GetSpeed = 0x0D
 }
 CommandToFoxEnum;
 
@@ -167,6 +169,11 @@ void OnGetCode(uint8_t payloadSize, uint8_t* payload);
  * Called when command "Set code" comes
  */
 void OnSetCode(uint8_t payloadSize, uint8_t* payload);
+
+/**
+ * Called when command "Get speed" comes
+ */
+void OnGetSpeed(uint8_t payloadSize, uint8_t* payload);
 
 /**
  * Returns 0x00 if false, 0x01 if true
