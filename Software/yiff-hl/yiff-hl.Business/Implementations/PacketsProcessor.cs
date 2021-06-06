@@ -33,6 +33,7 @@ namespace yiff_hl.Business.Implementations
         private OnResponseDelegate onGetSpeedResponse;
         private OnResponseDelegate onSetSpeedResponse;
         private OnResponseDelegate onGetCycleResponse;
+        private OnResponseDelegate onSetCycleResponse;
 
         private enum ReceiverState
         {
@@ -403,6 +404,11 @@ namespace yiff_hl.Business.Implementations
         public void SetOnGetCycleResponse(OnResponseDelegate onGetCycleResponse)
         {
             this.onGetCycleResponse = onGetCycleResponse ?? throw new ArgumentNullException(nameof(onGetCycleResponse));
+        }
+
+        public void SetOnSetCycleResponse(OnResponseDelegate onSetCycleResponse)
+        {
+            this.onSetCycleResponse = onSetCycleResponse ?? throw new ArgumentNullException(nameof(onSetCycleResponse));
         }
     }
 }

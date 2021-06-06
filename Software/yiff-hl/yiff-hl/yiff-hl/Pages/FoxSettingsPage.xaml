@@ -213,7 +213,12 @@
                             Text="Get cycle parameters"
                             Clicked="OnGetCycleClicked"
                             />
-                        
+
+                        <Button
+                            Text="Set cycle parameters"
+                            Clicked="OnSetCycleClicked"
+                            />
+
                     </StackLayout>
                 </Frame>
 

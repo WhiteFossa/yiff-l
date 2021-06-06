@@ -523,5 +523,30 @@ namespace yiff_hl.Pages
         }
 
         #endregion
+
+        #region Set cycle
+
+        private void OnSetCycleClicked(object sender, EventArgs e)
+        {
+            SetCycle(cbIsContinuous.IsChecked, new TimeSpan(0, 0, int.Parse(edTxTime.Text)), new TimeSpan(0, 0, int.Parse(edPauseTime.Text)));
+        }
+
+        private void SetCycle(bool isContinuous, TimeSpan txTime, TimeSpan pauseTime)
+        {
+            var command = new SetCycleCommand(packetsProcessor);
+            command.SetResponseDelegate(OnSetCycleResponse);
+            command.SendSetCycleCommand(isContinuous, txTime, pauseTime);
+        }
+
+        private void OnSetCycleResponse(bool isSuccess)
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                var message = isSuccess ? "Cycle set" : "Failed to set cycle";
+                DisplayAlert("Set cycle", message, "OK");
+            });
+        }
+
+        #endregion
     }
 }

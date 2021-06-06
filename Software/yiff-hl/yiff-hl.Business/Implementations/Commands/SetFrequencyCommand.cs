@@ -52,7 +52,7 @@ namespace yiff_hl.Business.Implementations.Commands
             var payload = new List<byte>();
 
             // 2th (from 0th) byte - is 144MHz flag
-            payload.Add((byte)(is144MHz ? 0x01 : 0x00));
+            payload.Add(CommandsHelper.FromBool(is144MHz));
 
             // 3th - 6th bytes - frequency
             payload.AddRange(BitConverter.GetBytes((uint)frequency));
