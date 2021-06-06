@@ -203,6 +203,7 @@ int main(int argc, char* argv[])
 		Main_ProcessSetFrequency();
 		Main_ProcessSetCode();
 		Main_ProcessSetSpeed();
+		Main_ProcessSetCycle();
 
 		/* Flush profile changes to EEPROM, must be called last in sequence */
 		Main_FlushProfileToEEPROM();
@@ -310,6 +311,20 @@ void Main_ProcessSetSpeed(void)
 		SendResponse(SetSpeed, 1, &response);
 
 		PendingCommandsFlags.NeedToSetSpeed = false;
+	}
+}
+
+void Main_ProcessSetCycle(void)
+{
+	if (PendingCommandsFlags.NeedToSetCycle)
+	{
+		EEPROM_CurrentProfile.Cycle = FoxState.Cycle;
+		PendingCommandsFlags.NeedToFlushCurrentProfileToEEPROM = true;
+
+		uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
+		SendResponse(SetCycle, 1, &response);
+
+		PendingCommandsFlags.NeedToSetCycle = false;
 	}
 }
 

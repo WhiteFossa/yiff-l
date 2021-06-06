@@ -18,7 +18,7 @@ void FoxState_Init(void)
 	PendingCommandsFlags.NeedToSetFrequency = false;
 	PendingCommandsFlags.NeedToSetCode = false;
 	PendingCommandsFlags.NeedToSetSpeed = false;
-
+	PendingCommandsFlags.NeedToSetCycle = false;
 }
 
 void FoxState_CorrectDateTime(void)

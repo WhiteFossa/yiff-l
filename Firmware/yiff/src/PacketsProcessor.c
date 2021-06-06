@@ -135,6 +135,11 @@ void OnNewCommandToFox(uint8_t payloadSize, uint8_t* payload)
 			/* Get cycle parameters */
 			OnGetCycle(payloadSize, payload);
 			break;
+
+		case SetCycle:
+			/* Set cycle parameters */
+			OnSetCycle(payloadSize, payload);
+			break;
 	}
 
 	free(payload);
@@ -560,6 +565,45 @@ void OnGetCycle(uint8_t payloadSize, uint8_t* payload)
 	memcpy(&response[3], (uint8_t*)&pauseTimeInSeconds, 2);
 
 	SendResponse(GetCycle, 5, response);
+}
+
+void OnSetCycle(uint8_t payloadSize, uint8_t* payload)
+{
+	bool isValid = true;
+
+	if (payloadSize != 6)
+	{
+		isValid = false;
+		goto OnSetCycle_Validate;
+	}
+
+	uint8_t isContinuousByte = payload[1];
+
+	if (!IsBool(isContinuousByte))
+	{
+		isValid = false;
+		goto OnSetCycle_Validate;
+	}
+
+OnSetCycle_Validate:
+	if (!isValid)
+	{
+		uint8_t result = YHL_PACKET_PROCESSOR_FAILURE;
+		SendResponse(SetCycle, 1, &result);
+		return;
+	}
+
+	FoxState.Cycle.IsContinuous = ToBool(isContinuousByte);
+
+	uint16_t txTimeInSeconds;
+	memcpy(&txTimeInSeconds, &payload[2], 2);
+	FoxState.Cycle.TxTime = TimeSinceDayBegin(txTimeInSeconds);
+
+	uint16_t pauseTimeInSeconds;
+	memcpy(&pauseTimeInSeconds, &payload[4], 2);
+	FoxState.Cycle.PauseTime = TimeSinceDayBegin(pauseTimeInSeconds);
+
+	PendingCommandsFlags.NeedToSetCycle = true;
 }
 
 uint8_t FromBool(bool data)

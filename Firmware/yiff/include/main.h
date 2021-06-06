@@ -113,6 +113,11 @@ void Main_ProcessSetCode(void);
 void Main_ProcessSetSpeed(void);
 
 /**
+ * Updates fox cycle if needed
+ */
+void Main_ProcessSetCycle(void);
+
+/**
  * Flushes current profile changes into EEPROM if needed
  */
 void Main_FlushProfileToEEPROM(void);

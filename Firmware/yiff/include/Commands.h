@@ -52,6 +52,11 @@ typedef struct
 	 * If true, then we need to update fox speed
 	 */
 	bool NeedToSetSpeed;
+
+	/**
+	 * If true, then we need to update fox cycle
+	 */
+	bool NeedToSetCycle;
 }
 PendingCommandsFlagsStruct;
 
