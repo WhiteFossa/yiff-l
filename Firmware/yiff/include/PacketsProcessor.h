@@ -81,7 +81,9 @@ typedef enum
 
 	GetCycle = 0x0F,
 
-	SetCycle = 0x10
+	SetCycle = 0x10,
+
+	GetEndingToneDuration = 0x11
 }
 CommandToFoxEnum;
 
@@ -195,6 +197,11 @@ void OnGetCycle(uint8_t payloadSize, uint8_t* payload);
  * Called when command "Set cycle parameters" comes
  */
 void OnSetCycle(uint8_t payloadSize, uint8_t* payload);
+
+/**
+ * Called when command "Get ending tone duration" comes
+ */
+void OnGetEndingToneDuration(uint8_t payloadSize, uint8_t* payload);
 
 /**
  * Returns 0x00 if false, 0x01 if true

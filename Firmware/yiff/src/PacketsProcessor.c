@@ -140,6 +140,11 @@ void OnNewCommandToFox(uint8_t payloadSize, uint8_t* payload)
 			/* Set cycle parameters */
 			OnSetCycle(payloadSize, payload);
 			break;
+
+		case GetEndingToneDuration:
+			/* Get ending tone duration */
+			OnGetEndingToneDuration(payloadSize, payload);
+			break;
 	}
 
 	free(payload);
@@ -602,6 +607,17 @@ OnSetCycle_Validate:
 	FoxState.Cycle.PauseTime = TimeSinceDayBegin(pauseTimeInSeconds);
 
 	PendingCommandsFlags.NeedToSetCycle = true;
+}
+
+void OnGetEndingToneDuration(uint8_t payloadSize, uint8_t* payload)
+{
+	if (payloadSize != 1)
+	{
+		return;
+	}
+
+	uint8_t response = FoxState.EndingToneLength;
+	SendResponse(GetEndingToneDuration, 1, &response);
 }
 
 uint8_t FromBool(bool data)
