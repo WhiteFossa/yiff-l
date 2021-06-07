@@ -548,5 +548,29 @@ namespace yiff_hl.Pages
         }
 
         #endregion
+
+        #region Get ending tone duration
+
+        private void OnGetEndingToneDurationClicked(object sender, EventArgs e)
+        {
+            GetEndingToneDuration();
+        }
+
+        private void GetEndingToneDuration()
+        {
+            var command = new GetEndingToneDurationCommand(packetsProcessor);
+            command.SetResponseDelegate(OnGetEndingToneDurationResponse);
+            command.SendGetEndingToneDurationCommand();
+        }
+
+        private void OnGetEndingToneDurationResponse(TimeSpan duration)
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                edTEndingTone.Text = $"{ duration.TotalSeconds }";
+            });
+        }
+
+        #endregion
     }
 }

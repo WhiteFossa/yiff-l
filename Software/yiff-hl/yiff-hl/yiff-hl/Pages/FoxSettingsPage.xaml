@@ -219,6 +219,22 @@
                             Clicked="OnSetCycleClicked"
                             />
 
+                        <StackLayout
+                            Orientation="Horizontal">
+
+                            <Editor
+                                x:Name="edTEndingTone"
+                                WidthRequest="100"
+                                />
+
+                            <Label
+                                Text="Ending tone duration" />
+                        </StackLayout>
+
+                        <Button
+                            Text="Get ending tone duration"
+                            Clicked="OnGetEndingToneDurationClicked"
+                            />
                     </StackLayout>
                 </Frame>
 

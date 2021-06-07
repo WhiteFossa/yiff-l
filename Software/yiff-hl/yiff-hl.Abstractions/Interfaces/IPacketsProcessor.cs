@@ -45,6 +45,7 @@ namespace yiff_hl.Abstractions.Interfaces
         void SetOnSetSpeedResponse(OnResponseDelegate onSetSpeedResponse);
         void SetOnGetCycleResponse(OnResponseDelegate onGetCycleResponse);
         void SetOnSetCycleResponse(OnResponseDelegate onSetCycleResponse);
+        void SetOnGetEndingToneDurationResponse(OnResponseDelegate onGetEndingToneDurationResponse);
 
 
         #endregion
