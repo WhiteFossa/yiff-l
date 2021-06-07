@@ -39,6 +39,8 @@
 
         SetCycle = 0x10,
 
-        GetEndingToneDuration = 0x11
+        GetEndingToneDuration = 0x11,
+
+        SetEndingToneDuration = 0x12
     }
 }

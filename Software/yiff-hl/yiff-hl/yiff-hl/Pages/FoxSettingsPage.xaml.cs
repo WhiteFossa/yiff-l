@@ -567,7 +567,32 @@ namespace yiff_hl.Pages
         {
             Device.BeginInvokeOnMainThread(() =>
             {
-                edTEndingTone.Text = $"{ duration.TotalSeconds }";
+                edEndingTone.Text = $"{ duration.TotalSeconds }";
+            });
+        }
+
+        #endregion
+
+        #region Set ending tone duration
+
+        private void OnSetEndingToneDurationClicked(object sender, EventArgs e)
+        {
+            SetEndingToneDuration(new TimeSpan(0, 0, int.Parse(edEndingTone.Text)));
+        }
+
+        private void SetEndingToneDuration(TimeSpan endingToneDuration)
+        {
+            var command = new SetEndingToneDurationCommand(packetsProcessor);
+            command.SetResponseDelegate(OnSetEndingToneDurationResponse);
+            command.SendSetEndingToneResponseDurationCommand(endingToneDuration);
+        }
+
+        private void OnSetEndingToneDurationResponse(bool isSuccess)
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                var message = isSuccess ? "Ending tone duration set" : "Failed to set Ending tone duration";
+                DisplayAlert("Set ending tone duration", message, "OK");
             });
         }
 

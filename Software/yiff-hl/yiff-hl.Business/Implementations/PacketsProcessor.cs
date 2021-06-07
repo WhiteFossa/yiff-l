@@ -35,6 +35,7 @@ namespace yiff_hl.Business.Implementations
         private OnResponseDelegate onGetCycleResponse;
         private OnResponseDelegate onSetCycleResponse;
         private OnResponseDelegate onGetEndingToneDurationResponse;
+        private OnResponseDelegate onSetEndingToneDurationResponse;
 
         private enum ReceiverState
         {
@@ -313,6 +314,13 @@ namespace yiff_hl.Business.Implementations
                     onGetEndingToneDurationResponse(responsePayload);
                     break;
 
+                // Set ending tone duration
+                case CommandType.SetEndingToneDuration:
+                    CheckOnResponseDelegate(onSetEndingToneDurationResponse);
+
+                    onSetEndingToneDurationResponse(responsePayload);
+                    break;
+
                 default:
                     return; // We've got some junk
             }
@@ -426,9 +434,14 @@ namespace yiff_hl.Business.Implementations
             this.onSetCycleResponse = onSetCycleResponse ?? throw new ArgumentNullException(nameof(onSetCycleResponse));
         }
 
-        public void SetOnGetEndingToneDurationResponse(OnResponseDelegate onGetEndingToneDuration)
+        public void SetOnGetEndingToneDurationResponse(OnResponseDelegate onGetEndingToneDurationResponse)
         {
-            this.onGetEndingToneDurationResponse = onGetEndingToneDuration ?? throw new ArgumentNullException(nameof(onGetEndingToneDuration));
+            this.onGetEndingToneDurationResponse = onGetEndingToneDurationResponse ?? throw new ArgumentNullException(nameof(onGetEndingToneDurationResponse));
+        }
+
+        public void SetOnSetEndingToneDurationResponse(OnResponseDelegate onSetEndingToneDurationResponse)
+        {
+            this.onSetEndingToneDurationResponse = onSetEndingToneDurationResponse ?? throw new ArgumentNullException(nameof(onSetEndingToneDurationResponse));
         }
     }
 }

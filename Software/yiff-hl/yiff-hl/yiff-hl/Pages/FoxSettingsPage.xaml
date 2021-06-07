@@ -223,7 +223,7 @@
                             Orientation="Horizontal">
 
                             <Editor
-                                x:Name="edTEndingTone"
+                                x:Name="edEndingTone"
                                 WidthRequest="100"
                                 />
 
@@ -234,6 +234,11 @@
                         <Button
                             Text="Get ending tone duration"
                             Clicked="OnGetEndingToneDurationClicked"
+                            />
+
+                        <Button
+                            Text="Set ending tone duration"
+                            Clicked="OnSetEndingToneDurationClicked"
                             />
                     </StackLayout>
                 </Frame>
