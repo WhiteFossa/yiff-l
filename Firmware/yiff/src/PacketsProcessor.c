@@ -463,9 +463,7 @@ OnSetFrequency_Validate:
 		return;
 	}
 
-	FoxState.Frequency.Is144MHz = is144MHz;
-	FoxState.Frequency.FrequencyHz = frequency;
-
+	FoxState_SetFrequency(is144MHz, frequency);
 	PendingCommandsFlags.NeedToSetFrequency = true;
 }
 

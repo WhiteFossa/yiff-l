@@ -47,3 +47,38 @@ bool FoxState_IsFrequencyValid(bool is144MHz, uint32_t frequency)
 
 	return true;
 }
+
+bool FoxState_SetFrequency(bool is144MHz, uint32_t frequency)
+{
+	if (!FoxState_IsFrequencyValid(is144MHz, frequency))
+	{
+		return false;
+	}
+
+	FoxState.Frequency.Is144MHz = is144MHz;
+	FoxState.Frequency.FrequencyHz = frequency;
+
+	return true;
+}
+
+bool FoxState_IsEndingtoneDurationValid(uint8_t endingtoneDuration)
+{
+	if (endingtoneDuration > YHL_MAX_ENDINGTONE_DURATION)
+	{
+		return false;
+	}
+
+	return true;
+}
+
+bool FoxState_SetEndingtoneDuration(uint8_t endingtoneDuration)
+{
+	if (!FoxState_IsEndingtoneDurationValid(endingtoneDuration))
+	{
+		return false;
+	}
+
+	FoxState.EndingToneLength = endingtoneDuration;
+
+	return true;
+}

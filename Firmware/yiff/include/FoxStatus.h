@@ -18,10 +18,15 @@ extern PendingCommandsFlagsStruct PendingCommandsFlags;
 /**
  * Allowed frequencies
  */
-#define YHL_MIN_80M_FREQUENCY 3500000
-#define YHL_MAX_80M_FREQUENCY 3650000
-#define YHL_MIN_2M_FREQUENCY 144000000
-#define YHL_MAX_2M_FREQUENCY 146000000
+#define YHL_MIN_80M_FREQUENCY 3500000U
+#define YHL_MAX_80M_FREQUENCY 3650000U
+#define YHL_MIN_2M_FREQUENCY 144000000U
+#define YHL_MAX_2M_FREQUENCY 146000000U
+
+/**
+ * Maximal allowed ending tone
+ */
+#define YHL_MAX_ENDINGTONE_DURATION 10U
 
 
 /**
@@ -255,5 +260,19 @@ void FoxState_CorrectDateTime(void);
  */
 bool FoxState_IsFrequencyValid(bool is144MHz, uint32_t frequency);
 
+/**
+ * Tries to set frequency, if frequency correct - sets it and returns true, otherwise false
+ */
+bool FoxState_SetFrequency(bool is144MHz, uint32_t frequency);
+
+/**
+ * Returns true if ending tone duration is valid
+ */
+bool FoxState_IsEndingtoneDurationValid(uint8_t endingtoneDuration);
+
+/**
+ * Tries to set endingtone duration. If duration valid, sets it and returns true, otherwise false
+ */
+bool FoxState_SetEndingtoneDuration(uint8_t endingtoneDuration);
 
 #endif /* INCLUDE_FOXSTATUS_H_ */
