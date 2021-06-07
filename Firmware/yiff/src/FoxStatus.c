@@ -62,6 +62,32 @@ bool FoxState_SetFrequency(bool is144MHz, uint32_t frequency)
 	return true;
 }
 
+bool FoxState_IsCycleDurationsValid(Time txTime, Time pauseTime)
+{
+	Time minTxTime = TimeSinceDayBegin(YHL_MIN_TX_DURATION);
+	Time minPauseTime = TimeSinceDayBegin(YHL_MIN_PAUSE_DURATION);
+
+	if ((TIME1_LESS == CompareTimes(txTime, minTxTime)) || (TIME1_LESS == CompareTimes(pauseTime, minPauseTime)))
+	{
+		return false;
+	}
+
+	return true;
+}
+
+bool FoxState_SetCycleDurations(Time txTime, Time pauseTime)
+{
+	if (!FoxState_IsCycleDurationsValid(txTime, pauseTime))
+	{
+		return false;
+	}
+
+	FoxState.Cycle.TxTime = txTime;
+	FoxState.Cycle.PauseTime = pauseTime;
+
+	return true;
+}
+
 bool FoxState_IsEndingtoneDurationValid(uint8_t endingtoneDuration)
 {
 	if (endingtoneDuration > YHL_MAX_ENDINGTONE_DURATION)

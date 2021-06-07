@@ -24,6 +24,12 @@ extern PendingCommandsFlagsStruct PendingCommandsFlags;
 #define YHL_MAX_2M_FREQUENCY 146000000U
 
 /**
+ * Minimal allowed cyclic duration
+ */
+#define YHL_MIN_TX_DURATION 6U
+#define YHL_MIN_PAUSE_DURATION 6U
+
+/**
  * Maximal allowed ending tone
  */
 #define YHL_MAX_ENDINGTONE_DURATION 5U
@@ -266,12 +272,22 @@ bool FoxState_IsFrequencyValid(bool is144MHz, uint32_t frequency);
 bool FoxState_SetFrequency(bool is144MHz, uint32_t frequency);
 
 /**
+ * Checks if given cycle durations are valid
+ */
+bool FoxState_IsCycleDurationsValid(Time txTime, Time pauseTime);
+
+/**
+ * Tries to set cycle durations. If durations are valid then sets it and returns true, otherwise false
+ */
+bool FoxState_SetCycleDurations(Time txTime, Time pauseTime);
+
+/**
  * Returns true if ending tone duration is valid
  */
 bool FoxState_IsEndingtoneDurationValid(uint8_t endingtoneDuration);
 
 /**
- * Tries to set endingtone duration. If duration valid, sets it and returns true, otherwise false
+ * Tries to set ending tone duration. If duration valid, sets it and returns true, otherwise false
  */
 bool FoxState_SetEndingtoneDuration(uint8_t endingtoneDuration);
 

@@ -593,6 +593,20 @@ void OnSetCycle(uint8_t payloadSize, uint8_t* payload)
 		goto OnSetCycle_Validate;
 	}
 
+	uint16_t txTimeInSeconds;
+	memcpy(&txTimeInSeconds, &payload[2], 2);
+	Time txTime = TimeSinceDayBegin(txTimeInSeconds);
+
+	uint16_t pauseTimeInSeconds;
+	memcpy(&pauseTimeInSeconds, &payload[4], 2);
+	Time pauseTime = TimeSinceDayBegin(pauseTimeInSeconds);
+
+	if (!FoxState_IsCycleDurationsValid(txTime, pauseTime))
+	{
+		isValid = false;
+		goto OnSetCycle_Validate;
+	}
+
 OnSetCycle_Validate:
 	if (!isValid)
 	{
@@ -602,14 +616,7 @@ OnSetCycle_Validate:
 	}
 
 	FoxState.Cycle.IsContinuous = ToBool(isContinuousByte);
-
-	uint16_t txTimeInSeconds;
-	memcpy(&txTimeInSeconds, &payload[2], 2);
-	FoxState.Cycle.TxTime = TimeSinceDayBegin(txTimeInSeconds);
-
-	uint16_t pauseTimeInSeconds;
-	memcpy(&pauseTimeInSeconds, &payload[4], 2);
-	FoxState.Cycle.PauseTime = TimeSinceDayBegin(pauseTimeInSeconds);
+	FoxState_SetCycleDurations(txTime, pauseTime);
 
 	PendingCommandsFlags.NeedToSetCycle = true;
 }
