@@ -118,6 +118,11 @@ void Main_ProcessSetSpeed(void);
 void Main_ProcessSetCycle(void);
 
 /**
+ * Updates ending tone duration if needed
+ */
+void Main_ProcessSetEndingToneDuration(void);
+
+/**
  * Flushes current profile changes into EEPROM if needed
  */
 void Main_FlushProfileToEEPROM(void);

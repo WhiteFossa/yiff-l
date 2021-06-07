@@ -57,6 +57,11 @@ typedef struct
 	 * If true, then we need to update fox cycle
 	 */
 	bool NeedToSetCycle;
+
+	/**
+	 * If true, then we need to update ending tone duration
+	 */
+	bool NeedToSetEndingToneDuration;
 }
 PendingCommandsFlagsStruct;
 

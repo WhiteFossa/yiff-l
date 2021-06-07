@@ -204,6 +204,7 @@ int main(int argc, char* argv[])
 		Main_ProcessSetCode();
 		Main_ProcessSetSpeed();
 		Main_ProcessSetCycle();
+		Main_ProcessSetEndingToneDuration();
 
 		/* Flush profile changes to EEPROM, must be called last in sequence */
 		Main_FlushProfileToEEPROM();
@@ -325,6 +326,20 @@ void Main_ProcessSetCycle(void)
 		SendResponse(SetCycle, 1, &response);
 
 		PendingCommandsFlags.NeedToSetCycle = false;
+	}
+}
+
+void Main_ProcessSetEndingToneDuration(void)
+{
+	if (PendingCommandsFlags.NeedToSetEndingToneDuration)
+	{
+		EEPROM_CurrentProfile.EndingToneLength = FoxState.EndingToneLength;
+		PendingCommandsFlags.NeedToFlushCurrentProfileToEEPROM = true;
+
+		uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
+		SendResponse(SetEndingToneDuration, 1, &response);
+
+		PendingCommandsFlags.NeedToSetEndingToneDuration = false;
 	}
 }
 

@@ -145,6 +145,11 @@ void OnNewCommandToFox(uint8_t payloadSize, uint8_t* payload)
 			/* Get ending tone duration */
 			OnGetEndingToneDuration(payloadSize, payload);
 			break;
+
+		case SetEndingToneDuration:
+			/* Set ending tone duration */
+			OnSetEndingToneDuration(payloadSize, payload);
+			break;
 	}
 
 	free(payload);
@@ -618,6 +623,36 @@ void OnGetEndingToneDuration(uint8_t payloadSize, uint8_t* payload)
 
 	uint8_t response = FoxState.EndingToneLength;
 	SendResponse(GetEndingToneDuration, 1, &response);
+}
+
+void OnSetEndingToneDuration(uint8_t payloadSize, uint8_t* payload)
+{
+	bool isValid = true;
+
+	if (payloadSize != 2)
+	{
+		isValid = false;
+		goto OnSetEndingToneDuration_Validate;
+	}
+
+	uint8_t endingToneDuration = payload[1];
+	if (!FoxState_IsEndingtoneDurationValid(endingToneDuration))
+	{
+		isValid = false;
+		goto OnSetEndingToneDuration_Validate;
+	}
+
+OnSetEndingToneDuration_Validate:
+	if (!isValid)
+	{
+		uint8_t result = YHL_PACKET_PROCESSOR_FAILURE;
+		SendResponse(SetEndingToneDuration, 1, &result);
+		return;
+	}
+
+	FoxState_SetEndingtoneDuration(endingToneDuration);
+
+	PendingCommandsFlags.NeedToSetEndingToneDuration = true;
 }
 
 uint8_t FromBool(bool data)

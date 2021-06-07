@@ -26,7 +26,7 @@ extern PendingCommandsFlagsStruct PendingCommandsFlags;
 /**
  * Maximal allowed ending tone
  */
-#define YHL_MAX_ENDINGTONE_DURATION 10U
+#define YHL_MAX_ENDINGTONE_DURATION 5U
 
 
 /**
