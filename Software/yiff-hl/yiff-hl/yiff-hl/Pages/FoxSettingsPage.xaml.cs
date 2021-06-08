@@ -646,5 +646,30 @@ namespace yiff_hl.Pages
         }
 
         #endregion
+
+        #region Arm fox
+
+        private void OnArmFoxClicked(object sender, EventArgs e)
+        {
+            ArmFox();
+        }
+
+        private void ArmFox()
+        {
+            var command = new ArmFoxCommand(packetsProcessor);
+            command.SetResponseDelegate(OnArmFoxResponse);
+            command.SendArmFoxCommand();
+        }
+
+        private void OnArmFoxResponse(bool isSuccess)
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                var message = isSuccess ? "Fox armed" : "Failed to arm fox";
+                DisplayAlert("Arm fox", message, "OK");
+            });
+        }
+
+        #endregion
     }
 }

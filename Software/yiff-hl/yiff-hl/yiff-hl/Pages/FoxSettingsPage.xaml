@@ -291,6 +291,11 @@
                             Text="Get times"
                             Clicked="OnGetBeginAndEndTimeClicked"
                             />
+
+                        <Button
+                            Text="Arm fox"
+                            Clicked="OnArmFoxClicked"
+                            />
                     </StackLayout>
                 </Frame>
 

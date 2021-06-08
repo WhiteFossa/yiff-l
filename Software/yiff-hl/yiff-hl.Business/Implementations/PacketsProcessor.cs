@@ -38,6 +38,7 @@ namespace yiff_hl.Business.Implementations
         private OnResponseDelegate onSetEndingToneDurationResponse;
         private OnResponseDelegate onGetBeginAndEndTimesResponse;
         private OnResponseDelegate onIsFoxArmedResponse;
+        private OnResponseDelegate onArmFoxResponse;
 
         private enum ReceiverState
         {
@@ -337,6 +338,13 @@ namespace yiff_hl.Business.Implementations
                     onIsFoxArmedResponse(responsePayload);
                     break;
 
+                // Arm fox
+                case CommandType.ArmFox:
+                    CheckOnResponseDelegate(onArmFoxResponse);
+
+                    onArmFoxResponse(responsePayload);
+                    break;
+
                 default:
                     return; // We've got some junk
             }
@@ -468,6 +476,11 @@ namespace yiff_hl.Business.Implementations
         public void SetOnIsFoxArmedResponse(OnResponseDelegate onIsFoxArmedResponse)
         {
             this.onIsFoxArmedResponse = onIsFoxArmedResponse ?? throw new ArgumentNullException(nameof(onIsFoxArmedResponse));
+        }
+
+        public void SetOnArmFoxResponse(OnResponseDelegate onArmFoxResponse)
+        {
+            this.onArmFoxResponse = onArmFoxResponse ?? throw new ArgumentNullException(nameof(onArmFoxResponse));
         }
     }
 }

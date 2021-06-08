@@ -45,6 +45,8 @@
 
         GetBeginAndEndTimes = 0x13,
 
-        IsFoxArmed = 0x14
+        IsFoxArmed = 0x14,
+
+        ArmFox = 0x015
     }
 }
