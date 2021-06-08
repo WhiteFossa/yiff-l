@@ -91,7 +91,9 @@ typedef enum
 
 	IsFoxArmed = 0x14,
 
-	ArmFox = 0x15
+	ArmFox = 0x15,
+
+	DisarmFox = 0x16
 }
 CommandToFoxEnum;
 
@@ -230,6 +232,11 @@ void OnIsFoxArmed(uint8_t payloadSize, uint8_t* payload);
  * Called when command "Arm fox" comes
  */
 void OnArmFox(uint8_t payloadSize, uint8_t* payload);
+
+/**
+ * Called when command "Disarm fox" comes
+ */
+void OnDisarmFox(uint8_t payloadSize, uint8_t* payload);
 
 /**
  * Returns 0x00 if false, 0x01 if true

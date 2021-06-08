@@ -165,6 +165,11 @@ void OnNewCommandToFox(uint8_t payloadSize, uint8_t* payload)
 			/* Arm fox */
 			OnArmFox(payloadSize, payload);
 			break;
+
+		case DisarmFox:
+			/* Disarm fox */
+			OnDisarmFox(payloadSize, payload);
+			break;
 	}
 
 	free(payload);
@@ -720,6 +725,22 @@ void OnArmFox(uint8_t payloadSize, uint8_t* payload)
 
 	uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
 	SendResponse(ArmFox, 1, &response);
+}
+
+void OnDisarmFox(uint8_t payloadSize, uint8_t* payload)
+{
+	if (payloadSize != 1)
+	{
+		return;
+	}
+
+	if (FoxState.GlobalState.IsArmed)
+	{
+		GSM_Disarm();
+	}
+
+	uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
+	SendResponse(DisarmFox, 1, &response);
 }
 
 uint8_t FromBool(bool data)
