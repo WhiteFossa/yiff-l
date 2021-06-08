@@ -9,15 +9,15 @@
 
 void GSM_Init(void)
 {
-	GSM_Cancel();
+	GSM_Disarm();
 }
 
-void GSM_Cancel(void)
+void GSM_Disarm(void)
 {
 	FoxState.GlobalState.CurrentState = Standby;
 }
 
-void GSM_Program(void)
+void GSM_Arm(void)
 {
 	if (CompareTimes(FoxState.GlobalState.StartTime, FoxState.GlobalState.EndTime) != TIME1_LESS)
 	{
@@ -25,6 +25,16 @@ void GSM_Program(void)
 	}
 
 	GSM_MoveToBeforeStart();
+}
+
+bool GSM_IsArmed(void)
+{
+	if (Standby == FoxState.GlobalState.CurrentState)
+	{
+		return false;
+	}
+
+	return true;
 }
 
 void GSM_Tick(void)

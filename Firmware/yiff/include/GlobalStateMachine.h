@@ -23,12 +23,17 @@ void GSM_Tick(void);
 /**
  * Cancel current operation and move SM to Standby
  */
-void GSM_Cancel(void);
+void GSM_Disarm(void);
 
 /**
  * Program fox to start and finish at FoxState.GlobalState.StartTime and FoxState.GlobalState.EndTime
  */
-void GSM_Program(void);
+void GSM_Arm(void);
+
+/**
+ * Returns true if fox is armed, false otherwise
+ */
+bool GSM_IsArmed(void);
 
 
 /* Private stuff goes below */

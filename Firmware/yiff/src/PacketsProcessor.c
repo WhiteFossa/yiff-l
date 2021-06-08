@@ -155,6 +155,11 @@ void OnNewCommandToFox(uint8_t payloadSize, uint8_t* payload)
 			/* Get fox begin and end times */
 			OnGetBeginAndEndTimes(payloadSize, payload);
 			break;
+
+		case IsFoxArmed:
+			/* Is fox armed? */
+			OnIsFoxArmed(payloadSize, payload);
+			break;
 	}
 
 	free(payload);
@@ -683,6 +688,17 @@ void OnGetBeginAndEndTimes(uint8_t payloadSize, uint8_t* payload)
 	memcpy(&response[4], &endTimeInSeconds, 4);
 
 	SendResponse(GetBeginAndEndTimes, 8, response);
+}
+
+void OnIsFoxArmed(uint8_t payloadSize, uint8_t* payload)
+{
+	if (payloadSize != 1)
+	{
+		return;
+	}
+
+	uint8_t response = FromBool(GSM_IsArmed());
+	SendResponse(IsFoxArmed, 1, &response);
 }
 
 uint8_t FromBool(bool data)
