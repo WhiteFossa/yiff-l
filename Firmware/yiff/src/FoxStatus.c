@@ -110,3 +110,40 @@ bool FoxState_SetEndingtoneDuration(uint8_t endingtoneDuration)
 
 	return true;
 }
+
+bool FoxState_IsBeginAndEndTimesValid(Time beginTime, Time endTime)
+{
+	int8_t comparisonResult;
+
+	comparisonResult = CompareTimes(beginTime, endTime);
+
+	if ((TIME2_LESS == comparisonResult) || (TIMES_EQUAL == comparisonResult))
+	{
+		return false;
+	}
+
+	Time wholeDay = TimeSinceDayBegin(YHL_TIME_DAY_IN_SECONDS);
+
+	comparisonResult = CompareTimes(endTime, wholeDay);
+
+	if ((TIME2_LESS == comparisonResult) || (TIMES_EQUAL == comparisonResult))
+	{
+		return false;
+	}
+
+	return true;
+}
+
+bool FoxState_SetBeginAndEndTimes(Time beginTime, Time endTime)
+{
+	if (!FoxState_IsBeginAndEndTimesValid(beginTime, endTime))
+	{
+		return false;
+	}
+
+	FoxState.GlobalState.StartTime = beginTime;
+	FoxState.GlobalState.EndTime = endTime;
+
+	return true;
+}
+

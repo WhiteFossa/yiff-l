@@ -296,4 +296,14 @@ bool FoxState_IsEndingtoneDurationValid(uint8_t endingtoneDuration);
  */
 bool FoxState_SetEndingtoneDuration(uint8_t endingtoneDuration);
 
+/**
+ * Returns true if transmission begin and end times are valid
+ */
+bool FoxState_IsBeginAndEndTimesValid(Time beginTime, Time endTime);
+
+/**
+ * Tries to send transmission begin/end times, if they are valid sets it and returns true, otherwise false
+ */
+bool FoxState_SetBeginAndEndTimes(Time beginTime, Time endTime);
+
 #endif /* INCLUDE_FOXSTATUS_H_ */

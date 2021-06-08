@@ -764,13 +764,10 @@ void OnSetBeginAndEndTimes(uint8_t payloadSize, uint8_t* payload)
 	uint32_t endTimeInSeconds;
 	memcpy(&endTimeInSeconds, &payload[5], 4);
 
-	if (beginTimeInSeconds >= endTimeInSeconds)
-	{
-		isValid = false;
-		goto OnSetBeginAndEndTimes_Validate;
-	}
+	Time beginTime = TimeSinceDayBegin(beginTimeInSeconds);
+	Time endTime = TimeSinceDayBegin(endTimeInSeconds);
 
-	if (endTimeInSeconds >= YHL_TIME_DAY_IN_SECONDS)
+	if (!FoxState_IsBeginAndEndTimesValid(beginTime, endTime))
 	{
 		isValid = false;
 		goto OnSetBeginAndEndTimes_Validate;
@@ -786,8 +783,7 @@ OnSetBeginAndEndTimes_Validate:
 
 	GSM_Disarm();
 
-	FoxState.GlobalState.StartTime = TimeSinceDayBegin(beginTimeInSeconds);
-	FoxState.GlobalState.EndTime = TimeSinceDayBegin(endTimeInSeconds);
+	FoxState_SetBeginAndEndTimes(beginTime, endTime);
 
 	PendingCommandsFlags.NeedToSetBeginAndEndTimes = true;
 }
