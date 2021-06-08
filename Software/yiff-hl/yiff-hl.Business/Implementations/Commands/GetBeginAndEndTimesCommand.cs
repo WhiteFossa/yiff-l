@@ -9,7 +9,7 @@ namespace yiff_hl.Business.Implementations.Commands
     /// <summary>
     /// Times returned relative to BaseDate
     /// </summary>
-    public delegate void OnGetBeginAndEndTimesResponseDelegate(DateTime beginTime, DateTime dateTime);
+    public delegate void OnGetBeginAndEndTimesResponseDelegate(DateTime beginTime, DateTime endTime);
 
     public class GetBeginAndEndTimesCommand
     {

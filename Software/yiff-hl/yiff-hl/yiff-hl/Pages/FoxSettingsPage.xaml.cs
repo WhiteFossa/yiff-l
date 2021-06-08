@@ -598,7 +598,7 @@ namespace yiff_hl.Pages
 
         #endregion
 
-        #region Get begin and end time
+        #region Get begin and end times
 
         private void OnGetBeginAndEndTimeClicked(object sender, EventArgs e)
         {
@@ -692,6 +692,31 @@ namespace yiff_hl.Pages
             {
                 var message = isSuccess ? "Fox disarmed" : "Failed to disarm fox";
                 DisplayAlert("Disarm fox", message, "OK");
+            });
+        }
+
+        #endregion
+
+        #region Set begin and end times
+
+        private void OnSetBeginAndEndTimeClicked(object sender, EventArgs e)
+        {
+            SetBeginAndEndTimes(new DateTime(1970, 1, 1) + tpBeginTime.Time, new DateTime(1970, 1, 1) + tpEndTime.Time);
+        }
+
+        private void SetBeginAndEndTimes(DateTime beginTime, DateTime endTime)
+        {
+            var command = new SetBeginAndEndTimesCommand(packetsProcessor);
+            command.SetResponseDelegate(OnSetBeginAndEndTimesResponse);
+            command.SendSetBeginAndEndTimesCommand(beginTime, endTime);
+        }
+
+        private void OnSetBeginAndEndTimesResponse(bool isSuccess)
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                var message = isSuccess ? "Times set" : "Failed to set times";
+                DisplayAlert("Set begin and end times", message, "OK");
             });
         }
 

@@ -49,6 +49,8 @@
 
         ArmFox = 0x15,
 
-        DisarmFox = 0x16
+        DisarmFox = 0x16,
+
+        SetBeginAndEndTimes = 0x17
     }
 }

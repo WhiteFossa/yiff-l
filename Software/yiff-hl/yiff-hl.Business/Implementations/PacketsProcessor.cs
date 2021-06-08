@@ -40,6 +40,7 @@ namespace yiff_hl.Business.Implementations
         private OnResponseDelegate onIsFoxArmedResponse;
         private OnResponseDelegate onArmFoxResponse;
         private OnResponseDelegate onDisarmFoxResponse;
+        private OnResponseDelegate onSetBeginAndEndTimesResponse;
 
         private enum ReceiverState
         {
@@ -353,6 +354,13 @@ namespace yiff_hl.Business.Implementations
                     onDisarmFoxResponse(responsePayload);
                     break;
 
+                // Set begin and end times
+                case CommandType.SetBeginAndEndTimes:
+                    CheckOnResponseDelegate(onSetBeginAndEndTimesResponse);
+
+                    onSetBeginAndEndTimesResponse(responsePayload);
+                    break;
+
                 default:
                     return; // We've got some junk
             }
@@ -494,6 +502,11 @@ namespace yiff_hl.Business.Implementations
         public void SetOnDisarmFoxResponse(OnResponseDelegate onDisarmFoxResponse)
         {
             this.onDisarmFoxResponse = onDisarmFoxResponse ?? throw new ArgumentNullException(nameof(onDisarmFoxResponse));
+        }
+
+        public void SetOnSetBeginAndEndTimesResponse(OnResponseDelegate onSetBeginAndEndTimesResponse)
+        {
+            this.onSetBeginAndEndTimesResponse = onSetBeginAndEndTimesResponse ?? throw new ArgumentNullException(nameof(onSetBeginAndEndTimesResponse));
         }
     }
 }

@@ -293,6 +293,11 @@
                             />
 
                         <Button
+                            Text="Set times"
+                            Clicked="OnSetBeginAndEndTimeClicked"
+                            />
+
+                        <Button
                             Text="Arm fox"
                             Clicked="OnArmFoxClicked"
                             />
