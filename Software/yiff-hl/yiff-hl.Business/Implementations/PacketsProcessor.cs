@@ -346,6 +346,13 @@ namespace yiff_hl.Business.Implementations
                     onArmFoxResponse(responsePayload);
                     break;
 
+                // Disarm fox
+                case CommandType.DisarmFox:
+                    CheckOnResponseDelegate(onDisarmFoxResponse);
+
+                    onDisarmFoxResponse(responsePayload);
+                    break;
+
                 default:
                     return; // We've got some junk
             }
