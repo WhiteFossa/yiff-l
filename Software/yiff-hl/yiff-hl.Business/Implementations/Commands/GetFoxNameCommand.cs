@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using yiff_hl.Abstractions.Enums;
@@ -18,8 +19,7 @@ namespace yiff_hl.Business.Implementations.Commands
 
         public GetFoxNameCommand(IPacketsProcessor packetsProcessor)
         {
-            this.packetsProcessor = packetsProcessor;
-
+            this.packetsProcessor = packetsProcessor ?? throw new ArgumentNullException(nameof(packetsProcessor));
             packetsProcessor.SetOnGetFoxNameResponse(OnGetFoxNameResponse);
         }
 

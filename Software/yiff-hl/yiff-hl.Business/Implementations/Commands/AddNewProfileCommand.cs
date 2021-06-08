@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using yiff_hl.Abstractions.Enums;
 using yiff_hl.Abstractions.Interfaces;
@@ -13,9 +14,14 @@ namespace yiff_hl.Business.Implementations.Commands
         private readonly IPacketsProcessor packetsProcessor;
         private OnAddNewProfileResponseDelegate onAddNewProfileResponse;
 
+        private AddNewProfileCommand()
+        {
+
+        }
+
         public AddNewProfileCommand(IPacketsProcessor packetsProcessor)
         {
-            this.packetsProcessor = packetsProcessor;
+            this.packetsProcessor = packetsProcessor ?? throw new ArgumentNullException(nameof(packetsProcessor));
             packetsProcessor.SetOnAddNewProfileResponse(OnAddNewProfileResponse);
         }
 

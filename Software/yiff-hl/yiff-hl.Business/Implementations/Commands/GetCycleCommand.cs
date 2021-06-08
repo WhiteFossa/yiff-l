@@ -16,7 +16,7 @@ namespace yiff_hl.Business.Implementations.Commands
 
         public GetCycleCommand(IPacketsProcessor packetsProcessor)
         {
-            this.packetsProcessor = packetsProcessor;
+            this.packetsProcessor = packetsProcessor ?? throw new ArgumentNullException(nameof(packetsProcessor));
             packetsProcessor.SetOnGetCycleResponse(OnGetCycleResponse);
         }
         public void SetResponseDelegate(OnGetCycleResponseDelegate onGetCycleResponse)

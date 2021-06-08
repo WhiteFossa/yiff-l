@@ -15,7 +15,7 @@ namespace yiff_hl.Business.Implementations.Commands
 
         public GetEndingToneDurationCommand(IPacketsProcessor packetsProcessor)
         {
-            this.packetsProcessor = packetsProcessor;
+            this.packetsProcessor = packetsProcessor ?? throw new ArgumentNullException(nameof(packetsProcessor));
             packetsProcessor.SetOnGetEndingToneDurationResponse(OnGetEndingToneDurationResponse);
         }
 

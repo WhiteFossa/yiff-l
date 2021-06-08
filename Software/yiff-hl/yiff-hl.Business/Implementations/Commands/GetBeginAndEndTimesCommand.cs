@@ -18,9 +18,14 @@ namespace yiff_hl.Business.Implementations.Commands
         private readonly IPacketsProcessor packetsProcessor;
         private OnGetBeginAndEndTimesResponseDelegate onGetBeginAndEndTimesResponse;
 
+        private GetBeginAndEndTimesCommand()
+        {
+
+        }
+
         public GetBeginAndEndTimesCommand(IPacketsProcessor packetsProcessor)
         {
-            this.packetsProcessor = packetsProcessor;
+            this.packetsProcessor = packetsProcessor ?? throw new ArgumentNullException(nameof(packetsProcessor));
             packetsProcessor.SetOnGetBeginAndEndTimesResponse(OnGetBeginAndEndTimesResponse);
         }
 
