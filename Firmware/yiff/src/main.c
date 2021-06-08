@@ -140,6 +140,7 @@ int main(int argc, char* argv[])
 
 	FoxState.IsTXOn = false;
 
+	FoxState.GlobalState.IsArmed = false;
 	FoxState.GlobalState.CurrentState = Standby;
 	FoxState.CycleState.CycleState = Pause;
 

@@ -117,6 +117,11 @@ GlobalFoxStateEnum;
 typedef struct
 {
 	/**
+	 * If true, then fox will start at start time
+	 */
+	bool IsArmed;
+
+	/**
 	 * When fox will turn on.
 	 */
 	Time StartTime;

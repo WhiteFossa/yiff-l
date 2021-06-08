@@ -30,11 +30,6 @@ void GSM_Disarm(void);
  */
 void GSM_Arm(void);
 
-/**
- * Returns true if fox is armed, false otherwise
- */
-bool GSM_IsArmed(void);
-
 
 /* Private stuff goes below */
 

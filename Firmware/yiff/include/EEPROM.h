@@ -219,7 +219,7 @@ void EEPROM_WriteProfile(EEPROMProfileStruct* profile, uint16_t address);
 EEPROMProfileStruct EEPROM_GenerateDefaultProfile(void);
 
 /**
- * Load given profile into a fox state. Running fox is cancelled before load.
+ * Load given profile into a fox state. Armed fox is disarmed before load.
  */
 void EEPROM_LoadProfileIntoFoxState(FoxStateStruct* foxState, EEPROMProfileStruct* profile);
 

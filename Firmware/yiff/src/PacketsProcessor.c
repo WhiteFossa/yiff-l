@@ -697,7 +697,7 @@ void OnIsFoxArmed(uint8_t payloadSize, uint8_t* payload)
 		return;
 	}
 
-	uint8_t response = FromBool(GSM_IsArmed());
+	uint8_t response = FromBool(FoxState.GlobalState.IsArmed);
 	SendResponse(IsFoxArmed, 1, &response);
 }
 

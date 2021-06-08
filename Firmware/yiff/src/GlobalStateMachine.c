@@ -14,6 +14,7 @@ void GSM_Init(void)
 
 void GSM_Disarm(void)
 {
+	FoxState.GlobalState.IsArmed = false;
 	FoxState.GlobalState.CurrentState = Standby;
 }
 
@@ -24,21 +25,17 @@ void GSM_Arm(void)
 		L2HAL_Error(Generic);
 	}
 
+	FoxState.GlobalState.IsArmed = true;
 	GSM_MoveToBeforeStart();
-}
-
-bool GSM_IsArmed(void)
-{
-	if (Standby == FoxState.GlobalState.CurrentState)
-	{
-		return false;
-	}
-
-	return true;
 }
 
 void GSM_Tick(void)
 {
+	if (!FoxState.GlobalState.IsArmed)
+	{
+		return;
+	}
+
 	GlobalFoxStateEnum newGlobalState = GSM_GetExpectedState();
 
 	if (newGlobalState == FoxState.GlobalState.CurrentState)
