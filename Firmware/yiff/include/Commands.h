@@ -62,6 +62,11 @@ typedef struct
 	 * If true, then we need to update ending tone duration
 	 */
 	bool NeedToSetEndingToneDuration;
+
+	/**
+	 * If true, then we need to update start and end times
+	 */
+	bool NeedToSetBeginAndEndTimes;
 }
 PendingCommandsFlagsStruct;
 

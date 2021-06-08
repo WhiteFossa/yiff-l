@@ -8,6 +8,11 @@
 #ifndef INCLUDE_TIME_H_
 #define INCLUDE_TIME_H_
 
+/**
+ * How many seconds in a day
+ */
+#define YHL_TIME_DAY_IN_SECONDS 86400U
+
 #include <l2hal.h>
 
 typedef struct

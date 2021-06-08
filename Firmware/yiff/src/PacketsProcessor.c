@@ -170,6 +170,11 @@ void OnNewCommandToFox(uint8_t payloadSize, uint8_t* payload)
 			/* Disarm fox */
 			OnDisarmFox(payloadSize, payload);
 			break;
+
+		case SetBeginAndEndTimes:
+			/* Set begin and end times */
+			OnSetBeginAndEndTimes(payloadSize, payload);
+			break;
 	}
 
 	free(payload);
@@ -741,6 +746,50 @@ void OnDisarmFox(uint8_t payloadSize, uint8_t* payload)
 
 	uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
 	SendResponse(DisarmFox, 1, &response);
+}
+
+void OnSetBeginAndEndTimes(uint8_t payloadSize, uint8_t* payload)
+{
+	bool isValid = true;
+
+	if (payloadSize != 9)
+	{
+		isValid = false;
+		goto OnSetBeginAndEndTimes_Validate;
+	}
+
+	uint32_t beginTimeInSeconds;
+	memcpy(&beginTimeInSeconds, &payload[1], 4);
+
+	uint32_t endTimeInSeconds;
+	memcpy(&endTimeInSeconds, &payload[5], 4);
+
+	if (beginTimeInSeconds >= endTimeInSeconds)
+	{
+		isValid = false;
+		goto OnSetBeginAndEndTimes_Validate;
+	}
+
+	if (endTimeInSeconds >= YHL_TIME_DAY_IN_SECONDS)
+	{
+		isValid = false;
+		goto OnSetBeginAndEndTimes_Validate;
+	}
+
+OnSetBeginAndEndTimes_Validate:
+	if (!isValid)
+	{
+		uint8_t result = YHL_PACKET_PROCESSOR_FAILURE;
+		SendResponse(SetBeginAndEndTimes, 1, &result);
+		return;
+	}
+
+	GSM_Disarm();
+
+	FoxState.GlobalState.StartTime = TimeSinceDayBegin(beginTimeInSeconds);
+	FoxState.GlobalState.EndTime = TimeSinceDayBegin(endTimeInSeconds);
+
+	PendingCommandsFlags.NeedToSetBeginAndEndTimes = true;
 }
 
 uint8_t FromBool(bool data)

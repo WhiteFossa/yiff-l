@@ -123,6 +123,11 @@ void Main_ProcessSetCycle(void);
 void Main_ProcessSetEndingToneDuration(void);
 
 /**
+ * Updates start/end times if needed
+ */
+void Main_ProcessSetBeginAndEndTimes(void);
+
+/**
  * Flushes current profile changes into EEPROM if needed
  */
 void Main_FlushProfileToEEPROM(void);
