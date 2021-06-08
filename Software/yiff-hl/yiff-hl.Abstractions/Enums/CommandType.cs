@@ -43,6 +43,8 @@
 
         SetEndingToneDuration = 0x12,
 
-        GetBeginAndEndTimes = 0x13
+        GetBeginAndEndTimes = 0x13,
+
+        IsFoxArmed = 0x14
     }
 }

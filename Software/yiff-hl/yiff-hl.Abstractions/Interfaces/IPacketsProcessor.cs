@@ -48,6 +48,7 @@ namespace yiff_hl.Abstractions.Interfaces
         void SetOnGetEndingToneDurationResponse(OnResponseDelegate onGetEndingToneDurationResponse);
         void SetOnSetEndingToneDurationResponse(OnResponseDelegate onSetEndingToneDurationResponse);
         void SetOnGetBeginAndEndTimesResponse(OnResponseDelegate onGetBeginAndEndTimesResponse);
+        void SetOnIsFoxArmedResponse(OnResponseDelegate onIsFoxArmedResponse);
 
 
         #endregion

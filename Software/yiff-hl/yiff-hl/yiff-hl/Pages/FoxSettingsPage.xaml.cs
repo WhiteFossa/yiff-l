@@ -600,7 +600,7 @@ namespace yiff_hl.Pages
 
         #region Get begin and end time
 
-        private void OnGetBeginAndEndTime(object sender, EventArgs e)
+        private void OnGetBeginAndEndTimeClicked(object sender, EventArgs e)
         {
             GetBeginAndEndTimes();
         }
@@ -618,6 +618,30 @@ namespace yiff_hl.Pages
             {
                 tpBeginTime.Time = beginTime - GetBeginAndEndTimesCommand.BaseDate;
                 tpEndTime.Time = endTime - GetBeginAndEndTimesCommand.BaseDate;
+            });
+        }
+
+        #endregion
+
+        #region Is fox armed
+
+        private void OnIsFoxArmedClicked(object sender, EventArgs e)
+        {
+            IsFoxArmed();
+        }
+
+        private void IsFoxArmed()
+        {
+            var command = new IsFoxArmedCommand(packetsProcessor);
+            command.SetResponseDelegate(OnIsFoxArmedResponse);
+            command.SendIsFoxArmedCommand();
+        }
+
+        private void OnIsFoxArmedResponse(bool isArmed)
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                cbIsArmed.IsChecked = isArmed;
             });
         }
 

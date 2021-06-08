@@ -252,6 +252,23 @@
 
                         <StackLayout
                             Orientation="Horizontal">
+
+                            <CheckBox
+                                x:Name="cbIsArmed"
+                            />
+
+                            <Label
+                                Text="Is armed?"
+                            />
+                        </StackLayout>
+
+                        <Button
+                            Text="Check armed status"
+                            Clicked="OnIsFoxArmedClicked"
+                            />
+
+                        <StackLayout
+                            Orientation="Horizontal">
                             
                             <Label
                                 Text="Begin time:" />
@@ -272,7 +289,7 @@
 
                         <Button
                             Text="Get times"
-                            Clicked="OnGetBeginAndEndTime"
+                            Clicked="OnGetBeginAndEndTimeClicked"
                             />
                     </StackLayout>
                 </Frame>
