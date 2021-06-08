@@ -13,6 +13,11 @@ namespace yiff_hl.Business.Implementations.Commands
         private readonly IPacketsProcessor packetsProcessor;
         private OnGetProfilesCountResponseDelegate onGetProfilesCountResponse;
 
+        private GetProfilesCountCommand()
+        {
+
+        }
+
         public GetProfilesCountCommand(IPacketsProcessor packetsProcessor)
         {
             this.packetsProcessor = packetsProcessor ?? throw new ArgumentNullException(nameof(packetsProcessor));

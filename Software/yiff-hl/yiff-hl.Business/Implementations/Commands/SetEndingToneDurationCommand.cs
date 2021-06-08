@@ -14,6 +14,11 @@ namespace yiff_hl.Business.Implementations.Commands
         private readonly IPacketsProcessor packetsProcessor;
         private OnSetEndingToneDurationResponseDelegate onSetEndingToneDurationResponse;
 
+        private SetEndingToneDurationCommand()
+        {
+
+        }
+
         public SetEndingToneDurationCommand(IPacketsProcessor packetsProcessor)
         {
             this.packetsProcessor = packetsProcessor ?? throw new ArgumentNullException(nameof(packetsProcessor));

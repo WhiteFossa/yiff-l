@@ -18,6 +18,11 @@ namespace yiff_hl.Business.Implementations.Commands
         private readonly IPacketsProcessor packetsProcessor;
         private OnSetProfileNameResponseDelegate onSetProfileNameResponse;
 
+        private SetProfileNameCommand()
+        {
+
+        }
+
         public SetProfileNameCommand(IPacketsProcessor packetsProcessor)
         {
             this.packetsProcessor = packetsProcessor ?? throw new ArgumentNullException(nameof(packetsProcessor));

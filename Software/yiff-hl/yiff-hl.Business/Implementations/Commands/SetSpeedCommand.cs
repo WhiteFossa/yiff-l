@@ -14,6 +14,11 @@ namespace yiff_hl.Business.Implementations.Commands
         private readonly IPacketsProcessor packetsProcessor;
         private OnSetSpeedResponseDelegate onSetSpeedResponse;
 
+        private SetSpeedCommand()
+        {
+
+        }
+
         public SetSpeedCommand(IPacketsProcessor packetsProcessor)
         {
             this.packetsProcessor = packetsProcessor ?? throw new ArgumentNullException(nameof(packetsProcessor));

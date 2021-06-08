@@ -14,6 +14,10 @@ namespace yiff_hl.Business.Implementations.Commands
         private readonly IPacketsProcessor packetsProcessor;
         private OnGetCycleResponseDelegate onGetCycleResponse;
 
+        private GetCycleCommand()
+        {
+
+        }
         public GetCycleCommand(IPacketsProcessor packetsProcessor)
         {
             this.packetsProcessor = packetsProcessor ?? throw new ArgumentNullException(nameof(packetsProcessor));

@@ -14,6 +14,11 @@ namespace yiff_hl.Business.Implementations.Commands
         private readonly IPacketsProcessor packetsProcessor;
         private OnGetFrequencyResponseDelegate onGetFrequencyResponse;
 
+        private GetFrequencyCommand()
+        {
+
+        }
+
         public GetFrequencyCommand(IPacketsProcessor packetsProcessor)
         {
             this.packetsProcessor = packetsProcessor ?? throw new ArgumentNullException(nameof(packetsProcessor));

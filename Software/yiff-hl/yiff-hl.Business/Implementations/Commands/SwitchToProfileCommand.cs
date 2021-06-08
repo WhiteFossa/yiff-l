@@ -14,6 +14,11 @@ namespace yiff_hl.Business.Implementations.Commands
         private readonly IPacketsProcessor packetsProcessor;
         private OnSwitchToProfileResponseDelegate onSwitchToProfileResponse;
 
+        private SwitchToProfileCommand()
+        {
+
+        }
+
         public SwitchToProfileCommand(IPacketsProcessor packetsProcessor)
         {
             this.packetsProcessor = packetsProcessor ?? throw new ArgumentNullException(nameof(packetsProcessor));

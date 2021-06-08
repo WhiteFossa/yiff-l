@@ -18,6 +18,11 @@ namespace yiff_hl.Business.Implementations.Commands
         private readonly IPacketsProcessor packetsProcessor;
         private OnSetFoxNameResponseDelegate onSetFoxNameResponse;
 
+        private SetFoxNameCommand()
+        {
+
+        }
+
         public SetFoxNameCommand(IPacketsProcessor packetsProcessor)
         {
             this.packetsProcessor = packetsProcessor ?? throw new ArgumentNullException(nameof(packetsProcessor));
