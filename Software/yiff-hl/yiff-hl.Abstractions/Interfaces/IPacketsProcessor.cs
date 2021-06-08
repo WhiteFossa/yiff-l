@@ -50,6 +50,7 @@ namespace yiff_hl.Abstractions.Interfaces
         void SetOnGetBeginAndEndTimesResponse(OnResponseDelegate onGetBeginAndEndTimesResponse);
         void SetOnIsFoxArmedResponse(OnResponseDelegate onIsFoxArmedResponse);
         void SetOnArmFoxResponse(OnResponseDelegate onArmFoxResponse);
+        void SetOnDisarmFoxResponse(OnResponseDelegate onDisarmFoxResponse);
 
 
         #endregion

@@ -47,6 +47,8 @@
 
         IsFoxArmed = 0x14,
 
-        ArmFox = 0x015
+        ArmFox = 0x15,
+
+        DisarmFox = 0x16
     }
 }

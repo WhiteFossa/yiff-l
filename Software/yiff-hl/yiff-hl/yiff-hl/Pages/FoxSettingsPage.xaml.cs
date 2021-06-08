@@ -671,5 +671,30 @@ namespace yiff_hl.Pages
         }
 
         #endregion
+
+        #region Disarm fox
+
+        private void OnDisarmFoxClicked(object sender, EventArgs e)
+        {
+            DisarmFox();
+        }
+
+        private void DisarmFox()
+        {
+            var command = new DisarmFoxCommand(packetsProcessor);
+            command.SetResponseDelegate(OnDisarmFoxResponse);
+            command.SendDisarmFoxCommand();
+        }
+
+        private void OnDisarmFoxResponse(bool isSuccess)
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                var message = isSuccess ? "Fox disarmed" : "Failed to disarm fox";
+                DisplayAlert("Disarm fox", message, "OK");
+            });
+        }
+
+        #endregion
     }
 }

@@ -296,6 +296,11 @@
                             Text="Arm fox"
                             Clicked="OnArmFoxClicked"
                             />
+
+                        <Button
+                            Text="Disarm fox"
+                            Clicked="OnDisarmFoxClicked"
+                            />
                     </StackLayout>
                 </Frame>
 
