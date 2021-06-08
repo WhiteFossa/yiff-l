@@ -53,14 +53,14 @@ namespace yiff_hl.Business.Implementations.Commands
 
             var beginTimeBytes = payload
                 .ToList()
-                .GetRange(0, 3)
+                .GetRange(0, 4)
                 .ToArray();
 
             var beginTime = BytesToDateTime(beginTimeBytes);
 
             var endTimeBytes = payload
                 .ToList()
-                .GetRange(4, 7)
+                .GetRange(4, 4)
                 .ToArray();
 
             var endTime = BytesToDateTime(endTimeBytes);
@@ -77,7 +77,7 @@ namespace yiff_hl.Business.Implementations.Commands
 
             var secondsSinceMidnight = BitConverter.ToUInt32(payload, 0);
             var time = BaseDate; // We don't care about day, month and year yet
-            time.AddSeconds(secondsSinceMidnight);
+            time = time.AddSeconds(secondsSinceMidnight);
 
             return time;
         }
