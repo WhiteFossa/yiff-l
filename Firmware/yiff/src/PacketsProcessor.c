@@ -150,6 +150,11 @@ void OnNewCommandToFox(uint8_t payloadSize, uint8_t* payload)
 			/* Set ending tone duration */
 			OnSetEndingToneDuration(payloadSize, payload);
 			break;
+
+		case GetBeginAndEndTimes:
+			/* Get fox begin and end times */
+			OnGetBeginAndEndTimes(payloadSize, payload);
+			break;
 	}
 
 	free(payload);
@@ -660,6 +665,24 @@ OnSetEndingToneDuration_Validate:
 	FoxState_SetEndingtoneDuration(endingToneDuration);
 
 	PendingCommandsFlags.NeedToSetEndingToneDuration = true;
+}
+
+void OnGetBeginAndEndTimes(uint8_t payloadSize, uint8_t* payload)
+{
+	if (payloadSize != 1)
+	{
+		return;
+	}
+
+	uint8_t response[8];
+
+	uint32_t beginTimeInSeconds = SecondsSinceDayBegin(FoxState.GlobalState.StartTime);
+	uint32_t endTimeInSeconds = SecondsSinceDayBegin(FoxState.GlobalState.EndTime);
+
+	memcpy(&response[0], &beginTimeInSeconds, 4);
+	memcpy(&response[4], &endTimeInSeconds, 4);
+
+	SendResponse(GetBeginAndEndTimes, 8, response);
 }
 
 uint8_t FromBool(bool data)
