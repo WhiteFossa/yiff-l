@@ -160,6 +160,11 @@ void OnNewCommandToFox(uint8_t payloadSize, uint8_t* payload)
 			/* Is fox armed? */
 			OnIsFoxArmed(payloadSize, payload);
 			break;
+
+		case ArmFox:
+			/* Arm fox */
+			OnArmFox(payloadSize, payload);
+			break;
 	}
 
 	free(payload);
@@ -699,6 +704,22 @@ void OnIsFoxArmed(uint8_t payloadSize, uint8_t* payload)
 
 	uint8_t response = FromBool(FoxState.GlobalState.IsArmed);
 	SendResponse(IsFoxArmed, 1, &response);
+}
+
+void OnArmFox(uint8_t payloadSize, uint8_t* payload)
+{
+	if (payloadSize != 1)
+	{
+		return;
+	}
+
+	if (!FoxState.GlobalState.IsArmed)
+	{
+		GSM_Arm();
+	}
+
+	uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
+	SendResponse(ArmFox, 1, &response);
 }
 
 uint8_t FromBool(bool data)

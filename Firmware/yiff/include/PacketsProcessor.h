@@ -89,7 +89,9 @@ typedef enum
 
 	GetBeginAndEndTimes = 0x13,
 
-	IsFoxArmed = 0x14
+	IsFoxArmed = 0x14,
+
+	ArmFox = 0x15
 }
 CommandToFoxEnum;
 
@@ -223,6 +225,11 @@ void OnGetBeginAndEndTimes(uint8_t payloadSize, uint8_t* payload);
  * Called when command "Is fox armed" comes
  */
 void OnIsFoxArmed(uint8_t payloadSize, uint8_t* payload);
+
+/**
+ * Called when command "Arm fox" comes
+ */
+void OnArmFox(uint8_t payloadSize, uint8_t* payload);
 
 /**
  * Returns 0x00 if false, 0x01 if true
