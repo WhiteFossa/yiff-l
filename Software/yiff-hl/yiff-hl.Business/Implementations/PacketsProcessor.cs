@@ -36,6 +36,7 @@ namespace yiff_hl.Business.Implementations
         private OnResponseDelegate onSetCycleResponse;
         private OnResponseDelegate onGetEndingToneDurationResponse;
         private OnResponseDelegate onSetEndingToneDurationResponse;
+        private OnResponseDelegate onGetBeginAndEndTimesResponse;
 
         private enum ReceiverState
         {
@@ -321,6 +322,13 @@ namespace yiff_hl.Business.Implementations
                     onSetEndingToneDurationResponse(responsePayload);
                     break;
 
+                // Get begin and end times
+                case CommandType.GetBeginAndEndTimes:
+                    CheckOnResponseDelegate(onGetBeginAndEndTimesResponse);
+
+                    onGetBeginAndEndTimesResponse(responsePayload);
+                    break;
+
                 default:
                     return; // We've got some junk
             }
@@ -442,6 +450,11 @@ namespace yiff_hl.Business.Implementations
         public void SetOnSetEndingToneDurationResponse(OnResponseDelegate onSetEndingToneDurationResponse)
         {
             this.onSetEndingToneDurationResponse = onSetEndingToneDurationResponse ?? throw new ArgumentNullException(nameof(onSetEndingToneDurationResponse));
+        }
+
+        public void SetOnGetBeginAndEndTimesResponse(OnResponseDelegate onGetBeginAndEndTimesResponse)
+        {
+            this.onGetBeginAndEndTimesResponse = onGetBeginAndEndTimesResponse ?? throw new ArgumentNullException(nameof(onGetBeginAndEndTimesResponse));
         }
     }
 }

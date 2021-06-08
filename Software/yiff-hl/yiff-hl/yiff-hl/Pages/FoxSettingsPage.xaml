@@ -243,6 +243,40 @@
                     </StackLayout>
                 </Frame>
 
+                <Frame
+                    BackgroundColor="DarkSlateGray">
+                    <StackLayout>
+                        <Label
+                            Text="Begin and end times"
+                            />
+
+                        <StackLayout
+                            Orientation="Horizontal">
+                            
+                            <Label
+                                Text="Begin time:" />
+
+                            <TimePicker
+                                x:Name="tpBeginTime"/>
+                        </StackLayout>
+
+                        <StackLayout
+                            Orientation="Horizontal">
+
+                            <Label
+                                Text="End time:" />
+
+                            <TimePicker
+                                x:Name="tpEndTime"/>
+                        </StackLayout>
+
+                        <Button
+                            Text="Get times"
+                            Clicked="OnGetBeginAndEndTime"
+                            />
+                    </StackLayout>
+                </Frame>
+
                 <Button
                 Text="Disconnect"
                 Clicked="OnDisconnectClicked"

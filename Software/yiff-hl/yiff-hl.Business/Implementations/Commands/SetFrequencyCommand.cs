@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using yiff_hl.Abstractions.Enums;
 using yiff_hl.Abstractions.Interfaces;
 using yiff_hl.Business.Implementations.Commands.Helpers;

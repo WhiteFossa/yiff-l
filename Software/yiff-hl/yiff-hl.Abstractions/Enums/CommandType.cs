@@ -41,6 +41,8 @@
 
         GetEndingToneDuration = 0x11,
 
-        SetEndingToneDuration = 0x12
+        SetEndingToneDuration = 0x12,
+
+        GetBeginAndEndTimes = 0x13
     }
 }

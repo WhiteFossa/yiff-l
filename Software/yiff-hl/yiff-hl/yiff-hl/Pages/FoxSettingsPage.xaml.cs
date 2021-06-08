@@ -597,5 +597,30 @@ namespace yiff_hl.Pages
         }
 
         #endregion
+
+        #region Get begin and end time
+
+        private void OnGetBeginAndEndTime(object sender, EventArgs e)
+        {
+            GetBeginAndEndTimes();
+        }
+
+        private void GetBeginAndEndTimes()
+        {
+            var command = new GetBeginAndEndTimesCommand(packetsProcessor);
+            command.SetResponseDelegate(OnGetBeginAndEndTimesResponse);
+            command.SendGetBeginAndEndTimesCommand();
+        }
+
+        private void OnGetBeginAndEndTimesResponse(DateTime beginTime, DateTime endTime)
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                tpBeginTime.Time = beginTime - GetBeginAndEndTimesCommand.BaseDate;
+                tpEndTime.Time = endTime - GetBeginAndEndTimesCommand.BaseDate;
+            });
+        }
+
+        #endregion
     }
 }
