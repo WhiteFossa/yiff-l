@@ -95,7 +95,9 @@ typedef enum
 
 	DisarmFox = 0x16,
 
-	SetBeginAndEndTimes = 0x17
+	SetBeginAndEndTimes = 0x17,
+
+	GetFoxPower = 0x18
 }
 CommandToFoxEnum;
 
@@ -244,6 +246,11 @@ void OnDisarmFox(uint8_t payloadSize, uint8_t* payload);
  * Called when command "Set begin and end times" comes
  */
 void OnSetBeginAndEndTimes(uint8_t payloadSize, uint8_t* payload);
+
+/**
+ * Called when command "Get fox power" comes
+ */
+void OnGetFoxPower(uint8_t payloadSize, uint8_t* payload);
 
 /**
  * Returns 0x00 if false, 0x01 if true

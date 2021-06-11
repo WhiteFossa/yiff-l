@@ -175,6 +175,11 @@ void OnNewCommandToFox(uint8_t payloadSize, uint8_t* payload)
 			/* Set begin and end times */
 			OnSetBeginAndEndTimes(payloadSize, payload);
 			break;
+
+		case GetFoxPower:
+			/* Get fox power */
+			OnGetFoxPower(payloadSize, payload);
+			break;
 	}
 
 	free(payload);
@@ -463,6 +468,11 @@ OnSetProfileName_Validate:
 
 void OnGetFrequency(uint8_t payloadSize, uint8_t* payload)
 {
+	if (payloadSize != 1)
+	{
+		return;
+	}
+
 	uint8_t response[5];
 
 	response[0] = FromBool(FoxState.Frequency.Is144MHz);
@@ -786,6 +796,17 @@ OnSetBeginAndEndTimes_Validate:
 	FoxState_SetBeginAndEndTimes(beginTime, endTime);
 
 	PendingCommandsFlags.NeedToSetBeginAndEndTimes = true;
+}
+
+void OnGetFoxPower(uint8_t payloadSize, uint8_t* payload)
+{
+	if (payloadSize != 1)
+	{
+		return;
+	}
+
+	float response = FoxState.Power;
+	SendResponse(GetFoxPower, 4, &response);
 }
 
 uint8_t FromBool(bool data)
