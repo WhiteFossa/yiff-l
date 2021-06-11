@@ -51,6 +51,8 @@
 
         DisarmFox = 0x16,
 
-        SetBeginAndEndTimes = 0x17
+        SetBeginAndEndTimes = 0x17,
+
+        GetFoxPower = 0x18
     }
 }

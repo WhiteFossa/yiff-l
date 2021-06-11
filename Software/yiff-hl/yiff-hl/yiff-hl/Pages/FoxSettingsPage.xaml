@@ -309,6 +309,34 @@
                     </StackLayout>
                 </Frame>
 
+                <Frame
+                    BackgroundColor="DarkSlateGray">
+                    <StackLayout>
+
+                        <Label
+                            Text="Power"
+                            />
+
+                        <StackLayout
+                            Orientation="Horizontal">
+
+                            <Editor
+                                x:Name="edFoxPower"
+                                WidthRequest="200" />
+
+                            <Label
+                                Text="Fox power"
+                            />
+                        </StackLayout>
+
+                        <Button
+                            Text="Get fox power"
+                            Clicked="OnGetFoxPowerClicked"
+                            />
+                        
+                    </StackLayout>
+                </Frame>
+                
                 <Button
                 Text="Disconnect"
                 Clicked="OnDisconnectClicked"

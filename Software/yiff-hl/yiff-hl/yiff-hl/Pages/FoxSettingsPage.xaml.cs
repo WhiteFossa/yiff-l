@@ -721,5 +721,29 @@ namespace yiff_hl.Pages
         }
 
         #endregion
+
+        #region Get fox power
+
+        private void OnGetFoxPowerClicked(object sender, EventArgs e)
+        {
+            GetFoxPower();
+        }
+
+        private void GetFoxPower()
+        {
+            var command = new GetFoxPowerCommand(packetsProcessor);
+            command.SetResponseDelegate(OnGetFoxPowerResponse);
+            command.SendGetFoxPowerCommand();
+        }
+
+        private void OnGetFoxPowerResponse(float power)
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                edFoxPower.Text = $"{power}";
+            });
+        }
+
+        #endregion
     }
 }
