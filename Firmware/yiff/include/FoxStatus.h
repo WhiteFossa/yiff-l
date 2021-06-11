@@ -34,6 +34,12 @@ extern PendingCommandsFlagsStruct PendingCommandsFlags;
  */
 #define YHL_MAX_ENDINGTONE_DURATION 5U
 
+/**
+ * Allowed powers (for 3.5MHz)
+ */
+#define YHL_MIN_POWER_80M 0.1f
+#define YHL_MAX_POWER_80M 5.0f
+
 
 /**
  * Fox frequency
@@ -305,5 +311,15 @@ bool FoxState_IsBeginAndEndTimesValid(Time beginTime, Time endTime);
  * Tries to send transmission begin/end times, if they are valid sets it and returns true, otherwise false
  */
 bool FoxState_SetBeginAndEndTimes(Time beginTime, Time endTime);
+
+/**
+ * Checks if requested power is valid for current fox mode. If valid returns true
+ */
+bool FoxState_IsPowerValid(float power);
+
+/**
+ * Tries to set power, if it is valid - sets it and returns true, otherwise false
+ */
+bool FoxState_SetPower(float power);
 
 #endif /* INCLUDE_FOXSTATUS_H_ */

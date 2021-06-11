@@ -128,6 +128,11 @@ void Main_ProcessSetEndingToneDuration(void);
 void Main_ProcessSetBeginAndEndTimes(void);
 
 /**
+ * Updates fox power if needed
+ */
+void Main_ProcessSetPower(void);
+
+/**
  * Flushes current profile changes into EEPROM if needed
  */
 void Main_FlushProfileToEEPROM(void);

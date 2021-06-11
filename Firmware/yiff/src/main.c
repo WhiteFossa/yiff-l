@@ -207,6 +207,7 @@ int main(int argc, char* argv[])
 		Main_ProcessSetCycle();
 		Main_ProcessSetEndingToneDuration();
 		Main_ProcessSetBeginAndEndTimes();
+		Main_ProcessSetPower();
 
 		/* Flush profile changes to EEPROM, must be called last in sequence */
 		Main_FlushProfileToEEPROM();
@@ -357,6 +358,22 @@ void Main_ProcessSetBeginAndEndTimes(void)
 		SendResponse(SetBeginAndEndTimes, 1, &response);
 
 		PendingCommandsFlags.NeedToSetBeginAndEndTimes = false;
+	}
+}
+
+void Main_ProcessSetPower(void)
+{
+	if (PendingCommandsFlags.NeedToSetPower)
+	{
+		// TODO: Set power in HAL
+
+		EEPROM_CurrentProfile.Power = FoxState.Power;
+		PendingCommandsFlags.NeedToFlushCurrentProfileToEEPROM = true;
+
+		uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
+		SendResponse(SetFoxPower, 1, &response);
+
+		PendingCommandsFlags.NeedToSetPower = false;
 	}
 }
 

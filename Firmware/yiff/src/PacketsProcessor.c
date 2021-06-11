@@ -180,6 +180,11 @@ void OnNewCommandToFox(uint8_t payloadSize, uint8_t* payload)
 			/* Get fox power */
 			OnGetFoxPower(payloadSize, payload);
 			break;
+
+		case SetFoxPower:
+			/* Set fox power */
+			OnSetFoxPower(payloadSize, payload);
+			break;
 	}
 
 	free(payload);
@@ -807,6 +812,37 @@ void OnGetFoxPower(uint8_t payloadSize, uint8_t* payload)
 
 	float response = FoxState.Power;
 	SendResponse(GetFoxPower, 4, &response);
+}
+
+void OnSetFoxPower(uint8_t payloadSize, uint8_t* payload)
+{
+	bool isValid = true;
+
+	if (payloadSize != 5)
+	{
+		isValid = false;
+		goto OnSetFoxPower_Validate;
+	}
+
+	float power;
+	memcpy(&power, &payload[1], 4);
+
+	if (!FoxState_IsPowerValid(power))
+	{
+		isValid = false;
+		goto OnSetFoxPower_Validate;
+	}
+
+OnSetFoxPower_Validate:
+	if (!isValid)
+	{
+		uint8_t result = YHL_PACKET_PROCESSOR_FAILURE;
+		SendResponse(SetFoxPower, 1, &result);
+		return;
+	}
+
+	FoxState_SetPower(power);
+	PendingCommandsFlags.NeedToSetPower = true;
 }
 
 uint8_t FromBool(bool data)

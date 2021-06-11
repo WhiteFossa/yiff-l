@@ -21,6 +21,7 @@ void FoxState_Init(void)
 	PendingCommandsFlags.NeedToSetCycle = false;
 	PendingCommandsFlags.NeedToSetEndingToneDuration = false;
 	PendingCommandsFlags.NeedToSetBeginAndEndTimes = false;
+	PendingCommandsFlags.NeedToSetPower = false;
 }
 
 void FoxState_CorrectDateTime(void)
@@ -143,6 +144,33 @@ bool FoxState_SetBeginAndEndTimes(Time beginTime, Time endTime)
 
 	FoxState.GlobalState.StartTime = beginTime;
 	FoxState.GlobalState.EndTime = endTime;
+
+	return true;
+}
+
+bool FoxState_IsPowerValid(float power)
+{
+	if (FoxState.Frequency.Is144MHz)
+	{
+		return false; /* Power setting is not supported in 144MHz mode */
+	}
+
+	if ((power < YHL_MIN_POWER_80M) || (power > YHL_MAX_POWER_80M))
+	{
+		return false;
+	}
+
+	return true;
+}
+
+bool FoxState_SetPower(float power)
+{
+	if (!FoxState_IsPowerValid(power))
+	{
+		return false;
+	}
+
+	FoxState.Power = power;
 
 	return true;
 }

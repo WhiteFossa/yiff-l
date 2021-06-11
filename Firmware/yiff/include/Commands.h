@@ -67,6 +67,11 @@ typedef struct
 	 * If true, then we need to update start and end times
 	 */
 	bool NeedToSetBeginAndEndTimes;
+
+	/**
+	 * If true, then we need to set fox power
+	 */
+	bool NeedToSetPower;
 }
 PendingCommandsFlagsStruct;
 
