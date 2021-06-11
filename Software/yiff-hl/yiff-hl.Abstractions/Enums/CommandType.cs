@@ -53,6 +53,8 @@
 
         SetBeginAndEndTimes = 0x17,
 
-        GetFoxPower = 0x18
+        GetFoxPower = 0x18,
+
+        SetFoxPower = 0x19
     }
 }

@@ -745,5 +745,32 @@ namespace yiff_hl.Pages
         }
 
         #endregion
+
+        #region Set fox power
+
+        private void OnSetFoxPowerClicked(object sender, EventArgs e)
+        {
+            var power = float.Parse(edFoxPower.Text);
+
+            SetFoxPower(power);
+        }
+
+        private void SetFoxPower(float power)
+        {
+            var command = new SetFoxPowerCommand(packetsProcessor);
+            command.SetResponseDelegate(OnSetFoxPowerResponse);
+            command.SendSetFoxPowerCommand(power);
+        }
+
+        private void OnSetFoxPowerResponse(bool isSuccess)
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                var message = isSuccess ? "Power set" : "Failed to set power";
+                DisplayAlert("Set fox power", message, "OK");
+            });
+        }
+
+        #endregion
     }
 }

@@ -333,7 +333,12 @@
                             Text="Get fox power"
                             Clicked="OnGetFoxPowerClicked"
                             />
-                        
+
+                        <Button
+                            Text="Set fox power"
+                            Clicked="OnSetFoxPowerClicked"
+                            />
+
                     </StackLayout>
                 </Frame>
                 

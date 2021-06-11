@@ -42,6 +42,7 @@ namespace yiff_hl.Business.Implementations
         private OnResponseDelegate onDisarmFoxResponse;
         private OnResponseDelegate onSetBeginAndEndTimesResponse;
         private OnResponseDelegate onGetFoxPowerResponse;
+        private OnResponseDelegate onSetFoxPowerResponse;
 
         private enum ReceiverState
         {
@@ -369,6 +370,13 @@ namespace yiff_hl.Business.Implementations
                     onGetFoxPowerResponse(responsePayload);
                     break;
 
+                // Set fox power
+                case CommandType.SetFoxPower:
+                    CheckOnResponseDelegate(onSetFoxPowerResponse);
+
+                    onSetFoxPowerResponse(responsePayload);
+                    break;
+
                 default:
                     return; // We've got some junk
             }
@@ -520,6 +528,11 @@ namespace yiff_hl.Business.Implementations
         public void SetOnGetFoxPowerResponse(OnResponseDelegate onGetFoxPowerResponse)
         {
             this.onGetFoxPowerResponse = onGetFoxPowerResponse ?? throw new ArgumentNullException(nameof(onGetFoxPowerResponse));
+        }
+
+        public void SetOnSetFoxPowerResponse(OnResponseDelegate onSetFoxPowerResponse)
+        {
+            this.onSetFoxPowerResponse = onSetFoxPowerResponse ?? throw new ArgumentNullException(nameof(onSetFoxPowerResponse));
         }
     }
 }
