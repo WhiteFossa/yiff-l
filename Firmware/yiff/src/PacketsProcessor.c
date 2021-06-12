@@ -185,6 +185,11 @@ void OnNewCommandToFox(uint8_t payloadSize, uint8_t* payload)
 			/* Set fox power */
 			OnSetFoxPower(payloadSize, payload);
 			break;
+
+		case GetBatteryLevel:
+			/* Get battery level */
+			OnGetBatteryLevel(payloadSize, payload);
+			break;
 	}
 
 	free(payload);
@@ -843,6 +848,17 @@ OnSetFoxPower_Validate:
 
 	FoxState_SetPower(power);
 	PendingCommandsFlags.NeedToSetPower = true;
+}
+
+void OnGetBatteryLevel(uint8_t payloadSize, uint8_t* payload)
+{
+	if (payloadSize != 1)
+	{
+		return;
+	}
+
+	float response = FoxState.BatteryLevel;
+	SendResponse(GetBatteryLevel, 4, &response);
 }
 
 uint8_t FromBool(bool data)
