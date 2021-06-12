@@ -772,5 +772,29 @@ namespace yiff_hl.Pages
         }
 
         #endregion
+
+        #region Get battery level
+
+        private void OnGetBatteryLevelClicked(object sender, EventArgs e)
+        {
+            GetBatteryLevel();
+        }
+
+        private void GetBatteryLevel()
+        {
+            var command = new GetBatteryLevelCommand(packetsProcessor);
+            command.SetResponseDelegate(OnGetBatteryLevelrResponse);
+            command.SendGetBatteryLevelCommand();
+        }
+
+        private void OnGetBatteryLevelrResponse(float level)
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                DisplayAlert("Check battery", $"Battery level: { level }", "OK");
+            });
+        }
+
+        #endregion
     }
 }

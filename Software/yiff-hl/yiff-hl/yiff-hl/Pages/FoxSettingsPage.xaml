@@ -341,11 +341,16 @@
 
                     </StackLayout>
                 </Frame>
-                
+
                 <Button
-                Text="Disconnect"
-                Clicked="OnDisconnectClicked"
-                />
+                    Text="Check battery"
+                    Clicked="OnGetBatteryLevelClicked"
+                    />
+
+                <Button
+                    Text="Disconnect"
+                    Clicked="OnDisconnectClicked"
+                    />
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>

@@ -43,6 +43,7 @@ namespace yiff_hl.Business.Implementations
         private OnResponseDelegate onSetBeginAndEndTimesResponse;
         private OnResponseDelegate onGetFoxPowerResponse;
         private OnResponseDelegate onSetFoxPowerResponse;
+        private OnResponseDelegate onGetBatteryLevelResponse;
 
         private enum ReceiverState
         {
@@ -377,6 +378,13 @@ namespace yiff_hl.Business.Implementations
                     onSetFoxPowerResponse(responsePayload);
                     break;
 
+                // Get battery level
+                case CommandType.GetBatteryLevel:
+                    CheckOnResponseDelegate(onGetBatteryLevelResponse);
+
+                    onGetBatteryLevelResponse(responsePayload);
+                    break;
+
                 default:
                     return; // We've got some junk
             }
@@ -533,6 +541,11 @@ namespace yiff_hl.Business.Implementations
         public void SetOnSetFoxPowerResponse(OnResponseDelegate onSetFoxPowerResponse)
         {
             this.onSetFoxPowerResponse = onSetFoxPowerResponse ?? throw new ArgumentNullException(nameof(onSetFoxPowerResponse));
+        }
+
+        public void SetOnGetBatteryLevelResponse(OnResponseDelegate onGetBatteryLevelResponse)
+        {
+            this.onGetBatteryLevelResponse = onGetBatteryLevelResponse ?? throw new ArgumentNullException(nameof(onGetBatteryLevelResponse));
         }
     }
 }

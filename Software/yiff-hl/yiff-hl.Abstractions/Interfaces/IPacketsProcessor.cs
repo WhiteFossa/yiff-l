@@ -54,6 +54,7 @@ namespace yiff_hl.Abstractions.Interfaces
         void SetOnSetBeginAndEndTimesResponse(OnResponseDelegate onSetBeginAndEndTimesResponse);
         void SetOnGetFoxPowerResponse(OnResponseDelegate onGetFoxPowerResponse);
         void SetOnSetFoxPowerResponse(OnResponseDelegate onSetFoxPowerResponse);
+        void SetOnGetBatteryLevelResponse(OnResponseDelegate onGetBatteryLevelResponse);
 
 
         #endregion
