@@ -21,6 +21,8 @@ L2HAL_HC06_ContextStruct L2HAL_HC06_AttachToDevice(UART_HandleTypeDef* uart)
 		L2HAL_Error(Generic);
 	}
 
+	memset(buffer, 0, 3);
+
 	/* Immediately expecting an answer */
 	HAL_StatusTypeDef receiveStatus = HAL_UART_Receive(context.UART_Handle, (uint8_t*)buffer, 2, L2HAL_HC06_UART_TIMEOUT);
 

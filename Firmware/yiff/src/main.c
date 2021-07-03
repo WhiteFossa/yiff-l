@@ -51,6 +51,18 @@ int main(int argc, char* argv[])
 	L2HAL_Init();
 	HAL_IntiHardware();
 
+	/* Hardware debug
+	 * TODO: Remove me */
+	HAL_SwitchDisplayPower(true);
+	HAL_ActivateFox(true);
+	HAL_SwitchBluetoothPower(true);
+
+	HAL_Activate80M(true);
+
+	HAL_SwitchUBattCheck(true);
+
+	HAL_Delay(1000); /* To give regulators time to spin up */
+
 	/* Setting up CRC calculator */
 	CRC_Context = L2HAL_CRC_Init();
 
