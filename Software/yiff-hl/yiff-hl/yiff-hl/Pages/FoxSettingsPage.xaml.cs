@@ -844,5 +844,29 @@ namespace yiff_hl.Pages
         }
 
         #endregion
+
+        #region Get U80m (ADC)
+
+        private void OnGetU80mADCClicked(object sender, EventArgs e)
+        {
+            GetU80mADC();
+        }
+
+        private void GetU80mADC()
+        {
+            var command = new GetU80mADCCommand(packetsProcessor);
+            command.SetResponseDelegate(OnGetU80mADCResponse);
+            command.SendGetU80mADCCommand();
+        }
+
+        private void OnGetU80mADCResponse(float u80m)
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                edU80mADC.Text = $"{u80m}";
+            });
+        }
+
+        #endregion
     }
 }

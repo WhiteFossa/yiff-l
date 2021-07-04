@@ -57,6 +57,7 @@ namespace yiff_hl.Abstractions.Interfaces
         void SetOnGetBatteryLevelResponse(OnResponseDelegate onGetBatteryLevelResponse);
         void SetOnGetUAntADCResponse(OnResponseDelegate onGetUAntADCResponse);
         void SetOnGetUBattADCResponse(OnResponseDelegate onGetUBattADCResponse);
+        void SetOnGetU80mADCResponse(OnResponseDelegate onGetU80mADCResponse);
 
 
         #endregion

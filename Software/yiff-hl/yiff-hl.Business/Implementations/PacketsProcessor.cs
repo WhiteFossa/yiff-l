@@ -46,6 +46,7 @@ namespace yiff_hl.Business.Implementations
         private OnResponseDelegate onGetBatteryLevelResponse;
         private OnResponseDelegate onGetUAntADCResponse;
         private OnResponseDelegate onGetUBattADCResponse;
+        private OnResponseDelegate onGetU80mADCResponse;
 
         private enum ReceiverState
         {
@@ -401,6 +402,13 @@ namespace yiff_hl.Business.Implementations
                     onGetUBattADCResponse(responsePayload);
                     break;
 
+                // Get 3.5MHz output stage power source voltage
+                case CommandType.GetU80mADC:
+                    CheckOnResponseDelegate(onGetU80mADCResponse);
+
+                    onGetU80mADCResponse(responsePayload);
+                    break;
+
                 default:
                     return; // We've got some junk
             }
@@ -572,6 +580,11 @@ namespace yiff_hl.Business.Implementations
         public void SetOnGetUBattADCResponse(OnResponseDelegate onGetUBattADCResponse)
         {
             this.onGetUBattADCResponse = onGetUBattADCResponse ?? throw new ArgumentNullException(nameof(onGetUBattADCResponse));
+        }
+
+        public void SetOnGetU80mADCResponse(OnResponseDelegate onGetU80mADCResponse)
+        {
+            this.onGetU80mADCResponse = onGetU80mADCResponse ?? throw new ArgumentNullException(nameof(onGetU80mADCResponse));
         }
     }
 }

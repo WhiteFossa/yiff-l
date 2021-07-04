@@ -388,6 +388,23 @@
                             Text="Get UBatt (ADC)"
                             Clicked="OnGetUBattADCClicked"
                             />
+                        
+                        <StackLayout
+                            Orientation="Horizontal">
+
+                            <Editor
+                                x:Name="edU80mADC"
+                                WidthRequest="200" />
+
+                            <Label
+                                Text="U80m (ADC)"
+                            />
+                        </StackLayout>
+
+                        <Button
+                            Text="Get U80m (ADC)"
+                            Clicked="OnGetU80mADCClicked"
+                            />
 
                     </StackLayout>
                 </Frame>

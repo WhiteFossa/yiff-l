@@ -61,6 +61,8 @@
 
         GetUAntADC = 0x1B,
 
-        GetUBattADC = 0x1C
+        GetUBattADC = 0x1C,
+
+        GetU80mADC = 0x1D
     }
 }
