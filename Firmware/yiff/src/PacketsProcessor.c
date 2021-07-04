@@ -190,6 +190,11 @@ void OnNewCommandToFox(uint8_t payloadSize, uint8_t* payload)
 			/* Get battery level */
 			OnGetBatteryLevel(payloadSize, payload);
 			break;
+
+		case GetUAntADC:
+			/* Get UAnt ADC*/
+			OnGetUAntADC(payloadSize, payload);
+			break;
 	}
 
 	free(payload);
@@ -859,6 +864,17 @@ void OnGetBatteryLevel(uint8_t payloadSize, uint8_t* payload)
 
 	float response = FoxState.BatteryLevel;
 	SendResponse(GetBatteryLevel, 4, &response);
+}
+
+void OnGetUAntADC(uint8_t payloadSize, uint8_t* payload)
+{
+	if (payloadSize != 1)
+	{
+		return;
+	}
+
+	float response = HAL_GetUAntADC();
+	SendResponse(GetUAntADC, 4, &response);
 }
 
 uint8_t FromBool(bool data)
