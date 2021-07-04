@@ -285,3 +285,18 @@ void HAL_AddNewADCMeasurement(uint16_t measurement)
 			break;
 	}
 }
+
+float HAL_GetUAntADC(void)
+{
+	return HAL_AntennaLevelADC;
+}
+
+float HAL_GetUBattADC(void)
+{
+	return HAL_BatteryLevelADC;
+}
+
+float HAL_GetU80mADC(void)
+{
+	return HAL_80mLevelADC;
+}

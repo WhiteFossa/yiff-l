@@ -132,7 +132,7 @@ void HAL_Activate80M(bool isActivate);
 void HAL_Activate2M(bool isActivate);
 
 /**
- * Enable/disable battery level check. Note, that when it enabled, it leads to some current, pulled from battery.
+ * Enable/disable battery level check. Note, that when it enabled, it leads to some current to be pulled from battery.
  * So do not turn it on for long when device in sleep mode.
  */
 void HAL_SwitchUBattCheck(bool isOn);
@@ -148,7 +148,7 @@ void HAL_SetupADCGeneric(void);
 void HAL_SetupADCForUAntMeasurement(void);
 
 /**
- * Sets ADC up for battery level measurement.
+ * Sets ADC up for battery level measurement
  */
 void HAL_SetupADCForUBattMeasurement(void);
 
@@ -156,6 +156,21 @@ void HAL_SetupADCForUBattMeasurement(void);
  * Sets ADC up for antenna signal level measurement (3.5MHz)
  */
 void HAL_SetupADCForU80mMeasurement(void);
+
+/**
+ * Get antenna voltage (in ADC measurements)
+ */
+float HAL_GetUAntADC(void);
+
+/**
+ * Get battery voltage (in ADC measurements)
+ */
+float HAL_GetUBattADC(void);
+
+/**
+ * Get 3.5MHz output stage voltage
+ */
+float HAL_GetU80mADC(void);
 
 
 #endif /* INCLUDE_HAL_H_ */
