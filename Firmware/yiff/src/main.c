@@ -144,7 +144,7 @@ int main(int argc, char* argv[])
 	FMGL_API_PushFramebuffer(&fmglContext);
 
 	/* Initial fox state*/
-	FoxState.BatteryLevel = 0.8f;
+	FoxState.BatteryLevel = 1.0f;
 
 	FoxState.CurrentTime.Hours = 0;
 	FoxState.CurrentTime.Minutes = 0;
@@ -208,6 +208,8 @@ int main(int argc, char* argv[])
 
 	while(true)
 	{
+		Main_MeasureBatteryLevel();
+
 		/* Processing possible updates from smartphone */
 		Main_ProcessFoxNameChange();
 		Main_ProcessNewProfileAdd();
@@ -397,6 +399,11 @@ void Main_FlushProfileToEEPROM(void)
 
 		PendingCommandsFlags.NeedToFlushCurrentProfileToEEPROM = false;
 	}
+}
+
+void Main_MeasureBatteryLevel(void)
+{
+	FoxState.BatteryLevel = HAL_GetBatteryLevel();
 }
 
 #pragma GCC diagnostic pop

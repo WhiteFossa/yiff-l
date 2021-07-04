@@ -300,3 +300,28 @@ float HAL_GetU80mADC(void)
 {
 	return HAL_80mLevelADC;
 }
+
+float HAL_GetUbattVolts(void)
+{
+	float adc = HAL_GetUBattADC();
+
+	return EEPROM_Header.UBattADCA * adc + EEPROM_Header.UBattADCB;
+}
+
+float HAL_GetBatteryLevel(void)
+{
+	float voltage = HAL_GetUbattVolts();
+
+	float result = HAL_BATTERY_LEVEL_A * voltage + HAL_BATTERY_LEVEL_B;
+
+	if (result < 0)
+	{
+		result = 0;
+	}
+	else if (result > 1)
+	{
+		result = 1;
+	}
+
+	return result;
+}

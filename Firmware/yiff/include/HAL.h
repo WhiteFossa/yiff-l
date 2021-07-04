@@ -75,6 +75,17 @@
  */
 #define HAL_ADC_AVERAGING 500U
 
+/**
+ * Battery voltages
+ */
+#define HAL_FULL_BATTERY_VOLTS 8.0f
+#define HAL_EMPTY_BATTERY_VOLTS 6.0f
+
+/**
+ * Battery voltage to charge level factors
+ */
+#define HAL_BATTERY_LEVEL_A 0.5f
+#define HAL_BATTERY_LEVEL_B -3.0f
 
 extern ADC_HandleTypeDef ADC_Handle;
 
@@ -171,6 +182,16 @@ float HAL_GetUBattADC(void);
  * Get 3.5MHz output stage voltage
  */
 float HAL_GetU80mADC(void);
+
+/**
+ * Returns UBatt in volts.
+ */
+float HAL_GetUbattVolts(void);
+
+/**
+ * Returns battery charge level [0-1]
+ */
+float HAL_GetBatteryLevel(void);
 
 
 #endif /* INCLUDE_HAL_H_ */

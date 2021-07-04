@@ -137,4 +137,9 @@ void Main_ProcessSetPower(void);
  */
 void Main_FlushProfileToEEPROM(void);
 
+/**
+ * Measures battery level and store it into fox state.
+ */
+void Main_MeasureBatteryLevel(void);
+
 #endif /* __MAIN_H */

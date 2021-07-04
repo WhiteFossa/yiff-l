@@ -24,6 +24,11 @@ void EEPROM_Format(void)
 	memset(defaultHeader.ProfilesAddresses, 0x00, YHL_MAX_PROFILES_COUNT * 2); /* *2 because each address is 2 bytes wide */
 	defaultHeader.ProfilesAddresses[0] = (uint16_t)(constantHeader.HeaderAddress + sizeof(EEPROMHeaderStruct)); /* First profile goes after header */
 	defaultHeader.ProfileInUse = 0;
+
+	/* Factors for ADC measurements */
+	defaultHeader.UBattADCA = YHL_DEFAULT_ADC_UBATT_A;
+	defaultHeader.UBattADCB = YHL_DEFAULT_ADC_UBATT_B;
+
 	defaultHeader.CRCSum = 0;
 	EEPROM_WriteHeader(&defaultHeader, constantHeader.HeaderAddress);
 }

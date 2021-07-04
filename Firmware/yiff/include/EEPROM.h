@@ -33,6 +33,12 @@
 #define YHL_DEFAULT_FOX_NAME "Yiffy foxy"
 
 /**
+ * Default factors for UBatt(ADC)->Volts conversion
+ */
+#define YHL_DEFAULT_ADC_UBATT_A 0.002448f;
+#define YHL_DEFAULT_ADC_UBATT_B 0.3647f
+
+/**
  * EEPROM constant header. It's structure must not change from version
  * to version
  */
@@ -80,6 +86,12 @@ typedef struct
 	 * Profile in use (index for ProfilesAddresses)
 	 */
 	uint8_t ProfileInUse;
+
+	/**
+	 * Factors to convert ADC measurements into volts
+	 */
+	float UBattADCA;
+	float UBattADCB;
 
 	/**
 	 * CRC
