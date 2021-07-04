@@ -87,7 +87,14 @@
 #define HAL_BATTERY_LEVEL_A 0.5f
 #define HAL_BATTERY_LEVEL_B -3.0f
 
+/**
+ * 3.5MHz output stage power regulator address
+ */
+#define HAL_U80M_REGULATOR_BUS_ADDRESS 0x58
+
 extern ADC_HandleTypeDef ADC_Handle;
+extern L2HAL_AD5245_ContextStruct U80mRegulatorContext;
+extern I2C_HandleTypeDef I2C_Other;
 
 
 /**
@@ -192,6 +199,11 @@ float HAL_GetUbattVolts(void);
  * Returns battery charge level [0-1]
  */
 float HAL_GetBatteryLevel(void);
+
+/**
+ * Sets up context for 3.5MHz output stage voltage regulator
+ */
+void HAL_ConnectToU80mRegulator(void);
 
 
 #endif /* INCLUDE_HAL_H_ */

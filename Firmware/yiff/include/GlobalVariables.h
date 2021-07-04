@@ -60,6 +60,11 @@ L2HAL_HC06_ContextStruct HC06_Context;
  */
 ADC_HandleTypeDef ADC_Handle;
 
+/**
+ * Context for 3.5MHz output stage power regulator
+ */
+L2HAL_AD5245_ContextStruct U80mRegulatorContext;
+
 
 /****************************
 * Graphics stuff goes below *

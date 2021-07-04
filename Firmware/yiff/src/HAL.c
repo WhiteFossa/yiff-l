@@ -75,8 +75,12 @@ void HAL_IntiHardware(void)
 	 * Launching ADC conversions
 	 */
 	HAL_SetupADCGeneric();
-
 	HAL_SetupADCForUAntMeasurement();
+
+	/**
+	 * Setting up 3.5MHz output stage power source
+	 */
+	HAL_ConnectToU80mRegulator();
 }
 
 void HAL_SwitchManipulator(bool isTxOn)
@@ -324,4 +328,16 @@ float HAL_GetBatteryLevel(void)
 	}
 
 	return result;
+}
+
+void HAL_ConnectToU80mRegulator(void)
+{
+	U80mRegulatorContext = L2HAL_AD5245_DetectDACAtAddress(&I2C_Other, HAL_U80M_REGULATOR_BUS_ADDRESS);
+
+	if (!U80mRegulatorContext.IsFound)
+	{
+		L2HAL_Error(Generic);
+	}
+
+	L2HAL_AD5245_SetValue(&U80mRegulatorContext, 0x80);
 }

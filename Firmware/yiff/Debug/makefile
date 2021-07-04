@@ -23,6 +23,7 @@ RM := rm -rf
 -include src/l2hal/drivers/display/ssd1327/src/subdir.mk
 -include src/l2hal/drivers/display/ssd1306/src/subdir.mk
 -include src/l2hal/drivers/dds/ad9835/src/subdir.mk
+-include src/l2hal/drivers/dac/ad5245/src/subdir.mk
 -include src/l2hal/drivers/bluetooth/hc06/src/subdir.mk
 -include src/fmgl/src/subdir.mk
 -include src/fmgl/fonts/src/subdir.mk

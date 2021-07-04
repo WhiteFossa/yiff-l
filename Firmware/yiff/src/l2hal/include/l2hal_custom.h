@@ -47,6 +47,7 @@
 #include <l2hal_24x.h>
 #include <l2hal_crc.h>
 #include <l2hal_hc06.h>
+#include <l2hal_ad5245.h>
 
 /**
  * I2C1 interrupt priorities.
