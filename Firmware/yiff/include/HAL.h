@@ -186,14 +186,20 @@ float HAL_GetUAntADC(void);
 float HAL_GetUBattADC(void);
 
 /**
+ * Returns UBatt in volts
+ */
+float HAL_GetUbattVolts(void);
+
+/**
  * Get 3.5MHz output stage voltage
  */
 float HAL_GetU80mADC(void);
 
 /**
- * Returns UBatt in volts.
+ * Returns U80m in volts
  */
-float HAL_GetUbattVolts(void);
+float HAL_GetU80mVolts(void);
+
 
 /**
  * Returns battery charge level [0-1]

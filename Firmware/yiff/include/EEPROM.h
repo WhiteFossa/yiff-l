@@ -39,6 +39,12 @@
 #define YHL_DEFAULT_ADC_UBATT_B 0.3647f
 
 /**
+ * Default factors for U80m(ADC)->Volts conversion
+ */
+#define YHL_DEFAULT_ADC_U80M_A 0.006281f
+#define YHL_DEFAULT_ADC_U80M_B 0.4150f
+
+/**
  * EEPROM constant header. It's structure must not change from version
  * to version
  */
@@ -92,6 +98,9 @@ typedef struct
 	 */
 	float UBattADCA;
 	float UBattADCB;
+
+	float U80mADCA;
+	float U80mADCB;
 
 	/**
 	 * CRC

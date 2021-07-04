@@ -312,6 +312,13 @@ float HAL_GetUbattVolts(void)
 	return EEPROM_Header.UBattADCA * adc + EEPROM_Header.UBattADCB;
 }
 
+float HAL_GetU80mVolts(void)
+{
+	float adc = HAL_GetU80mADC();
+
+	return EEPROM_Header.U80mADCA * adc + EEPROM_Header.U80mADCB;
+}
+
 float HAL_GetBatteryLevel(void)
 {
 	float voltage = HAL_GetUbattVolts();
