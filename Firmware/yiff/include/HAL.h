@@ -73,7 +73,7 @@
 /**
  * ADC measurements count for averaging
  */
-#define HAL_ADC_AVERAGING 100U
+#define HAL_ADC_AVERAGING 500U
 
 
 extern ADC_HandleTypeDef ADC_Handle;

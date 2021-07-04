@@ -103,7 +103,11 @@ typedef enum
 
 	GetBatteryLevel = 0x1A,
 
-	GetUAntADC = 0x1B
+	GetUAntADC = 0x1B,
+
+	GetUBattADC = 0x1C,
+
+	GetU80mADC = 0x1D
 }
 CommandToFoxEnum;
 
@@ -272,6 +276,16 @@ void OnGetBatteryLevel(uint8_t payloadSize, uint8_t* payload);
  * Called when "Get UAnt ADC" command comes
  */
 void OnGetUAntADC(uint8_t payloadSize, uint8_t* payload);
+
+/**
+ * Called when "Get UBatt ADC" command comes
+ */
+void OnGetUBattADC(uint8_t payloadSize, uint8_t* payload);
+
+/**
+ * Called when "Get U80m ADC" command comes
+ */
+void OnGetU80mADC(uint8_t payloadSize, uint8_t* payload);
 
 /**
  * Returns 0x00 if false, 0x01 if true

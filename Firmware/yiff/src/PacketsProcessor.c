@@ -195,6 +195,16 @@ void OnNewCommandToFox(uint8_t payloadSize, uint8_t* payload)
 			/* Get UAnt ADC*/
 			OnGetUAntADC(payloadSize, payload);
 			break;
+
+		case GetUBattADC:
+			/* Get UBatt ADC*/
+			OnGetUBattADC(payloadSize, payload);
+			break;
+
+		case GetU80mADC:
+			/* Get U80m ADC*/
+			OnGetU80mADC(payloadSize, payload);
+			break;
 	}
 
 	free(payload);
@@ -875,6 +885,28 @@ void OnGetUAntADC(uint8_t payloadSize, uint8_t* payload)
 
 	float response = HAL_GetUAntADC();
 	SendResponse(GetUAntADC, 4, &response);
+}
+
+void OnGetUBattADC(uint8_t payloadSize, uint8_t* payload)
+{
+	if (payloadSize != 1)
+	{
+		return;
+	}
+
+	float response = HAL_GetUBattADC();
+	SendResponse(GetUBattADC, 4, &response);
+}
+
+void OnGetU80mADC(uint8_t payloadSize, uint8_t* payload)
+{
+	if (payloadSize != 1)
+	{
+		return;
+	}
+
+	float response = HAL_GetU80mADC();
+	SendResponse(GetU80mADC, 4, &response);
 }
 
 uint8_t FromBool(bool data)
