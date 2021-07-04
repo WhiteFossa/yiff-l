@@ -372,6 +372,23 @@
                             Clicked="OnGetUAntADCClicked"
                             />
 
+                        <StackLayout
+                            Orientation="Horizontal">
+
+                            <Editor
+                                x:Name="edUBattADC"
+                                WidthRequest="200" />
+
+                            <Label
+                                Text="UBatt (ADC)"
+                            />
+                        </StackLayout>
+
+                        <Button
+                            Text="Get UBatt (ADC)"
+                            Clicked="OnGetUBattADCClicked"
+                            />
+
                     </StackLayout>
                 </Frame>
 

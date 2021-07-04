@@ -59,6 +59,8 @@
 
         GetBatteryLevel = 0x1A,
 
-        GetUAntADC = 0x1B
+        GetUAntADC = 0x1B,
+
+        GetUBattADC = 0x1C
     }
 }

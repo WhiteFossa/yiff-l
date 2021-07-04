@@ -820,5 +820,29 @@ namespace yiff_hl.Pages
         }
 
         #endregion
+
+        #region Get UBatt (ADC)
+
+        private void OnGetUBattADCClicked(object sender, EventArgs e)
+        {
+            GetUBattADC();
+        }
+
+        private void GetUBattADC()
+        {
+            var command = new GetUBattADCCommand(packetsProcessor);
+            command.SetResponseDelegate(OnGetUBattADCResponse);
+            command.SendGetUBattADCCommand();
+        }
+
+        private void OnGetUBattADCResponse(float uBatt)
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                edUBattADC.Text = $"{uBatt}";
+            });
+        }
+
+        #endregion
     }
 }

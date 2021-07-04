@@ -18,6 +18,7 @@ namespace yiff_hl.Business.Implementations.Commands
             this.packetsProcessor = packetsProcessor ?? throw new ArgumentNullException(nameof(packetsProcessor));
             packetsProcessor.SetOnGetUAntADCResponse(OnGetUAntADCResponse);
         }
+
         public void SetResponseDelegate(OnGetUAntADCResponseDelegate onGetUAntADCResponse)
         {
             this.onGetUAntADCResponse = onGetUAntADCResponse;
