@@ -55,6 +55,11 @@ UART_HandleTypeDef UART_Handle;
  */
 L2HAL_HC06_ContextStruct HC06_Context;
 
+/**
+ * ADC handle
+ */
+ADC_HandleTypeDef ADC_Handle;
+
 
 /****************************
 * Graphics stuff goes below *

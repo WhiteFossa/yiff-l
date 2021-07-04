@@ -6,6 +6,7 @@
  */
 
 #include <main.h>
+#include <HALPrivate.h>
 
 void HAL_IntiHardware(void)
 {
@@ -61,6 +62,21 @@ void HAL_IntiHardware(void)
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
 	HAL_GPIO_Init(HAL_ENABLE_UBATT_CHECK_PORT, &GPIO_InitStruct);
+
+	/**
+	 * Variables initial state
+	 */
+
+	HAL_BatteryLevelADC = 0;
+	HAL_ADCAccumulator = 0;
+	HAL_ADCAveragesCounter = 0;
+
+	/**
+	 * Launching ADC conversions
+	 */
+	HAL_SetupADCGeneric();
+
+	HAL_SetupADCForUAntMeasurement();
 }
 
 void HAL_SwitchManipulator(bool isTxOn)
@@ -147,5 +163,125 @@ void HAL_SwitchUBattCheck(bool isOn)
 	else
 	{
 		HAL_GPIO_WritePin(HAL_ENABLE_UBATT_CHECK_PORT, HAL_ENABLE_UBATT_CHECK_PIN, GPIO_PIN_RESET);
+	}
+}
+
+void HAL_SetupADCGeneric(void)
+{
+	ADC_Handle.Instance = ADC1;
+	ADC_Handle.Init.DataAlign = ADC_DATAALIGN_RIGHT;
+	ADC_Handle.Init.ScanConvMode = ADC_SCAN_DISABLE;
+	ADC_Handle.Init.ContinuousConvMode = ENABLE;
+	ADC_Handle.Init.NbrOfConversion = 1;
+	ADC_Handle.Init.DiscontinuousConvMode = DISABLE;
+	ADC_Handle.Init.NbrOfDiscConversion = 1;
+	ADC_Handle.Init.ExternalTrigConv = ADC_SOFTWARE_START;
+
+	if (HAL_ADC_Init(&ADC_Handle) != HAL_OK)
+	{
+		L2HAL_Error(Generic);
+	}
+}
+
+void HAL_SetupADCForUAntMeasurement(void)
+{
+	HAL_ADC_Stop_IT(&ADC_Handle);
+
+	HAL_CurrentADCChannel = UAnt;
+
+	ADC_ChannelConfTypeDef adcChannelConfig;
+	adcChannelConfig.Channel = HAL_ADC_UANT_CHANNEL;
+	adcChannelConfig.Rank = ADC_REGULAR_RANK_1;
+	adcChannelConfig.SamplingTime = ADC_SAMPLETIME_239CYCLES_5;
+
+	if (HAL_ADC_ConfigChannel(&ADC_Handle, &adcChannelConfig) != HAL_OK)
+	{
+		L2HAL_Error(Generic);
+	}
+
+	HAL_ADC_Start_IT(&ADC_Handle);
+}
+
+void HAL_SetupADCForUBattMeasurement(void)
+{
+	HAL_ADC_Stop_IT(&ADC_Handle);
+
+	HAL_CurrentADCChannel = UBatt;
+
+	ADC_ChannelConfTypeDef adcChannelConfig;
+	adcChannelConfig.Channel = HAL_ADC_UBATT_CHANNEL;
+	adcChannelConfig.Rank = ADC_REGULAR_RANK_1;
+	adcChannelConfig.SamplingTime = ADC_SAMPLETIME_239CYCLES_5;
+
+	if (HAL_ADC_ConfigChannel(&ADC_Handle, &adcChannelConfig) != HAL_OK)
+	{
+		L2HAL_Error(Generic);
+	}
+
+	HAL_ADC_Start_IT(&ADC_Handle);
+}
+
+void HAL_SetupADCForU80mMeasurement(void)
+{
+	HAL_ADC_Stop_IT(&ADC_Handle);
+
+	HAL_CurrentADCChannel = U80m;
+
+	ADC_ChannelConfTypeDef adcChannelConfig;
+	adcChannelConfig.Channel = HAL_ADC_U80M_CHANNEL;
+	adcChannelConfig.Rank = ADC_REGULAR_RANK_1;
+	adcChannelConfig.SamplingTime = ADC_SAMPLETIME_239CYCLES_5;
+
+	if (HAL_ADC_ConfigChannel(&ADC_Handle, &adcChannelConfig) != HAL_OK)
+	{
+		L2HAL_Error(Generic);
+	}
+
+	HAL_ADC_Start_IT(&ADC_Handle);
+}
+
+/**
+ * ADC callback
+ */
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* AdcHandle)
+{
+	if (AdcHandle != &ADC_Handle)
+	{
+		return;
+	}
+
+	HAL_AddNewADCMeasurement((uint16_t)HAL_ADC_GetValue(&ADC_Handle));
+}
+
+void HAL_AddNewADCMeasurement(uint16_t measurement)
+{
+	if (HAL_ADCAveragesCounter < HAL_ADC_AVERAGING)
+	{
+		HAL_ADCAccumulator += measurement;
+		HAL_ADCAveragesCounter ++;
+		return;
+	}
+
+	float averaged = HAL_ADCAccumulator / (float)HAL_ADC_AVERAGING;
+	HAL_ADCAccumulator = 0;
+	HAL_ADCAveragesCounter = 0;
+
+	/* Writing result and switching to next channel */
+	switch (HAL_CurrentADCChannel)
+	{
+		case UAnt:
+			HAL_AntennaLevelADC = averaged;
+			HAL_SetupADCForUBattMeasurement();
+			break;
+
+		case UBatt:
+			HAL_BatteryLevelADC = averaged;
+			HAL_SetupADCForU80mMeasurement();
+			break;
+
+		case U80m:
+			HAL_80mLevelADC = averaged;
+			HAL_SetupADCForUAntMeasurement();
+			break;
 	}
 }

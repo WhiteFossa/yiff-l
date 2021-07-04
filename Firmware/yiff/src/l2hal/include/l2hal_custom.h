@@ -109,4 +109,10 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart);
 void HAL_UART_MspDeInit(UART_HandleTypeDef *huart);
 void USART1_IRQHandler(void);
 
+/**
+ * ADC-related stuff
+ */
+void HAL_ADC_MspInit(ADC_HandleTypeDef *hadc);
+void HAL_ADC_MspDeInit(ADC_HandleTypeDef *hadc);
+
 #endif /* L2HAL_INCLUDE_L2HAL_CUSTOM_H_ */

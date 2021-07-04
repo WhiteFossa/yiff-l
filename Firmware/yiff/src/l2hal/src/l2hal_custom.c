@@ -249,8 +249,7 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef *huart)
 		__HAL_RCC_USART1_FORCE_RESET();
 		__HAL_RCC_USART1_RELEASE_RESET();
 
-		HAL_GPIO_DeInit(GPIOA, GPIO_PIN_9);
-		HAL_GPIO_DeInit(GPIOA, GPIO_PIN_10);
+		HAL_GPIO_DeInit(GPIOA, GPIO_PIN_9 | GPIO_PIN_10);
 
 		HAL_NVIC_DisableIRQ(USART1_IRQn);
 	}
@@ -259,5 +258,36 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef *huart)
 void USART1_IRQHandler(void)
 {
 	HAL_UART_IRQHandler(&UART_Handle);
+}
+
+void HAL_ADC_MspInit(ADC_HandleTypeDef *hadc)
+{
+	/* Clocking in */
+	__HAL_RCC_ADC1_CLK_ENABLE();
+
+	RCC_PeriphCLKInitTypeDef  PeriphClkInit;
+	PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_ADC;
+	PeriphClkInit.AdcClockSelection = RCC_ADCPCLK2_DIV6;
+	HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit);
+
+	__HAL_RCC_GPIOA_CLK_ENABLE();
+	GPIO_InitTypeDef gpioInit;
+	gpioInit.Pin = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2;
+	gpioInit.Mode = GPIO_MODE_ANALOG;
+	gpioInit.Pull = GPIO_NOPULL;
+	HAL_GPIO_Init(GPIOA, &gpioInit);
+
+	HAL_NVIC_SetPriority(ADC1_IRQn, 1, 0);
+	HAL_NVIC_EnableIRQ(ADC1_IRQn);
+}
+
+void HAL_ADC_MspDeInit(ADC_HandleTypeDef *hadc)
+{
+	__HAL_RCC_ADC1_FORCE_RESET();
+	__HAL_RCC_ADC1_RELEASE_RESET();
+
+	HAL_GPIO_DeInit(GPIOA, GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2);
+
+	HAL_NVIC_DisableIRQ(ADC1_IRQn);
 }
 

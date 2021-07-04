@@ -185,4 +185,9 @@ void SysTick_Handler(void)
   * @}
   */
 
+void ADC1_IRQHandler(void)
+{
+	HAL_ADC_IRQHandler(&ADC_Handle);
+}
+
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
