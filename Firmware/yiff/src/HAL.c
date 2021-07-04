@@ -339,5 +339,5 @@ void HAL_ConnectToU80mRegulator(void)
 		L2HAL_Error(Generic);
 	}
 
-	L2HAL_AD5245_SetValue(&U80mRegulatorContext, 0x80);
+	L2HAL_AD5245_SetValue(&U80mRegulatorContext, 0x00);
 }

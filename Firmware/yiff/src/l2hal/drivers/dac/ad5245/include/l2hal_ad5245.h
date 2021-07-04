@@ -91,7 +91,7 @@
 #define L2HAL_AD5245_BUS_TIMEOUT 100
 
 /**
- * 24x EEPROM context
+ * AD5245 context
  */
 typedef struct
 {
