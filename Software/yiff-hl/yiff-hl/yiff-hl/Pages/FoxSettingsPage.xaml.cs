@@ -796,5 +796,29 @@ namespace yiff_hl.Pages
         }
 
         #endregion
+
+        #region Get UAnt (ADC)
+
+        private void OnGetUAntADCClicked(object sender, EventArgs e)
+        {
+            GetUAntADC();
+        }
+
+        private void GetUAntADC()
+        {
+            var command = new GetUAntADCCommand(packetsProcessor);
+            command.SetResponseDelegate(OnGetUAntADCResponse);
+            command.SendGetUAntADCCommand();
+        }
+
+        private void OnGetUAntADCResponse(float uAnt)
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                edUAntADC.Text = $"{uAnt}";
+            });
+        }
+
+        #endregion
     }
 }

@@ -57,6 +57,8 @@
 
         SetFoxPower = 0x19,
 
-        GetBatteryLevel = 0x1A
+        GetBatteryLevel = 0x1A,
+
+        GetUAntADC = 0x1B
     }
 }

@@ -347,6 +347,34 @@
                     Clicked="OnGetBatteryLevelClicked"
                     />
 
+                <Frame
+                    BackgroundColor="DarkSlateGray">
+                    <StackLayout>
+
+                        <Label
+                            Text="Service commands"
+                            />
+
+                        <StackLayout
+                            Orientation="Horizontal">
+
+                            <Editor
+                                x:Name="edUAntADC"
+                                WidthRequest="200" />
+
+                            <Label
+                                Text="UAnt (ADC)"
+                            />
+                        </StackLayout>
+
+                        <Button
+                            Text="Get UAnt (ADC)"
+                            Clicked="OnGetUAntADCClicked"
+                            />
+
+                    </StackLayout>
+                </Frame>
+
                 <Button
                     Text="Disconnect"
                     Clicked="OnDisconnectClicked"

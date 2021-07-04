@@ -44,6 +44,7 @@ namespace yiff_hl.Business.Implementations
         private OnResponseDelegate onGetFoxPowerResponse;
         private OnResponseDelegate onSetFoxPowerResponse;
         private OnResponseDelegate onGetBatteryLevelResponse;
+        private OnResponseDelegate onGetUAntADCResponse;
 
         private enum ReceiverState
         {
@@ -385,6 +386,13 @@ namespace yiff_hl.Business.Implementations
                     onGetBatteryLevelResponse(responsePayload);
                     break;
 
+                // Get 3.5MHz antenna voltage (ADC)
+                case CommandType.GetUAntADC:
+                    CheckOnResponseDelegate(onGetUAntADCResponse);
+
+                    onGetUAntADCResponse(responsePayload);
+                    break;
+
                 default:
                     return; // We've got some junk
             }
@@ -546,6 +554,11 @@ namespace yiff_hl.Business.Implementations
         public void SetOnGetBatteryLevelResponse(OnResponseDelegate onGetBatteryLevelResponse)
         {
             this.onGetBatteryLevelResponse = onGetBatteryLevelResponse ?? throw new ArgumentNullException(nameof(onGetBatteryLevelResponse));
+        }
+
+        public void SetOnGetUAntADCResponse(OnResponseDelegate onGetUAntADCResponse)
+        {
+            this.onGetUAntADCResponse = onGetUAntADCResponse ?? throw new ArgumentNullException(nameof(onGetUAntADCResponse));
         }
     }
 }

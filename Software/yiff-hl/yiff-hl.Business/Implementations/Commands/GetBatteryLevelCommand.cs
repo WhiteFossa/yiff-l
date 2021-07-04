@@ -7,6 +7,7 @@ using yiff_hl.Abstractions.Interfaces;
 namespace yiff_hl.Business.Implementations.Commands
 {
     public delegate void OnGetBatteryLevelResponseDelegate(float level);
+
     public class GetBatteryLevelCommand
     {
         private readonly IPacketsProcessor packetsProcessor;
@@ -45,10 +46,9 @@ namespace yiff_hl.Business.Implementations.Commands
                 return;
             }
 
-            var power = BitConverter.ToSingle(payload.ToArray(), 0);
+            var level = BitConverter.ToSingle(payload.ToArray(), 0);
 
-            onGetBatteryLevelResponse(power);
+            onGetBatteryLevelResponse(level);
         }
-
     }
 }

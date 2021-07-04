@@ -55,6 +55,7 @@ namespace yiff_hl.Abstractions.Interfaces
         void SetOnGetFoxPowerResponse(OnResponseDelegate onGetFoxPowerResponse);
         void SetOnSetFoxPowerResponse(OnResponseDelegate onSetFoxPowerResponse);
         void SetOnGetBatteryLevelResponse(OnResponseDelegate onGetBatteryLevelResponse);
+        void SetOnGetUAntADCResponse(OnResponseDelegate onGetUAntADCResponse);
 
 
         #endregion
