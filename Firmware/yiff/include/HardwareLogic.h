@@ -17,7 +17,7 @@
 /**
  * Allowed U80m set-up error
  */
-#define YHL_HL_U80M_TOLERANCY 0.05f
+#define YHL_HL_U80M_TOLERANCY 0.1f
 
 /**
  * If U80m is within limits during this count of measurements we assume that we found required U80m regulator code

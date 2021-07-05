@@ -58,21 +58,20 @@ void HL_U80mMeasurementCallback(void)
 	if (fabs(currentVoltage - HL_U80mTarget) <= YHL_HL_U80M_TOLERANCY)
 	{
 		/* Voltage is OK */
-		if (HL_IsU80mFeedbackActive)
+		if (HL_U80mLockCounter < YHL_HL_U80M_LOCK_DURATION)
 		{
-			if (HL_U80mLockCounter < YHL_HL_U80M_LOCK_DURATION)
-			{
-				HL_U80mLockCounter ++;
-			}
-			else
-			{
-				/* Required voltage is achieved */
-				HL_IsU80mFeedbackActive = false;
-			}
+			HL_U80mLockCounter ++;
+		}
+		else
+		{
+			/* Required voltage is achieved */
+			HL_IsU80mFeedbackActive = false;
 		}
 
 		return;
 	}
+
+	HL_U80mLockCounter = 0; /* Miss */
 
 	int16_t newRegulatorCode = HAL_GetU80mRegulatorCode();
 

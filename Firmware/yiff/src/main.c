@@ -63,7 +63,7 @@ int main(int argc, char* argv[])
 
 	HAL_Delay(1000); /* To give regulators time to spin up */
 
-	HL_SetupU80m(13.5);
+	HL_SetupU80m(20.0f);
 
 	/* Setting up CRC calculator */
 	CRC_Context = L2HAL_CRC_Init();
