@@ -47,6 +47,7 @@ namespace yiff_hl.Business.Implementations
         private OnResponseDelegate onGetUAntADCResponse;
         private OnResponseDelegate onGetUBattADCResponse;
         private OnResponseDelegate onGetU80mADCResponse;
+        private OnResponseDelegate onGetUBattVoltsResponse;
 
         private enum ReceiverState
         {
@@ -409,6 +410,13 @@ namespace yiff_hl.Business.Implementations
                     onGetU80mADCResponse(responsePayload);
                     break;
 
+                // Get battery voltage (volts)
+                case CommandType.GetUBattVolts:
+                    CheckOnResponseDelegate(onGetUBattVoltsResponse);
+
+                    onGetUBattVoltsResponse(responsePayload);
+                    break;
+
                 default:
                     return; // We've got some junk
             }
@@ -585,6 +593,11 @@ namespace yiff_hl.Business.Implementations
         public void SetOnGetU80mADCResponse(OnResponseDelegate onGetU80mADCResponse)
         {
             this.onGetU80mADCResponse = onGetU80mADCResponse ?? throw new ArgumentNullException(nameof(onGetU80mADCResponse));
+        }
+
+        public void SetOnGetUBattVoltsResponse(OnResponseDelegate onGetUBattVoltsResponse)
+        {
+            this.onGetUBattVoltsResponse = onGetUBattVoltsResponse ?? throw new ArgumentNullException(nameof(onGetUBattVoltsResponse));
         }
     }
 }

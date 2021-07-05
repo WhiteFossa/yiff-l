@@ -868,5 +868,29 @@ namespace yiff_hl.Pages
         }
 
         #endregion
+
+        #region Get UBatt (Volts)
+
+        private void OnGetUBattVoltsClicked(object sender, EventArgs e)
+        {
+            GetUBattVolts();
+        }
+
+        private void GetUBattVolts()
+        {
+            var command = new GetUBattVoltsCommand(packetsProcessor);
+            command.SetResponseDelegate(OnGetUBattVoltsResponse);
+            command.SendGetUBattVoltsCommand();
+        }
+
+        private void OnGetUBattVoltsResponse(float uBatt)
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                edUBattVolts.Text = $"{uBatt}";
+            });
+        }
+
+        #endregion
     }
 }

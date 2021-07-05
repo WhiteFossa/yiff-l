@@ -388,7 +388,24 @@
                             Text="Get UBatt (ADC)"
                             Clicked="OnGetUBattADCClicked"
                             />
-                        
+
+                        <StackLayout
+                            Orientation="Horizontal">
+
+                            <Editor
+                                x:Name="edUBattVolts"
+                                WidthRequest="200" />
+
+                            <Label
+                                Text="UBatt (Volts)"
+                            />
+                        </StackLayout>
+
+                        <Button
+                            Text="Get UBatt (Volts)"
+                            Clicked="OnGetUBattVoltsClicked"
+                            />
+
                         <StackLayout
                             Orientation="Horizontal">
 
