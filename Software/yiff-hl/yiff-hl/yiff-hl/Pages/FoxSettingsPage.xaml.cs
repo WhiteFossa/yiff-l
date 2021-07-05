@@ -892,5 +892,29 @@ namespace yiff_hl.Pages
         }
 
         #endregion
+
+        #region Get U80m (Volts)
+
+        private void OnGetU80mVoltsClicked(object sender, EventArgs e)
+        {
+            GetU80mVolts();
+        }
+
+        private void GetU80mVolts()
+        {
+            var command = new GetU80mVoltsCommand(packetsProcessor);
+            command.SetResponseDelegate(OnGetU80mVoltsResponse);
+            command.SendGetU80mVoltsCommand();
+        }
+
+        private void OnGetU80mVoltsResponse(float u80m)
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                edU80mVolts.Text = $"{u80m}";
+            });
+        }
+
+        #endregion
     }
 }

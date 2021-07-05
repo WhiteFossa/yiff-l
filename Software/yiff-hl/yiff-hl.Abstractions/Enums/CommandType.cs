@@ -65,6 +65,8 @@
 
         GetU80mADC = 0x1D,
 
-        GetUBattVolts = 0x1E
+        GetUBattVolts = 0x1E,
+
+        GetU80mVolts = 0x1F
     }
 }

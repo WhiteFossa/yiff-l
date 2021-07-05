@@ -59,6 +59,7 @@ namespace yiff_hl.Abstractions.Interfaces
         void SetOnGetUBattADCResponse(OnResponseDelegate onGetUBattADCResponse);
         void SetOnGetU80mADCResponse(OnResponseDelegate onGetU80mADCResponse);
         void SetOnGetUBattVoltsResponse(OnResponseDelegate onGetUBattVoltsResponse);
+        void SetOnGetU80mVoltsResponse(OnResponseDelegate onGetU80mVoltsResponse);
 
 
         #endregion

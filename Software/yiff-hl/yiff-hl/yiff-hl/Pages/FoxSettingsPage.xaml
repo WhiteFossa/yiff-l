@@ -423,6 +423,23 @@
                             Clicked="OnGetU80mADCClicked"
                             />
 
+                        <StackLayout
+                            Orientation="Horizontal">
+
+                            <Editor
+                                x:Name="edU80mVolts"
+                                WidthRequest="200" />
+
+                            <Label
+                                Text="U80m (Volts)"
+                            />
+                        </StackLayout>
+
+                        <Button
+                            Text="Get U80m (Volts)"
+                            Clicked="OnGetU80mVoltsClicked"
+                            />
+
                     </StackLayout>
                 </Frame>
 
