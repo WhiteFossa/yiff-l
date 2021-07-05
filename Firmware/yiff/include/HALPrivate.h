@@ -29,6 +29,16 @@ volatile float HAL_80mLevelADC;
 volatile float HAL_ADCAccumulator;
 
 /**
+ * Callback, called when new measurement of 3.5MHz output stage voltage arrives
+ */
+void (*HAL_U80mNewMeasurementCallback)(void);
+
+/**
+ * Current U80m regulator code
+ */
+float HAL_CurrentU80mCode;
+
+/**
  * Averages counter
  */
 volatile uint16_t HAL_ADCAveragesCounter;
@@ -42,6 +52,5 @@ volatile HAL_ADCChannelEnum HAL_CurrentADCChannel;
  * Call from ADC interrupt handler to add measurement
  */
 void HAL_AddNewADCMeasurement(uint16_t measurement);
-
 
 #endif /* INCLUDE_HALPRIVATE_H_ */

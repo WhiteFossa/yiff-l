@@ -92,6 +92,11 @@
  */
 #define HAL_U80M_REGULATOR_BUS_ADDRESS 0x58
 
+/**
+ * Code for U80m lowest voltage
+ */
+#define HAL_U80M_LOWEST_VOLTAGE_CODE 0xFF
+
 extern ADC_HandleTypeDef ADC_Handle;
 extern L2HAL_AD5245_ContextStruct U80mRegulatorContext;
 extern I2C_HandleTypeDef I2C_Other;
@@ -200,16 +205,30 @@ float HAL_GetU80mADC(void);
  */
 float HAL_GetU80mVolts(void);
 
-
 /**
  * Returns battery charge level [0-1]
  */
 float HAL_GetBatteryLevel(void);
 
 /**
- * Sets up context for 3.5MHz output stage voltage regulator
+ * Sets up context for 3.5MHz output stage voltage regulator, and setting least possible voltage
  */
 void HAL_ConnectToU80mRegulator(void);
+
+/**
+ * Sets 3.5MHz output stage voltage regulator code. 0x00 - maximal voltage, 0xFF - minimal
+ */
+void HAL_SetU80mRegulatorCode(uint8_t code);
+
+/**
+ * Get U80m regulator code
+ */
+uint8_t HAL_GetU80mRegulatorCode(void);
+
+/**
+ * Call this function to set callback, which will be called when new measurement of 3.5MHz output stage voltage arrives
+ */
+void HAL_SetU80mMeasuredCallback(void (*callback)(void));
 
 
 #endif /* INCLUDE_HAL_H_ */

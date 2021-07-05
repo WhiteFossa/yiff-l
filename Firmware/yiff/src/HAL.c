@@ -70,6 +70,7 @@ void HAL_IntiHardware(void)
 	HAL_BatteryLevelADC = 0;
 	HAL_ADCAccumulator = 0;
 	HAL_ADCAveragesCounter = 0;
+	HAL_U80mNewMeasurementCallback = NULL;
 
 	/**
 	 * Launching ADC conversions
@@ -285,6 +286,12 @@ void HAL_AddNewADCMeasurement(uint16_t measurement)
 
 		case U80m:
 			HAL_80mLevelADC = averaged;
+
+			if (HAL_U80mNewMeasurementCallback != NULL)
+			{
+				HAL_U80mNewMeasurementCallback();
+			}
+
 			HAL_SetupADCForUAntMeasurement();
 			break;
 	}
@@ -346,5 +353,21 @@ void HAL_ConnectToU80mRegulator(void)
 		L2HAL_Error(Generic);
 	}
 
-	L2HAL_AD5245_SetValue(&U80mRegulatorContext, 0x00);
+	HAL_SetU80mRegulatorCode(HAL_U80M_LOWEST_VOLTAGE_CODE); // Least possible voltage
+}
+
+void HAL_SetU80mRegulatorCode(uint8_t code)
+{
+	HAL_CurrentU80mCode = code;
+	L2HAL_AD5245_SetValue(&U80mRegulatorContext, code);
+}
+
+uint8_t HAL_GetU80mRegulatorCode(void)
+{
+	return HAL_CurrentU80mCode;
+}
+
+void HAL_SetU80mMeasuredCallback(void (*callback)(void))
+{
+	HAL_U80mNewMeasurementCallback = callback;
 }

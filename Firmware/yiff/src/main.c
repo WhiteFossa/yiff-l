@@ -49,7 +49,7 @@ int main(int argc, char* argv[])
 {
 	/* Setting up hardware */
 	L2HAL_Init();
-	HAL_IntiHardware();
+	HL_Init();
 
 	/* Hardware debug
 	 * TODO: Remove me */
@@ -62,6 +62,8 @@ int main(int argc, char* argv[])
 	HAL_SwitchUBattCheck(true);
 
 	HAL_Delay(1000); /* To give regulators time to spin up */
+
+	HL_SetupU80m(13.5);
 
 	/* Setting up CRC calculator */
 	CRC_Context = L2HAL_CRC_Init();
