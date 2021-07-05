@@ -14,6 +14,7 @@ void HL_Init()
 
 	HL_IsU80mFeedbackActive = false;
 	HL_U80mLockCounter = 0;
+	HL_U80mLockCallback = NULL;
 
 	HAL_SetU80mMeasuredCallback(HL_U80mMeasurementCallback);
 }
@@ -55,7 +56,9 @@ void HL_U80mMeasurementCallback(void)
 
 	float currentVoltage = HAL_GetU80mVolts();
 
-	if (fabs(currentVoltage - HL_U80mTarget) <= YHL_HL_U80M_TOLERANCY)
+	float delta = fabs(currentVoltage - HL_U80mTarget);
+
+	if (delta <= YHL_HL_U80M_TOLERANCY)
 	{
 		/* Voltage is OK */
 		if (HL_U80mLockCounter < YHL_HL_U80M_LOCK_DURATION)
@@ -66,6 +69,11 @@ void HL_U80mMeasurementCallback(void)
 		{
 			/* Required voltage is achieved */
 			HL_IsU80mFeedbackActive = false;
+
+			if (HL_U80mLockCallback != NULL)
+			{
+				HL_U80mLockCallback();
+			}
 		}
 
 		return;
@@ -75,14 +83,20 @@ void HL_U80mMeasurementCallback(void)
 
 	int16_t newRegulatorCode = HAL_GetU80mRegulatorCode();
 
+	float codeDelta = delta * YHL_HL_U80M_PROPORTIONAL_REGULATION_FACTOR;
+	if (codeDelta < 1)
+	{
+		codeDelta = 1;
+	}
+
 	if (currentVoltage < HL_U80mTarget)
 	{
 		/* Need to increase voltage -> decrease code */
-		newRegulatorCode --;
+		newRegulatorCode -= codeDelta;
 	}
 	else
 	{
-		newRegulatorCode ++;
+		newRegulatorCode += codeDelta;
 	}
 
 	if (newRegulatorCode < 0)
@@ -95,4 +109,9 @@ void HL_U80mMeasurementCallback(void)
 	}
 
 	HAL_SetU80mRegulatorCode((uint8_t)newRegulatorCode);
+}
+
+void HL_SetU80mLockCallback(void (*callback)(void))
+{
+	HL_U80mLockCallback = callback;
 }

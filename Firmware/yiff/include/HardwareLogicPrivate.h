@@ -24,6 +24,11 @@ bool HL_IsU80mFeedbackActive;
 uint16_t HL_U80mLockCounter;
 
 /**
+ * This callback is called when target U80m is achieved
+ */
+void (*HL_U80mLockCallback)(void);
+
+/**
  * Call it when new measurement of U80m arrives
  */
 void HL_U80mMeasurementCallback(void);

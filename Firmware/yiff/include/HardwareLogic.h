@@ -20,6 +20,11 @@
 #define YHL_HL_U80M_TOLERANCY 0.1f
 
 /**
+ * Proportional factor for U80m regulation
+ */
+#define YHL_HL_U80M_PROPORTIONAL_REGULATION_FACTOR 10.0f
+
+/**
  * If U80m is within limits during this count of measurements we assume that we found required U80m regulator code
  */
 #define YHL_HL_U80M_LOCK_DURATION 100U
@@ -38,5 +43,11 @@ void ProcessManipulatorFoxStateChange(void);
  * Call it to set-up 3.5MHz output stage voltage
  */
 void HL_SetupU80m(float targetVoltage);
+
+/**
+ * Call this function to set U80m lock callback.
+ * This callback will be called when desired voltage is achieved after HL_SetupU80m() call.
+ */
+void HL_SetU80mLockCallback(void (*callback)(void));
 
 #endif /* INCLUDE_HARDWARELOGIC_H_ */
