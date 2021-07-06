@@ -65,6 +65,16 @@ ADC_HandleTypeDef ADC_Handle;
  */
 L2HAL_AD5245_ContextStruct U80mRegulatorContext;
 
+/**
+ * SPI bus handle.
+ */
+SPI_HandleTypeDef SPIHandle;
+
+/**
+ * Frequency synthesizer context
+ */
+L2HAL_AD9835_ContextStruct SynthesizerContext;
+
 
 /****************************
 * Graphics stuff goes below *

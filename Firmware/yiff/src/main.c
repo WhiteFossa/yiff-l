@@ -63,8 +63,6 @@ int main(int argc, char* argv[])
 
 	HAL_Delay(1000); /* To give regulators time to spin up */
 
-	HL_SetupU80m(12.0f);
-
 	/* Setting up CRC calculator */
 	CRC_Context = L2HAL_CRC_Init();
 
@@ -205,6 +203,9 @@ int main(int argc, char* argv[])
 	UART_StartListen(&OnNewRawPacket);
 
 	/* Debugging stuff begin */
+
+	/* Preparing fox for launch */
+	HL_PrepareFoxFor80mCycleEP();
 
 	/* Debugging stuff end */
 

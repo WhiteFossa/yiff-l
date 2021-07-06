@@ -63,6 +63,13 @@ void HAL_IntiHardware(void)
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
 	HAL_GPIO_Init(HAL_ENABLE_UBATT_CHECK_PORT, &GPIO_InitStruct);
 
+	/* Synthesizer fsync */
+	GPIO_InitStruct.Pin = HAL_SYNTHESIZER_FSYNC_PIN;
+	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW; /* Note me! High speed leads to lots of noice */
+	HAL_GPIO_Init(HAL_SYNTHESIZER_FSYNC_PORT, &GPIO_InitStruct);
+
 	/**
 	 * Variables initial state
 	 */
@@ -82,17 +89,22 @@ void HAL_IntiHardware(void)
 	 * Setting up 3.5MHz output stage power source
 	 */
 	HAL_ConnectToU80mRegulator();
+
+	/**
+	 * Connecting to frequency synthesizer
+	 */
+	HAL_ConnectToSynthesizer();
 }
 
 void HAL_SwitchManipulator(bool isTxOn)
 {
 	if (isTxOn)
 	{
-		HAL_GPIO_WritePin(HAL_MANIPULATOR_PORT, HAL_MANIPULATOR_PIN, GPIO_PIN_SET);
+		HAL_GPIO_WritePin(HAL_MANIPULATOR_PORT, HAL_MANIPULATOR_PIN, GPIO_PIN_RESET);
 	}
 	else
 	{
-		HAL_GPIO_WritePin(HAL_MANIPULATOR_PORT, HAL_MANIPULATOR_PIN, GPIO_PIN_RESET);
+		HAL_GPIO_WritePin(HAL_MANIPULATOR_PORT, HAL_MANIPULATOR_PIN, GPIO_PIN_SET);
 	}
 
 	FoxState.IsTXOn = isTxOn;
@@ -370,4 +382,37 @@ uint8_t HAL_GetU80mRegulatorCode(void)
 void HAL_SetU80mMeasuredCallback(void (*callback)(void))
 {
 	HAL_U80mNewMeasurementCallback = callback;
+}
+
+float HAL_GetU80mFromPower(float power)
+{
+	return EEPROM_Header.P80mA * power + EEPROM_Header.P80mB;
+}
+
+void HAL_ConnectToSynthesizer(void)
+{
+	SynthesizerContext.SPIHandle = &SPIHandle;
+	SynthesizerContext.FSYNCPort = GPIOA;
+	SynthesizerContext.FSYNCPin = GPIO_PIN_8;
+	L2HAL_AD9835_Init(&SynthesizerContext);
+
+	HAL_PutSynthesizerToSleep();
+}
+
+void HAL_PutSynthesizerToSleep(void)
+{
+	L2HAL_AD9835_PowerControl(&SynthesizerContext, true, false, false);
+}
+
+void HAL_WakeSynthesizerUp(void)
+{
+	L2HAL_AD9835_PowerControl(&SynthesizerContext, false, false, false);
+}
+
+void HAL_SetupSynthesizer(float frequency)
+{
+	uint32_t frequencyWord = floor(HAL_SYNTHESIZER_MAX_PHA * frequency / HAL_SYNTHESIZER_BASE_CLOCK+ 0.5f);
+
+	L2HAL_AD9835_WriteFrequencyWord(&SynthesizerContext, Freg0, frequencyWord);
+	HAL_WakeSynthesizerUp();
 }

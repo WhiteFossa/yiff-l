@@ -32,6 +32,10 @@ void EEPROM_Format(void)
 	defaultHeader.U80mADCA = YHL_DEFAULT_ADC_U80M_A;
 	defaultHeader.U80mADCB = YHL_DEFAULT_ADC_U80M_B;
 
+	/* Factors for output power */
+	defaultHeader.P80mA = YHL_DEFAULT_P80M_A;
+	defaultHeader.P80mB = YHL_DEFAULT_P80M_B;
+
 	defaultHeader.CRCSum = 0;
 	EEPROM_WriteHeader(&defaultHeader, constantHeader.HeaderAddress);
 }

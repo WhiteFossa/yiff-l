@@ -115,3 +115,40 @@ void HL_SetU80mLockCallback(void (*callback)(void))
 {
 	HL_U80mLockCallback = callback;
 }
+
+void HL_PrepareFoxFor80mCycleEP(void)
+{
+	if (FoxState.Frequency.Is144MHz)
+	{
+		L2HAL_Error(Generic);
+	}
+
+	/* Disabling manipulator (just as precaution) */
+	HAL_SwitchManipulator(false);
+
+	/* Activating 3.5MHz tract */
+	HAL_Activate80M(true);
+
+	HAL_Delay(HAL_REGULATORS_SPIN_UP_TIME);
+
+	/* Converting required power into voltage and setting U80m */
+	float requiredU80m = HAL_GetU80mFromPower(FoxState.Power);
+	HL_SetU80mLockCallback(HL_PrepareFoxFor80mCycleContU80m);
+	HL_SetupU80m(requiredU80m);
+}
+
+void HL_PrepareFoxFor80mCycleContU80m(void)
+{
+	/* Setting up frequency synthesizer */
+	HAL_SetupSynthesizer(FoxState.Frequency.FrequencyHz);
+}
+
+void HL_UnPrepareFoxFrom80mCycle(void)
+{
+	/* Disabling manipulator (just as precaution) */
+	HAL_SwitchManipulator(false);
+
+	HAL_PutSynthesizerToSleep();
+
+	HAL_Activate80M(false);
+}

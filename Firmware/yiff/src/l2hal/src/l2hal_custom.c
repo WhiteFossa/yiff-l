@@ -40,7 +40,11 @@
 void L2HAL_InitCustomHardware(void)
 {
 	/* Preparing I2C */
-	L2HAL_SetupI2C();}
+	L2HAL_SetupI2C();
+
+	/* And SPI */
+	L2HAL_SetupSPI();
+}
 
 void L2HAL_SetupI2C(void)
 {
@@ -289,5 +293,52 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef *hadc)
 	HAL_GPIO_DeInit(GPIOA, GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2);
 
 	HAL_NVIC_DisableIRQ(ADC1_IRQn);
+}
+
+void HAL_SPI_MspInit(SPI_HandleTypeDef *hspi)
+{
+	if (hspi->Instance == SPI1)
+	{
+		/**
+		 * Setting up port and SPI
+		 * SPI1 at PA5 (SCK) and PA7 (MOSI)
+		 */
+		__HAL_RCC_GPIOA_CLK_ENABLE();
+		__HAL_RCC_SPI1_CLK_ENABLE();
+
+		GPIO_InitTypeDef GPIO_InitStruct;
+		GPIO_InitStruct.Pin = GPIO_PIN_5 | GPIO_PIN_7;
+		GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+		GPIO_InitStruct.Pull = GPIO_NOPULL;
+		GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+		HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+	}
+}
+
+void HAL_SPI_MspDeInit(SPI_HandleTypeDef *hspi)
+{
+	HAL_GPIO_DeInit(GPIOA, GPIO_PIN_5 | GPIO_PIN_7);
+}
+
+void L2HAL_SetupSPI(void)
+{
+	SPIHandle.Instance = SPI1;
+	SPIHandle.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_256;
+	SPIHandle.Init.Direction = SPI_DIRECTION_2LINES;
+	SPIHandle.Init.CLKPhase = SPI_PHASE_1EDGE;
+	SPIHandle.Init.CLKPolarity = SPI_POLARITY_HIGH;
+	SPIHandle.Init.DataSize = SPI_DATASIZE_8BIT;
+	SPIHandle.Init.FirstBit = SPI_FIRSTBIT_MSB;
+	SPIHandle.Init.TIMode = SPI_TIMODE_DISABLE;
+	SPIHandle.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
+	SPIHandle.Init.CRCPolynomial = 0;
+	SPIHandle.Init.NSS = SPI_NSS_SOFT;
+	SPIHandle.Init.Mode = SPI_MODE_MASTER;
+
+	if(HAL_SPI_Init(&SPIHandle) != HAL_OK)
+	{
+		/* Initialization Error */
+		L2HAL_Error(Generic);
+	}
 }
 

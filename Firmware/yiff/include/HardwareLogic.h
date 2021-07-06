@@ -50,4 +50,14 @@ void HL_SetupU80m(float targetVoltage);
  */
 void HL_SetU80mLockCallback(void (*callback)(void));
 
+/**
+ * Prepares for for 80m cycle (entry point).
+ */
+void HL_PrepareFoxFor80mCycleEP(void);
+
+/**
+ * Un-prepares fox after 80m cycle.
+ */
+void HL_UnPrepareFoxFrom80mCycle(void);
+
 #endif /* INCLUDE_HARDWARELOGIC_H_ */

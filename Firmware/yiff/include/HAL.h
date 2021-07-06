@@ -69,7 +69,6 @@
  */
 #define HAL_ADC_U80M_CHANNEL ADC_CHANNEL_2
 
-
 /**
  * ADC measurements count for averaging
  */
@@ -97,10 +96,33 @@
  */
 #define HAL_U80M_LOWEST_VOLTAGE_CODE 0xFF
 
+/**
+ * Wait this time for regulators spin-up
+ */
+#define HAL_REGULATORS_SPIN_UP_TIME 500
+
+/**
+ * Base clock of frequency synthesizer
+ */
+#define HAL_SYNTHESIZER_BASE_CLOCK 50000000.0f
+
+/**
+ * Maximal value for synthesizer phase accumulator
+ */
+#define HAL_SYNTHESIZER_MAX_PHA 4294967296.0f
+
+
+/**
+ * FSYNC pin for frequency synthesizer
+ */
+#define HAL_SYNTHESIZER_FSYNC_PORT GPIOA
+#define HAL_SYNTHESIZER_FSYNC_PIN GPIO_PIN_8
+
 extern ADC_HandleTypeDef ADC_Handle;
 extern L2HAL_AD5245_ContextStruct U80mRegulatorContext;
 extern I2C_HandleTypeDef I2C_Other;
-
+extern L2HAL_AD9835_ContextStruct SynthesizerContext;
+extern SPI_HandleTypeDef SPIHandle;
 
 /**
  * ADC channel in use
@@ -229,6 +251,31 @@ uint8_t HAL_GetU80mRegulatorCode(void);
  * Call this function to set callback, which will be called when new measurement of 3.5MHz output stage voltage arrives
  */
 void HAL_SetU80mMeasuredCallback(void (*callback)(void));
+
+/**
+ * Determines output stage power voltage from requested fox power
+ */
+float HAL_GetU80mFromPower(float power);
+
+/**
+ * Inits synthesizer and puts it to sleep.
+ */
+void HAL_ConnectToSynthesizer(void);
+
+/**
+ * Puts synthesizer to sleep
+ */
+void HAL_PutSynthesizerToSleep(void);
+
+/**
+ * Wakes synthesizer up
+ */
+void HAL_WakeSynthesizerUp(void);
+
+/**
+ * Activates frequncy synthesizer and sets it up for required frequency
+ */
+void HAL_SetupSynthesizer(float frequency);
 
 
 #endif /* INCLUDE_HAL_H_ */

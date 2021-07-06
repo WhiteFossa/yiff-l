@@ -33,4 +33,9 @@ void (*HL_U80mLockCallback)(void);
  */
 void HL_U80mMeasurementCallback(void);
 
+/**
+ * Continuing to prepare fox for transmission, called when U80m locked
+ */
+void HL_PrepareFoxFor80mCycleContU80m(void);
+
 #endif /* INCLUDE_HARDWARELOGICPRIVATE_H_ */

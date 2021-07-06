@@ -37,7 +37,7 @@ extern PendingCommandsFlagsStruct PendingCommandsFlags;
 /**
  * Allowed powers (for 3.5MHz)
  */
-#define YHL_MIN_POWER_80M 0.1f
+#define YHL_MIN_POWER_80M 2.0f
 #define YHL_MAX_POWER_80M 5.0f
 
 

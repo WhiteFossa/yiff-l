@@ -41,6 +41,7 @@
 
 #ifndef L2HAL_INCLUDE_L2HAL_CUSTOM_H_
 #define L2HAL_INCLUDE_L2HAL_CUSTOM_H_
+
 #include <l2hal_ssd1327.h>
 #include <l2hal_buttons.h>
 #include <l2hal_encoders.h>
@@ -48,6 +49,7 @@
 #include <l2hal_crc.h>
 #include <l2hal_hc06.h>
 #include <l2hal_ad5245.h>
+#include <l2hal_ad9835.h>
 
 /**
  * I2C1 interrupt priorities.
@@ -115,5 +117,12 @@ void USART1_IRQHandler(void);
  */
 void HAL_ADC_MspInit(ADC_HandleTypeDef *hadc);
 void HAL_ADC_MspDeInit(ADC_HandleTypeDef *hadc);
+
+/**
+ * SPI-related stuff
+ */
+void HAL_SPI_MspInit(SPI_HandleTypeDef *hspi);
+void HAL_SPI_MspDeInit(SPI_HandleTypeDef *hspi);
+void L2HAL_SetupSPI(void);
 
 #endif /* L2HAL_INCLUDE_L2HAL_CUSTOM_H_ */

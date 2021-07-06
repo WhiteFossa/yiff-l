@@ -45,6 +45,12 @@
 #define YHL_DEFAULT_ADC_U80M_B 0.4150f
 
 /**
+ * Default factors for U80m(volts) to P80m conversion
+ */
+#define YHL_DEFAULT_P80M_A 3.440f
+#define YHL_DEFAULT_P80M_B 2.952f
+
+/**
  * EEPROM constant header. It's structure must not change from version
  * to version
  */
@@ -101,6 +107,12 @@ typedef struct
 
 	float U80mADCA;
 	float U80mADCB;
+
+	/**
+	 * Factors to calculate P80m from U80m
+	 */
+	float P80mA;
+	float P80mB;
 
 	/**
 	 * CRC
