@@ -57,8 +57,6 @@ int main(int argc, char* argv[])
 	HAL_ActivateFox(true);
 	HAL_SwitchBluetoothPower(true);
 
-	HAL_Activate80M(true);
-
 	HAL_SwitchUBattCheck(true);
 
 	HAL_Delay(1000); /* To give regulators time to spin up */
@@ -204,9 +202,6 @@ int main(int argc, char* argv[])
 
 	/* Debugging stuff begin */
 
-	/* Preparing fox for launch */
-	HL_PrepareFoxFor80mCycleEP();
-
 	/* Debugging stuff end */
 
 	while(true)
@@ -336,7 +331,7 @@ void Main_ProcessSetSpeed(void)
 }
 
 void Main_ProcessSetCycle(void)
-{
+{HAL_GPIO_WritePin(HAL_MANIPULATOR_PORT, HAL_MANIPULATOR_PIN, GPIO_PIN_SET);
 	if (PendingCommandsFlags.NeedToSetCycle)
 	{
 		EEPROM_CurrentProfile.Cycle = FoxState.Cycle;

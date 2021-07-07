@@ -118,11 +118,33 @@
 #define HAL_SYNTHESIZER_FSYNC_PORT GPIOA
 #define HAL_SYNTHESIZER_FSYNC_PIN GPIO_PIN_8
 
+
+/*
+ * Timer clock is 12MHz
+ **/
+#define HAL_TONE_TIMER_PRESCALER (uint32_t)((SystemCoreClock / 12000000) - 1);
+
+/*
+ * Period is 6KHz, so compares happens at 2KHz frequency, which leads to 1KHz tone (because of TIM_OCMODE_TOGGLE)
+ **/
+#define HAL_TONE_TIMER_PERIOD 6000 - 1;
+
+/*
+ * Timer itself
+ **/
+#define HAL_TONE_TIMER TIM3
+
+/**
+ * Tone timer channel
+ */
+#define HAL_TONE_TIMER_CHANNEL TIM_CHANNEL_3
+
 extern ADC_HandleTypeDef ADC_Handle;
 extern L2HAL_AD5245_ContextStruct U80mRegulatorContext;
 extern I2C_HandleTypeDef I2C_Other;
 extern L2HAL_AD9835_ContextStruct SynthesizerContext;
 extern SPI_HandleTypeDef SPIHandle;
+extern TIM_HandleTypeDef ToneTimerHandle;
 
 /**
  * ADC channel in use
@@ -276,6 +298,15 @@ void HAL_WakeSynthesizerUp(void);
  * Activates frequncy synthesizer and sets it up for required frequency
  */
 void HAL_SetupSynthesizer(float frequency);
+
+/* Enables timer, which generate 144MHz modulation tone */
+void HAL_Enable2mToneGenerator(void);
+
+/**
+ * Disables tone generation timer (see HAL_Enable2mTonGenerator()) and restores normal state
+ * of manipulator pin.
+ */
+void HAL_Disable2mToneGenerator(void);
 
 
 #endif /* INCLUDE_HAL_H_ */

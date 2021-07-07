@@ -100,11 +100,28 @@ void HAL_SwitchManipulator(bool isTxOn)
 {
 	if (isTxOn)
 	{
-		HAL_GPIO_WritePin(HAL_MANIPULATOR_PORT, HAL_MANIPULATOR_PIN, GPIO_PIN_RESET);
+		if (FoxState.Frequency.Is144MHz)
+		{
+			/* Turn tone generator on, active is high */
+			HAL_Enable2mToneGenerator();
+		}
+		else
+		{
+			HAL_GPIO_WritePin(HAL_MANIPULATOR_PORT, HAL_MANIPULATOR_PIN, GPIO_PIN_RESET); /* Active is low */
+		}
 	}
 	else
 	{
-		HAL_GPIO_WritePin(HAL_MANIPULATOR_PORT, HAL_MANIPULATOR_PIN, GPIO_PIN_SET);
+		if (FoxState.Frequency.Is144MHz)
+		{
+			/* Turn tone generator off */
+			HAL_Disable2mToneGenerator();
+			HAL_GPIO_WritePin(HAL_MANIPULATOR_PORT, HAL_MANIPULATOR_PIN, GPIO_PIN_RESET); /* Inactive is low*/
+		}
+		else
+		{
+			HAL_GPIO_WritePin(HAL_MANIPULATOR_PORT, HAL_MANIPULATOR_PIN, GPIO_PIN_SET); /* Inactive is high */
+		}
 	}
 
 	FoxState.IsTXOn = isTxOn;
@@ -415,4 +432,62 @@ void HAL_SetupSynthesizer(float frequency)
 
 	L2HAL_AD9835_WriteFrequencyWord(&SynthesizerContext, Freg0, frequencyWord);
 	HAL_WakeSynthesizerUp();
+}
+
+void HAL_Enable2mToneGenerator(void)
+{
+	if (HAL_TIM_OC_GetState(&ToneTimerHandle) == HAL_TIM_STATE_READY)
+	{
+		return;
+	}
+
+	/* Setting up timer */
+	ToneTimerHandle.Instance = HAL_TONE_TIMER;
+
+	ToneTimerHandle.Init.Prescaler = HAL_TONE_TIMER_PRESCALER;
+	ToneTimerHandle.Init.Period = HAL_TONE_TIMER_PERIOD;
+	ToneTimerHandle.Init.ClockDivision = 0;
+	ToneTimerHandle.Init.CounterMode = TIM_COUNTERMODE_UP;
+	ToneTimerHandle.Init.RepetitionCounter = 0;
+	ToneTimerHandle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+
+	if (HAL_TIM_OC_Init(&ToneTimerHandle) != HAL_OK)
+	{
+		L2HAL_Error(Generic);
+	}
+
+	/* Setting up timer output channel */
+	TIM_OC_InitTypeDef channel;
+	channel.OCMode = TIM_OCMODE_TOGGLE;
+	channel.Pulse = 0;
+	channel.OCPolarity = TIM_OCPOLARITY_HIGH;
+	channel.OCNPolarity = TIM_OCNPOLARITY_HIGH;
+	channel.OCFastMode = TIM_OCFAST_DISABLE;
+	channel.OCIdleState = TIM_OCIDLESTATE_RESET;
+	channel.OCNIdleState = TIM_OCNIDLESTATE_RESET;
+
+	if (HAL_TIM_OC_ConfigChannel(&ToneTimerHandle, &channel, HAL_TONE_TIMER_CHANNEL) != HAL_OK)
+	{
+		L2HAL_Error(Generic);
+	}
+
+	if (HAL_TIM_OC_Start(&ToneTimerHandle, HAL_TONE_TIMER_CHANNEL) != HAL_OK)
+	{
+		L2HAL_Error(Generic);
+	}
+}
+
+void HAL_Disable2mToneGenerator(void)
+{
+	if (HAL_TIM_OC_GetState(&ToneTimerHandle) == HAL_TIM_STATE_RESET)
+	{
+		return;
+	}
+
+	if (HAL_TIM_OC_Stop(&ToneTimerHandle, HAL_TONE_TIMER_CHANNEL) != HAL_OK)
+	{
+		L2HAL_Error(Generic);
+	}
+
+	HAL_TIM_OC_DeInit(&ToneTimerHandle);
 }

@@ -125,4 +125,11 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef *hspi);
 void HAL_SPI_MspDeInit(SPI_HandleTypeDef *hspi);
 void L2HAL_SetupSPI(void);
 
+/**
+ * Timer 3 (144MHz modulation generator) related stuff
+ */
+void HAL_TIM_OC_MspInit(TIM_HandleTypeDef* htim);
+void HAL_TIM_OC_MspDeInit(TIM_HandleTypeDef* htim);
+
+
 #endif /* L2HAL_INCLUDE_L2HAL_CUSTOM_H_ */

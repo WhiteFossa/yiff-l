@@ -179,8 +179,9 @@ EEPROMProfileStruct EEPROM_GenerateDefaultProfile(void)
 
 	sprintf(result.Name, YHL_DEFAULT_PROFILE_NAME);
 
-	result.Frequency.Is144MHz = false;
-	result.Frequency.FrequencyHz = 3500000U;
+	/* TODO: Set to 3.5MHz */
+	result.Frequency.Is144MHz = true;
+	result.Frequency.FrequencyHz = 144000000U;
 
 	result.Code = F1;
 

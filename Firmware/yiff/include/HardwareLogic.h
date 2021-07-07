@@ -30,6 +30,11 @@
 #define YHL_HL_U80M_LOCK_DURATION 100U
 
 /**
+ * Synthesizer clock is multiplied by this value in 144MHz tract
+ */
+#define YHL_HL_2M_FREQUENCY_MULTIPLICATION_FACTOR 8.0f
+
+/**
  * Initialize hardware logic
  */
 void HL_Init(void);
@@ -51,13 +56,23 @@ void HL_SetupU80m(float targetVoltage);
 void HL_SetU80mLockCallback(void (*callback)(void));
 
 /**
- * Prepares for for 80m cycle (entry point).
+ * Prepares for for 80m cycle
  */
-void HL_PrepareFoxFor80mCycleEP(void);
+void HL_PrepareFoxFor80mCycle(void);
 
 /**
- * Un-prepares fox after 80m cycle.
+ * Un-prepares fox after 80m cycle
  */
 void HL_UnPrepareFoxFrom80mCycle(void);
+
+/**
+ * Prepares for fox 2m cycle
+ */
+void HL_PrepareFoxFor2mCycle(void);
+
+/**
+ * Un-prepares fox after 2m cycle
+ */
+void HL_UnPrepareFoxFor2mCycle(void);
 
 #endif /* INCLUDE_HARDWARELOGIC_H_ */

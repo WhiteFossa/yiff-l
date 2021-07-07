@@ -75,6 +75,10 @@ SPI_HandleTypeDef SPIHandle;
  */
 L2HAL_AD9835_ContextStruct SynthesizerContext;
 
+/**
+ * Tone timer handle
+ */
+TIM_HandleTypeDef ToneTimerHandle;
 
 /****************************
 * Graphics stuff goes below *
