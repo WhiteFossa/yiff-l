@@ -170,9 +170,14 @@ typedef enum
 	Pause,
 
 	/**
-	 * Preparation for new cycle
+	 * Preparation for transmission
 	 */
-	Preparation
+	Preparation,
+
+	/**
+	 * Fox is ready for transmission
+	 */
+	Ready
 }
 CycleStateEnum;
 

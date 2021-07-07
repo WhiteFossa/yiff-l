@@ -305,6 +305,8 @@ void DrawFoxCycleState(CycleStateStruct cycleState, Time currentTime, FoxCycleSt
 			sprintf(actionBuffer, "pause");
 		break;
 		case Pause:
+		case Preparation:
+		case Ready:
 			sprintf(actionBuffer, "TX");
 		break;
 		default:

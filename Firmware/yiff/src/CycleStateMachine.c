@@ -60,11 +60,17 @@ void CSM_Tick(void)
 				break;
 
 			case Preparation:
-				/* We need to prepare fox only once per cycle */
-				if (!HL_CheckIsFoxPrepared())
+
+				if (FoxState.CycleState.CycleState != Ready)
 				{
-					HL_PrepareFoxForCycle();
+					if (!HL_CheckIsFoxPrepared()) /* Because of possible time shift we can occur here from any state */
+					{
+						HL_PrepareFoxForCycle();
+					}
+
+					FoxState.CycleState.CycleState = Ready;
 				}
+
 				break;
 		}
 	}
@@ -167,6 +173,8 @@ void CSM_RecalculateStateChangeTime(uint16_t timeSinceCycleBegin)
 			break;
 
 		case Pause:
+		case Preparation:
+		case Ready:
 			remainder = SubtractSeconds(AddTimes(FoxState.Cycle.TxTime, FoxState.Cycle.PauseTime), timeSinceCycleBegin);
 			break;
 	}
