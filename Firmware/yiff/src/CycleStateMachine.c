@@ -58,6 +58,14 @@ void CSM_Tick(void)
 			case Pause:
 				CSM_Cycle_StartPause((uint16_t)timeSinceCycleStart);
 				break;
+
+			case Preparation:
+				/* We need to prepare fox only once per cycle */
+				if (!HL_CheckIsFoxPrepared())
+				{
+					HL_PrepareFoxForCycle();
+				}
+				break;
 		}
 	}
 
@@ -84,6 +92,7 @@ CycleStateEnum CSM_GetStateByCycleTime(int16_t cycleTime)
 	Time timeSinceCycleStart = TimeSinceDayBegin(cycleTime);
 	Time endingToneStartTime = SubtractSeconds(FoxState.Cycle.TxTime, FoxState.EndingToneLength);
 	Time pauseStartTime = FoxState.Cycle.TxTime;
+	Time preparationStartTime = SubtractSeconds(AddTimes(FoxState.Cycle.TxTime, FoxState.Cycle.PauseTime), YHL_HL_FOX_PREPARATION_TIME);
 
 	if (TIME1_LESS == CompareTimes(timeSinceCycleStart, endingToneStartTime))
 	{
@@ -94,8 +103,14 @@ CycleStateEnum CSM_GetStateByCycleTime(int16_t cycleTime)
 	if ((TIME2_LESS != CompareTimes(endingToneStartTime, timeSinceCycleStart))
 			&& (TIME1_LESS == CompareTimes(timeSinceCycleStart, pauseStartTime)))
 	{
-		/* Ending Tone Start Time <= Current Time < Pause Start Time -> Ending tone*/
+		/* Ending Tone Start Time <= Current Time < Pause Start Time -> Ending tone */
 		return EndingTone;
+	}
+
+	if (TIME2_LESS != CompareTimes(preparationStartTime, timeSinceCycleStart))
+	{
+		/* Preparation Start Time <= Current Time -> Preparation */
+		return Preparation;
 	}
 
 	return Pause;
@@ -103,6 +118,13 @@ CycleStateEnum CSM_GetStateByCycleTime(int16_t cycleTime)
 
 void CSM_Cycle_StartTx(uint16_t timeSinceCycleBegin)
 {
+	if (!HL_CheckIsFoxPrepared())
+	{
+		/* Looks like time adjustment happened and now we are in cycle, but fox is not ready.
+		Activating immediately */
+		HL_PrepareFoxForCycle();
+	}
+
 	FoxState.CycleState.CycleState = Tx;
 	FoxState.CycleState.IsEndingTone = false;
 	ProcessManipulatorFoxStateChange();
@@ -129,6 +151,9 @@ void CSM_Cycle_StartPause(uint16_t timeSinceCycleBegin)
 
 	/* Stopping transmission */
 	MorsePlayerStop();
+
+	/* Un-preparing fox */
+	HL_UnPrepareFoxFromCycle();
 }
 
 void CSM_RecalculateStateChangeTime(uint16_t timeSinceCycleBegin)

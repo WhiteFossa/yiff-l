@@ -15,6 +15,7 @@ void HL_Init()
 	HL_IsU80mFeedbackActive = false;
 	HL_U80mLockCounter = 0;
 	HL_U80mLockCallback = NULL;
+	HL_IsFoxPrepared = false;
 
 	HAL_SetU80mMeasuredCallback(HL_U80mMeasurementCallback);
 }
@@ -167,7 +168,7 @@ void HL_PrepareFoxFor2mCycle(void)
 	HAL_SetupSynthesizer(FoxState.Frequency.FrequencyHz / YHL_HL_2M_FREQUENCY_MULTIPLICATION_FACTOR);
 }
 
-void HL_UnPrepareFoxFor2mCycle(void)
+void HL_UnPrepareFoxFrom2mCycle(void)
 {
 	/* Disabling manipulator (just as precaution) */
 	HAL_SwitchManipulator(false);
@@ -175,4 +176,49 @@ void HL_UnPrepareFoxFor2mCycle(void)
 	HAL_PutSynthesizerToSleep();
 
 	HAL_Activate2M(false);
+}
+
+void HL_PrepareFoxForCycle(void)
+{
+	if (HL_CheckIsFoxPrepared())
+	{
+		return;
+	}
+
+	if (FoxState.Frequency.Is144MHz)
+	{
+		HL_UnPrepareFoxFrom80mCycle();
+		HL_PrepareFoxFor2mCycle();
+	}
+	else
+	{
+		HL_UnPrepareFoxFrom2mCycle();
+		HL_PrepareFoxFor80mCycle();
+	}
+
+	HL_IsFoxPrepared = true;
+}
+
+void HL_UnPrepareFoxFromCycle(void)
+{
+	if (!HL_CheckIsFoxPrepared())
+	{
+		return;
+	}
+
+	if (FoxState.Frequency.Is144MHz)
+	{
+		HL_UnPrepareFoxFrom2mCycle();
+	}
+	else
+	{
+		HL_UnPrepareFoxFrom80mCycle();
+	}
+
+	HL_IsFoxPrepared = false;
+}
+
+bool HL_CheckIsFoxPrepared(void)
+{
+	return HL_IsFoxPrepared;
 }

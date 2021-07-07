@@ -331,7 +331,7 @@ void Main_ProcessSetSpeed(void)
 }
 
 void Main_ProcessSetCycle(void)
-{HAL_GPIO_WritePin(HAL_MANIPULATOR_PORT, HAL_MANIPULATOR_PIN, GPIO_PIN_SET);
+{
 	if (PendingCommandsFlags.NeedToSetCycle)
 	{
 		EEPROM_CurrentProfile.Cycle = FoxState.Cycle;

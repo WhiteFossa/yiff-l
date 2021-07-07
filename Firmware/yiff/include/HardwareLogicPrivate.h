@@ -24,6 +24,11 @@ bool HL_IsU80mFeedbackActive;
 uint16_t HL_U80mLockCounter;
 
 /**
+ * Is fox prepared for transmission?
+ */
+bool HL_IsFoxPrepared;
+
+/**
  * This callback is called when target U80m is achieved
  */
 void (*HL_U80mLockCallback)(void);

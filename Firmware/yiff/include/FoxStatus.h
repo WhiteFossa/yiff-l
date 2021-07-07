@@ -167,7 +167,12 @@ typedef enum
 	/**
 	 * Pause
 	 */
-	Pause
+	Pause,
+
+	/**
+	 * Preparation for new cycle
+	 */
+	Preparation
 }
 CycleStateEnum;
 

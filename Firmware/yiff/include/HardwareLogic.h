@@ -35,6 +35,12 @@
 #define YHL_HL_2M_FREQUENCY_MULTIPLICATION_FACTOR 8.0f
 
 /**
+ * Fox must be ready for transmission not later than this amount of seconds after
+ * HL_PrepareFoxForCycle() call
+ */
+#define YHL_HL_FOX_PREPARATION_TIME 5U
+
+/**
  * Initialize hardware logic
  */
 void HL_Init(void);
@@ -73,6 +79,21 @@ void HL_PrepareFoxFor2mCycle(void);
 /**
  * Un-prepares fox after 2m cycle
  */
-void HL_UnPrepareFoxFor2mCycle(void);
+void HL_UnPrepareFoxFrom2mCycle(void);
+
+/**
+ * Prepares fox for cycle (band-independent)
+ */
+void HL_PrepareFoxForCycle(void);
+
+/**
+ * Un-prepares fox after cycle (band-independent)
+ */
+void HL_UnPrepareFoxFromCycle(void);
+
+/**
+ * Is fox prepared for transmission?
+ */
+bool HL_CheckIsFoxPrepared(void);
 
 #endif /* INCLUDE_HARDWARELOGIC_H_ */
