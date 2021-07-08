@@ -182,7 +182,7 @@ void HL_PrepareFoxForCycle(void)
 {
 	if (HL_CheckIsFoxPrepared())
 	{
-		return;
+		L2HAL_Error(Generic);
 	}
 
 	if (FoxState.Frequency.Is144MHz)
@@ -203,7 +203,7 @@ void HL_UnPrepareFoxFromCycle(void)
 {
 	if (!HL_CheckIsFoxPrepared())
 	{
-		return;
+		L2HAL_Error(Generic);
 	}
 
 	if (FoxState.Frequency.Is144MHz)

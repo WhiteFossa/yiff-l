@@ -159,7 +159,10 @@ void CSM_Cycle_StartPause(uint16_t timeSinceCycleBegin)
 	MorsePlayerStop();
 
 	/* Un-preparing fox */
-	HL_UnPrepareFoxFromCycle();
+	if (HL_CheckIsFoxPrepared())
+	{
+		HL_UnPrepareFoxFromCycle();
+	}
 }
 
 void CSM_RecalculateStateChangeTime(uint16_t timeSinceCycleBegin)
