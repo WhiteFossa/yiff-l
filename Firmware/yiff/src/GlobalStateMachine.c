@@ -15,7 +15,7 @@ void GSM_Init(void)
 void GSM_Disarm(void)
 {
 	FoxState.GlobalState.IsArmed = false;
-	FoxState.GlobalState.CurrentState = Standby;
+	FoxState.GlobalState.CurrentState = GfsStandby;
 }
 
 void GSM_Arm(void)
@@ -45,16 +45,27 @@ void GSM_Tick(void)
 
 	switch(newGlobalState)
 	{
-		case BeforeStart:
+		case GfsPreparation:
+			GSM_PrepareFox();
+			break;
+
+		case GfsReady:
+			break;
+
+		case GfsBeforeStart:
 			GSM_MoveToBeforeStart();
 			break;
 
-		case BeforeFinish:
+		case GfsBeforeFinish:
 			GSM_StartFox();
 			break;
 
-		case Standby:
+		case GfsStandby:
 			GSM_StopFox();
+			break;
+
+		default:
+			L2HAL_Error(Generic);
 			break;
 	}
 }
@@ -62,15 +73,29 @@ void GSM_Tick(void)
 void GSM_MoveToBeforeStart(void)
 {
 	FoxState.GlobalState.StateChangeTime = FoxState.GlobalState.StartTime;
-	FoxState.GlobalState.CurrentState = BeforeStart;
+	FoxState.GlobalState.CurrentState = GfsBeforeStart;
 
 	CSM_Stop();
+}
+
+void GSM_PrepareFox(void)
+{
+	if (FoxState.GlobalState.CurrentState != GfsReady)
+	{
+		/* Going to prepare fox*/
+		if (!HL_CheckIsFoxPrepared()) /* Because of possible time shift we can occur here from any state */
+		{
+			HL_PrepareFoxForCycle();
+		}
+
+		FoxState.GlobalState.CurrentState = GfsReady;
+	}
 }
 
 void GSM_StartFox(void)
 {
 	/* Starting */
-	FoxState.GlobalState.CurrentState = BeforeFinish;
+	FoxState.GlobalState.CurrentState = GfsBeforeFinish;
 	FoxState.GlobalState.StateChangeTime = FoxState.GlobalState.EndTime;
 
 	/* Starting cycle */
@@ -80,7 +105,7 @@ void GSM_StartFox(void)
 void GSM_StopFox(void)
 {
 	/* Finishing */
-	FoxState.GlobalState.CurrentState = Standby;
+	FoxState.GlobalState.CurrentState = GfsStandby;
 
 	/* Stopping cycle */
 	CSM_Stop();
@@ -88,21 +113,30 @@ void GSM_StopFox(void)
 
 GlobalFoxStateEnum GSM_GetExpectedState(void)
 {
+	Time preparationStartTime = SubtractSeconds(FoxState.GlobalState.StartTime, YHL_HL_FOX_PREPARATION_TIME);
+
+	int8_t compResPreparationStartTime = CompareTimes(FoxState.CurrentTime, preparationStartTime);
 	int8_t compResStartTime = CompareTimes(FoxState.CurrentTime, FoxState.GlobalState.StartTime);
 	int8_t compResEndTime = CompareTimes(FoxState.CurrentTime, FoxState.GlobalState.EndTime);
 
-	if (TIME1_LESS == compResStartTime)
+
+	if (TIME1_LESS == compResPreparationStartTime)
 	{
 		/* Current time < Start time -> Before start */
-		return BeforeStart;
+		return GfsBeforeStart;
+	}
+
+	if (TIME1_LESS != compResPreparationStartTime && TIME1_LESS == compResStartTime)
+	{
+		return GfsPreparation;
 	}
 
 	if (TIME1_LESS == compResEndTime)
 	{
 		/* Start time <= Current time < End time */
-		return BeforeFinish;
+		return GfsBeforeFinish;
 	}
 
-	return Standby;
+	return GfsStandby;
 }
 

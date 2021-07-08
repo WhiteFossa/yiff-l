@@ -276,7 +276,7 @@ void DrawFoxCycleState(CycleStateStruct cycleState, Time currentTime, FoxCycleSt
 			OffColor,
 			OffColor);
 
-	if (BeforeFinish != globalState.CurrentState)
+	if (GfsBeforeFinish != globalState.CurrentState)
 	{
 		char buffer[32];
 		sprintf(buffer, "Waiting for start");
@@ -300,13 +300,13 @@ void DrawFoxCycleState(CycleStateStruct cycleState, Time currentTime, FoxCycleSt
 	char actionBuffer[16];
 	switch(cycleState.CycleState)
 	{
-		case Tx:
-		case EndingTone:
+		case CsTx:
+		case CsEndingTone:
 			sprintf(actionBuffer, "pause");
 		break;
-		case Pause:
-		case Preparation:
-		case Ready:
+		case CsPause:
+		case CsPreparation:
+		case CsReady:
 			sprintf(actionBuffer, "TX");
 		break;
 		default:
@@ -330,7 +330,7 @@ void DrawGlobalState(GlobalFoxStateStruct globalState, Time currentTime)
 			OffColor,
 			OffColor);
 
-	if (Standby == globalState.CurrentState)
+	if (GfsStandby == globalState.CurrentState)
 	{
 		char buffer[32];
 		sprintf(buffer, "Standing by");
@@ -347,10 +347,12 @@ void DrawGlobalState(GlobalFoxStateStruct globalState, Time currentTime)
 	char actionBuffer[16];
 	switch(globalState.CurrentState)
 	{
-		case BeforeStart:
+		case GfsPreparation:
+		case GfsReady:
+		case GfsBeforeStart:
 			sprintf(actionBuffer, "start");
 		break;
-		case BeforeFinish:
+		case GfsBeforeFinish:
 			sprintf(actionBuffer, "finish");
 		break;
 		default:

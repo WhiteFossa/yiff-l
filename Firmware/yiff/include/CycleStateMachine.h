@@ -42,6 +42,11 @@ int16_t CSM_GetCycleTime(void);
 CycleStateEnum CSM_GetStateByCycleTime(int16_t cycleTime);
 
 /**
+ * Prepare fox
+ */
+void CSM_Cycle_PrepareFox(void);
+
+/**
  * Start transmission
  */
 void CSM_Cycle_StartTx(uint16_t timeSinceCycleBegin);

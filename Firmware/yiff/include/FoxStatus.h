@@ -103,17 +103,27 @@ typedef enum
 	/**
 	 * Fox is in standby, awaiting to be programmed.
 	 */
-	Standby,
+	GfsStandby,
 
 	/**
 	 * Fox is programmed, on countdown before start.
 	 */
-	BeforeStart,
+	GfsBeforeStart,
+
+	/**
+	 * Fox preparing for transmission
+	 */
+	GfsPreparation,
+
+	/**
+	 * Fox is ready to start
+	 */
+	GfsReady,
 
 	/**
 	 * Fox is running, on countdown before finish.
 	 */
-	BeforeFinish
+	GfsBeforeFinish
 }
 GlobalFoxStateEnum;
 
@@ -157,27 +167,27 @@ typedef enum
 	/**
 	 * Transmitting
 	 */
-	Tx,
+	CsTx,
 
 	/**
 	 * Transmitting end tone
 	 */
-	EndingTone,
+	CsEndingTone,
 
 	/**
 	 * Pause
 	 */
-	Pause,
+	CsPause,
 
 	/**
 	 * Preparation for transmission
 	 */
-	Preparation,
+	CsPreparation,
 
 	/**
 	 * Fox is ready for transmission
 	 */
-	Ready
+	CsReady
 }
 CycleStateEnum;
 

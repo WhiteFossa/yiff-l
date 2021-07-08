@@ -39,6 +39,11 @@ void GSM_Arm(void);
 void GSM_MoveToBeforeStart(void);
 
 /**
+ * Prepare fox and move machine into Ready state
+ */
+void GSM_PrepareFox(void);
+
+/**
  * Start the fox and move machine into BeforeFinish state.
  */
 void GSM_StartFox(void);
