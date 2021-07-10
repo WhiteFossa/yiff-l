@@ -935,6 +935,21 @@ void OnGetU80mVolts(uint8_t payloadSize, uint8_t* payload)
 	SendResponse(GetU80mVolts, 4, &response);
 }
 
+void EmitFoxArmedEvent(void)
+{
+	SendEvent(FoxArmed, 0, NULL);
+}
+
+void EmitAntennaMatchingMeasurementEvent(uint8_t matchingPosition, float uAnt)
+{
+	uint8_t payload[5];
+
+	payload[0] = matchingPosition;
+	memcpy(&payload[1], &uAnt, 4);
+
+	SendEvent(AntennaMatchingMeasurement, 5, payload);
+}
+
 uint8_t FromBool(bool data)
 {
 	if (data)
@@ -998,7 +1013,27 @@ void SendResponse(CommandToFoxEnum responseTo, uint8_t payloadSize, uint8_t* pay
 	fullPayload[0] = YHL_PACKET_PROCESSOR_RESPONSE_FROM_FOX;
 	fullPayload[1] = responseTo;
 
-	memcpy(fullPayload + 2, payload, payloadSize);
+	if (payloadSize > 0)
+	{
+		memcpy(fullPayload + 2, payload, payloadSize);
+	}
+
+	SendPacket(fullPayloadSize, fullPayload);
+	free(fullPayload);
+}
+
+void SendEvent(EventsFromFoxEnum event, uint8_t payloadSize, uint8_t* payload)
+{
+	uint8_t fullPayloadSize = payloadSize + 2; /* +2 because one byte is event marker, another is event type */
+	uint8_t* fullPayload = malloc(fullPayloadSize);
+
+	fullPayload[0] = YHL_PACKET_PROCESSOR_EVENT_FROM_FOX;
+	fullPayload[1] = event;
+
+	if (payloadSize > 0)
+	{
+		memcpy(fullPayload + 2, payload, payloadSize);
+	}
 
 	SendPacket(fullPayloadSize, fullPayload);
 	free(fullPayload);

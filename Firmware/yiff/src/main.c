@@ -403,12 +403,20 @@ void Main_ProcessFoxArming(void)
 			if (!FoxState.Frequency.Is144MHz)
 			{
 				/* Antenna matching */
+				/* TODO: Show "Matching in progress" display */
 				HL_PrepareFoxForCycle();
 				HL_Setup80mAntenna();
 				HL_UnPrepareFoxFromCycle();
 			}
 
 			GSM_Arm();
+
+			EmitFoxArmedEvent();
+		}
+		else
+		{
+			uint8_t response = YHL_PACKET_PROCESSOR_FAILURE;
+			SendResponse(ArmFox, 1, &response);
 		}
 
 		PendingCommandsFlags.NeedToArmFox = false;

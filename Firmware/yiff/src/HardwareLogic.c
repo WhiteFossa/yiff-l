@@ -258,6 +258,8 @@ void HL_Setup80mAntenna(void)
 			signalLevel = measuredSignalLevel;
 			HL_OptimalAntennaMatching = amValue;
 		}
+
+		EmitAntennaMatchingMeasurementEvent(amValue, measuredSignalLevel);
 	}
 
 	FoxState.ForceCarrierOn = false;
