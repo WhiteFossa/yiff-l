@@ -768,13 +768,7 @@ void OnArmFox(uint8_t payloadSize, uint8_t* payload)
 		return;
 	}
 
-	if (!FoxState.GlobalState.IsArmed)
-	{
-		GSM_Arm();
-	}
-
-	uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
-	SendResponse(ArmFox, 1, &response);
+	PendingCommandsFlags.NeedToArmFox = true;
 }
 
 void OnDisarmFox(uint8_t payloadSize, uint8_t* payload)

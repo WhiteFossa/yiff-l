@@ -279,6 +279,16 @@ typedef struct
 	 * Fox power in watts, applicable only for 3.5MHz mode
 	 */
 	float Power;
+
+	/**
+	 * Force constant carrier on (for antenna matching)
+	 */
+	bool ForceCarrierOn;
+
+	/**
+	 * Supress carrier (for antenna matching)
+	 */
+	bool ForceCarrierOff;
 }
 FoxStateStruct;
 

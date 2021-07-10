@@ -139,6 +139,30 @@
  */
 #define HAL_TONE_TIMER_CHANNEL TIM_CHANNEL_3
 
+/**
+ * 3.5 MHz antenna matching stuff
+ */
+#define HAL_AM_PORT GPIOA
+#define HAL_AM_CHAN0_PIN GPIO_PIN_3
+#define HAL_AM_CHAN1_PIN GPIO_PIN_11
+#define HAL_AM_CHAN2_PIN GPIO_PIN_12
+#define HAL_AM_CHAN3_PIN GPIO_PIN_13
+#define HAL_AM_CHAN4_PIN GPIO_PIN_14
+#define HAL_AM_CHAN5_PIN GPIO_PIN_15
+
+/**
+ * Maximal value for 3.5MHz antenna matching
+ */
+#define HAL_AM_MAX_VALUE 63
+
+/**
+ * Pause in milliseconds for transient processes during antenna matching.
+ * Logic: carrier is suppressed -> pause -> matching switch -> pause -> carrier restored
+ */
+#define HAL_AM_PAUSE 100
+
+
+
 extern ADC_HandleTypeDef ADC_Handle;
 extern L2HAL_AD5245_ContextStruct U80mRegulatorContext;
 extern I2C_HandleTypeDef I2C_Other;
@@ -152,15 +176,29 @@ extern TIM_HandleTypeDef ToneTimerHandle;
 typedef enum
 {
 	/* 3.5MHz antenna */
-	UAnt = 0,
+	YHL_HAL_UAnt = 0,
 
 	/* Battery */
-	UBatt = 1,
+	YHL_HAL_UBatt = 1,
 
 	/* 3.5MHz output stage voltage */
-	U80m = 2
+	YHL_HAL_U80m = 2
 }
-HAL_ADCChannelEnum;
+YHL_HAL_ADCChannelEnum;
+
+/**
+ * 3.5MHz antenna matching channels
+ */
+typedef enum
+{
+	YHL_HAL_AM0,
+	YHL_HAL_AM1,
+	YHL_HAL_AM2,
+	YHL_HAL_AM3,
+	YHL_HAL_AM4,
+	YHL_HAL_AM5
+}
+YHL_HAL_AMChannelEnum;
 
 
 /**
@@ -308,5 +346,14 @@ void HAL_Enable2mToneGenerator(void);
  */
 void HAL_Disable2mToneGenerator(void);
 
+/**
+ * Switches given 3.5 MHz antenna matching channel or on off
+ */
+void HAL_SwitchAntennaMatchingChannel(YHL_HAL_AMChannelEnum channel, bool isOn);
+
+/**
+ * Sets 3.5MHz antenna matching to given value
+ */
+void HAL_SetAntennaMatchingValue(uint8_t value);
 
 #endif /* INCLUDE_HAL_H_ */

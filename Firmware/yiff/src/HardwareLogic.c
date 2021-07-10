@@ -20,9 +20,9 @@ void HL_Init()
 	HAL_SetU80mMeasuredCallback(HL_U80mMeasurementCallback);
 }
 
-void ProcessManipulatorFoxStateChange(void)
+void HL_ProcessManipulatorFoxStateChange(void)
 {
-	if (FoxState.IsMorseTx || FoxState.CycleState.IsEndingTone)
+	if ((FoxState.IsMorseTx || FoxState.CycleState.IsEndingTone || FoxState.ForceCarrierOn) && (!FoxState.ForceCarrierOff))
 	{
 		HAL_SwitchManipulator(true);
 	}
@@ -221,4 +221,30 @@ void HL_UnPrepareFoxFromCycle(void)
 bool HL_CheckIsFoxPrepared(void)
 {
 	return HL_IsFoxPrepared;
+}
+
+void HL_Setup80mAntenna(void)
+{
+	if (FoxState.Frequency.Is144MHz)
+	{
+		L2HAL_Error(Generic);
+	}
+
+	if (!HL_CheckIsFoxPrepared())
+	{
+		L2HAL_Error(Generic);
+	}
+
+	FoxState.ForceCarrierOn = true;
+	HL_ProcessManipulatorFoxStateChange();
+
+	for (uint8_t amValue = 0; amValue < HAL_AM_MAX_VALUE; amValue ++)
+	{
+		HAL_SetAntennaMatchingValue(amValue);
+
+		HAL_Delay(500);
+	}
+
+	FoxState.ForceCarrierOn = false;
+	HL_ProcessManipulatorFoxStateChange();
 }

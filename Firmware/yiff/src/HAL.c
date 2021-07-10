@@ -67,8 +67,17 @@ void HAL_IntiHardware(void)
 	GPIO_InitStruct.Pin = HAL_SYNTHESIZER_FSYNC_PIN;
 	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
-	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW; /* Note me! High speed leads to lots of noice */
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW; /* Note me! High speed leads to lots of noise */
 	HAL_GPIO_Init(HAL_SYNTHESIZER_FSYNC_PORT, &GPIO_InitStruct);
+
+	/**
+	 * Antenna matching
+	 */
+	GPIO_InitStruct.Pin = HAL_AM_CHAN0_PIN | HAL_AM_CHAN1_PIN | HAL_AM_CHAN2_PIN | HAL_AM_CHAN3_PIN | HAL_AM_CHAN4_PIN | HAL_AM_CHAN5_PIN;
+	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+	HAL_GPIO_Init(HAL_AM_PORT, &GPIO_InitStruct);
 
 	/**
 	 * Variables initial state
@@ -168,10 +177,16 @@ void HAL_Activate80M(bool isActivate)
 {
 	if (isActivate)
 	{
+		/* Disabling SWD, because we use SWD pins for antenna matching */
+		__HAL_AFIO_REMAP_SWJ_DISABLE();
+
 		HAL_GPIO_WritePin(HAL_ACTIVATE_80M_PORT, HAL_ACTIVATE_80M_PIN, GPIO_PIN_SET);
 	}
 	else
 	{
+		/* Re-enabling SWD */
+		__HAL_AFIO_REMAP_SWJ_NOJTAG();
+
 		HAL_GPIO_WritePin(HAL_ACTIVATE_80M_PORT, HAL_ACTIVATE_80M_PIN, GPIO_PIN_RESET);
 	}
 }
@@ -221,7 +236,7 @@ void HAL_SetupADCForUAntMeasurement(void)
 {
 	HAL_ADC_Stop_IT(&ADC_Handle);
 
-	HAL_CurrentADCChannel = UAnt;
+	HAL_CurrentADCChannel = YHL_HAL_UAnt;
 
 	ADC_ChannelConfTypeDef adcChannelConfig;
 	adcChannelConfig.Channel = HAL_ADC_UANT_CHANNEL;
@@ -240,7 +255,7 @@ void HAL_SetupADCForUBattMeasurement(void)
 {
 	HAL_ADC_Stop_IT(&ADC_Handle);
 
-	HAL_CurrentADCChannel = UBatt;
+	HAL_CurrentADCChannel = YHL_HAL_UBatt;
 
 	ADC_ChannelConfTypeDef adcChannelConfig;
 	adcChannelConfig.Channel = HAL_ADC_UBATT_CHANNEL;
@@ -259,7 +274,7 @@ void HAL_SetupADCForU80mMeasurement(void)
 {
 	HAL_ADC_Stop_IT(&ADC_Handle);
 
-	HAL_CurrentADCChannel = U80m;
+	HAL_CurrentADCChannel = YHL_HAL_U80m;
 
 	ADC_ChannelConfTypeDef adcChannelConfig;
 	adcChannelConfig.Channel = HAL_ADC_U80M_CHANNEL;
@@ -303,17 +318,17 @@ void HAL_AddNewADCMeasurement(uint16_t measurement)
 	/* Writing result and switching to next channel */
 	switch (HAL_CurrentADCChannel)
 	{
-		case UAnt:
+		case YHL_HAL_UAnt:
 			HAL_AntennaLevelADC = averaged;
 			HAL_SetupADCForUBattMeasurement();
 			break;
 
-		case UBatt:
+		case YHL_HAL_UBatt:
 			HAL_BatteryLevelADC = averaged;
 			HAL_SetupADCForU80mMeasurement();
 			break;
 
-		case U80m:
+		case YHL_HAL_U80m:
 			HAL_80mLevelADC = averaged;
 
 			if (HAL_U80mNewMeasurementCallback != NULL)
@@ -322,6 +337,10 @@ void HAL_AddNewADCMeasurement(uint16_t measurement)
 			}
 
 			HAL_SetupADCForUAntMeasurement();
+			break;
+
+		default:
+			L2HAL_Error(Generic);
 			break;
 	}
 }
@@ -490,4 +509,79 @@ void HAL_Disable2mToneGenerator(void)
 	}
 
 	HAL_TIM_OC_DeInit(&ToneTimerHandle);
+}
+
+void HAL_SwitchAntennaMatchingChannel(YHL_HAL_AMChannelEnum channel, bool isOn)
+{
+	uint16_t pin;
+
+	switch (channel)
+	{
+		case YHL_HAL_AM0:
+			pin = HAL_AM_CHAN0_PIN;
+			break;
+
+		case YHL_HAL_AM1:
+			pin = HAL_AM_CHAN1_PIN;
+			break;
+
+		case YHL_HAL_AM2:
+			pin = HAL_AM_CHAN2_PIN;
+			break;
+
+		case YHL_HAL_AM3:
+			pin = HAL_AM_CHAN3_PIN;
+			break;
+
+		case YHL_HAL_AM4:
+			pin = HAL_AM_CHAN4_PIN;
+			break;
+
+		case YHL_HAL_AM5:
+			pin = HAL_AM_CHAN5_PIN;
+			break;
+
+		default:
+			L2HAL_Error(Generic);
+			break;
+	}
+
+	GPIO_PinState pinState;
+	if (isOn)
+	{
+		pinState = GPIO_PIN_SET;
+	}
+	else
+	{
+		pinState = GPIO_PIN_RESET;
+	}
+
+	HAL_GPIO_WritePin(HAL_AM_PORT, pin, pinState);
+}
+
+void HAL_SetAntennaMatchingValue(uint8_t value)
+{
+	if (value > HAL_AM_MAX_VALUE)
+	{
+		L2HAL_Error(Generic);
+	}
+
+	/* Supressing carrier to decrease switching damage for relays */
+	FoxState.ForceCarrierOff = true;
+	HL_ProcessManipulatorFoxStateChange();
+
+	HAL_Delay(HAL_AM_PAUSE);
+
+	HAL_SwitchAntennaMatchingChannel(YHL_HAL_AM0, value & 0b1 != 0);
+	HAL_SwitchAntennaMatchingChannel(YHL_HAL_AM1, value & 0b10 != 0);
+	HAL_SwitchAntennaMatchingChannel(YHL_HAL_AM2, value & 0b100 != 0);
+	HAL_SwitchAntennaMatchingChannel(YHL_HAL_AM3, value & 0b1000 != 0);
+	HAL_SwitchAntennaMatchingChannel(YHL_HAL_AM4, value & 0b10000 != 0);
+	HAL_SwitchAntennaMatchingChannel(YHL_HAL_AM5, value & 0b100000 != 0);
+
+	HAL_Delay(HAL_AM_PAUSE);
+
+	/* Restoring carrier */
+	FoxState.ForceCarrierOff = false;
+	HL_ProcessManipulatorFoxStateChange();
 }

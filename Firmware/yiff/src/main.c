@@ -220,6 +220,7 @@ int main(int argc, char* argv[])
 		Main_ProcessSetEndingToneDuration();
 		Main_ProcessSetBeginAndEndTimes();
 		Main_ProcessSetPower();
+		Main_ProcessFoxArming();
 
 		/* Flush profile changes to EEPROM, must be called last in sequence */
 		Main_FlushProfileToEEPROM();
@@ -386,6 +387,31 @@ void Main_ProcessSetPower(void)
 		SendResponse(SetFoxPower, 1, &response);
 
 		PendingCommandsFlags.NeedToSetPower = false;
+	}
+}
+
+void Main_ProcessFoxArming(void)
+{
+	if (PendingCommandsFlags.NeedToArmFox)
+	{
+		if (!FoxState.GlobalState.IsArmed)
+		{
+			/* Immediately reporting that arming in progress */
+			uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
+			SendResponse(ArmFox, 1, &response);
+
+			if (!FoxState.Frequency.Is144MHz)
+			{
+				/* Antenna matching */
+				HL_PrepareFoxForCycle();
+				HL_Setup80mAntenna();
+				HL_UnPrepareFoxFromCycle();
+			}
+
+			GSM_Arm();
+		}
+
+		PendingCommandsFlags.NeedToArmFox = false;
 	}
 }
 

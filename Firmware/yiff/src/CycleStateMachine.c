@@ -143,7 +143,7 @@ void CSM_Cycle_StartTx(uint16_t timeSinceCycleBegin)
 
 	FoxState.CycleState.CycleState = CsTx;
 	FoxState.CycleState.IsEndingTone = false;
-	ProcessManipulatorFoxStateChange();
+	HL_ProcessManipulatorFoxStateChange();
 	CSM_RecalculateStateChangeTime(timeSinceCycleBegin);
 
 	/* Starting transmission */
@@ -155,7 +155,7 @@ void CSM_Cycle_StartEndingTone(uint16_t timeSinceCycleBegin)
 	FoxState.CycleState.CycleState = CsEndingTone;
 	FoxState.CycleState.IsEndingTone = true;
 	CSM_RecalculateStateChangeTime(timeSinceCycleBegin);
-	ProcessManipulatorFoxStateChange();
+	HL_ProcessManipulatorFoxStateChange();
 }
 
 void CSM_Cycle_StartPause(uint16_t timeSinceCycleBegin)
@@ -163,7 +163,7 @@ void CSM_Cycle_StartPause(uint16_t timeSinceCycleBegin)
 	FoxState.CycleState.CycleState = CsPause;
 	FoxState.CycleState.IsEndingTone = false;
 	CSM_RecalculateStateChangeTime(timeSinceCycleBegin);
-	ProcessManipulatorFoxStateChange();
+	HL_ProcessManipulatorFoxStateChange();
 
 	/* Stopping transmission */
 	MorsePlayerStop();

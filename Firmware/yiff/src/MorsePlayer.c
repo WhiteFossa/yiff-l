@@ -31,7 +31,7 @@ void MorsePlayerStop(void)
 {
 	FoxState.IsMorseTx = false;
 	MorsePlayerState = NotPlaying;
-	ProcessManipulatorFoxStateChange();
+	HL_ProcessManipulatorFoxStateChange();
 }
 
 void MorseTickMs(void)
@@ -62,12 +62,12 @@ void MorseTickMs(void)
 			if (DitTone == *MorseCurrentElement || DahTone == *MorseCurrentElement)
 			{
 				FoxState.IsMorseTx = true;
-				ProcessManipulatorFoxStateChange();
+				HL_ProcessManipulatorFoxStateChange();
 			}
 			else if (DitPause == *MorseCurrentElement || DahPause == *MorseCurrentElement)
 			{
 				FoxState.IsMorseTx = false;
-				ProcessManipulatorFoxStateChange();
+				HL_ProcessManipulatorFoxStateChange();
 			}
 
 			MorsePlayerCurrentInterval = MorseGetInterval(*MorseCurrentElement);

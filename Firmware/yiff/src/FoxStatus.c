@@ -9,6 +9,9 @@
 
 void FoxState_Init(void)
 {
+	FoxState.ForceCarrierOff = false;
+	FoxState.ForceCarrierOn = false;
+
 	PendingCommandsFlags.NeedToFlushCurrentProfileToEEPROM = false; /* At load current profile is actual */
 
 	PendingCommandsFlags.FoxStateNameChanged = false;
@@ -22,6 +25,7 @@ void FoxState_Init(void)
 	PendingCommandsFlags.NeedToSetEndingToneDuration = false;
 	PendingCommandsFlags.NeedToSetBeginAndEndTimes = false;
 	PendingCommandsFlags.NeedToSetPower = false;
+	PendingCommandsFlags.NeedToArmFox = false;
 }
 
 void FoxState_CorrectDateTime(void)

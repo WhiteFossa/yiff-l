@@ -46,7 +46,7 @@ volatile uint16_t HAL_ADCAveragesCounter;
 /**
  * Current ADC channel
  */
-volatile HAL_ADCChannelEnum HAL_CurrentADCChannel;
+volatile YHL_HAL_ADCChannelEnum HAL_CurrentADCChannel;
 
 /**
  * Call from ADC interrupt handler to add measurement

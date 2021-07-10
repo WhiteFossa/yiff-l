@@ -72,6 +72,11 @@ typedef struct
 	 * If true, then we need to set fox power
 	 */
 	bool NeedToSetPower;
+
+	/**
+	 * If true, then we need to arm fox
+	 */
+	bool NeedToArmFox;
 }
 PendingCommandsFlagsStruct;
 

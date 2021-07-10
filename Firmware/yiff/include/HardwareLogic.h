@@ -48,7 +48,7 @@ void HL_Init(void);
 /**
  * Call it when manipulator-related parts of state changes
  */
-void ProcessManipulatorFoxStateChange(void);
+void HL_ProcessManipulatorFoxStateChange(void);
 
 /**
  * Call it to set-up 3.5MHz output stage voltage
@@ -95,5 +95,10 @@ void HL_UnPrepareFoxFromCycle(void);
  * Is fox prepared for transmission?
  */
 bool HL_CheckIsFoxPrepared(void);
+
+/**
+ * Setup antenna matching for optimal output signal
+ */
+void HL_Setup80mAntenna(void);
 
 #endif /* INCLUDE_HARDWARELOGIC_H_ */

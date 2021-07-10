@@ -142,4 +142,9 @@ void Main_FlushProfileToEEPROM(void);
  */
 void Main_MeasureBatteryLevel(void);
 
+/**
+ * Armes fox if needed
+ */
+void Main_ProcessFoxArming(void);
+
 #endif /* __MAIN_H */
