@@ -41,6 +41,11 @@
 #define YHL_HL_FOX_PREPARATION_TIME 5U
 
 /**
+ * How long to wait for UAnt measurement after changing in antenna matching
+ */
+#define YHL_HL_FOX_WAIT_FOR_UANT_DELAY 500
+
+/**
  * Initialize hardware logic
  */
 void HL_Init(void);

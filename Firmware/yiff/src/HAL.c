@@ -70,10 +70,16 @@ void HAL_IntiHardware(void)
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW; /* Note me! High speed leads to lots of noise */
 	HAL_GPIO_Init(HAL_SYNTHESIZER_FSYNC_PORT, &GPIO_InitStruct);
 
-	/**
-	 * Antenna matching
-	 */
-	GPIO_InitStruct.Pin = HAL_AM_CHAN0_PIN | HAL_AM_CHAN1_PIN | HAL_AM_CHAN2_PIN | HAL_AM_CHAN3_PIN | HAL_AM_CHAN4_PIN | HAL_AM_CHAN5_PIN;
+	/* Antenna matching (except 3th and 4th channels - they are SWDIO/SCLK) */
+	GPIO_InitStruct.Pin = HAL_AM_CHAN0_PIN | HAL_AM_CHAN1_PIN | HAL_AM_CHAN2_PIN | HAL_AM_CHAN5_PIN;
+	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+	HAL_GPIO_Init(HAL_AM_PORT, &GPIO_InitStruct);
+
+	/* Antenna matching (3th and 4th channels) */
+	HAL_GPIO_DeInit(GPIOA, HAL_AM_CHAN3_PIN | HAL_AM_CHAN4_PIN);
+	GPIO_InitStruct.Pin = HAL_AM_CHAN3_PIN | HAL_AM_CHAN4_PIN;
 	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
@@ -175,18 +181,14 @@ void HAL_SwitchBluetoothPower(bool isOn)
 
 void HAL_Activate80M(bool isActivate)
 {
+	HAL_SwitchAntennaMatching(isActivate);
+
 	if (isActivate)
 	{
-		/* Disabling SWD, because we use SWD pins for antenna matching */
-		__HAL_AFIO_REMAP_SWJ_DISABLE();
-
 		HAL_GPIO_WritePin(HAL_ACTIVATE_80M_PORT, HAL_ACTIVATE_80M_PIN, GPIO_PIN_SET);
 	}
 	else
 	{
-		/* Re-enabling SWD */
-		__HAL_AFIO_REMAP_SWJ_NOJTAG();
-
 		HAL_GPIO_WritePin(HAL_ACTIVATE_80M_PORT, HAL_ACTIVATE_80M_PIN, GPIO_PIN_RESET);
 	}
 }
@@ -572,16 +574,30 @@ void HAL_SetAntennaMatchingValue(uint8_t value)
 
 	HAL_Delay(HAL_AM_PAUSE);
 
-	HAL_SwitchAntennaMatchingChannel(YHL_HAL_AM0, value & 0b1 != 0);
-	HAL_SwitchAntennaMatchingChannel(YHL_HAL_AM1, value & 0b10 != 0);
-	HAL_SwitchAntennaMatchingChannel(YHL_HAL_AM2, value & 0b100 != 0);
-	HAL_SwitchAntennaMatchingChannel(YHL_HAL_AM3, value & 0b1000 != 0);
-	HAL_SwitchAntennaMatchingChannel(YHL_HAL_AM4, value & 0b10000 != 0);
-	HAL_SwitchAntennaMatchingChannel(YHL_HAL_AM5, value & 0b100000 != 0);
+	HAL_SwitchAntennaMatchingChannel(YHL_HAL_AM0, (value & 0b1) != 0);
+	HAL_SwitchAntennaMatchingChannel(YHL_HAL_AM1, (value & 0b10) != 0);
+	HAL_SwitchAntennaMatchingChannel(YHL_HAL_AM2, (value & 0b100) != 0);
+	HAL_SwitchAntennaMatchingChannel(YHL_HAL_AM3, (value & 0b1000) != 0);
+	HAL_SwitchAntennaMatchingChannel(YHL_HAL_AM4, (value & 0b10000) != 0);
+	HAL_SwitchAntennaMatchingChannel(YHL_HAL_AM5, (value & 0b100000) != 0);
 
 	HAL_Delay(HAL_AM_PAUSE);
 
 	/* Restoring carrier */
 	FoxState.ForceCarrierOff = false;
 	HL_ProcessManipulatorFoxStateChange();
+}
+
+void HAL_SwitchAntennaMatching(bool isOn)
+{
+	if (isOn)
+	{
+		/* Disabling SWD, because we use SWD pins for antenna matching */
+		__HAL_AFIO_REMAP_SWJ_DISABLE();
+	}
+	else
+	{
+		/* Re-enabling SWD */
+		__HAL_AFIO_REMAP_SWJ_NOJTAG();
+	}
 }

@@ -356,4 +356,9 @@ void HAL_SwitchAntennaMatchingChannel(YHL_HAL_AMChannelEnum channel, bool isOn);
  */
 void HAL_SetAntennaMatchingValue(uint8_t value);
 
+/**
+ * Switches 3.5MHz antenna matching on or off (when enabled SWDIO and SWCLK work as GPIO)
+ */
+void HAL_SwitchAntennaMatching(bool isOn);
+
 #endif /* INCLUDE_HAL_H_ */

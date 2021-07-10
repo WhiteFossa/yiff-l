@@ -16,6 +16,7 @@ void HL_Init()
 	HL_U80mLockCounter = 0;
 	HL_U80mLockCallback = NULL;
 	HL_IsFoxPrepared = false;
+	HL_OptimalAntennaMatching = 0;
 
 	HAL_SetU80mMeasuredCallback(HL_U80mMeasurementCallback);
 }
@@ -137,6 +138,9 @@ void HL_PrepareFoxFor80mCycle(void)
 
 	/* Converting required power into voltage and setting U80m */
 	HL_SetupU80m(HAL_GetU80mFromPower(FoxState.Power));
+
+	/* Switching antenna matching */
+	HAL_SetAntennaMatchingValue(HL_OptimalAntennaMatching);
 }
 
 void HL_UnPrepareFoxFrom80mCycle(void)
@@ -236,13 +240,24 @@ void HL_Setup80mAntenna(void)
 	}
 
 	FoxState.ForceCarrierOn = true;
+
 	HL_ProcessManipulatorFoxStateChange();
+
+	HL_OptimalAntennaMatching = 0;
+	float signalLevel = 0;
 
 	for (uint8_t amValue = 0; amValue < HAL_AM_MAX_VALUE; amValue ++)
 	{
 		HAL_SetAntennaMatchingValue(amValue);
+		HAL_Delay(YHL_HL_FOX_WAIT_FOR_UANT_DELAY);
 
-		HAL_Delay(500);
+		float measuredSignalLevel = HAL_GetUAntADC();
+
+		if (measuredSignalLevel > signalLevel)
+		{
+			signalLevel = measuredSignalLevel;
+			HL_OptimalAntennaMatching = amValue;
+		}
 	}
 
 	FoxState.ForceCarrierOn = false;

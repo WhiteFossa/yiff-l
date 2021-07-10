@@ -29,6 +29,11 @@ uint16_t HL_U80mLockCounter;
 bool HL_IsFoxPrepared;
 
 /**
+ * Antenna matching value at which most powerful signal is generated
+ */
+uint8_t HL_OptimalAntennaMatching;
+
+/**
  * This callback is called when target U80m is achieved
  */
 void (*HL_U80mLockCallback)(void);
