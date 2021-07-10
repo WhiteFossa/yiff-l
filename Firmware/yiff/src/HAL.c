@@ -424,7 +424,18 @@ void HAL_SetU80mMeasuredCallback(void (*callback)(void))
 
 float HAL_GetU80mFromPower(float power)
 {
-	return EEPROM_Header.P80mA * power + EEPROM_Header.P80mB;
+	float result = EEPROM_Header.P80mA * power + EEPROM_Header.P80mB;
+
+	if (result > YHL_HL_MAX_U80M)
+	{
+		result = YHL_HL_MAX_U80M;
+	}
+	else if (result < YHL_HL_MIN_U80M)
+	{
+		result = YHL_HL_MIN_U80M;
+	}
+
+	return result;
 }
 
 void HAL_ConnectToSynthesizer(void)
