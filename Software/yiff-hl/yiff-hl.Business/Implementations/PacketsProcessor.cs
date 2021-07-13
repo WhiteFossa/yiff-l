@@ -17,6 +17,8 @@ namespace yiff_hl.Business.Implementations
         private const int MinPayloadLength = 1;
         private const int MaxPayloadLength = 59;
 
+        #region Command responses
+
         private OnResponseDelegate onSetDateAndTimeResponse;
         private OnResponseDelegate onSetFoxNameResponse;
         private OnResponseDelegate onGetFoxNameResponse;
@@ -49,6 +51,15 @@ namespace yiff_hl.Business.Implementations
         private OnResponseDelegate onGetU80mADCResponse;
         private OnResponseDelegate onGetUBattVoltsResponse;
         private OnResponseDelegate onGetU80mVoltsResponse;
+
+        #endregion
+
+        #region Events
+
+        private OnFoxArmedEventDelegate onFoxArmedEvent;
+
+        #endregion
+
 
         private enum ReceiverState
         {
@@ -440,7 +451,12 @@ namespace yiff_hl.Business.Implementations
 
         private void OnNewEventFromFox(IReadOnlyCollection<byte> payload)
         {
+            var responseTo = (CommandType)payload.ElementAt(0);
 
+            var responsePayload = payload
+                .ToList()
+                .GetRange(1, payload.Count - 1)
+                .AsReadOnly();
         }
 
         public void SendCommand(CommandType command, IReadOnlyCollection<byte> commandPayload)
@@ -611,6 +627,11 @@ namespace yiff_hl.Business.Implementations
         public void SetOnGetU80mVoltsResponse(OnResponseDelegate onGetU80mVoltsResponse)
         {
             this.onGetU80mVoltsResponse = onGetU80mVoltsResponse ?? throw new ArgumentNullException(nameof(onGetU80mVoltsResponse));
+        }
+
+        public void RegisterOnFoxArmedEventHandler(OnFoxArmedEventDelegate onFoxArmedEvent)
+        {
+            this.onFoxArmedEvent = onFoxArmedEvent ?? throw new ArgumentNullException(nameof(onFoxArmedEvent));
         }
     }
 }

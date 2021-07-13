@@ -665,7 +665,7 @@ namespace yiff_hl.Pages
         {
             Device.BeginInvokeOnMainThread(() =>
             {
-                var message = isSuccess ? "Fox armed" : "Failed to arm fox";
+                var message = isSuccess ? "Arming initiated" : "Failed to arm fox";
                 DisplayAlert("Arm fox", message, "OK");
             });
         }
