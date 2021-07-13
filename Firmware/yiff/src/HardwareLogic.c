@@ -17,8 +17,10 @@ void HL_Init()
 	HL_U80mLockCallback = NULL;
 	HL_IsFoxPrepared = false;
 	HL_OptimalAntennaMatching = 0;
+	HL_IsU80mLocked = false;
 
 	HAL_SetU80mMeasuredCallback(HL_U80mMeasurementCallback);
+	HL_SetU80mLockCallback(HL_OnU80mLock);
 }
 
 void HL_ProcessManipulatorFoxStateChange(void)
@@ -47,6 +49,7 @@ void HL_SetupU80m(float targetVoltage)
 
 	HL_U80mLockCounter = 0;
 	HL_IsU80mFeedbackActive = true;
+	HL_IsU80mLocked = false;
 }
 
 void HL_U80mMeasurementCallback(void)
@@ -150,6 +153,7 @@ void HL_UnPrepareFoxFrom80mCycle(void)
 
 	HAL_PutSynthesizerToSleep();
 
+	HL_IsU80mLocked = false;
 	HAL_Activate80M(false);
 }
 
@@ -265,3 +269,37 @@ void HL_Setup80mAntenna(void)
 	FoxState.ForceCarrierOn = false;
 	HL_ProcessManipulatorFoxStateChange();
 }
+
+void HL_OnU80mLock(void)
+{
+	if (HL_IsU80mLocked)
+	{
+		L2HAL_Error(Generic);
+	}
+
+	HL_IsU80mLocked = true;
+}
+
+void HL_PrepareAndMatch80m(void)
+{
+	if (FoxState.Frequency.Is144MHz)
+	{
+		L2HAL_Error(Generic);
+	}
+
+	if (HL_CheckIsFoxPrepared())
+	{
+		/* Already prepared somehow, bug is somewhere */
+		L2HAL_Error(Generic);
+	}
+
+	HL_PrepareFoxForCycle();
+
+	while(!HL_IsU80mLocked)
+	{
+		HAL_Delay(100); /* No need to put it into constants */
+	}
+
+	HL_Setup80mAntenna();
+}
+

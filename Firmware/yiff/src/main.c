@@ -404,8 +404,7 @@ void Main_ProcessFoxArming(void)
 			{
 				/* Antenna matching */
 				/* TODO: Show "Matching in progress" display */
-				HL_PrepareFoxForCycle();
-				HL_Setup80mAntenna();
+				HL_PrepareAndMatch80m();
 				HL_UnPrepareFoxFromCycle();
 			}
 

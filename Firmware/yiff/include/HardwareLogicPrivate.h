@@ -34,6 +34,11 @@ bool HL_IsFoxPrepared;
 uint8_t HL_OptimalAntennaMatching;
 
 /**
+ * True if U80m locked
+ */
+bool HL_IsU80mLocked;
+
+/**
  * This callback is called when target U80m is achieved
  */
 void (*HL_U80mLockCallback)(void);
@@ -42,5 +47,10 @@ void (*HL_U80mLockCallback)(void);
  * Call it when new measurement of U80m arrives
  */
 void HL_U80mMeasurementCallback(void);
+
+/**
+ * Called when U80m is locked
+ */
+void HL_OnU80mLock(void);
 
 #endif /* INCLUDE_HARDWARELOGICPRIVATE_H_ */

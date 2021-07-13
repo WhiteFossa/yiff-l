@@ -106,4 +106,12 @@ bool HL_CheckIsFoxPrepared(void);
  */
 void HL_Setup80mAntenna(void);
 
+/**
+ * Prepares for and matches antenna:
+ * 1) Prepares fox
+ * 2) Waits for U80m lock
+ * 3) Matches antenna
+ */
+void HL_PrepareAndMatch80m(void);
+
 #endif /* INCLUDE_HARDWARELOGIC_H_ */

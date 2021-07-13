@@ -604,11 +604,11 @@ void HAL_SwitchAntennaMatching(bool isOn)
 	if (isOn)
 	{
 		/* Disabling SWD, because we use SWD pins for antenna matching */
-		__HAL_AFIO_REMAP_SWJ_DISABLE();
+		//__HAL_AFIO_REMAP_SWJ_DISABLE();
 	}
 	else
 	{
 		/* Re-enabling SWD */
-		__HAL_AFIO_REMAP_SWJ_NOJTAG();
+		//__HAL_AFIO_REMAP_SWJ_NOJTAG();
 	}
 }
