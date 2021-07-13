@@ -246,7 +246,7 @@ void HL_Setup80mAntenna(void)
 	HL_OptimalAntennaMatching = 0;
 	float signalLevel = 0;
 
-	for (uint8_t amValue = 0; amValue < HAL_AM_MAX_VALUE; amValue ++)
+	for (uint8_t amValue = 0; amValue <= HAL_AM_MAX_VALUE; amValue ++)
 	{
 		HAL_SetAntennaMatchingValue(amValue);
 		HAL_Delay(YHL_HL_FOX_WAIT_FOR_UANT_DELAY);
