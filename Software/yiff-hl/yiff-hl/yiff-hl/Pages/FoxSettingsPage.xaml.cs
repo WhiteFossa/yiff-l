@@ -6,6 +6,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using yiff_hl.Abstractions.Enums;
 using yiff_hl.Abstractions.Interfaces;
+using yiff_hl.Abstractions.Interfaces.Events;
 using yiff_hl.Business.Implementations.Commands;
 
 namespace yiff_hl.Pages
@@ -45,6 +46,10 @@ namespace yiff_hl.Pages
             pkCode.Items.Add("Fox #4");
             pkCode.Items.Add("Fox #5");
             pkCode.Items.Add("Beacon");
+
+            // Registering events handlers
+            packetsProcessor.RegisterOnFoxArmedEventHandler(OnFoxIsArmed);
+
         }
 
         private void OnDisconnectClicked(object sender, EventArgs e)
@@ -912,6 +917,18 @@ namespace yiff_hl.Pages
             Device.BeginInvokeOnMainThread(() =>
             {
                 edU80mVolts.Text = $"{u80m}";
+            });
+        }
+
+        #endregion
+
+        #region On Fox Is Armed event
+
+        private void OnFoxIsArmed(IFoxArmedEvent foxArmedEvent)
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                DisplayAlert("Arm fox", "Fox is armed", "OK");
             });
         }
 

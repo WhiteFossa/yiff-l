@@ -4,6 +4,7 @@ using System.Linq;
 using yiff_hl.Abstractions.Enums;
 using yiff_hl.Abstractions.Interfaces;
 using yiff_hl.Business.Helpers;
+using yiff_hl.Business.Implementations.Events;
 
 namespace yiff_hl.Business.Implementations
 {
@@ -451,12 +452,35 @@ namespace yiff_hl.Business.Implementations
 
         private void OnNewEventFromFox(IReadOnlyCollection<byte> payload)
         {
-            var responseTo = (CommandType)payload.ElementAt(0);
+            var responseTo = (EventType)payload.ElementAt(0);
 
             var responsePayload = payload
                 .ToList()
                 .GetRange(1, payload.Count - 1)
                 .AsReadOnly();
+
+            switch(responseTo)
+            {
+                // Fox is armed
+                case EventType.FoxIsArmed:
+                    OnFoxIsArmedEvent();
+                    break;
+
+                // New antenna matching measurement arrived
+                case EventType.AntennaMatchingMeasurement:
+                    break;
+
+                // We've got some junk
+                default:
+                    return;
+            }
+        }
+
+        private void OnFoxIsArmedEvent()
+        {
+            _ = onFoxArmedEvent ?? throw new InvalidOperationException("Handler for Fox Is Armed event isn't registered");
+
+            onFoxArmedEvent(new FoxArmedEvent());
         }
 
         public void SendCommand(CommandType command, IReadOnlyCollection<byte> commandPayload)

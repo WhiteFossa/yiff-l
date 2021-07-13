@@ -5,6 +5,8 @@
     /// </summary>
     public enum EventType
     {
+        FoxIsArmed = 0x01,
 
+        AntennaMatchingMeasurement = 0x02
     }
 }
