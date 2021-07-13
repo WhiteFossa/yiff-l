@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using yiff_hl.Abstractions.Enums;
+using yiff_hl.Abstractions.Interfaces.Events;
 
 namespace yiff_hl.Abstractions.Interfaces
 {
@@ -8,6 +9,12 @@ namespace yiff_hl.Abstractions.Interfaces
     /// response marker and command code
     /// </summary>
     public delegate void OnResponseDelegate(IReadOnlyCollection<byte> payload);
+
+    #region Events delegats
+
+    public delegate void OnFoxArmedEventDelegate(IFoxArmedEvent foxArmedEvent);
+
+    #endregion
 
     /// <summary>
     /// Interface to work with packets
@@ -61,6 +68,12 @@ namespace yiff_hl.Abstractions.Interfaces
         void SetOnGetUBattVoltsResponse(OnResponseDelegate onGetUBattVoltsResponse);
         void SetOnGetU80mVoltsResponse(OnResponseDelegate onGetU80mVoltsResponse);
 
+
+        #endregion
+
+        #region Events handlers registration
+
+        void RegisterOnFoxArmedEventHandler(OnFoxArmedEventDelegate onFoxArmedEvent);
 
         #endregion
 
