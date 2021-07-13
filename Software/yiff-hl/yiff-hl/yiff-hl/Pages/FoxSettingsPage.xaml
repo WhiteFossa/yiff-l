@@ -440,6 +440,29 @@
                             Clicked="OnGetU80mVoltsClicked"
                             />
 
+                        <!-- Antenna matching -->
+                        <Label
+                            Text="Antenna matching:" />
+
+                        <StackLayout
+                            Orientation="Horizontal">
+
+                            <Label
+                                Text="Position" />
+
+                            <Editor
+                                x:Name="edMatchingPosition"
+                                WidthRequest="100" />
+
+                            <Label
+                                Text="Voltage" />
+
+                            <Editor
+                                x:Name="edMatchingVoltage"
+                                WidthRequest="200" />
+
+                        </StackLayout>
+                        
                     </StackLayout>
                 </Frame>
 

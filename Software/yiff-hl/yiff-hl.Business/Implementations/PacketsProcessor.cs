@@ -58,6 +58,7 @@ namespace yiff_hl.Business.Implementations
         #region Events
 
         private OnFoxArmedEventDelegate onFoxArmedEvent;
+        private OnAntennaMatchingMeasurementEventDelegate onAntennaMatchingMeasurementEvent;
 
         #endregion
 
@@ -452,22 +453,23 @@ namespace yiff_hl.Business.Implementations
 
         private void OnNewEventFromFox(IReadOnlyCollection<byte> payload)
         {
-            var responseTo = (EventType)payload.ElementAt(0);
+            var eventType = (EventType)payload.ElementAt(0);
 
-            var responsePayload = payload
+            var eventPayload = payload
                 .ToList()
                 .GetRange(1, payload.Count - 1)
                 .AsReadOnly();
 
-            switch(responseTo)
+            switch(eventType)
             {
                 // Fox is armed
                 case EventType.FoxIsArmed:
-                    OnFoxIsArmedEvent();
+                    OnFoxIsArmedEvent(eventPayload);
                     break;
 
                 // New antenna matching measurement arrived
                 case EventType.AntennaMatchingMeasurement:
+                    OnAntennaMatchingMeasurementEvent(eventPayload);
                     break;
 
                 // We've got some junk
@@ -476,11 +478,26 @@ namespace yiff_hl.Business.Implementations
             }
         }
 
-        private void OnFoxIsArmedEvent()
+        private void OnFoxIsArmedEvent(IReadOnlyCollection<byte> payload)
         {
             _ = onFoxArmedEvent ?? throw new InvalidOperationException("Handler for Fox Is Armed event isn't registered");
 
             onFoxArmedEvent(new FoxArmedEvent());
+        }
+
+        private void OnAntennaMatchingMeasurementEvent(IReadOnlyCollection<byte> payload)
+        {
+            _ = onAntennaMatchingMeasurementEvent ?? throw new InvalidOperationException("Handler for Antenna Matching Measurement event isn't registered");
+
+            if (payload.Count != 5)
+            {
+                return;
+            }
+
+            var matchingPosition = (int)payload.ElementAt(0);
+            var antennaVoltage = BitConverter.ToSingle(payload.ToArray(), 1);
+
+            onAntennaMatchingMeasurementEvent(new AntennaMatchingMeasurementEvent(matchingPosition, antennaVoltage));
         }
 
         public void SendCommand(CommandType command, IReadOnlyCollection<byte> commandPayload)
@@ -656,6 +673,11 @@ namespace yiff_hl.Business.Implementations
         public void RegisterOnFoxArmedEventHandler(OnFoxArmedEventDelegate onFoxArmedEvent)
         {
             this.onFoxArmedEvent = onFoxArmedEvent ?? throw new ArgumentNullException(nameof(onFoxArmedEvent));
+        }
+
+        public void RegisterOnAntennaMatchingMeasurementEventHandler(OnAntennaMatchingMeasurementEventDelegate onAntennaMatchingMeasurementEvent)
+        {
+            this.onAntennaMatchingMeasurementEvent = onAntennaMatchingMeasurementEvent ?? throw new ArgumentNullException(nameof(onAntennaMatchingMeasurementEvent));
         }
     }
 }

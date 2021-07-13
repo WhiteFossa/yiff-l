@@ -49,6 +49,7 @@ namespace yiff_hl.Pages
 
             // Registering events handlers
             packetsProcessor.RegisterOnFoxArmedEventHandler(OnFoxIsArmed);
+            packetsProcessor.RegisterOnAntennaMatchingMeasurementEventHandler(OnAntennaMatchingMeasurement);
 
         }
 
@@ -929,6 +930,19 @@ namespace yiff_hl.Pages
             Device.BeginInvokeOnMainThread(() =>
             {
                 DisplayAlert("Arm fox", "Fox is armed", "OK");
+            });
+        }
+
+        #endregion
+
+        #region On Antenna Matching Measurement event
+
+        private void OnAntennaMatchingMeasurement(IAntennaMatchingMeasurementEvent antennaMatchingMeasurementEvent)
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                edMatchingPosition.Text = $"{ antennaMatchingMeasurementEvent.GetMatchingPosition() }";
+                edMatchingVoltage.Text = $"{ antennaMatchingMeasurementEvent.GetAntennaVoltage() }";
             });
         }
 

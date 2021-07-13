@@ -13,6 +13,7 @@ namespace yiff_hl.Abstractions.Interfaces
     #region Events delegats
 
     public delegate void OnFoxArmedEventDelegate(IFoxArmedEvent foxArmedEvent);
+    public delegate void OnAntennaMatchingMeasurementEventDelegate(IAntennaMatchingMeasurementEvent antennaMatchingMeasurementEvent);
 
     #endregion
 
@@ -74,6 +75,7 @@ namespace yiff_hl.Abstractions.Interfaces
         #region Events handlers registration
 
         void RegisterOnFoxArmedEventHandler(OnFoxArmedEventDelegate onFoxArmedEvent);
+        void RegisterOnAntennaMatchingMeasurementEventHandler(OnAntennaMatchingMeasurementEventDelegate onAntennaMatchingMeasurementEvent);
 
         #endregion
 
