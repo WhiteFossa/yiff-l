@@ -15,7 +15,7 @@ void GSM_Init(void)
 void GSM_Disarm(void)
 {
 	FoxState.GlobalState.IsArmed = false;
-	FoxState.GlobalState.CurrentState = GfsStandby;
+	GSM_StopFox();
 }
 
 void GSM_Arm(void)
