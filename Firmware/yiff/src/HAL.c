@@ -27,6 +27,7 @@ void HAL_IntiHardware(void)
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
 	HAL_GPIO_Init(HAL_MANIPULATOR_PORT, &GPIO_InitStruct);
+	HAL_GPIO_WritePin(HAL_MANIPULATOR_PORT, HAL_MANIPULATOR_PIN, GPIO_PIN_RESET);
 
 	/* Display power*/
 	GPIO_InitStruct.Pin = HAL_ACTIVATE_DISPLAY_POWER_PIN;
@@ -34,6 +35,7 @@ void HAL_IntiHardware(void)
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
 	HAL_GPIO_Init(HAL_ACTIVATE_DISPLAY_POWER_PORT, &GPIO_InitStruct);
+	HAL_GPIO_WritePin(HAL_ACTIVATE_DISPLAY_POWER_PORT, HAL_ACTIVATE_DISPLAY_POWER_PIN, GPIO_PIN_RESET);
 
 	/* Fox activation */
 	GPIO_InitStruct.Pin = HAL_ACTIVATE_FOX_PIN;
@@ -41,6 +43,7 @@ void HAL_IntiHardware(void)
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
 	HAL_GPIO_Init(HAL_ACTIVATE_FOX_PORT, &GPIO_InitStruct);
+	HAL_GPIO_WritePin(HAL_ACTIVATE_FOX_PORT, HAL_ACTIVATE_FOX_PIN, GPIO_PIN_RESET);
 
 	/* Bluetooth power */
 	GPIO_InitStruct.Pin = HAL_ENABLE_BLUETOOTH_POWER_PIN;
@@ -48,6 +51,7 @@ void HAL_IntiHardware(void)
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
 	HAL_GPIO_Init(HAL_ENABLE_BLUETOOTH_POWER_PORT, &GPIO_InitStruct);
+	HAL_GPIO_WritePin(HAL_ENABLE_BLUETOOTH_POWER_PORT, HAL_ENABLE_BLUETOOTH_POWER_PIN, GPIO_PIN_RESET);
 
 	/* Activate 3.5MHz */
 	GPIO_InitStruct.Pin = HAL_ACTIVATE_80M_PIN;
@@ -55,6 +59,15 @@ void HAL_IntiHardware(void)
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
 	HAL_GPIO_Init(HAL_ACTIVATE_80M_PORT, &GPIO_InitStruct);
+	HAL_GPIO_WritePin(HAL_ACTIVATE_80M_PORT, HAL_ACTIVATE_80M_PIN, GPIO_PIN_RESET);
+
+	/* Activate 144MHz */
+	GPIO_InitStruct.Pin = HAL_ACTIVATE_2M_PIN;
+	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+	HAL_GPIO_Init(HAL_ACTIVATE_2M_PORT, &GPIO_InitStruct);
+	HAL_GPIO_WritePin(HAL_ACTIVATE_2M_PORT, HAL_ACTIVATE_2M_PIN, GPIO_PIN_RESET);
 
 	/* Battery voltage check */
 	GPIO_InitStruct.Pin = HAL_ENABLE_UBATT_CHECK_PIN;
@@ -62,6 +75,7 @@ void HAL_IntiHardware(void)
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
 	HAL_GPIO_Init(HAL_ENABLE_UBATT_CHECK_PORT, &GPIO_InitStruct);
+	HAL_GPIO_WritePin(HAL_ENABLE_UBATT_CHECK_PORT, HAL_ENABLE_UBATT_CHECK_PIN, GPIO_PIN_RESET);
 
 	/* Synthesizer fsync */
 	GPIO_InitStruct.Pin = HAL_SYNTHESIZER_FSYNC_PIN;
@@ -69,6 +83,7 @@ void HAL_IntiHardware(void)
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW; /* Note me! High speed leads to lots of noise */
 	HAL_GPIO_Init(HAL_SYNTHESIZER_FSYNC_PORT, &GPIO_InitStruct);
+	HAL_GPIO_WritePin(HAL_SYNTHESIZER_FSYNC_PORT, HAL_SYNTHESIZER_FSYNC_PIN, GPIO_PIN_RESET);
 
 	/* Antenna matching (except 3th and 4th channels - they are SWDIO/SCLK) */
 	GPIO_InitStruct.Pin = HAL_AM_CHAN0_PIN | HAL_AM_CHAN1_PIN | HAL_AM_CHAN2_PIN | HAL_AM_CHAN5_PIN;
@@ -76,6 +91,7 @@ void HAL_IntiHardware(void)
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
 	HAL_GPIO_Init(HAL_AM_PORT, &GPIO_InitStruct);
+	HAL_GPIO_WritePin(HAL_AM_PORT, HAL_AM_CHAN0_PIN | HAL_AM_CHAN1_PIN | HAL_AM_CHAN2_PIN | HAL_AM_CHAN5_PIN, GPIO_PIN_RESET);
 
 	/* Antenna matching (3th and 4th channels) */
 	HAL_GPIO_DeInit(GPIOA, HAL_AM_CHAN3_PIN | HAL_AM_CHAN4_PIN);
@@ -84,6 +100,7 @@ void HAL_IntiHardware(void)
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
 	HAL_GPIO_Init(HAL_AM_PORT, &GPIO_InitStruct);
+	HAL_GPIO_WritePin(HAL_AM_PORT, HAL_AM_CHAN3_PIN | HAL_AM_CHAN4_PIN, GPIO_PIN_RESET);
 
 	/**
 	 * Variables initial state
