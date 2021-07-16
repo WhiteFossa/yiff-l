@@ -418,6 +418,13 @@ void OnAddNewProfile(uint8_t payloadSize, uint8_t* payload)
 {
 	bool canWeAdd = true;
 
+	if (FoxState.GlobalState.IsArmed)
+	{
+		canWeAdd = false;
+		goto OnAddNewProfile_Validate;
+	}
+
+
 	if (payloadSize != 1)
 	{
 		canWeAdd = false;
@@ -458,6 +465,12 @@ void OnSwitchProfile(uint8_t payloadSize, uint8_t* payload)
 {
 	bool isValid = true;
 
+	if (FoxState.GlobalState.IsArmed)
+	{
+		isValid = false;
+		goto OnSwitchProfile_Validate;
+	}
+
 	if (payloadSize != 2)
 	{
 		isValid = false;
@@ -486,6 +499,12 @@ OnSwitchProfile_Validate:
 void OnSetProfileName(uint8_t payloadSize, uint8_t* payload)
 {
 	bool isValid = true;
+
+	if (FoxState.GlobalState.IsArmed)
+	{
+		isValid = false;
+		goto OnSetProfileName_Validate;
+	}
 
 	uint8_t nameLength = payload[1];
 
@@ -532,6 +551,12 @@ void OnSetFrequency(uint8_t payloadSize, uint8_t* payload)
 {
 	bool isValid = true;
 
+	if (FoxState.GlobalState.IsArmed)
+	{
+		isValid = false;
+		goto OnSetFrequency_Validate;
+	}
+
 	if (payloadSize != 6)
 	{
 		isValid = false;
@@ -568,6 +593,12 @@ void OnGetCode(uint8_t payloadSize, uint8_t* payload)
 void OnSetCode(uint8_t payloadSize, uint8_t* payload)
 {
 	bool isValid = true;
+
+	if (FoxState.GlobalState.IsArmed)
+	{
+		isValid = false;
+		goto OnSetCode_Validate;
+	}
 
 	if (payloadSize != 2)
 	{
@@ -608,8 +639,13 @@ void OnGetSpeed(uint8_t payloadSize, uint8_t* payload)
 
 void OnSetSpeed(uint8_t payloadSize, uint8_t* payload)
 {
-
 	bool isValid = true;
+
+	if (FoxState.GlobalState.IsArmed)
+	{
+		isValid = false;
+		goto OnSetSpeed_Validate;
+	}
 
 	if (payloadSize != 2)
 	{
@@ -660,6 +696,12 @@ void OnGetCycle(uint8_t payloadSize, uint8_t* payload)
 void OnSetCycle(uint8_t payloadSize, uint8_t* payload)
 {
 	bool isValid = true;
+
+	if (FoxState.GlobalState.IsArmed)
+	{
+		isValid = false;
+		goto OnSetCycle_Validate;
+	}
 
 	if (payloadSize != 6)
 	{
@@ -717,6 +759,12 @@ void OnGetEndingToneDuration(uint8_t payloadSize, uint8_t* payload)
 void OnSetEndingToneDuration(uint8_t payloadSize, uint8_t* payload)
 {
 	bool isValid = true;
+
+	if (FoxState.GlobalState.IsArmed)
+	{
+		isValid = false;
+		goto OnSetEndingToneDuration_Validate;
+	}
 
 	if (payloadSize != 2)
 	{
@@ -803,6 +851,12 @@ void OnSetBeginAndEndTimes(uint8_t payloadSize, uint8_t* payload)
 {
 	bool isValid = true;
 
+	if (FoxState.GlobalState.IsArmed)
+	{
+		isValid = false;
+		goto OnSetBeginAndEndTimes_Validate;
+	}
+
 	if (payloadSize != 9)
 	{
 		isValid = false;
@@ -853,6 +907,12 @@ void OnGetFoxPower(uint8_t payloadSize, uint8_t* payload)
 void OnSetFoxPower(uint8_t payloadSize, uint8_t* payload)
 {
 	bool isValid = true;
+
+	if (FoxState.GlobalState.IsArmed)
+	{
+		isValid = false;
+		goto OnSetFoxPower_Validate;
+	}
 
 	if (payloadSize != 5)
 	{

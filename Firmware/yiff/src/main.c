@@ -291,8 +291,6 @@ void Main_ProcessSetFrequency(void)
 {
 	if (PendingCommandsFlags.NeedToSetFrequency)
 	{
-		// TODO: Apply frequency change to hardware
-
 		EEPROM_CurrentProfile.Frequency = FoxState.Frequency;
 		PendingCommandsFlags.NeedToFlushCurrentProfileToEEPROM = true;
 
@@ -378,8 +376,6 @@ void Main_ProcessSetPower(void)
 {
 	if (PendingCommandsFlags.NeedToSetPower)
 	{
-		// TODO: Set power in HAL
-
 		EEPROM_CurrentProfile.Power = FoxState.Power;
 		PendingCommandsFlags.NeedToFlushCurrentProfileToEEPROM = true;
 
