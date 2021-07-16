@@ -82,11 +82,8 @@ void GSM_PrepareFox(void)
 {
 	if (FoxState.GlobalState.CurrentState != GfsReady)
 	{
-		/* Going to prepare fox*/
-		if (!HL_CheckIsFoxPrepared()) /* Because of possible time shift we can occur here from any state */
-		{
-			HL_PrepareFoxForCycle();
-		}
+		/* Slow preparation (with antenna matching) */
+		Main_PrepareAndMatchAntenna();
 
 		FoxState.GlobalState.CurrentState = GfsReady;
 	}
@@ -113,7 +110,7 @@ void GSM_StopFox(void)
 
 GlobalFoxStateEnum GSM_GetExpectedState(void)
 {
-	Time preparationStartTime = SubtractSeconds(FoxState.GlobalState.StartTime, YHL_HL_FOX_PREPARATION_TIME);
+	Time preparationStartTime = SubtractSeconds(FoxState.GlobalState.StartTime, YHL_HL_FOX_PREPARATION_AND_MATCHING_TIME);
 
 	int8_t compResPreparationStartTime = CompareTimes(FoxState.CurrentTime, preparationStartTime);
 	int8_t compResStartTime = CompareTimes(FoxState.CurrentTime, FoxState.GlobalState.StartTime);

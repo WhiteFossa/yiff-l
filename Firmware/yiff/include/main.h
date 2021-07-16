@@ -142,4 +142,9 @@ void Main_MeasureBatteryLevel(void);
  */
 void Main_ProcessFoxArming(void);
 
+/**
+ * Prepares fox for activation and matches antenna (if needed)
+ */
+void Main_PrepareAndMatchAntenna(void);
+
 #endif /* __MAIN_H */

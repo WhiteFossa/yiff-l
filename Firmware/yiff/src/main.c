@@ -396,13 +396,8 @@ void Main_ProcessFoxArming(void)
 			uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
 			SendResponse(ArmFox, 1, &response);
 
-			if (!FoxState.Frequency.Is144MHz)
-			{
-				/* Antenna matching */
-				/* TODO: Show "Matching in progress" display */
-				HL_PrepareAndMatch80m();
-				HL_UnPrepareFoxFromCycle();
-			}
+			Main_PrepareAndMatchAntenna();
+			HL_UnPrepareFoxFromCycle();
 
 			GSM_Arm();
 
@@ -416,6 +411,20 @@ void Main_ProcessFoxArming(void)
 
 		PendingCommandsFlags.NeedToArmFox = false;
 	}
+}
+
+void Main_PrepareAndMatchAntenna(void)
+{
+	if (FoxState.Frequency.Is144MHz)
+	{
+		HL_PrepareFoxForCycle();
+		return; /* No need to match antenna at 144MHz*/
+	}
+
+	/* 3.5MHz */
+	/* TODO: Show "Matching in progress" display */
+	HL_PrepareAndMatch80m();
+	/* TODO: Hide "Matching in progress" display */
 }
 
 void Main_FlushProfileToEEPROM(void)

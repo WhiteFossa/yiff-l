@@ -41,6 +41,12 @@
 #define YHL_HL_FOX_PREPARATION_TIME 5U
 
 /**
+ * Fox must be ready for transmission not later than this amount of seconds after
+ * Main_PrepareAndMatchAntenna() call
+ */
+#define YHL_HL_FOX_PREPARATION_AND_MATCHING_TIME 120U
+
+/**
  * How long to wait for UAnt measurement after changing in antenna matching
  */
 #define YHL_HL_FOX_WAIT_FOR_UANT_DELAY 500
