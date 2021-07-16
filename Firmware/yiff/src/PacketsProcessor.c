@@ -224,6 +224,12 @@ void OnSetDateAndTime(uint8_t payloadSize, uint8_t* payload)
 {
 	bool isValid = true;
 
+	if (FoxState.GlobalState.IsArmed)
+	{
+		isValid = false;
+		goto OnSetDateAndTime_Validate;
+	}
+
 	if (payloadSize != 8U)
 	{
 		isValid = false;
@@ -308,6 +314,12 @@ OnSetDateAndTime_Validate:
 void OnSetName(uint8_t payloadSize, uint8_t* payload)
 {
 	bool isValid = true;
+
+	if (FoxState.GlobalState.IsArmed)
+	{
+		isValid = false;
+		goto OnSetName_Validate;
+	}
 
 	uint8_t nameLength = payload[1];
 

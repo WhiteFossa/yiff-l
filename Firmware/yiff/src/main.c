@@ -238,7 +238,7 @@ void Main_ProcessFoxNameChange(void)
 		strcpy(EEPROM_Header.Name, FoxState.Name);
 		EEPROM_UpdateHeader();
 
-		// TODO: Restart HC-06 when hardware will be ready
+		HL_RenameBluetoothDevice(FoxState.Name);
 
 		uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
 		SendResponse(SetName, 1, &response);

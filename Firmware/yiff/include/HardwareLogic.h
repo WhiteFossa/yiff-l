@@ -46,6 +46,21 @@
 #define YHL_HL_FOX_WAIT_FOR_UANT_DELAY 500
 
 /**
+ * Switch bluetooth power off for this duration when renaming device
+ */
+#define YHL_HL_BLUETOOTH_POWERCYCLE_LENGTH 1000
+
+/**
+ * Bluetooth device pin
+ */
+#define YHL_HL_BLUETOOTH_PIN "0000"
+
+/**
+ * Bluetooth module will be ready after this time on powering up
+ */
+#define YHL_HL_BLUETOOTH_BOOT_TIME 1000
+
+/**
  * Initialize hardware logic
  */
 void HL_Init(void);
@@ -113,5 +128,10 @@ void HL_Setup80mAntenna(void);
  * 3) Matches antenna
  */
 void HL_PrepareAndMatch80m(void);
+
+/**
+ * Renames bluetooth device (will lead to bluetooth device power cycling)
+ */
+void HL_RenameBluetoothDevice(char* newName);
 
 #endif /* INCLUDE_HARDWARELOGIC_H_ */

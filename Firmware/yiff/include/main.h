@@ -59,11 +59,6 @@
 #define YHL_EEPROM_ADDRESS 0xA0
 #define YHL_EEPROM_PAGE_SIZE 8
 
-/**
- * Bluetooth-related stuff
- */
-#define YHL_BLUETOOTH_PIN "0000"
-
 extern I2C_HandleTypeDef I2C_Display;
 extern I2C_HandleTypeDef I2C_Other;
 extern L2HAL_SSD1327_ContextStruct L2HAL_SSD1327_Context;

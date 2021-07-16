@@ -9,6 +9,12 @@
 
 L2HAL_HC06_ContextStruct L2HAL_HC06_AttachToDevice(UART_HandleTypeDef* uart)
 {
+	/* Cancelling current UART exchange */
+	if (HAL_UART_Abort(uart) != HAL_OK)
+	{
+		L2HAL_Error(Generic);
+	}
+
 	L2HAL_HC06_ContextStruct context;
 	context.IsFound = false;
 	context.UART_Handle = uart;

@@ -303,3 +303,21 @@ void HL_PrepareAndMatch80m(void)
 	HL_Setup80mAntenna();
 }
 
+void HL_RenameBluetoothDevice(char* newName)
+{
+	HAL_SwitchBluetoothPower(false);
+	HAL_Delay(YHL_HL_BLUETOOTH_POWERCYCLE_LENGTH);
+	HAL_SwitchBluetoothPower(true);
+	HAL_Delay(YHL_HL_BLUETOOTH_BOOT_TIME);
+
+	/* Reconnecting to bluetooth module */
+	HC06_Context = L2HAL_HC06_AttachToDevice(&UART_Handle);
+	if (!HC06_Context.IsFound)
+	{
+		L2HAL_Error(Generic);
+	}
+
+	L2HAL_HC06_SetName(&HC06_Context, FoxState.Name);
+	L2HAL_HC06_SetPIN(&HC06_Context, YHL_HL_BLUETOOTH_PIN);
+}
+
