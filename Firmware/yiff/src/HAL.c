@@ -102,14 +102,57 @@ void HAL_IntiHardware(void)
 	HAL_GPIO_Init(HAL_AM_PORT, &GPIO_InitStruct);
 	HAL_GPIO_WritePin(HAL_AM_PORT, HAL_AM_CHAN3_PIN | HAL_AM_CHAN4_PIN, GPIO_PIN_RESET);
 
+	/* Left button (interrupt) */
+	GPIO_InitStruct.Pin = HAL_LEFT_BUTTON_PIN;
+	GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	HAL_GPIO_Init(HAL_LEFT_BUTTON_PORT, &GPIO_InitStruct);
+
+	HAL_NVIC_SetPriority(HAL_LEFT_BUTTON_EXTI_LINE, 0, 0);
+	HAL_NVIC_EnableIRQ(HAL_LEFT_BUTTON_EXTI_LINE);
+
+	/* Right button (interrupt) */
+	GPIO_InitStruct.Pin = HAL_RIGHT_BUTTON_PIN;
+	GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	HAL_GPIO_Init(HAL_RIGHT_BUTTON_PORT, &GPIO_InitStruct);
+
+	HAL_NVIC_SetPriority(HAL_RIGHT_BUTTON_EXTI_LINE, 0, 0);
+	HAL_NVIC_EnableIRQ(HAL_RIGHT_BUTTON_EXTI_LINE);
+
+	/* Encoder button (interrupt) */
+	GPIO_InitStruct.Pin = HAL_ENCODER_BUTTON_PIN;
+	GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	HAL_GPIO_Init(HAL_ENCODER_BUTTON_PORT, &GPIO_InitStruct);
+
+	/* Encoder right (interrupt) */
+	GPIO_InitStruct.Pin = HAL_ENCODER_RIGHT_PIN;
+	GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	HAL_GPIO_Init(HAL_ENCODER_RIGHT_PORT, &GPIO_InitStruct);
+
+	/* Encoder left (no interrupt) */
+	GPIO_InitStruct.Pin = HAL_ENCODER_LEFT_PIN;
+	GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	HAL_GPIO_Init(HAL_ENCODER_LEFT_PORT, &GPIO_InitStruct);
+
+	HAL_NVIC_SetPriority(HAL_ENCODER_BUTTON_EXTI_LINE, 0, 0);
+	HAL_NVIC_EnableIRQ(HAL_ENCODER_BUTTON_EXTI_LINE);
+
 	/**
 	 * Variables initial state
 	 */
-
 	HAL_BatteryLevelADC = 0;
 	HAL_ADCAccumulator = 0;
 	HAL_ADCAveragesCounter = 0;
 	HAL_U80mNewMeasurementCallback = NULL;
+
+	HAL_LeftButtonCallback = NULL;
+	HAL_RightButtonCallback = NULL;
+	HAL_EncoderButtonCallback = NULL;
+	HAL_EncoderRotationCallback = NULL;
 
 	/**
 	 * Launching ADC conversions
@@ -628,4 +671,86 @@ void HAL_SwitchAntennaMatching(bool isOn)
 		/* Re-enabling SWD */
 		__HAL_AFIO_REMAP_SWJ_NOJTAG();
 	}
+}
+
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+	if (HAL_LEFT_BUTTON_PIN == GPIO_Pin)
+	{
+		HAL_OnLeftButtonPressed();
+	}
+	else if (HAL_RIGHT_BUTTON_PIN == GPIO_Pin)
+	{
+		HAL_OnRightButtonPressed();
+	}
+	else if (HAL_ENCODER_BUTTON_PIN == GPIO_Pin)
+	{
+		HAL_OnEncoderButtonPressed();
+	}
+	else if (HAL_ENCODER_RIGHT_PIN == GPIO_Pin)
+	{
+		HAL_OnEncoderTurned();
+	}
+}
+
+void HAL_OnLeftButtonPressed(void)
+{
+	if (HAL_LeftButtonCallback != NULL)
+	{
+		HAL_LeftButtonCallback();
+	}
+}
+
+void HAL_OnRightButtonPressed(void)
+{
+	if (HAL_RightButtonCallback != NULL)
+	{
+		HAL_RightButtonCallback();
+	}
+}
+
+void HAL_OnEncoderButtonPressed(void)
+{
+	if (HAL_EncoderButtonCallback != NULL)
+	{
+		HAL_EncoderButtonCallback();
+	}
+}
+
+void HAL_OnEncoderTurned(void)
+{
+	int8_t direction;
+	if (GPIO_PIN_RESET == HAL_GPIO_ReadPin(HAL_ENCODER_LEFT_PORT, HAL_ENCODER_LEFT_PIN))
+	{
+		direction = HAL_ENCODER_ROTATION_CLOCKWISE;
+	}
+	else
+	{
+		direction = HAL_ENCODER_ROTATION_COUNTERCLOCKWISE;
+	}
+
+	if (HAL_EncoderRotationCallback != NULL)
+	{
+		HAL_EncoderRotationCallback(direction);
+	}
+}
+
+void HAL_RegisterLeftButtonHandler(void (*handler)(void))
+{
+	HAL_LeftButtonCallback = handler;
+}
+
+void HAL_RegisterRightButtonHandler(void (*handler)(void))
+{
+	HAL_RightButtonCallback = handler;
+}
+
+void HAL_RegisterEncoderButtonHandler(void (*handler)(void))
+{
+	HAL_EncoderButtonCallback = handler;
+}
+
+void HAL_RegisterEncoderRotationHandler(void (*handler)(int8_t))
+{
+	HAL_EncoderRotationCallback = handler;
 }

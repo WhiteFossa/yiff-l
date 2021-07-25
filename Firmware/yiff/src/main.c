@@ -190,15 +190,18 @@ int main(int argc, char* argv[])
 		L2HAL_Error(Generic);
 	}
 
-	/** Do not set name or pin, it leads to un-pairing
-	L2HAL_HC06_SetName(&HC06_Context, FoxState.Name);
-	L2HAL_HC06_SetPIN(&HC06_Context, YHL_BLUETOOTH_PIN);
-	*/
-
 	/**
 	 * Starting to listen for commands
 	 */
 	UART_StartListen(&OnNewRawPacket);
+
+	/**
+	 * Initializing hardware controls
+	 */
+	HAL_RegisterLeftButtonHandler(Main_OnLeftButtonPressed);
+	HAL_RegisterRightButtonHandler(Main_OnRightButtonPressed);
+	HAL_RegisterEncoderButtonHandler(Main_OnEncoderButtonPressed);
+	HAL_RegisterEncoderRotationHandler(Main_OnEncoderRotation);
 
 	/* Debugging stuff begin */
 
@@ -226,6 +229,10 @@ int main(int argc, char* argv[])
 		Main_FlushProfileToEEPROM();
 
 		RTC_Poll();
+
+		/* TODO: Delete me, debug */
+		LeftButton.IsPressed = false;
+		RightButton.IsPressed = false;
 	}
 
 	return 0;
@@ -440,6 +447,26 @@ void Main_FlushProfileToEEPROM(void)
 void Main_MeasureBatteryLevel(void)
 {
 	FoxState.BatteryLevel = HAL_GetBatteryLevel();
+}
+
+void Main_OnLeftButtonPressed(void)
+{
+	LeftButton.IsPressed = true;
+}
+
+void Main_OnRightButtonPressed(void)
+{
+	RightButton.IsPressed = true;
+}
+
+void Main_OnEncoderButtonPressed(void)
+{
+
+}
+
+void Main_OnEncoderRotation(int8_t direction)
+{
+
 }
 
 #pragma GCC diagnostic pop

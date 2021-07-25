@@ -161,7 +161,45 @@
  */
 #define HAL_AM_PAUSE 100
 
+/**
+ * Left button
+ */
+#define HAL_LEFT_BUTTON_PORT GPIOA
+#define HAL_LEFT_BUTTON_PIN GPIO_PIN_4
+#define HAL_LEFT_BUTTON_EXTI_LINE EXTI4_IRQn
 
+/**
+ * Right button
+ */
+#define HAL_RIGHT_BUTTON_PORT GPIOA
+#define HAL_RIGHT_BUTTON_PIN GPIO_PIN_6
+#define HAL_RIGHT_BUTTON_EXTI_LINE EXTI9_5_IRQn
+
+/**
+ * Encoder button
+ */
+#define HAL_ENCODER_BUTTON_PORT GPIOB
+#define HAL_ENCODER_BUTTON_PIN GPIO_PIN_14
+#define HAL_ENCODER_BUTTON_EXTI_LINE EXTI15_10_IRQn
+
+/**
+ * Encoder right
+ */
+#define HAL_ENCODER_RIGHT_PORT GPIOB
+#define HAL_ENCODER_RIGHT_PIN GPIO_PIN_13
+
+/**
+ * Encoder left
+ */
+#define HAL_ENCODER_LEFT_PORT GPIOB
+#define HAL_ENCODER_LEFT_PIN GPIO_PIN_12
+
+
+/**
+ * Encoder
+ */
+#define HAL_ENCODER_ROTATION_CLOCKWISE 1
+#define HAL_ENCODER_ROTATION_COUNTERCLOCKWISE -1
 
 extern ADC_HandleTypeDef ADC_Handle;
 extern L2HAL_AD5245_ContextStruct U80mRegulatorContext;
@@ -360,5 +398,25 @@ void HAL_SetAntennaMatchingValue(uint8_t value);
  * Switches 3.5MHz antenna matching on or off (when enabled SWDIO and SWCLK work as GPIO)
  */
 void HAL_SwitchAntennaMatching(bool isOn);
+
+/**
+ * Registers left button press handler
+ */
+void HAL_RegisterLeftButtonHandler(void (*handler)(void));
+
+/**
+ * Registers right button press handler
+ */
+void HAL_RegisterRightButtonHandler(void (*handler)(void));
+
+/**
+ * Registers encoder button press handler
+ */
+void HAL_RegisterEncoderButtonHandler(void (*handler)(void));
+
+/**
+ * Registers encoder rotation handler
+ */
+void HAL_RegisterEncoderRotationHandler(void (*handler)(int8_t));
 
 #endif /* INCLUDE_HAL_H_ */

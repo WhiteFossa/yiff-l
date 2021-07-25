@@ -49,8 +49,49 @@ volatile uint16_t HAL_ADCAveragesCounter;
 volatile YHL_HAL_ADCChannelEnum HAL_CurrentADCChannel;
 
 /**
+ * Callback, called when left button pressed
+ */
+void (*HAL_LeftButtonCallback)(void);
+
+/**
+ * Callback, called when right button pressed
+ */
+void (*HAL_RightButtonCallback)(void);
+
+/**
+ * Callback, called when encoder button pressed
+ */
+void (*HAL_EncoderButtonCallback)(void);
+
+/**
+ * Callback, called when encoder rotated
+ */
+void (*HAL_EncoderRotationCallback)(int8_t direction);
+
+
+/**
  * Call from ADC interrupt handler to add measurement
  */
 void HAL_AddNewADCMeasurement(uint16_t measurement);
+
+/**
+ * Called when left button is pressed
+ */
+void HAL_OnLeftButtonPressed(void);
+
+/**
+ * Called when right button is pressed
+ */
+void HAL_OnRightButtonPressed(void);
+
+/**
+ * Called when encoder button is pressed
+ */
+void HAL_OnEncoderButtonPressed(void);
+
+/**
+ * Called when encoder turned
+ */
+void HAL_OnEncoderTurned(void);
 
 #endif /* INCLUDE_HALPRIVATE_H_ */

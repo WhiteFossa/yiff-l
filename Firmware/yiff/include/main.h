@@ -147,4 +147,24 @@ void Main_ProcessFoxArming(void);
  */
 void Main_PrepareAndMatchAntenna(void);
 
+/**
+ * Left button pressed event
+ */
+void Main_OnLeftButtonPressed(void);
+
+/**
+ * Right button pressed event
+ */
+void Main_OnRightButtonPressed(void);
+
+/**
+ * Encoder button pressed event
+ */
+void Main_OnEncoderButtonPressed(void);
+
+/**
+ * Encoder rotation event
+ */
+void Main_OnEncoderRotation(int8_t direction);
+
 #endif /* __MAIN_H */
