@@ -15,7 +15,6 @@
 #include <UART.h>
 #include <Commands.h>
 
-
 /******************************
 * Hardware handles goes below *
 *******************************/
@@ -149,6 +148,11 @@ EEPROMHeaderStruct EEPROM_Header;
  * Current profile
  */
 EEPROMProfileStruct EEPROM_CurrentProfile;
+
+/**
+ * Events from hardware controls
+ */
+HardwareControlsEventsStruct HardwareControlsEvents;
 
 
 /**********************

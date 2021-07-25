@@ -149,7 +149,8 @@ int main(int argc, char* argv[])
 	FoxState.CurrentTime.Seconds = 0;
 
 	FoxState.IsTXOn = false;
-
+	void Main_CheckEncoderButtonPressedEvent(void);
+	void Main_OnEncoderButtonPressed(void);
 	FoxState.GlobalState.IsArmed = false;
 	FoxState.GlobalState.CurrentState = GfsStandby;
 	FoxState.CycleState.CycleState = CsPause;
@@ -198,10 +199,15 @@ int main(int argc, char* argv[])
 	/**
 	 * Initializing hardware controls
 	 */
-	HAL_RegisterLeftButtonHandler(Main_OnLeftButtonPressed);
-	HAL_RegisterRightButtonHandler(Main_OnRightButtonPressed);
-	HAL_RegisterEncoderButtonHandler(Main_OnEncoderButtonPressed);
-	HAL_RegisterEncoderRotationHandler(Main_OnEncoderRotation);
+	HardwareControlsEvents.IsLeftButtonPressed = false;
+	HardwareControlsEvents.IsRightButtonPressed = false;
+	HardwareControlsEvents.IsEncoderButtonPressed = false;
+	HardwareControlsEvents.EncoderRotation = HAL_ENCODER_ROTATION_NONE;
+
+	HAL_RegisterLeftButtonHandler(Main_OnLeftButtonPressedInterrupt);
+	HAL_RegisterRightButtonHandler(Main_OnRightButtonPressedInterrupt);
+	HAL_RegisterEncoderButtonHandler(Main_OnEncoderButtonPressedInterrupt);
+	HAL_RegisterEncoderRotationHandler(Main_OnEncoderRotationInterrupt);
 
 	/* Debugging stuff begin */
 
@@ -228,11 +234,13 @@ int main(int argc, char* argv[])
 		/* Flush profile changes to EEPROM, must be called last in sequence */
 		Main_FlushProfileToEEPROM();
 
-		RTC_Poll();
+		/* Hardware controls events */
+		Main_CheckLeftButtonPressedEvent();
+		Main_CheckRightButtonPressedEvent();
+		Main_CheckEncoderButtonPressedEvent();
+		Main_CheckEncoderRotationEvent();
 
-		/* TODO: Delete me, debug */
-		LeftButton.IsPressed = false;
-		RightButton.IsPressed = false;
+		RTC_Poll();
 	}
 
 	return 0;
@@ -449,19 +457,79 @@ void Main_MeasureBatteryLevel(void)
 	FoxState.BatteryLevel = HAL_GetBatteryLevel();
 }
 
+void Main_OnLeftButtonPressedInterrupt(void)
+{
+	HardwareControlsEvents.IsLeftButtonPressed = true;
+}
+
+void Main_OnRightButtonPressedInterrupt(void)
+{
+	HardwareControlsEvents.IsRightButtonPressed = true;
+}
+
+void Main_OnEncoderButtonPressedInterrupt(void)
+{
+	HardwareControlsEvents.IsEncoderButtonPressed = true;
+}
+
+void Main_OnEncoderRotationInterrupt(int8_t direction)
+{
+	HardwareControlsEvents.EncoderRotation = direction;
+}
+
+void Main_CheckLeftButtonPressedEvent(void)
+{
+	if (HardwareControlsEvents.IsLeftButtonPressed)
+	{
+		Main_OnLeftButtonPressed();
+
+		HardwareControlsEvents.IsLeftButtonPressed = false;
+	}
+}
+
 void Main_OnLeftButtonPressed(void)
 {
-	LeftButton.IsPressed = true;
+
+}
+
+void Main_CheckRightButtonPressedEvent(void)
+{
+	if (HardwareControlsEvents.IsRightButtonPressed)
+	{
+		Main_OnRightButtonPressed();
+
+		HardwareControlsEvents.IsRightButtonPressed = false;
+	}
 }
 
 void Main_OnRightButtonPressed(void)
 {
-	RightButton.IsPressed = true;
+
+}
+
+void Main_CheckEncoderButtonPressedEvent(void)
+{
+	if (HardwareControlsEvents.IsEncoderButtonPressed)
+	{
+		Main_OnEncoderButtonPressed();
+
+		HardwareControlsEvents.IsEncoderButtonPressed = false;
+	}
 }
 
 void Main_OnEncoderButtonPressed(void)
 {
 
+}
+
+void Main_CheckEncoderRotationEvent(void)
+{
+	if (HardwareControlsEvents.EncoderRotation != HAL_ENCODER_ROTATION_NONE)
+	{
+		Main_OnEncoderRotation(HardwareControlsEvents.EncoderRotation);
+
+		HardwareControlsEvents.EncoderRotation = HAL_ENCODER_ROTATION_NONE;
+	}
 }
 
 void Main_OnEncoderRotation(int8_t direction)

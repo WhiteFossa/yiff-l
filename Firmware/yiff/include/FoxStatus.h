@@ -293,6 +293,18 @@ typedef struct
 FoxStateStruct;
 
 /**
+ * Flags for hardware controls, needed to switch context from interrupts to main loop
+ */
+typedef struct
+{
+	bool IsLeftButtonPressed;
+	bool IsRightButtonPressed;
+	bool IsEncoderButtonPressed;
+	int8_t EncoderRotation;
+}
+HardwareControlsEventsStruct;
+
+/**
  * Call this before any operations with fox state
  */
 void FoxState_Init(void);

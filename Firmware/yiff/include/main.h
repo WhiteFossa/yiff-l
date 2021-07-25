@@ -70,7 +70,7 @@ extern FoxStateStruct FoxState;
 extern PendingCommandsFlagsStruct PendingCommandsFlags;
 extern uint8_t SwitchToThisProfileId;
 extern char SetThisProfileName[YHL_MAX_PROFILE_NAME_LENGTH];
-
+extern HardwareControlsEventsStruct HardwareControlsEvents;
 
 /**
  * Checks if fox name changed and if so, then saves it into EEPROM and bluetooth module
@@ -150,21 +150,29 @@ void Main_PrepareAndMatchAntenna(void);
 /**
  * Left button pressed event
  */
+void Main_OnLeftButtonPressedInterrupt(void);
+void Main_CheckLeftButtonPressedEvent(void);
 void Main_OnLeftButtonPressed(void);
 
 /**
  * Right button pressed event
  */
+void Main_OnRightButtonPressedInterrupt(void);
+void Main_CheckRightButtonPressedEvent(void);
 void Main_OnRightButtonPressed(void);
 
 /**
  * Encoder button pressed event
  */
+void Main_OnEncoderButtonPressedInterrupt(void);
+void Main_CheckEncoderButtonPressedEvent(void);
 void Main_OnEncoderButtonPressed(void);
 
 /**
  * Encoder rotation event
  */
+void Main_OnEncoderRotationInterrupt(int8_t direction);
+void Main_CheckEncoderRotationEvent(void);
 void Main_OnEncoderRotation(int8_t direction);
 
 #endif /* __MAIN_H */
