@@ -74,6 +74,23 @@ typedef enum
 FoxCodeEnum;
 
 /**
+ * What display to show
+ */
+typedef enum
+{
+	/**
+	 * Status display
+	 */
+	StatusDisplay = 0,
+
+	/**
+	 * Antenna matching display (3.5MHz)
+	 */
+	AntennaMatchingDisplay = 1
+}
+FoxDisplayEnum;
+
+/**
  * Cycle settings
  */
 typedef struct
@@ -210,6 +227,31 @@ typedef struct
 }
 CycleStateStruct;
 
+#define YHL_MATCHING_LEVELS_DATA_SIZE (HAL_AM_MAX_VALUE + 1) * sizeof(float)
+
+/**
+ * Matching display data
+ */
+typedef struct
+{
+	/**
+	 * Other fields is meaningless if false
+	 */
+	bool IsMatchingInProgress;
+
+	/**
+	 * Matching step
+	 */
+	uint8_t MatchingStep;
+
+	/**
+	 * Matching levels. Allocated only when matching in progress,
+	 * contains HAL_AM_MAX_VALUE + 1 elements.
+	 */
+	float* MatchingLevels;
+}
+MatchingDisplayStruct;
+
 /**
  * Fox status
  */
@@ -289,6 +331,16 @@ typedef struct
 	 * Supress carrier (for antenna matching)
 	 */
 	bool ForceCarrierOff;
+
+	/**
+	 * Current fox display
+	 */
+	FoxDisplayEnum CurrentDisplay;
+
+	/**
+	 * Data for matching display
+	 */
+	MatchingDisplayStruct MatchingDisplayData;
 }
 FoxStateStruct;
 

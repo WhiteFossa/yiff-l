@@ -26,6 +26,10 @@ void FoxState_Init(void)
 	PendingCommandsFlags.NeedToSetBeginAndEndTimes = false;
 	PendingCommandsFlags.NeedToSetPower = false;
 	PendingCommandsFlags.NeedToArmFox = false;
+
+	FoxState.CurrentDisplay = StatusDisplay;
+
+	FoxState.MatchingDisplayData.IsMatchingInProgress = false;
 }
 
 void FoxState_CorrectDateTime(void)

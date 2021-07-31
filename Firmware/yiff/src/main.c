@@ -436,10 +436,20 @@ void Main_PrepareAndMatchAntenna(void)
 		return; /* No need to match antenna at 144MHz*/
 	}
 
-	/* 3.5MHz */
-	/* TODO: Show "Matching in progress" display */
+	FoxState.MatchingDisplayData.MatchingLevels = malloc(YHL_MATCHING_LEVELS_DATA_SIZE);
+	memset(FoxState.MatchingDisplayData.MatchingLevels, 0x00, YHL_MATCHING_LEVELS_DATA_SIZE);
+	FoxState.MatchingDisplayData.MatchingStep = 0;
+	FoxState.MatchingDisplayData.IsMatchingInProgress = true;
+	FoxState.CurrentDisplay = AntennaMatchingDisplay;
+
 	HL_PrepareAndMatch80m();
-	/* TODO: Hide "Matching in progress" display */
+
+	FoxState.CurrentDisplay = StatusDisplay;
+	FoxState.MatchingDisplayData.IsMatchingInProgress = false;
+	free(FoxState.MatchingDisplayData.MatchingLevels);
+
+	FMGL_API_ClearScreen(&fmglContext);
+
 }
 
 void Main_FlushProfileToEEPROM(void)

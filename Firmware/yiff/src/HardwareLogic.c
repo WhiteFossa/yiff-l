@@ -252,10 +252,14 @@ void HL_Setup80mAntenna(void)
 
 	for (uint8_t amValue = 0; amValue <= HAL_AM_MAX_VALUE; amValue ++)
 	{
+		FoxState.MatchingDisplayData.MatchingStep = amValue;
+		DrawMatchingDisplay(FoxState);
+
 		HAL_SetAntennaMatchingValue(amValue);
 		HAL_Delay(YHL_HL_FOX_WAIT_FOR_UANT_DELAY);
 
 		float measuredSignalLevel = HAL_GetUAntADC();
+		FoxState.MatchingDisplayData.MatchingLevels[amValue] = measuredSignalLevel;
 
 		if (measuredSignalLevel > signalLevel)
 		{

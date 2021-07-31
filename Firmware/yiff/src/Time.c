@@ -57,8 +57,11 @@ void NewSecondCallback(void)
 	/* Cycle state machine */
 	CSM_Tick();
 
-	/* Redraw display */
-	DrawStatusDisplay(FoxState);
+	/* Only status display need to be redrawn each second */
+	if (StatusDisplay == FoxState.CurrentDisplay)
+	{
+		DrawStatusDisplay(FoxState);
+	}
 }
 
 Time ToTime(RTC_TimeTypeDef rtcTime)
