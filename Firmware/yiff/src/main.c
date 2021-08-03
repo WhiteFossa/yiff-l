@@ -144,9 +144,7 @@ int main(int argc, char* argv[])
 	/* Initial fox state*/
 	FoxState.BatteryLevel = 1.0f;
 
-	FoxState.CurrentTime.Hours = 0;
-	FoxState.CurrentTime.Minutes = 0;
-	FoxState.CurrentTime.Seconds = 0;
+	FoxState.CurrentTime = YHL_TIME_DAY_ZERO_TIMESTAMP;
 
 	FoxState.IsTXOn = false;
 	void Main_CheckEncoderButtonPressedEvent(void);

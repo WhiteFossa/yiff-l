@@ -15,7 +15,7 @@ void OnNewRawPacket(uint8_t size, uint8_t* packet)
 	memcpy(crcBuffer, packet + size - 4U, 4); /* Four last bytes are always CRC */
 
 	uint32_t expectedCRC = ((uint32_t*)crcBuffer)[0];
-	uint32_t calculatedCRC = L2HAL_CRC_Calculate(&CRC_Context, packet, size - 4U);
+	volatile uint32_t calculatedCRC = L2HAL_CRC_Calculate(&CRC_Context, packet, size - 4U);
 
 	if (expectedCRC != calculatedCRC)
 	{
@@ -684,10 +684,10 @@ void OnGetCycle(uint8_t payloadSize, uint8_t* payload)
 
 	response[0] = FromBool(FoxState.Cycle.IsContinuous);
 
-	uint16_t txTimeInSeconds = (uint16_t)SecondsSinceDayBegin(FoxState.Cycle.TxTime);
+	uint16_t txTimeInSeconds = (uint16_t)FoxState.Cycle.TxTime;
 	memcpy(&response[1], (uint8_t*)&txTimeInSeconds, 2);
 
-	uint16_t pauseTimeInSeconds = (uint16_t)SecondsSinceDayBegin(FoxState.Cycle.PauseTime);
+	uint16_t pauseTimeInSeconds = (uint16_t)FoxState.Cycle.PauseTime;
 	memcpy(&response[3], (uint8_t*)&pauseTimeInSeconds, 2);
 
 	SendResponse(GetCycle, 5, response);
@@ -719,13 +719,11 @@ void OnSetCycle(uint8_t payloadSize, uint8_t* payload)
 
 	uint16_t txTimeInSeconds;
 	memcpy(&txTimeInSeconds, &payload[2], 2);
-	Time txTime = TimeSinceDayBegin(txTimeInSeconds);
 
 	uint16_t pauseTimeInSeconds;
 	memcpy(&pauseTimeInSeconds, &payload[4], 2);
-	Time pauseTime = TimeSinceDayBegin(pauseTimeInSeconds);
 
-	if (!FoxState_IsCycleDurationsValid(txTime, pauseTime))
+	if (!FoxState_IsCycleDurationsValid(txTimeInSeconds, pauseTimeInSeconds))
 	{
 		isValid = false;
 		goto OnSetCycle_Validate;
@@ -740,7 +738,7 @@ OnSetCycle_Validate:
 	}
 
 	FoxState.Cycle.IsContinuous = ToBool(isContinuousByte);
-	FoxState_SetCycleDurations(txTime, pauseTime);
+	FoxState_SetCycleDurations(txTimeInSeconds, pauseTimeInSeconds);
 
 	PendingCommandsFlags.NeedToSetCycle = true;
 }
@@ -801,11 +799,11 @@ void OnGetBeginAndEndTimes(uint8_t payloadSize, uint8_t* payload)
 
 	uint8_t response[8];
 
-	uint32_t beginTimeInSeconds = SecondsSinceDayBegin(FoxState.GlobalState.StartTime);
-	uint32_t endTimeInSeconds = SecondsSinceDayBegin(FoxState.GlobalState.EndTime);
+	uint32_t startTimeSinceMidnight = TimestampToSecondsSinceMidnight(FoxState.GlobalState.StartTime);
+	memcpy(&response[0], &startTimeSinceMidnight, 4);
 
-	memcpy(&response[0], &beginTimeInSeconds, 4);
-	memcpy(&response[4], &endTimeInSeconds, 4);
+	uint32_t endTimeSinceMidnight = TimestampToSecondsSinceMidnight(FoxState.GlobalState.EndTime);
+	memcpy(&response[4], &endTimeSinceMidnight, 4);
 
 	SendResponse(GetBeginAndEndTimes, 8, response);
 }
@@ -863,16 +861,19 @@ void OnSetBeginAndEndTimes(uint8_t payloadSize, uint8_t* payload)
 		goto OnSetBeginAndEndTimes_Validate;
 	}
 
-	uint32_t beginTimeInSeconds;
-	memcpy(&beginTimeInSeconds, &payload[1], 4);
+	uint32_t beginTimeInSecondsSinceMidnight;
+	memcpy(&beginTimeInSecondsSinceMidnight, &payload[1], 4);
 
-	uint32_t endTimeInSeconds;
-	memcpy(&endTimeInSeconds, &payload[5], 4);
+	uint32_t endTimeInSecondsSinceMidnight;
+	memcpy(&endTimeInSecondsSinceMidnight, &payload[5], 4);
 
-	Time beginTime = TimeSinceDayBegin(beginTimeInSeconds);
-	Time endTime = TimeSinceDayBegin(endTimeInSeconds);
+	/* Seconds since midnight to time of current day */
+	uint32_t todayMidnight = GetMidnightTimestamp(FoxState.CurrentTime);
 
-	if (!FoxState_IsBeginAndEndTimesValid(beginTime, endTime))
+	uint32_t startTime = todayMidnight + beginTimeInSecondsSinceMidnight;
+	uint32_t endTime = todayMidnight + endTimeInSecondsSinceMidnight;
+
+	if (!FoxState_IsBeginAndEndTimesValid(startTime, endTime))
 	{
 		isValid = false;
 		goto OnSetBeginAndEndTimes_Validate;
@@ -888,7 +889,7 @@ OnSetBeginAndEndTimes_Validate:
 
 	GSM_Disarm();
 
-	FoxState_SetBeginAndEndTimes(beginTime, endTime);
+	FoxState_SetBeginAndEndTimes(startTime, endTime);
 
 	PendingCommandsFlags.NeedToSetBeginAndEndTimes = true;
 }

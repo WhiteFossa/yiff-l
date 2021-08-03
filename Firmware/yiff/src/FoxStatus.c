@@ -34,9 +34,14 @@ void FoxState_Init(void)
 
 void FoxState_CorrectDateTime(void)
 {
-	FoxState.CurrentTime.Hours = CurrentTime.Hours;
-	FoxState.CurrentTime.Minutes = CurrentTime.Minutes;
-	FoxState.CurrentTime.Seconds = CurrentTime.Seconds;
+	/* TODO: Fix code duplication*/
+	Time CurrentRTCTime;
+	CurrentRTCTime.Days = CurrentDate.Year * 365 + CurrentDate.Month * 30 + CurrentDate.Date; /* We don't need precise conversion here */
+	CurrentRTCTime.Hours = CurrentTime.Hours;
+	CurrentRTCTime.Minutes = CurrentTime.Minutes;
+	CurrentRTCTime.Seconds = CurrentTime.Seconds;
+
+	FoxState.CurrentTime = TimeToTimestamp(CurrentRTCTime);
 }
 
 bool FoxState_IsFrequencyValid(bool is144MHz, uint32_t frequency)
@@ -72,12 +77,9 @@ bool FoxState_SetFrequency(bool is144MHz, uint32_t frequency)
 	return true;
 }
 
-bool FoxState_IsCycleDurationsValid(Time txTime, Time pauseTime)
+bool FoxState_IsCycleDurationsValid(uint32_t txTime, uint32_t pauseTime)
 {
-	Time minTxTime = TimeSinceDayBegin(YHL_MIN_TX_DURATION);
-	Time minPauseTime = TimeSinceDayBegin(YHL_MIN_PAUSE_DURATION);
-
-	if ((TIME1_LESS == CompareTimes(txTime, minTxTime)) || (TIME1_LESS == CompareTimes(pauseTime, minPauseTime)))
+	if ((txTime < YHL_MIN_TX_DURATION) || (pauseTime < YHL_MIN_PAUSE_DURATION))
 	{
 		return false;
 	}
@@ -85,7 +87,7 @@ bool FoxState_IsCycleDurationsValid(Time txTime, Time pauseTime)
 	return true;
 }
 
-bool FoxState_SetCycleDurations(Time txTime, Time pauseTime)
+bool FoxState_SetCycleDurations(uint32_t txTime, uint32_t pauseTime)
 {
 	if (!FoxState_IsCycleDurationsValid(txTime, pauseTime))
 	{
@@ -120,22 +122,9 @@ bool FoxState_SetEndingtoneDuration(uint8_t endingtoneDuration)
 	return true;
 }
 
-bool FoxState_IsBeginAndEndTimesValid(Time beginTime, Time endTime)
+bool FoxState_IsBeginAndEndTimesValid(uint32_t beginTime, uint32_t endTime)
 {
-	int8_t comparisonResult;
-
-	comparisonResult = CompareTimes(beginTime, endTime);
-
-	if ((TIME2_LESS == comparisonResult) || (TIMES_EQUAL == comparisonResult))
-	{
-		return false;
-	}
-
-	Time wholeDay = TimeSinceDayBegin(YHL_TIME_DAY_IN_SECONDS);
-
-	comparisonResult = CompareTimes(endTime, wholeDay);
-
-	if ((TIME2_LESS == comparisonResult) || (TIMES_EQUAL == comparisonResult))
+	if (endTime <= beginTime)
 	{
 		return false;
 	}
@@ -143,7 +132,7 @@ bool FoxState_IsBeginAndEndTimesValid(Time beginTime, Time endTime)
 	return true;
 }
 
-bool FoxState_SetBeginAndEndTimes(Time beginTime, Time endTime)
+bool FoxState_SetBeginAndEndTimes(uint32_t beginTime, uint32_t endTime)
 {
 	if (!FoxState_IsBeginAndEndTimesValid(beginTime, endTime))
 	{

@@ -103,12 +103,12 @@ typedef struct
 	/**
 	 * Transmission length.
 	 */
-	Time TxTime;
+	uint32_t TxTime;
 
 	/**
 	 * Pause length.
 	 */
-	Time PauseTime;
+	uint32_t PauseTime;
 }
 FoxCycleStruct;
 
@@ -157,12 +157,12 @@ typedef struct
 	/**
 	 * When fox will turn on.
 	 */
-	Time StartTime;
+	uint32_t StartTime;
 
 	/**
 	 * When fox will turn off.
 	 */
-	Time EndTime;
+	uint32_t EndTime;
 
 	/**
 	 * Current global fox state.
@@ -172,7 +172,7 @@ typedef struct
 	/**
 	 * When state will be changed to next state.
 	 */
-	Time StateChangeTime;
+	uint32_t StateChangeTime;
 }
 GlobalFoxStateStruct;
 
@@ -218,7 +218,7 @@ typedef struct
 	/**
 	 * When state will be changed to the next one.
 	 */
-	Time StateChangeTime;
+	uint32_t StateChangeTime;
 
 	/**
 	 * True, if ending tone is being transmitted currently.
@@ -263,9 +263,9 @@ typedef struct
 	float BatteryLevel;
 
 	/**
-	 * Current time without day
+	 * Current time (as timestamp)
 	 */
-	Time CurrentTime;
+	uint32_t CurrentTime;
 
 	/**
 	 * True if transmitter must be on by morse player.
@@ -379,12 +379,12 @@ bool FoxState_SetFrequency(bool is144MHz, uint32_t frequency);
 /**
  * Checks if given cycle durations are valid
  */
-bool FoxState_IsCycleDurationsValid(Time txTime, Time pauseTime);
+bool FoxState_IsCycleDurationsValid(uint32_t txTime, uint32_t pauseTime);
 
 /**
  * Tries to set cycle durations. If durations are valid then sets it and returns true, otherwise false
  */
-bool FoxState_SetCycleDurations(Time txTime, Time pauseTime);
+bool FoxState_SetCycleDurations(uint32_t txTime, uint32_t pauseTime);
 
 /**
  * Returns true if ending tone duration is valid
@@ -399,12 +399,12 @@ bool FoxState_SetEndingtoneDuration(uint8_t endingtoneDuration);
 /**
  * Returns true if transmission begin and end times are valid
  */
-bool FoxState_IsBeginAndEndTimesValid(Time beginTime, Time endTime);
+bool FoxState_IsBeginAndEndTimesValid(uint32_t beginTime, uint32_t endTime);
 
 /**
  * Tries to send transmission begin/end times, if they are valid sets it and returns true, otherwise false
  */
-bool FoxState_SetBeginAndEndTimes(Time beginTime, Time endTime);
+bool FoxState_SetBeginAndEndTimes(uint32_t beginTime, uint32_t endTime);
 
 /**
  * Checks if requested power is valid for current fox mode. If valid returns true

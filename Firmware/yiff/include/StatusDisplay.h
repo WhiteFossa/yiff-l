@@ -118,7 +118,7 @@ void DrawBattery(float level);
 /**
  * Draw current time.
  */
-void DrawCurrentTime(Time time);
+void DrawCurrentTime(uint32_t time);
 
 /**
  * Draw transmitter status.
@@ -155,12 +155,12 @@ void DrawEndingTone(uint8_t endingToneLength, FoxCycleStruct cycle);
 /**
  * Draw fox cycle state.
  */
-void DrawFoxCycleState(CycleStateStruct cycleState, Time currentTime, FoxCycleStruct cycle, GlobalFoxStateStruct globalState);
+void DrawFoxCycleState(CycleStateStruct cycleState, uint32_t currentTime, FoxCycleStruct cycle, GlobalFoxStateStruct globalState);
 
 /**
  * Display global fox state.
  */
-void DrawGlobalState(GlobalFoxStateStruct globalState, Time currentTime);
+void DrawGlobalState(GlobalFoxStateStruct globalState, uint32_t currentTime);
 
 /**
  * Draw fox power.

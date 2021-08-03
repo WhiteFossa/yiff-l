@@ -35,7 +35,7 @@ uint32_t L2HAL_CRC_Calculate(L2HAL_CRCContextStruct* context, uint8_t* buffer, u
 		memset(alignedBuffer, 0x00, sizeIn8);
 		memcpy(alignedBuffer, buffer, size);
 
-		uint32_t result = HAL_CRC_Calculate(&context->Handle, alignedBuffer, sizeIn32);
+		volatile uint32_t result = HAL_CRC_Calculate(&context->Handle, alignedBuffer, sizeIn32);
 
 		free(alignedBuffer);
 

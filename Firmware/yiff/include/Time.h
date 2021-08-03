@@ -9,71 +9,86 @@
 #define INCLUDE_TIME_H_
 
 /**
- * How many seconds in a day
+ * 00:00:00 of day 0 have this timestamp
+ */
+#define YHL_TIME_DAY_ZERO_TIMESTAMP 2147483648U
+
+/**
+ * Intervals in seconds
  */
 #define YHL_TIME_DAY_IN_SECONDS 86400U
+#define YHL_TIME_HOUR_IN_SECONDS 3600U
+#define YHL_TIME_MINUTE_IN_SECONDS 60
 
 #include <l2hal.h>
 
 typedef struct
 {
+	/**
+	 * Days since fox power on
+	 */
+	int32_t Days;
+
+	/**
+	 * Hours within current day
+	 */
 	uint8_t Hours;
+
+	/**
+	 * Minutes within current day
+	 */
 	uint8_t Minutes;
+
+	/**
+	 * Seconds within current day
+	 */
 	uint8_t Seconds;
 }
 Time;
 
 /**
- * Converts time to string with hours, minutes and seconds
+ * Converts time structure to timestamp
  */
-void TimeToHMS(Time time, char* result);
+uint32_t TimeToTimestamp(Time time);
 
 /**
- * Converts time to string with minutes and seconds. Hours must be zero
+ * Converts timestamp to time structure
  */
-void TimeToMS(Time time, char* result);
+Time TimestampToTime(uint32_t timestamp);
 
 /**
- * Returns amount of seconds since day begin
+ * Converts time to string with hours, minutes and seconds (days are dropped)
  */
-uint32_t SecondsSinceDayBegin(Time time);
+void TimestampToHMSString(uint32_t timestamp, char* result);
 
 /**
- * Returns time since day begin.
+ * Converts time to string with minutes and seconds (days and hours are dropped)
  */
-Time TimeSinceDayBegin(uint32_t seconds);
+void TimestampToMSString(uint32_t timestamp, char* result);
+
+/**
+ * Converts timeSPAN to string with minutes and seconds (days and hours are dropped)
+ */
+void TimespanToMSString(uint32_t timespan, char* result);
+
+/**
+ * Converts timeSPAN to string with hours, minutes and seconds (days are dropped)
+ */
+void TimespanToHMSString(uint32_t timespan, char* result);
+
+/**
+ * Returns amount of seconds since midnight (days are dropped)
+ */
+uint32_t TimestampToSecondsSinceMidnight(uint32_t timestamp);
+
+/**
+ * Gets midnight of given day
+ */
+uint32_t GetMidnightTimestamp(uint32_t timestamp);
 
 /**
  * Call this function on each new second.
  */
 void NewSecondCallback(void);
-
-/**
- * Convert RTC time to our time.
- */
-Time ToTime(RTC_TimeTypeDef rtcTime);
-
-/**
- * Compare two times.
- */
-#define TIME1_LESS 1
-#define TIMES_EQUAL 0
-#define TIME2_LESS -1
-int8_t CompareTimes(Time time1, Time time2);
-
-/**
- * Adds two times.
- */
-Time AddTimes(Time time1, Time time2);
-
-/**
- * Subtract two times.
- */
-Time SubtractTimes(Time time1, Time time2);
-
-/**
- * Subtracts given amount of seconds from time.
- */
-Time SubtractSeconds(Time time, uint32_t seconds);
 
 #endif /* INCLUDE_TIME_H_ */

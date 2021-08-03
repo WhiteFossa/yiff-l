@@ -164,12 +164,12 @@ typedef struct
 	/**
 	 * Fox will start at given time if armed.
 	 */
-	Time StartTime;
+	uint32_t StartTime;
 
 	/**
 	 * Fox will turn off at given time if armed.
 	 */
-	Time EndTime;
+	uint32_t EndTime;
 
 	/**
 	 * CRC

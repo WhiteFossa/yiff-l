@@ -88,11 +88,11 @@ void DrawBattery(float level)
 	}
 }
 
-void DrawCurrentTime(Time time)
+void DrawCurrentTime(uint32_t time)
 {
 	FMGL_API_DrawRectangleFilled(&fmglContext, YHL_TIME_LEFT, YHL_TIME_TOP, YHL_TIME_CLEAR_RIGHT, YHL_TIME_CLEAR_BOTTOM, OffColor, OffColor);
 	char buffer[16];
-	TimeToHMS(time, buffer);
+	TimestampToHMSString(time, buffer);
 	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, YHL_TIME_LEFT, YHL_TIME_TOP, NULL, NULL, false, buffer);
 }
 
@@ -233,8 +233,8 @@ void DrawFoxCycle(FoxCycleStruct cycle)
 	{
 		char TxTimeTxt[8];
 		char PauseTimeTxt[8];
-		TimeToMS(cycle.TxTime, TxTimeTxt);
-		TimeToMS(cycle.PauseTime, PauseTimeTxt);
+		TimespanToMSString(cycle.TxTime, TxTimeTxt);
+		TimespanToMSString(cycle.PauseTime, PauseTimeTxt);
 
 		sprintf(cycleTimeTxt, "%s/%s", TxTimeTxt, PauseTimeTxt);
 	}
@@ -266,7 +266,7 @@ void DrawEndingTone(uint8_t endingToneLength, FoxCycleStruct cycle)
 	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, YHL_ENDING_TONE_LEFT, YHL_ENDING_TONE_TOP, NULL, NULL, false, buffer);
 }
 
-void DrawFoxCycleState(CycleStateStruct cycleState, Time currentTime, FoxCycleStruct cycle, GlobalFoxStateStruct globalState)
+void DrawFoxCycleState(CycleStateStruct cycleState, uint32_t currentTime, FoxCycleStruct cycle, GlobalFoxStateStruct globalState)
 {
 	FMGL_API_DrawRectangleFilled(&fmglContext,
 			0,
@@ -292,10 +292,10 @@ void DrawFoxCycleState(CycleStateStruct cycleState, Time currentTime, FoxCycleSt
 		return;
 	}
 
-	Time timeTillAction = SubtractTimes(cycleState.StateChangeTime, currentTime);
+	uint32_t timeTillAction = cycleState.StateChangeTime - currentTime;
 
 	char timeBuffer[16];
-	TimeToHMS(timeTillAction, timeBuffer);
+	TimespanToHMSString(timeTillAction, timeBuffer);
 
 	char actionBuffer[16];
 	switch(cycleState.CycleState)
@@ -320,7 +320,7 @@ void DrawFoxCycleState(CycleStateStruct cycleState, Time currentTime, FoxCycleSt
 	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, YHL_CYCLE_STATE_LEFT, YHL_CYCLE_STATE_TOP, NULL, NULL, false, buffer);
 }
 
-void DrawGlobalState(GlobalFoxStateStruct globalState, Time currentTime)
+void DrawGlobalState(GlobalFoxStateStruct globalState, uint32_t currentTime)
 {
 	FMGL_API_DrawRectangleFilled(&fmglContext,
 			0,
@@ -338,11 +338,10 @@ void DrawGlobalState(GlobalFoxStateStruct globalState, Time currentTime)
 		return;
 	}
 
-	uint32_t secondsTillAction = SecondsSinceDayBegin(globalState.StateChangeTime) - SecondsSinceDayBegin(currentTime);
-	Time timeTillAction = TimeSinceDayBegin(secondsTillAction);
+	uint32_t secondsTillAction = globalState.StateChangeTime - currentTime;
 
 	char timeBuffer[16];
-	TimeToHMS(timeTillAction, timeBuffer);
+	TimespanToHMSString(secondsTillAction, timeBuffer);
 
 	char actionBuffer[16];
 	switch(globalState.CurrentState)

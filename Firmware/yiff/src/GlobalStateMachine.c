@@ -20,10 +20,22 @@ void GSM_Disarm(void)
 
 void GSM_Arm(void)
 {
-	if (CompareTimes(FoxState.GlobalState.StartTime, FoxState.GlobalState.EndTime) != TIME1_LESS)
+	if (FoxState.GlobalState.StartTime >= FoxState.GlobalState.EndTime)
 	{
 		L2HAL_Error(Generic);
 	}
+
+	/* Moving start and end times to today */
+	Time currentTime = TimestampToTime(FoxState.CurrentTime);
+
+	Time startTime = TimestampToTime(FoxState.GlobalState.StartTime);
+	Time endTime = TimestampToTime(FoxState.GlobalState.EndTime);
+
+	startTime.Days = currentTime.Days;
+	endTime.Days = currentTime.Days;
+
+	FoxState.GlobalState.StartTime = TimeToTimestamp(startTime);
+	FoxState.GlobalState.EndTime = TimeToTimestamp(endTime);
 
 	FoxState.GlobalState.IsArmed = true;
 	GSM_MoveToBeforeStart();
@@ -36,7 +48,7 @@ void GSM_Tick(void)
 		return;
 	}
 
-	GlobalFoxStateEnum newGlobalState = GSM_GetExpectedState();
+	volatile GlobalFoxStateEnum newGlobalState = GSM_GetExpectedState();
 
 	if (newGlobalState == FoxState.GlobalState.CurrentState)
 	{
@@ -110,25 +122,20 @@ void GSM_StopFox(void)
 
 GlobalFoxStateEnum GSM_GetExpectedState(void)
 {
-	Time preparationStartTime = SubtractSeconds(FoxState.GlobalState.StartTime, YHL_HL_FOX_PREPARATION_AND_MATCHING_TIME);
+	uint32_t preparationStartTime = FoxState.GlobalState.StartTime - YHL_HL_FOX_PREPARATION_AND_MATCHING_TIME;
 
-	int8_t compResPreparationStartTime = CompareTimes(FoxState.CurrentTime, preparationStartTime);
-	int8_t compResStartTime = CompareTimes(FoxState.CurrentTime, FoxState.GlobalState.StartTime);
-	int8_t compResEndTime = CompareTimes(FoxState.CurrentTime, FoxState.GlobalState.EndTime);
-
-
-	if (TIME1_LESS == compResPreparationStartTime)
+	if (FoxState.CurrentTime < preparationStartTime)
 	{
 		/* Current time < Start time -> Before start */
 		return GfsBeforeStart;
 	}
 
-	if (TIME1_LESS != compResPreparationStartTime && TIME1_LESS == compResStartTime)
+	if ((FoxState.CurrentTime >= preparationStartTime) && (FoxState.CurrentTime < FoxState.GlobalState.StartTime))
 	{
 		return GfsPreparation;
 	}
 
-	if (TIME1_LESS == compResEndTime)
+	if (FoxState.CurrentTime < FoxState.GlobalState.EndTime)
 	{
 		/* Start time <= Current time < End time */
 		return GfsBeforeFinish;

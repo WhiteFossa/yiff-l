@@ -187,24 +187,26 @@ EEPROMProfileStruct EEPROM_GenerateDefaultProfile(void)
 	result.IsFast = true;
 
 	result.Cycle.IsContinuous = false;
-	result.Cycle.TxTime.Hours = 0;
-	result.Cycle.TxTime.Minutes = 1;
-	result.Cycle.TxTime.Seconds = 0;
-	result.Cycle.PauseTime.Hours = 0;
-	result.Cycle.PauseTime.Minutes = 4;
-	result.Cycle.PauseTime.Seconds = 0;
+	result.Cycle.TxTime = 60;
+	result.Cycle.PauseTime = 240;
 
 	result.EndingToneLength = 5;
 
 	result.Power = 3.0f;
 
-	result.StartTime.Hours = 10;
-	result.StartTime.Minutes = 0;
-	result.StartTime.Seconds = 0;
+	Time time;
 
-	result.EndTime.Hours = 13;
-	result.EndTime.Minutes = 0;
-	result.EndTime.Seconds = 0;
+	time.Days = 0;
+	time.Hours = 10;
+	time.Minutes = 0;
+	time.Seconds = 0;
+	result.StartTime = TimeToTimestamp(time);
+
+	time.Days = 0;
+	time.Hours = 13;
+	time.Minutes = 0;
+	time.Seconds = 0;
+	result.EndTime = TimeToTimestamp(time);
 
 	result.CRCSum = 0;
 

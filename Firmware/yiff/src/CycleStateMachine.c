@@ -78,39 +78,38 @@ void CSM_Tick(void)
 
 int16_t CSM_GetCycleTime(void)
 {
-	if (TIME1_LESS == CompareTimes(FoxState.CurrentTime, FoxState.GlobalState.StartTime))
+	if (FoxState.CurrentTime < FoxState.GlobalState.StartTime)
 	{
 		return -1; /* Fox not in cycle */
 	}
 
-	uint32_t secondsSinceFoxStart = SecondsSinceDayBegin(SubtractTimes(FoxState.CurrentTime, FoxState.GlobalState.StartTime));
+	uint32_t secondsSinceFoxStart = FoxState.CurrentTime - FoxState.GlobalState.StartTime;
 
-	uint32_t cycleLength = SecondsSinceDayBegin(AddTimes(FoxState.Cycle.TxTime, FoxState.Cycle.PauseTime));
+	uint32_t cycleLength = FoxState.Cycle.TxTime + FoxState.Cycle.PauseTime;
 
 	return secondsSinceFoxStart % cycleLength;
 }
 
 CycleStateEnum CSM_GetStateByCycleTime(int16_t cycleTime)
 {
-	Time timeSinceCycleStart = TimeSinceDayBegin(cycleTime);
-	Time endingToneStartTime = SubtractSeconds(FoxState.Cycle.TxTime, FoxState.EndingToneLength);
-	Time pauseStartTime = FoxState.Cycle.TxTime;
-	Time preparationStartTime = SubtractSeconds(AddTimes(FoxState.Cycle.TxTime, FoxState.Cycle.PauseTime), YHL_HL_FOX_PREPARATION_TIME);
+	uint32_t timeSinceCycleStart = cycleTime;
+	uint32_t endingToneStartTime = FoxState.Cycle.TxTime - FoxState.EndingToneLength;
+	uint32_t pauseStartTime = FoxState.Cycle.TxTime;
+	uint32_t preparationStartTime = FoxState.Cycle.TxTime + FoxState.Cycle.PauseTime - YHL_HL_FOX_PREPARATION_TIME;
 
-	if (TIME1_LESS == CompareTimes(timeSinceCycleStart, endingToneStartTime))
+	if (timeSinceCycleStart < endingToneStartTime)
 	{
 		/* Current Time < Ending Tone Start Time -> TX*/
 		return CsTx;
 	}
 
-	if ((TIME2_LESS != CompareTimes(endingToneStartTime, timeSinceCycleStart))
-			&& (TIME1_LESS == CompareTimes(timeSinceCycleStart, pauseStartTime)))
+	if ((endingToneStartTime <= timeSinceCycleStart) && (timeSinceCycleStart < pauseStartTime))
 	{
 		/* Ending Tone Start Time <= Current Time < Pause Start Time -> Ending tone */
 		return CsEndingTone;
 	}
 
-	if (TIME2_LESS != CompareTimes(preparationStartTime, timeSinceCycleStart))
+	if (preparationStartTime <= timeSinceCycleStart)
 	{
 		/* Preparation Start Time <= Current Time -> Preparation */
 		return CsPreparation;
@@ -177,20 +176,20 @@ void CSM_Cycle_StartPause(uint16_t timeSinceCycleBegin)
 
 void CSM_RecalculateStateChangeTime(uint16_t timeSinceCycleBegin)
 {
-	Time remainder;
+	uint32_t remainder;
 	switch(FoxState.CycleState.CycleState)
 	{
 		case CsTx:
 		case CsEndingTone:
-			remainder = SubtractSeconds(FoxState.Cycle.TxTime, timeSinceCycleBegin);
+			remainder = FoxState.Cycle.TxTime - timeSinceCycleBegin;
 			break;
 
 		case CsPause:
 		case CsPreparation:
 		case CsReady:
-			remainder = SubtractSeconds(AddTimes(FoxState.Cycle.TxTime, FoxState.Cycle.PauseTime), timeSinceCycleBegin);
+			remainder = FoxState.Cycle.TxTime + FoxState.Cycle.PauseTime - timeSinceCycleBegin;
 			break;
 	}
 
-	FoxState.CycleState.StateChangeTime = AddTimes(FoxState.CurrentTime, remainder);
+	FoxState.CycleState.StateChangeTime = FoxState.CurrentTime + remainder;
 }

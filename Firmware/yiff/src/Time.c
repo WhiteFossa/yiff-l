@@ -5,51 +5,88 @@
  *      Author: fossa
  */
 
+#include <time.h>
 #include <main.h>
 #include <TimePrivate.h>
 
-void TimeToHMS(Time time, char* result)
+uint32_t TimeToTimestamp(Time time)
 {
-	sprintf(result, "%02d:%02d:%02d", time.Hours, time.Minutes, time.Seconds);
+	return (int32_t)YHL_TIME_DAY_ZERO_TIMESTAMP
+			+ (int32_t)(time.Days * YHL_TIME_DAY_IN_SECONDS)
+			+ (int32_t)(time.Hours * YHL_TIME_HOUR_IN_SECONDS)
+			+ (int32_t)(time.Minutes * YHL_TIME_MINUTE_IN_SECONDS)
+			+ (int32_t)time.Seconds;
 }
 
-void TimeToMS(Time time, char* result)
+Time TimestampToTime(uint32_t timestamp)
 {
-	if (time.Hours > 0)
+	int64_t timestampLong = timestamp;
+
+	bool isInPast = false;
+	if (timestampLong < (int64_t)YHL_TIME_DAY_ZERO_TIMESTAMP)
 	{
-		L2HAL_Error(Generic);
+		isInPast = true;
 	}
 
-	sprintf(result, "%02d:%02d", time.Minutes, time.Seconds);
-}
-
-uint32_t SecondsSinceDayBegin(Time time)
-{
-	return 3600UL * time.Hours + 60UL * time.Minutes + time.Seconds;
-}
-
-Time TimeSinceDayBegin(uint32_t seconds)
-{
 	Time result;
 
-	result.Hours = (uint8_t)(seconds / 3600UL);
+	result.Days = ((int64_t)timestampLong - (int64_t)YHL_TIME_DAY_ZERO_TIMESTAMP) / (int64_t)YHL_TIME_DAY_IN_SECONDS;
 
-	seconds -= result.Hours * 3600UL;
+	if (isInPast)
+	{
+		result.Days --;
+	}
 
-	result.Minutes = (uint8_t)(seconds / 60UL);
+	timestampLong -= (int64_t)YHL_TIME_DAY_ZERO_TIMESTAMP + (int64_t)result.Days * (int64_t)YHL_TIME_DAY_IN_SECONDS;
 
-	seconds -= result.Minutes * 60UL;
+	result.Hours = (uint8_t)(timestampLong / YHL_TIME_HOUR_IN_SECONDS);
+	timestampLong -= result.Hours * YHL_TIME_HOUR_IN_SECONDS;
 
-	result.Seconds = (uint8_t)seconds;
+	result.Minutes = (uint8_t)(timestampLong / YHL_TIME_MINUTE_IN_SECONDS);
+	timestampLong -= result.Minutes * YHL_TIME_MINUTE_IN_SECONDS;
+
+	result.Seconds = (uint8_t)timestampLong;
 
 	return result;
 }
 
+void TimestampToHMSString(uint32_t timestamp, char* result)
+{
+	Time time = TimestampToTime(timestamp);
+
+	sprintf(result, "%02d:%02d:%02d", time.Hours, time.Minutes, time.Seconds);
+}
+
+void TimestampToMSString(uint32_t timestamp, char* result)
+{
+	Time time = TimestampToTime(timestamp);
+
+	sprintf(result, "%02d:%02d", time.Minutes, time.Seconds);
+}
+
+void TimespanToMSString(uint32_t timespan, char* result)
+{
+	uint32_t timestamp = timespan + YHL_TIME_DAY_ZERO_TIMESTAMP;
+
+	TimestampToMSString(timestamp, result);
+}
+
+void TimespanToHMSString(uint32_t timespan, char* result)
+{
+	uint32_t timestamp = timespan + YHL_TIME_DAY_ZERO_TIMESTAMP;
+
+	TimestampToHMSString(timestamp, result);
+}
+
 void NewSecondCallback(void)
 {
-	FoxState.CurrentTime.Hours = CurrentTime.Hours;
-	FoxState.CurrentTime.Minutes = CurrentTime.Minutes;
-	FoxState.CurrentTime.Seconds = CurrentTime.Seconds;
+	Time CurrentRTCTime;
+	CurrentRTCTime.Days = CurrentDate.Year * 365 + CurrentDate.Month * 30 + CurrentDate.Date; /* We don't need precise conversion here */
+	CurrentRTCTime.Hours = CurrentTime.Hours;
+	CurrentRTCTime.Minutes = CurrentTime.Minutes;
+	CurrentRTCTime.Seconds = CurrentTime.Seconds;
+
+	FoxState.CurrentTime = TimeToTimestamp(CurrentRTCTime);
 
 	/* Global state machine */
 	GSM_Tick();
@@ -64,45 +101,19 @@ void NewSecondCallback(void)
 	}
 }
 
-Time ToTime(RTC_TimeTypeDef rtcTime)
+uint32_t TimestampToSecondsSinceMidnight(uint32_t timestamp)
 {
-	Time time;
-	time.Hours = rtcTime.Hours;
-	time.Minutes = rtcTime.Minutes;
-	time.Seconds = rtcTime.Seconds;
+	Time time = TimestampToTime(timestamp);
 
-	return time;
+	return time.Hours * YHL_TIME_HOUR_IN_SECONDS + time.Minutes * YHL_TIME_MINUTE_IN_SECONDS + time.Seconds;
 }
 
-int8_t CompareTimes(Time time1, Time time2)
+uint32_t GetMidnightTimestamp(uint32_t timestamp)
 {
-	uint32_t seconds1 = SecondsSinceDayBegin(time1);
-	uint32_t seconds2 = SecondsSinceDayBegin(time2);
+	Time time = TimestampToTime(timestamp);
+	time.Hours = 0;
+	time.Minutes = 0;
+	time.Seconds = 0;
 
-	if (seconds1 == seconds2)
-	{
-		return TIMES_EQUAL;
-	}
-
-	if (seconds1 < seconds2)
-	{
-		return TIME1_LESS;
-	}
-
-	return TIME2_LESS;
-}
-
-Time AddTimes(Time time1, Time time2)
-{
-	return TimeSinceDayBegin(SecondsSinceDayBegin(time1) + SecondsSinceDayBegin(time2));
-}
-
-Time SubtractSeconds(Time time, uint32_t seconds)
-{
-	return TimeSinceDayBegin(SecondsSinceDayBegin(time) - seconds);
-}
-
-Time SubtractTimes(Time time1, Time time2)
-{
-	return SubtractSeconds(time1, SecondsSinceDayBegin(time2));
+	return TimeToTimestamp(time);
 }
