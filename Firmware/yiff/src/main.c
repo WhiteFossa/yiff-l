@@ -437,13 +437,13 @@ void Main_PrepareAndMatchAntenna(void)
 	FoxState.MatchingDisplayData.MatchingLevels = malloc(YHL_MATCHING_LEVELS_DATA_SIZE);
 	memset(FoxState.MatchingDisplayData.MatchingLevels, 0x00, YHL_MATCHING_LEVELS_DATA_SIZE);
 	FoxState.MatchingDisplayData.MatchingStep = 0;
-	FoxState.MatchingDisplayData.IsMatchingInProgress = true;
+	FoxState.GlobalState.IsMatchingInProgress = true;
 	FoxState.CurrentDisplay = AntennaMatchingDisplay;
 
 	HL_PrepareAndMatch80m();
 
 	FoxState.CurrentDisplay = StatusDisplay;
-	FoxState.MatchingDisplayData.IsMatchingInProgress = false;
+	FoxState.GlobalState.IsMatchingInProgress = false;
 	free(FoxState.MatchingDisplayData.MatchingLevels);
 
 	FMGL_API_ClearScreen(&fmglContext);

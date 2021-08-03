@@ -836,10 +836,29 @@ void OnDisarmFox(uint8_t payloadSize, uint8_t* payload)
 		return;
 	}
 
-	if (FoxState.GlobalState.IsArmed)
+	bool canDisarm = true;
+	if (!FoxState.GlobalState.IsArmed)
 	{
-		GSM_Disarm();
+		canDisarm = false;
+		goto OnDisarmFox_Validate;
 	}
+
+	/* If antenna matching in progress we can't disarm fox */
+	if (FoxState.GlobalState.IsMatchingInProgress)
+	{
+		canDisarm = false;
+		goto OnDisarmFox_Validate;
+	}
+
+OnDisarmFox_Validate:
+	if (!canDisarm)
+	{
+		uint8_t response = YHL_PACKET_PROCESSOR_FAILURE;
+		SendResponse(DisarmFox, 1, &response);
+		return;
+	}
+
+	GSM_Disarm();
 
 	uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
 	SendResponse(DisarmFox, 1, &response);

@@ -173,6 +173,11 @@ typedef struct
 	 * When state will be changed to next state.
 	 */
 	uint32_t StateChangeTime;
+
+	/**
+	 * True if antenna matching in progress
+	 */
+	bool IsMatchingInProgress;
 }
 GlobalFoxStateStruct;
 
@@ -230,15 +235,10 @@ CycleStateStruct;
 #define YHL_MATCHING_LEVELS_DATA_SIZE (HAL_AM_MAX_VALUE + 1) * sizeof(float)
 
 /**
- * Matching display data
+ * Matching display data. Meaningless if Globalstate.IsMatchingInProgress == false
  */
 typedef struct
 {
-	/**
-	 * Other fields is meaningless if false
-	 */
-	bool IsMatchingInProgress;
-
 	/**
 	 * Matching step
 	 */

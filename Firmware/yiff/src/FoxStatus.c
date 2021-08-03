@@ -29,7 +29,7 @@ void FoxState_Init(void)
 
 	FoxState.CurrentDisplay = StatusDisplay;
 
-	FoxState.MatchingDisplayData.IsMatchingInProgress = false;
+	FoxState.GlobalState.IsMatchingInProgress = false;
 }
 
 void FoxState_CorrectDateTime(void)

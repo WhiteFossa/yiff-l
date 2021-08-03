@@ -14,7 +14,7 @@ void DrawMatchingDisplay(FoxStateStruct foxState)
 		L2HAL_Error(Generic);
 	}
 
-	if (!foxState.MatchingDisplayData.IsMatchingInProgress)
+	if (!foxState.GlobalState.IsMatchingInProgress)
 	{
 		L2HAL_Error(Generic);
 	}
