@@ -49,6 +49,11 @@ volatile uint16_t HAL_ADCAveragesCounter;
 volatile YHL_HAL_ADCChannelEnum HAL_CurrentADCChannel;
 
 /**
+ * Current position of encoder
+ */
+volatile int8_t HAL_EncoderPosition;
+
+/**
  * Callback, called when left button pressed
  */
 void (*HAL_LeftButtonCallback)(void);

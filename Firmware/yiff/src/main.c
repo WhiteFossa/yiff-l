@@ -147,8 +147,6 @@ int main(int argc, char* argv[])
 	FoxState.CurrentTime = YHL_TIME_DAY_ZERO_TIMESTAMP;
 
 	FoxState.IsTXOn = false;
-	void Main_CheckEncoderButtonPressedEvent(void);
-	void Main_OnEncoderButtonPressed(void);
 	FoxState.GlobalState.IsArmed = false;
 	FoxState.GlobalState.CurrentState = GfsStandby;
 	FoxState.CycleState.CycleState = CsPause;
@@ -206,6 +204,9 @@ int main(int argc, char* argv[])
 	HAL_RegisterRightButtonHandler(Main_OnRightButtonPressedInterrupt);
 	HAL_RegisterEncoderButtonHandler(Main_OnEncoderButtonPressedInterrupt);
 	HAL_RegisterEncoderRotationHandler(Main_OnEncoderRotationInterrupt);
+
+	/* Preparing menus */
+	Menu_InitMenuDisplay();
 
 	/* Debugging stuff begin */
 
@@ -497,7 +498,10 @@ void Main_CheckLeftButtonPressedEvent(void)
 
 void Main_OnLeftButtonPressed(void)
 {
-
+	if (StatusDisplay == FoxState.CurrentDisplay)
+	{
+		Main_EnterMenu();
+	}
 }
 
 void Main_CheckRightButtonPressedEvent(void)
@@ -512,7 +516,10 @@ void Main_CheckRightButtonPressedEvent(void)
 
 void Main_OnRightButtonPressed(void)
 {
-
+	if (MenuDisplay == FoxState.CurrentDisplay)
+	{
+		Menu_RightButtonHandler();
+	}
 }
 
 void Main_CheckEncoderButtonPressedEvent(void)
@@ -542,7 +549,16 @@ void Main_CheckEncoderRotationEvent(void)
 
 void Main_OnEncoderRotation(int8_t direction)
 {
+	if (MenuDisplay == FoxState.CurrentDisplay)
+	{
+		Menu_EncoderRotationHandler(direction);
+	}
+}
 
+void Main_EnterMenu(void)
+{
+	FoxState.CurrentDisplay = MenuDisplay;
+	Menu_DrawMenuDisplay();
 }
 
 #pragma GCC diagnostic pop

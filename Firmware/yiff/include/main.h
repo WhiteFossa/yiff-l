@@ -175,4 +175,9 @@ void Main_OnEncoderRotationInterrupt(int8_t direction);
 void Main_CheckEncoderRotationEvent(void);
 void Main_OnEncoderRotation(int8_t direction);
 
+/**
+ * Call this to enter menu mode
+ */
+void Main_EnterMenu(void);
+
 #endif /* __MAIN_H */

@@ -86,7 +86,12 @@ typedef enum
 	/**
 	 * Antenna matching display (3.5MHz)
 	 */
-	AntennaMatchingDisplay = 1
+	AntennaMatchingDisplay = 1,
+
+	/**
+	 * Menu display
+	 */
+	MenuDisplay = 2
 }
 FoxDisplayEnum;
 

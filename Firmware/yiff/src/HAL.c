@@ -153,6 +153,7 @@ void HAL_IntiHardware(void)
 	HAL_RightButtonCallback = NULL;
 	HAL_EncoderButtonCallback = NULL;
 	HAL_EncoderRotationCallback = NULL;
+	HAL_EncoderPosition = 0;
 
 	/**
 	 * Launching ADC conversions
@@ -719,19 +720,41 @@ void HAL_OnEncoderButtonPressed(void)
 
 void HAL_OnEncoderTurned(void)
 {
-	int8_t direction;
-	if (GPIO_PIN_RESET == HAL_GPIO_ReadPin(HAL_ENCODER_LEFT_PORT, HAL_ENCODER_LEFT_PIN))
+	uint8_t sum = 0;
+	for (uint8_t sample = 0; sample < HAL_ENCODER_SAMPLES_COUNT; sample ++)
 	{
-		direction = HAL_ENCODER_ROTATION_CLOCKWISE;
+		if (GPIO_PIN_SET == HAL_GPIO_ReadPin(HAL_ENCODER_LEFT_PORT, HAL_ENCODER_LEFT_PIN))
+		{
+			sum++;
+		}
+	}
+
+	if (sum > (HAL_ENCODER_SAMPLES_COUNT / 2 - 1))
+	{
+		HAL_EncoderPosition --;
 	}
 	else
 	{
-		direction = HAL_ENCODER_ROTATION_COUNTERCLOCKWISE;
+		HAL_EncoderPosition ++;
 	}
 
-	if (HAL_EncoderRotationCallback != NULL)
+	if (HAL_EncoderPosition >= HAL_ENCODER_DIVISION)
 	{
-		HAL_EncoderRotationCallback(direction);
+		HAL_EncoderPosition = 0;
+
+		if (HAL_EncoderRotationCallback != NULL)
+		{
+			HAL_EncoderRotationCallback(HAL_ENCODER_ROTATION_CLOCKWISE);
+		}
+	}
+	else if (HAL_EncoderPosition <= -1 * HAL_ENCODER_DIVISION)
+	{
+		HAL_EncoderPosition = 0;
+
+		if (HAL_EncoderRotationCallback != NULL)
+		{
+			HAL_EncoderRotationCallback(HAL_ENCODER_ROTATION_COUNTERCLOCKWISE);
+		}
 	}
 }
 

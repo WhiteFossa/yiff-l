@@ -202,6 +202,17 @@
 #define HAL_ENCODER_ROTATION_CLOCKWISE 1
 #define HAL_ENCODER_ROTATION_COUNTERCLOCKWISE -1
 
+/**
+ * This number of hardware clicks will lead to one software click
+ */
+#define HAL_ENCODER_DIVISION 2
+
+/**
+ * How much time to sample encoder data in ISR to suppress transient effects
+ */
+#define HAL_ENCODER_SAMPLES_COUNT 128
+
+
 extern ADC_HandleTypeDef ADC_Handle;
 extern L2HAL_AD5245_ContextStruct U80mRegulatorContext;
 extern I2C_HandleTypeDef I2C_Other;
