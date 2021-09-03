@@ -14,6 +14,12 @@
 #include <HAL.h>
 
 /**
+ * Maximal length of item's text
+ */
+#define YHL_MENU_MAX_ITEM_TEXT_LENGTH 31
+#define YHK_MENU_MAX_ITEM_TEXT_MEMORY_SIZE (YHL_MENU_MAX_ITEM_TEXT_LENGTH + 1)
+
+/**
  * Menu line height
  */
 #define YHL_MENU_LINE_HEIGHT 12
@@ -24,6 +30,11 @@
 #define YHL_MENU_LINE_VERTICAL_SPACING 2
 
 /**
+ * How much menu lines we able to display
+ */
+#define YHL_MENU_NUMBER_OF_LINES 8
+
+/**
  * Menu leaf
  */
 typedef struct
@@ -31,12 +42,12 @@ typedef struct
 	/**
 	 * Leaf name
 	 */
-	char Name[32];
+	char Name[YHK_MENU_MAX_ITEM_TEXT_MEMORY_SIZE];
 }
 MenuLeaf;
 
 /**
- * Menu node (contains nodes and leafs)
+ * Menu node (contains nodes and leaves)
  */
 typedef struct
 {
@@ -48,7 +59,7 @@ typedef struct
 	/**
 	 * Node name
 	 */
-	char Name[32];
+	char Name[YHK_MENU_MAX_ITEM_TEXT_MEMORY_SIZE];
 
 	/**
 	 * How many sub-nodes this node have
@@ -61,14 +72,14 @@ typedef struct
 	void* Nodes;
 
 	/**
-	 * How many leafs this node have
+	 * How many leaves this node have
 	 */
-	uint8_t LeafsCount;
+	uint8_t LeavesCount;
 
 	/**
-	 * Pointer to leafs array
+	 * Pointer to leaves array
 	 */
-	MenuLeaf* Leafs;
+	MenuLeaf* Leaves;
 
 	/**
 	 * Right button action
@@ -102,6 +113,27 @@ MenuNode Menu_CurrentNode;
 uint8_t ActiveLineIndex;
 
 /**
+ * How many menu lines current node have
+ */
+uint8_t CurrentNodeLinesCount;
+
+/**
+ * Current node lines, sub-nodes first, leaves then.
+ * CurrentNodeLines + lineNumber * YHK_MENU_MAX_ITEM_TEXT_MEMORY_SIZE
+ */
+void* CurrentNodeLines;
+
+/**
+ * How many lines are currently displayed
+ */
+uint8_t WindowLinesCount;
+
+/**
+ * Line with this index (from CurrentNodeLines) will be displayed at the top
+ */
+uint8_t BaseLine;
+
+/**
  * Initialize meny display
  */
 void Menu_InitMenuDisplay(void);
@@ -114,7 +146,7 @@ void Menu_DrawMenuDisplay(void);
 /**
  * Draw menu lines with selected line
  */
-void Menu_DrawMenuLines(uint8_t linesCount, char** lines, uint8_t activeLineIndex);
+void Menu_DrawMenuLines(uint8_t linesCount, char* lines, uint8_t activeLineIndex);
 
 /**
  * Call it when right button is pressed
@@ -125,6 +157,16 @@ void Menu_RightButtonHandler(void);
  * Call it when encoder is rotated
  */
 void Menu_EncoderRotationHandler(int8_t direction);
+
+/**
+ * Called when menu need to be scrolled up
+ */
+void Menu_ScrollUpHandler(void);
+
+/**
+ * Called when menu need to be scrolled down
+ */
+void Menu_ScrollDownHandler(void);
 
 void Menu_RootNode_RightButtonAction(void);
 void Menu_Node1_RightButtonAction(void);

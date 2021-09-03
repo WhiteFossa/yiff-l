@@ -14,42 +14,80 @@ void Menu_InitMenuDisplay(void)
 	Menu_RootNode.Parent = NULL;
 	strcpy(Menu_RootNode.Name, "Menu root");
 
-	Menu_RootNode.LeafsCount = 3;
-	Menu_RootNode.Leafs = malloc(sizeof(MenuLeaf) * Menu_RootNode.LeafsCount);
+	Menu_RootNode.LeavesCount = 8;
+	Menu_RootNode.Leaves = malloc(sizeof(MenuLeaf) * Menu_RootNode.LeavesCount);
 
-	strcpy(Menu_RootNode.Leafs[0].Name, "Test leaf 1");
-	strcpy(Menu_RootNode.Leafs[1].Name, "Test leaf 2");
-	strcpy(Menu_RootNode.Leafs[2].Name, "Test leaf 3");
+	strcpy(Menu_RootNode.Leaves[0].Name, "Test leaf 1");
+	strcpy(Menu_RootNode.Leaves[1].Name, "Test leaf 2");
+	strcpy(Menu_RootNode.Leaves[2].Name, "Test leaf 3");
+	strcpy(Menu_RootNode.Leaves[3].Name, "Test leaf 4");
+	strcpy(Menu_RootNode.Leaves[4].Name, "Test leaf 5");
+	strcpy(Menu_RootNode.Leaves[5].Name, "Test leaf 6");
+	strcpy(Menu_RootNode.Leaves[6].Name, "Test leaf 7");
+	strcpy(Menu_RootNode.Leaves[7].Name, "Test leaf 8");
 
 	Menu_RootNode.NodesCount = 2;
 	Menu_RootNode.Nodes = malloc(sizeof(MenuNode) * Menu_RootNode.NodesCount);
 
-	MenuNode node1 = ((MenuNode*)Menu_RootNode.Nodes)[0];
-	node1.Parent = &Menu_RootNode;
-	strcpy(node1.Name, "Menu node 1");
-	node1.LeafsCount = 1;
-	node1.Leafs = malloc(sizeof(MenuLeaf) * 1);
-	strcpy(node1.Leafs[0].Name, "Test leaf 1-1");
-	node1.NodesCount = 0;
-	node1.Nodes = NULL;
-	strcpy(node1.RightButtonText, "Test1");
-	node1.RightButtonAction = Menu_Node1_RightButtonAction;
+	MenuNode* node1 = &((MenuNode*)Menu_RootNode.Nodes)[0];
+	node1->Parent = &Menu_RootNode;
+	strcpy(node1->Name, "Menu node 1");
+	node1->LeavesCount = 1;
+	node1->Leaves = malloc(sizeof(MenuLeaf) * 1);
+	strcpy(node1->Leaves[0].Name, "Test leaf 1-1");
+	node1->NodesCount = 0;
+	node1->Nodes = NULL;
+	strcpy(node1->RightButtonText, "Test1");
+	node1->RightButtonAction = Menu_Node1_RightButtonAction;
 
-	MenuNode node2 = ((MenuNode*)Menu_RootNode.Nodes)[1];
-	node2.Parent = &Menu_RootNode;
-	strcpy(node2.Name, "Menu node 2");
-	node2.LeafsCount = 1;
-	node2.Leafs = malloc(sizeof(MenuLeaf) * 1);
-	strcpy(node2.Leafs[0].Name, "Test leaf 2-1");
-	node2.NodesCount = 0;
-	node2.Nodes = NULL;
-	strcpy(node1.RightButtonText, "Test2");
-	node2.RightButtonAction = Menu_Node1_RightButtonAction;
+	MenuNode* node2 = &((MenuNode*)Menu_RootNode.Nodes)[1];
+	node2->Parent = &Menu_RootNode;
+	strcpy(node2->Name, "Menu node 2");
+	node2->LeavesCount = 1;
+	node2->Leaves = malloc(sizeof(MenuLeaf) * 1);
+	strcpy(node2->Leaves[0].Name, "Test leaf 2-1");
+	node2->NodesCount = 0;
+	node2->Nodes = NULL;
+	strcpy(node2->RightButtonText, "Test2");
+	node2->RightButtonAction = Menu_Node1_RightButtonAction;
 
 	strcpy(Menu_RootNode.RightButtonText, "Exit");
 	Menu_RootNode.RightButtonAction = Menu_RootNode_RightButtonAction;
 
 	Menu_CurrentNode = Menu_RootNode;
+
+	CurrentNodeLinesCount = Menu_CurrentNode.NodesCount + Menu_CurrentNode.LeavesCount;
+	CurrentNodeLines = malloc(CurrentNodeLinesCount * YHK_MENU_MAX_ITEM_TEXT_MEMORY_SIZE); /* TODO: Do not forget to free me */
+
+	/* Nodes first */
+	for (uint8_t nodesCounter = 0; nodesCounter < Menu_CurrentNode.NodesCount; nodesCounter ++)
+	{
+		char* dst = (char*)(CurrentNodeLines + nodesCounter * YHK_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
+		MenuNode node = ((MenuNode*)Menu_CurrentNode.Nodes)[nodesCounter];
+		char* src = node.Name;
+		strcpy(dst, src);
+	}
+
+	/* Leaves then */
+	for (uint8_t leavesCounter = 0; leavesCounter < Menu_CurrentNode.LeavesCount; leavesCounter ++)
+	{
+		uint8_t baseCount = Menu_CurrentNode.NodesCount;
+		char* dst = (char*)(CurrentNodeLines + (baseCount + leavesCounter) * YHK_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
+		char* src = Menu_CurrentNode.Leaves[leavesCounter].Name;
+		strcpy(dst, src);
+	}
+
+	/* How many lines could we display */
+	if (CurrentNodeLinesCount > YHL_MENU_NUMBER_OF_LINES)
+	{
+		WindowLinesCount = YHL_MENU_NUMBER_OF_LINES;
+	}
+	else
+	{
+		WindowLinesCount = CurrentNodeLinesCount;
+	}
+
+	BaseLine = 0;
 }
 
 void Menu_DrawMenuDisplay(void)
@@ -63,18 +101,18 @@ void Menu_DrawMenuDisplay(void)
 
 	FMGL_API_ClearScreen(&fmglContext);
 
-	//FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, 0, 0, NULL, NULL, false, "Menu will be here");
-	char testLines[8][32];
-	strcpy(testLines[0], "Line 1");
-	strcpy(testLines[1], "Line 2");
-	strcpy(testLines[2], "Line 3");
-	strcpy(testLines[3], "Line 4");
-	strcpy(testLines[4], "Line 5");
-	strcpy(testLines[5], "Line 6");
-	strcpy(testLines[6], "Line 7");
-	strcpy(testLines[7], "Line 8");
+	/* Display window - this lines will be displayed*/
+	char window[YHL_MENU_NUMBER_OF_LINES][YHK_MENU_MAX_ITEM_TEXT_MEMORY_SIZE];
 
-	Menu_DrawMenuLines(8, testLines, ActiveLineIndex);
+
+	for (uint8_t linesCounter = 0; linesCounter < WindowLinesCount; linesCounter ++)
+	{
+		char* src = (char*)(CurrentNodeLines + (BaseLine + linesCounter) * YHK_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
+		char* dst = window[linesCounter];
+		strcpy(dst, src);
+	}
+
+	Menu_DrawMenuLines(WindowLinesCount, window, ActiveLineIndex);
 
 	/* Buttons texts */
 	strcpy(LeftButton.Text, "Activ.");
@@ -105,11 +143,17 @@ void Menu_EncoderRotationHandler(int8_t direction)
 
 	if (activeLineIndex < 0)
 	{
+		/* Scroll up */
 		activeLineIndex = 0;
+
+		Menu_ScrollUpHandler();
 	}
-	else if (activeLineIndex > 7)
+	else if (activeLineIndex > WindowLinesCount - 1)
 	{
-		activeLineIndex = 7;
+		/* Scroll down */
+		activeLineIndex = WindowLinesCount - 1;
+
+		Menu_ScrollDownHandler();
 	}
 
 	ActiveLineIndex = activeLineIndex;
@@ -117,7 +161,7 @@ void Menu_EncoderRotationHandler(int8_t direction)
 	Menu_DrawMenuDisplay();
 }
 
-void Menu_DrawMenuLines(uint8_t linesCount, char** lines, uint8_t activeLineIndex)
+void Menu_DrawMenuLines(uint8_t linesCount, char* lines, uint8_t activeLineIndex)
 {
 	uint16_t rightmostPixel = FMGL_API_GetDisplayWidth(&fmglContext) - 1;
 	uint16_t lineTop;
@@ -137,7 +181,32 @@ void Menu_DrawMenuLines(uint8_t linesCount, char** lines, uint8_t activeLineInde
 			FMGL_API_DrawRectangleFilled(&fmglContext, 0, lineTop, rightmostPixel, lineTop + YHL_MENU_LINE_HEIGHT, OnColor, OnColor);
 		}
 
-		FMGL_API_RenderTextWithLineBreaks(&fmglContext, &font, 0, lineTop, NULL, NULL, false, "Menu will be here");
+		FMGL_API_RenderTextWithLineBreaks(&fmglContext, &font, 0, lineTop, NULL, NULL, false, lines + YHK_MENU_MAX_ITEM_TEXT_MEMORY_SIZE* line);
+	}
+}
+
+void Menu_ScrollUpHandler(void)
+{
+	int16_t baseLineTmp = BaseLine;
+
+	baseLineTmp --;
+
+	if (baseLineTmp < 0)
+	{
+		baseLineTmp = 0;
+	}
+
+	BaseLine = baseLineTmp;
+}
+
+
+void Menu_ScrollDownHandler(void)
+{
+	BaseLine ++;
+
+	if (BaseLine > CurrentNodeLinesCount - YHL_MENU_NUMBER_OF_LINES)
+	{
+		BaseLine = CurrentNodeLinesCount - YHL_MENU_NUMBER_OF_LINES;
 	}
 }
 
