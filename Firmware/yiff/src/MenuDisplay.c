@@ -37,8 +37,6 @@ void Menu_InitMenuDisplay(void)
 	strcpy(node1->Leaves[0].Name, "Test leaf 1-1");
 	node1->NodesCount = 0;
 	node1->Nodes = NULL;
-	strcpy(node1->RightButtonText, "Test1");
-	node1->RightButtonAction = Menu_Node1_RightButtonAction;
 
 	MenuNode* node2 = &((MenuNode*)Menu_RootNode.Nodes)[1];
 	node2->Parent = &Menu_RootNode;
@@ -48,15 +46,22 @@ void Menu_InitMenuDisplay(void)
 	strcpy(node2->Leaves[0].Name, "Test leaf 2-1");
 	node2->NodesCount = 0;
 	node2->Nodes = NULL;
-	strcpy(node2->RightButtonText, "Test2");
-	node2->RightButtonAction = Menu_Node1_RightButtonAction;
 
-	strcpy(Menu_RootNode.RightButtonText, "Exit");
-	Menu_RootNode.RightButtonAction = Menu_RootNode_RightButtonAction;
+	CurrentNodeLines = NULL;
 
-	Menu_CurrentNode = Menu_RootNode;
+	Menu_SwitchNode(&Menu_RootNode);
+}
+
+void Menu_SwitchNode(MenuNode* nodePtr)
+{
+	Menu_CurrentNode = *nodePtr;
 
 	CurrentNodeLinesCount = Menu_CurrentNode.NodesCount + Menu_CurrentNode.LeavesCount;
+	if (CurrentNodeLines != NULL)
+	{
+		free(CurrentNodeLines);
+	}
+
 	CurrentNodeLines = malloc(CurrentNodeLinesCount * YHK_MENU_MAX_ITEM_TEXT_MEMORY_SIZE); /* TODO: Do not forget to free me */
 
 	/* Nodes first */
@@ -88,6 +93,25 @@ void Menu_InitMenuDisplay(void)
 	}
 
 	BaseLine = 0;
+	ActiveLineIndex = 0;
+}
+
+void Menu_GoToParentNode(void)
+{
+	MenuNode* parent = Menu_CurrentNode.Parent;
+	if (NULL == parent)
+	{
+		/* Exiting menu */
+		FoxState.CurrentDisplay = StatusDisplay;
+		strcpy(LeftButton.Text, "Menu");
+		strcpy(RightButton.Text, "Bt. off");
+
+		FMGL_API_ClearScreen(&fmglContext);
+		return;
+	}
+
+	Menu_SwitchNode(parent);
+	Menu_DrawMenuDisplay();
 }
 
 void Menu_DrawMenuDisplay(void)
@@ -104,7 +128,6 @@ void Menu_DrawMenuDisplay(void)
 	/* Display window - this lines will be displayed*/
 	char window[YHL_MENU_NUMBER_OF_LINES][YHK_MENU_MAX_ITEM_TEXT_MEMORY_SIZE];
 
-
 	for (uint8_t linesCounter = 0; linesCounter < WindowLinesCount; linesCounter ++)
 	{
 		char* src = (char*)(CurrentNodeLines + (BaseLine + linesCounter) * YHK_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
@@ -116,16 +139,104 @@ void Menu_DrawMenuDisplay(void)
 
 	/* Buttons texts */
 	strcpy(LeftButton.Text, "Activ.");
-	strcpy(RightButton.Text, Menu_CurrentNode.RightButtonText);
+	strcpy(RightButton.Text, "Back");
 
 	DrawButtons();
 
 	FMGL_API_PushFramebuffer(&fmglContext);
 }
 
+uint8_t Menu_GetCurrentNodeActiveLineIndex(void)
+{
+	return BaseLine + ActiveLineIndex;
+}
+
+int8_t Menu_GetCurrentSubNodeIndex(uint8_t currentNodeActiveLineIndex)
+{
+	if (currentNodeActiveLineIndex > Menu_CurrentNode.NodesCount - 1)
+	{
+		return YHL_MENU_NOT_A_NODE;
+	}
+
+	return currentNodeActiveLineIndex;
+}
+
+int8_t Menu_GetCurrentLeafIndex(uint8_t currentNodeActiveLineIndex)
+{
+	int subNodeIndex = Menu_GetCurrentSubNodeIndex(currentNodeActiveLineIndex);
+
+	if (subNodeIndex != YHL_MENU_NOT_A_NODE)
+	{
+		/* It's a node, not a leaf */
+		return YHL_MENU_NOT_A_LEAF;
+	}
+
+	return currentNodeActiveLineIndex - Menu_CurrentNode.NodesCount;
+}
+
+void Menu_LeftButtonHandler(void)
+{
+	Menu_OnAction(MenuLeftButtonClick);
+}
+
+void Menu_OnAction(MenuActionEnum action)
+{
+	uint8_t currentNodeActiveLineIndex = Menu_GetCurrentNodeActiveLineIndex();
+
+	int8_t subNodeIndex = Menu_GetCurrentSubNodeIndex(currentNodeActiveLineIndex);
+
+	if (subNodeIndex != YHL_MENU_NOT_A_NODE)
+	{
+		MenuNode* subNode = &((MenuNode*)Menu_CurrentNode.Nodes)[subNodeIndex];
+		Menu_ActionOnNodeHandler(subNode, action);
+		return;
+	}
+
+	int8_t leafIndex = Menu_GetCurrentLeafIndex(currentNodeActiveLineIndex);
+	if (YHL_MENU_NOT_A_LEAF == leafIndex)
+	{
+		/* Not a node, not a leaf, definitely a bug */
+		L2HAL_Error(Generic);
+	}
+
+	MenuLeaf* leafPtr = &Menu_CurrentNode.Leaves[leafIndex];
+	Menu_ActionOnLeafHandler(leafPtr, action);
+}
+
+void Menu_ActionOnNodeHandler(MenuNode* node, MenuActionEnum action)
+{
+	if (MenuLeftButtonClick == action || MenuEncoderClick == action)
+	{
+		/* Entering menu node */
+		Menu_SwitchNode(node);
+		Menu_DrawMenuDisplay();
+		return;
+	}
+
+	if (MenuRightButtonClick == action)
+	{
+		/* Going back */
+		Menu_GoToParentNode();
+	}
+}
+
+void Menu_ActionOnLeafHandler(MenuLeaf* leaf, MenuActionEnum action)
+{
+	if (MenuRightButtonClick == action)
+	{
+		/* Going back */
+		Menu_GoToParentNode();
+	}
+}
+
 void Menu_RightButtonHandler(void)
 {
-	Menu_CurrentNode.RightButtonAction();
+	Menu_OnAction(MenuRightButtonClick);
+}
+
+void Menu_EncoderClickHandler(void)
+{
+	Menu_OnAction(MenuEncoderClick);
 }
 
 void Menu_EncoderRotationHandler(int8_t direction)
@@ -202,6 +313,13 @@ void Menu_ScrollUpHandler(void)
 
 void Menu_ScrollDownHandler(void)
 {
+	if (CurrentNodeLinesCount <= YHL_MENU_NUMBER_OF_LINES)
+	{
+		/* Scrolling disabled because of too few items */
+		BaseLine = 0;
+		return;
+	}
+
 	BaseLine ++;
 
 	if (BaseLine > CurrentNodeLinesCount - YHL_MENU_NUMBER_OF_LINES)
@@ -210,22 +328,13 @@ void Menu_ScrollDownHandler(void)
 	}
 }
 
-void Menu_RootNode_RightButtonAction(void)
-{
-	/* Restoring status display */
-	FoxState.CurrentDisplay = StatusDisplay;
-	strcpy(LeftButton.Text, "Menu");
-	strcpy(RightButton.Text, "Bt. off");
+//void Menu_RootNode_RightButtonAction(void)
+//{
+//	/* Restoring status display */
+//	FoxState.CurrentDisplay = StatusDisplay;
+//	strcpy(LeftButton.Text, "Menu");
+//	strcpy(RightButton.Text, "Bt. off");
+//
+//	FMGL_API_ClearScreen(&fmglContext);
+//}
 
-	FMGL_API_ClearScreen(&fmglContext);
-}
-
-void Menu_Node1_RightButtonAction(void)
-{
-
-}
-
-void Menu_Node2_RightButtonAction(void)
-{
-
-}

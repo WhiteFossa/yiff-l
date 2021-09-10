@@ -176,7 +176,7 @@ void CSM_Cycle_StartPause(uint16_t timeSinceCycleBegin)
 
 void CSM_RecalculateStateChangeTime(uint16_t timeSinceCycleBegin)
 {
-	uint32_t remainder;
+	uint32_t remainder = 0;
 	switch(FoxState.CycleState.CycleState)
 	{
 		case CsTx:
@@ -189,6 +189,9 @@ void CSM_RecalculateStateChangeTime(uint16_t timeSinceCycleBegin)
 		case CsReady:
 			remainder = FoxState.Cycle.TxTime + FoxState.Cycle.PauseTime - timeSinceCycleBegin;
 			break;
+
+		default:
+			L2HAL_Error(Generic);
 	}
 
 	FoxState.CycleState.StateChangeTime = FoxState.CurrentTime + remainder;

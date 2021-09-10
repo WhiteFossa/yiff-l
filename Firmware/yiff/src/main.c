@@ -502,6 +502,10 @@ void Main_OnLeftButtonPressed(void)
 	{
 		Main_EnterMenu();
 	}
+	else if (MenuDisplay == FoxState.CurrentDisplay)
+	{
+		Menu_LeftButtonHandler();
+	}
 }
 
 void Main_CheckRightButtonPressedEvent(void)
@@ -534,7 +538,10 @@ void Main_CheckEncoderButtonPressedEvent(void)
 
 void Main_OnEncoderButtonPressed(void)
 {
-
+	if (MenuDisplay == FoxState.CurrentDisplay)
+	{
+		Menu_EncoderClickHandler();
+	}
 }
 
 void Main_CheckEncoderRotationEvent(void)

@@ -20,6 +20,19 @@
 #define YHK_MENU_MAX_ITEM_TEXT_MEMORY_SIZE (YHL_MENU_MAX_ITEM_TEXT_LENGTH + 1)
 
 /**
+ * What happened on menu item
+ */
+typedef enum
+{
+	MenuLeftButtonClick,
+
+	MenuEncoderClick,
+
+	MenuRightButtonClick
+}
+MenuActionEnum;
+
+/**
  * Menu line height
  */
 #define YHL_MENU_LINE_HEIGHT 12
@@ -33,6 +46,16 @@
  * How much menu lines we able to display
  */
 #define YHL_MENU_NUMBER_OF_LINES 8
+
+/**
+ * Result is not a node
+ */
+#define YHL_MENU_NOT_A_NODE -1
+
+/**
+ * Result is not a leaf
+ */
+#define YHL_MENU_NOT_A_LEAF - 1
 
 /**
  * Menu leaf
@@ -80,16 +103,6 @@ typedef struct
 	 * Pointer to leaves array
 	 */
 	MenuLeaf* Leaves;
-
-	/**
-	 * Right button action
-	 */
-	void (*RightButtonAction)(void);
-
-	/**
-	 * Right button text
-	 */
-	char RightButtonText[YHL_MAX_BUTTON_TEXT_LENGTH + 1];
 }
 MenuNode;
 
@@ -149,9 +162,19 @@ void Menu_DrawMenuDisplay(void);
 void Menu_DrawMenuLines(uint8_t linesCount, char* lines, uint8_t activeLineIndex);
 
 /**
+ * Call it when left button is pressed
+ */
+void Menu_LeftButtonHandler(void);
+
+/**
  * Call it when right button is pressed
  */
 void Menu_RightButtonHandler(void);
+
+/**
+ * Call it when encoder is pressed
+ */
+void Menu_EncoderClickHandler(void);
 
 /**
  * Call it when encoder is rotated
@@ -168,8 +191,45 @@ void Menu_ScrollUpHandler(void);
  */
 void Menu_ScrollDownHandler(void);
 
-void Menu_RootNode_RightButtonAction(void);
-void Menu_Node1_RightButtonAction(void);
-void Menu_Node2_RightButtonAction(void);
+/**
+ * Gets active line index (globally active, not in display window)
+ */
+uint8_t Menu_GetCurrentNodeActiveLineIndex(void);
+
+/**
+ * Gets current node active sub-node index or returns YHL_MENU_NOT_A_NODE if active line points to a leaf
+ */
+int8_t Menu_GetCurrentSubNodeIndex(uint8_t currentNodeActiveLineIndex);
+
+/**
+ * Gets current node active list index or returns YHL_MENU_NOT_A_LEAF if active line points to a sub-node
+ */
+int8_t Menu_GetCurrentLeafIndex(uint8_t currentNodeActiveLineIndex);
+
+/**
+ * Call it on action (e.g. button press)
+ */
+void Menu_OnAction(MenuActionEnum action);
+
+/**
+ * Called when something is happened on menu node
+ */
+void Menu_ActionOnNodeHandler(MenuNode* node, MenuActionEnum action);
+
+/**
+ * Called when something is happened on menu leaf
+ */
+void Menu_ActionOnLeafHandler(MenuLeaf* leaf, MenuActionEnum action);
+
+/**
+ * Make given node current
+ */
+void Menu_SwitchNode(MenuNode* nodePtr);
+
+/**
+ * Go to parent of current node
+ */
+void Menu_GoToParentNode(void);
+
 
 #endif /* INCLUDE_MENUDISPLAY_H_ */
