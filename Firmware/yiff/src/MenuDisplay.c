@@ -18,13 +18,28 @@ void Menu_InitMenuDisplay(void)
 	Menu_RootNode.Leaves = malloc(sizeof(MenuLeaf) * Menu_RootNode.LeavesCount);
 
 	strcpy(Menu_RootNode.Leaves[0].Name, "Test leaf 1");
+	strcpy(Menu_RootNode.Leaves[0].LeftButtonText, "Activ.");
+
 	strcpy(Menu_RootNode.Leaves[1].Name, "Test leaf 2");
+	strcpy(Menu_RootNode.Leaves[1].LeftButtonText, "Select");
+
 	strcpy(Menu_RootNode.Leaves[2].Name, "Test leaf 3");
+	strcpy(Menu_RootNode.Leaves[2].LeftButtonText, "Yiff");
+
 	strcpy(Menu_RootNode.Leaves[3].Name, "Test leaf 4");
+	strcpy(Menu_RootNode.Leaves[3].LeftButtonText, "Yerf");
+
 	strcpy(Menu_RootNode.Leaves[4].Name, "Test leaf 5");
+	strcpy(Menu_RootNode.Leaves[4].LeftButtonText, "Yuff");
+
 	strcpy(Menu_RootNode.Leaves[5].Name, "Test leaf 6");
+	strcpy(Menu_RootNode.Leaves[5].LeftButtonText, "Test");
+
 	strcpy(Menu_RootNode.Leaves[6].Name, "Test leaf 7");
+	strcpy(Menu_RootNode.Leaves[6].LeftButtonText, "Enter");
+
 	strcpy(Menu_RootNode.Leaves[7].Name, "Test leaf 8");
+	strcpy(Menu_RootNode.Leaves[7].LeftButtonText, "Test 2");
 
 	Menu_RootNode.NodesCount = 2;
 	Menu_RootNode.Nodes = malloc(sizeof(MenuNode) * Menu_RootNode.NodesCount);
@@ -34,7 +49,10 @@ void Menu_InitMenuDisplay(void)
 	strcpy(node1->Name, "Menu node 1");
 	node1->LeavesCount = 1;
 	node1->Leaves = malloc(sizeof(MenuLeaf) * 1);
+
 	strcpy(node1->Leaves[0].Name, "Test leaf 1-1");
+	strcpy(node1->Leaves[0].LeftButtonText, "Activ.");
+
 	node1->NodesCount = 0;
 	node1->Nodes = NULL;
 
@@ -43,7 +61,10 @@ void Menu_InitMenuDisplay(void)
 	strcpy(node2->Name, "Menu node 2");
 	node2->LeavesCount = 1;
 	node2->Leaves = malloc(sizeof(MenuLeaf) * 1);
+
 	strcpy(node2->Leaves[0].Name, "Test leaf 2-1");
+	strcpy(node2->Leaves[0].LeftButtonText, "Enter.");
+
 	node2->NodesCount = 0;
 	node2->Nodes = NULL;
 
@@ -138,7 +159,17 @@ void Menu_DrawMenuDisplay(void)
 	Menu_DrawMenuLines(WindowLinesCount, window, ActiveLineIndex);
 
 	/* Buttons texts */
-	strcpy(LeftButton.Text, "Activ.");
+	int8_t leafIndex = Menu_GetCurrentLeafIndex(Menu_GetCurrentNodeActiveLineIndex());
+	if (YHL_MENU_NOT_A_LEAF == leafIndex)
+	{
+		/* It's a node, left button text is the same for all nodes */
+		strcpy(LeftButton.Text, YHL_MENU_LEFT_BUTTON_TEXT_FOR_NODES);
+	}
+	else
+	{
+		strcpy(LeftButton.Text, Menu_CurrentNode.Leaves[leafIndex].LeftButtonText);
+	}
+
 	strcpy(RightButton.Text, "Back");
 
 	DrawButtons();
@@ -327,14 +358,4 @@ void Menu_ScrollDownHandler(void)
 		BaseLine = CurrentNodeLinesCount - YHL_MENU_NUMBER_OF_LINES;
 	}
 }
-
-//void Menu_RootNode_RightButtonAction(void)
-//{
-//	/* Restoring status display */
-//	FoxState.CurrentDisplay = StatusDisplay;
-//	strcpy(LeftButton.Text, "Menu");
-//	strcpy(RightButton.Text, "Bt. off");
-//
-//	FMGL_API_ClearScreen(&fmglContext);
-//}
 

@@ -20,6 +20,12 @@
 #define YHK_MENU_MAX_ITEM_TEXT_MEMORY_SIZE (YHL_MENU_MAX_ITEM_TEXT_LENGTH + 1)
 
 /**
+ * Maximal length of leaf button action text
+ */
+#define YHL_MENU_MAX_LEFT_BUTTON_TEXT_LENGTH 8
+#define YHL_MENU_MAX_LEFT_BUTTON_TEXT_MEMORY_SIZE (YHL_MENU_MAX_LEFT_BUTTON_TEXT_LENGTH + 1)
+
+/**
  * What happened on menu item
  */
 typedef enum
@@ -58,6 +64,11 @@ MenuActionEnum;
 #define YHL_MENU_NOT_A_LEAF - 1
 
 /**
+ * Text for left button for menu nodes
+ */
+#define YHL_MENU_LEFT_BUTTON_TEXT_FOR_NODES "Enter"
+
+/**
  * Menu leaf
  */
 typedef struct
@@ -66,6 +77,11 @@ typedef struct
 	 * Leaf name
 	 */
 	char Name[YHK_MENU_MAX_ITEM_TEXT_MEMORY_SIZE];
+
+	/**
+	 * Left button text for this node
+	 */
+	char LeftButtonText[YHL_MENU_MAX_LEFT_BUTTON_TEXT_MEMORY_SIZE];
 }
 MenuLeaf;
 
