@@ -82,6 +82,11 @@ typedef struct
 	 * Left button text for this node
 	 */
 	char LeftButtonText[YHL_MENU_MAX_LEFT_BUTTON_TEXT_MEMORY_SIZE];
+
+	/**
+	 * This function is called (if not null) when left button is pressed on the menu leaf
+	 */
+	void (*LeftButtonAction)(void);
 }
 MenuLeaf;
 
@@ -247,5 +252,6 @@ void Menu_SwitchNode(MenuNode* nodePtr);
  */
 void Menu_GoToParentNode(void);
 
+void Menu_TestAction(void);
 
 #endif /* INCLUDE_MENUDISPLAY_H_ */
