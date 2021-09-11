@@ -9,6 +9,11 @@
 #define INCLUDE_HALPRIVATE_H_
 
 /**
+ * Interval in milliseconds, during what continuous events will be ignored
+ */
+#define HAL_BUTTONS_NOISE_SUPPRESSION_INTERVAL 200U
+
+/**
  * Averaged antenna voltage (in ADC measurements)
  */
 volatile float HAL_AntennaLevelADC;
@@ -52,6 +57,13 @@ volatile YHL_HAL_ADCChannelEnum HAL_CurrentADCChannel;
  * Current position of encoder
  */
 volatile int8_t HAL_EncoderPosition;
+
+/**
+ * Downcounters to supress noise from buttons
+ */
+uint16_t HAL_LeftButtonNoiseSuppressionCounter;
+uint16_t HAL_EncoderButtonNoiseSuppressionCounter;
+uint16_t HAL_RightButtonNoiseSuppressionCounter;
 
 /**
  * Callback, called when left button pressed

@@ -61,6 +61,9 @@ int main(int argc, char* argv[])
 
 	HAL_Delay(1000); /* To give regulators time to spin up */
 
+	/* HAL need SysTick calls */
+	L2HAL_SysTick_RegisterHandler(&HAL_OnTick);
+
 	/* Setting up CRC calculator */
 	CRC_Context = L2HAL_CRC_Init();
 

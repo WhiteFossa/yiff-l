@@ -431,4 +431,9 @@ void HAL_RegisterEncoderButtonHandler(void (*handler)(void));
  */
 void HAL_RegisterEncoderRotationHandler(void (*handler)(int8_t));
 
+/**
+ * Call it on every SysTick
+ */
+void HAL_OnTick(void);
+
 #endif /* INCLUDE_HAL_H_ */

@@ -155,6 +155,10 @@ void HAL_IntiHardware(void)
 	HAL_EncoderRotationCallback = NULL;
 	HAL_EncoderPosition = 0;
 
+	HAL_LeftButtonNoiseSuppressionCounter = 0;
+	HAL_EncoderButtonNoiseSuppressionCounter = 0;
+	HAL_RightButtonNoiseSuppressionCounter = 0;
+
 	/**
 	 * Launching ADC conversions
 	 */
@@ -696,6 +700,13 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 
 void HAL_OnLeftButtonPressed(void)
 {
+	if (HAL_LeftButtonNoiseSuppressionCounter > 0)
+	{
+		return;
+	}
+
+	HAL_LeftButtonNoiseSuppressionCounter = HAL_BUTTONS_NOISE_SUPPRESSION_INTERVAL;
+
 	if (HAL_LeftButtonCallback != NULL)
 	{
 		HAL_LeftButtonCallback();
@@ -704,6 +715,13 @@ void HAL_OnLeftButtonPressed(void)
 
 void HAL_OnRightButtonPressed(void)
 {
+	if (HAL_RightButtonNoiseSuppressionCounter > 0)
+	{
+		return;
+	}
+
+	HAL_RightButtonNoiseSuppressionCounter = HAL_BUTTONS_NOISE_SUPPRESSION_INTERVAL;
+
 	if (HAL_RightButtonCallback != NULL)
 	{
 		HAL_RightButtonCallback();
@@ -712,6 +730,13 @@ void HAL_OnRightButtonPressed(void)
 
 void HAL_OnEncoderButtonPressed(void)
 {
+	if (HAL_EncoderButtonNoiseSuppressionCounter > 0)
+	{
+		return;
+	}
+
+	HAL_EncoderButtonNoiseSuppressionCounter = HAL_BUTTONS_NOISE_SUPPRESSION_INTERVAL;
+
 	if (HAL_EncoderButtonCallback != NULL)
 	{
 		HAL_EncoderButtonCallback();
@@ -776,4 +801,22 @@ void HAL_RegisterEncoderButtonHandler(void (*handler)(void))
 void HAL_RegisterEncoderRotationHandler(void (*handler)(int8_t))
 {
 	HAL_EncoderRotationCallback = handler;
+}
+
+void HAL_OnTick(void)
+{
+	if (HAL_LeftButtonNoiseSuppressionCounter > 0)
+	{
+		HAL_LeftButtonNoiseSuppressionCounter --;
+	}
+
+	if (HAL_EncoderButtonNoiseSuppressionCounter > 0)
+	{
+		HAL_EncoderButtonNoiseSuppressionCounter --;
+	}
+
+	if (HAL_RightButtonNoiseSuppressionCounter > 0)
+	{
+		HAL_RightButtonNoiseSuppressionCounter --;
+	}
 }
