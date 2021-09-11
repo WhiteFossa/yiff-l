@@ -9,75 +9,118 @@
 
 void Menu_InitMenuDisplay(void)
 {
-	ActiveLineIndex = 0;
-
 	Menu_RootNode.Parent = NULL;
-	strcpy(Menu_RootNode.Name, "Menu root");
+	strcpy(Menu_RootNode.Name, "Fox settings");
 
-	Menu_RootNode.LeavesCount = 8;
-	Menu_RootNode.Leaves = malloc(sizeof(MenuLeaf) * Menu_RootNode.LeavesCount);
-
-	strcpy(Menu_RootNode.Leaves[0].Name, "Test leaf 1");
-	strcpy(Menu_RootNode.Leaves[0].LeftButtonText, "Activ.");
-	Menu_RootNode.Leaves[0].LeftButtonAction = NULL;
-
-	strcpy(Menu_RootNode.Leaves[1].Name, "Test leaf 2");
-	strcpy(Menu_RootNode.Leaves[1].LeftButtonText, "Select");
-	Menu_RootNode.Leaves[1].LeftButtonAction = NULL;
-
-	strcpy(Menu_RootNode.Leaves[2].Name, "Test leaf 3");
-	strcpy(Menu_RootNode.Leaves[2].LeftButtonText, "Yiff");
-	Menu_RootNode.Leaves[2].LeftButtonAction = NULL;
-
-	strcpy(Menu_RootNode.Leaves[3].Name, "Test leaf 4");
-	strcpy(Menu_RootNode.Leaves[3].LeftButtonText, "Yerf");
-	Menu_RootNode.Leaves[3].LeftButtonAction = NULL;
-
-	strcpy(Menu_RootNode.Leaves[4].Name, "Test leaf 5");
-	strcpy(Menu_RootNode.Leaves[4].LeftButtonText, "Yuff");
-	Menu_RootNode.Leaves[4].LeftButtonAction = NULL;
-
-	strcpy(Menu_RootNode.Leaves[5].Name, "Test leaf 6");
-	strcpy(Menu_RootNode.Leaves[5].LeftButtonText, "Test");
-	Menu_RootNode.Leaves[5].LeftButtonAction = NULL;
-
-	strcpy(Menu_RootNode.Leaves[6].Name, "Test leaf 7");
-	strcpy(Menu_RootNode.Leaves[6].LeftButtonText, "Enter");
-	Menu_RootNode.Leaves[6].LeftButtonAction = NULL;
-
-	strcpy(Menu_RootNode.Leaves[7].Name, "Test leaf 8");
-	strcpy(Menu_RootNode.Leaves[7].LeftButtonText, "Test 2");
-	Menu_RootNode.Leaves[7].LeftButtonAction = NULL;
-
+	/* Root menu nodes */
 	Menu_RootNode.NodesCount = 2;
 	Menu_RootNode.Nodes = malloc(sizeof(MenuNode) * Menu_RootNode.NodesCount);
 
-	MenuNode* node1 = &((MenuNode*)Menu_RootNode.Nodes)[0];
-	node1->Parent = &Menu_RootNode;
-	strcpy(node1->Name, "Menu node 1");
-	node1->LeavesCount = 1;
-	node1->Leaves = malloc(sizeof(MenuLeaf) * 1);
+	/* Profile settings */
+	MenuNode* profileSettingsNode = &((MenuNode*)Menu_RootNode.Nodes)[0];
+	profileSettingsNode->Parent = &Menu_RootNode;
+	strcpy(profileSettingsNode->Name, "Profile settings");
+	profileSettingsNode->LeavesCount = 2;
+	profileSettingsNode->Leaves = malloc(sizeof(MenuLeaf) * profileSettingsNode->LeavesCount);
 
-	strcpy(node1->Leaves[0].Name, "Test leaf 1-1");
-	strcpy(node1->Leaves[0].LeftButtonText, "Activ.");
-	node1->Leaves[0].LeftButtonAction = &Menu_TestAction;
+	/* Profile settings -> Show current profile */
+	strcpy(profileSettingsNode->Leaves[0].Name, "Show current profile");
+	strcpy(profileSettingsNode->Leaves[0].LeftButtonText, "Show");
+	profileSettingsNode->Leaves[0].LeftButtonAction = NULL; /* TODO: Set me*/
 
-	node1->NodesCount = 0;
-	node1->Nodes = NULL;
+	/* Profile settings -> Select profile*/
+	strcpy(profileSettingsNode->Leaves[1].Name, "Select profile");
+	strcpy(profileSettingsNode->Leaves[1].LeftButtonText, "Select");
+	profileSettingsNode->Leaves[1].LeftButtonAction = NULL; /* TODO: Set me*/
 
-	MenuNode* node2 = &((MenuNode*)Menu_RootNode.Nodes)[1];
-	node2->Parent = &Menu_RootNode;
-	strcpy(node2->Name, "Menu node 2");
-	node2->LeavesCount = 1;
-	node2->Leaves = malloc(sizeof(MenuLeaf) * 1);
+	profileSettingsNode->NodesCount = 0;
+	profileSettingsNode->Nodes = NULL;
 
-	strcpy(node2->Leaves[0].Name, "Test leaf 2-1");
-	strcpy(node2->Leaves[0].LeftButtonText, "Enter.");
-	node2->Leaves[0].LeftButtonAction = &Menu_TestAction;
 
-	node2->NodesCount = 0;
-	node2->Nodes = NULL;
+	/* Edit current profile */
+	MenuNode* editCurrentProfileNode = &((MenuNode*)Menu_RootNode.Nodes)[1];
+	editCurrentProfileNode->Parent = &Menu_RootNode;
+	strcpy(editCurrentProfileNode->Name, "Edit current profile");
+	editCurrentProfileNode->LeavesCount = 0;
+	editCurrentProfileNode->Leaves = malloc(sizeof(MenuLeaf) * profileSettingsNode->LeavesCount);
 
+	editCurrentProfileNode->NodesCount = 0;
+	editCurrentProfileNode->Nodes = NULL;
+
+
+	/* Root menu leaves */
+	Menu_RootNode.LeavesCount = 0;
+	Menu_RootNode.Leaves = malloc(sizeof(MenuLeaf) * Menu_RootNode.LeavesCount);
+
+
+//	Menu_RootNode.Parent = NULL;
+//	strcpy(Menu_RootNode.Name, "Menu root");
+//
+//	Menu_RootNode.LeavesCount = 8;
+//	Menu_RootNode.Leaves = malloc(sizeof(MenuLeaf) * Menu_RootNode.LeavesCount);
+//
+//	strcpy(Menu_RootNode.Leaves[0].Name, "Test leaf 1");
+//	strcpy(Menu_RootNode.Leaves[0].LeftButtonText, "Activ.");
+//	Menu_RootNode.Leaves[0].LeftButtonAction = NULL;
+//
+//	strcpy(Menu_RootNode.Leaves[1].Name, "Test leaf 2");
+//	strcpy(Menu_RootNode.Leaves[1].LeftButtonText, "Select");
+//	Menu_RootNode.Leaves[1].LeftButtonAction = NULL;
+//
+//	strcpy(Menu_RootNode.Leaves[2].Name, "Test leaf 3");
+//	strcpy(Menu_RootNode.Leaves[2].LeftButtonText, "Yiff");
+//	Menu_RootNode.Leaves[2].LeftButtonAction = NULL;
+//
+//	strcpy(Menu_RootNode.Leaves[3].Name, "Test leaf 4");
+//	strcpy(Menu_RootNode.Leaves[3].LeftButtonText, "Yerf");
+//	Menu_RootNode.Leaves[3].LeftButtonAction = NULL;
+//
+//	strcpy(Menu_RootNode.Leaves[4].Name, "Test leaf 5");
+//	strcpy(Menu_RootNode.Leaves[4].LeftButtonText, "Yuff");
+//	Menu_RootNode.Leaves[4].LeftButtonAction = NULL;
+//
+//	strcpy(Menu_RootNode.Leaves[5].Name, "Test leaf 6");
+//	strcpy(Menu_RootNode.Leaves[5].LeftButtonText, "Test");
+//	Menu_RootNode.Leaves[5].LeftButtonAction = NULL;
+//
+//	strcpy(Menu_RootNode.Leaves[6].Name, "Test leaf 7");
+//	strcpy(Menu_RootNode.Leaves[6].LeftButtonText, "Enter");
+//	Menu_RootNode.Leaves[6].LeftButtonAction = NULL;
+//
+//	strcpy(Menu_RootNode.Leaves[7].Name, "Test leaf 8");
+//	strcpy(Menu_RootNode.Leaves[7].LeftButtonText, "Test 2");
+//	Menu_RootNode.Leaves[7].LeftButtonAction = NULL;
+//
+//	Menu_RootNode.NodesCount = 2;
+//	Menu_RootNode.Nodes = malloc(sizeof(MenuNode) * Menu_RootNode.NodesCount);
+//
+//	MenuNode* node1 = &((MenuNode*)Menu_RootNode.Nodes)[0];
+//	node1->Parent = &Menu_RootNode;
+//	strcpy(node1->Name, "Menu node 1");
+//	node1->LeavesCount = 1;
+//	node1->Leaves = malloc(sizeof(MenuLeaf) * 1);
+//
+//	strcpy(node1->Leaves[0].Name, "Test leaf 1-1");
+//	strcpy(node1->Leaves[0].LeftButtonText, "Activ.");
+//	node1->Leaves[0].LeftButtonAction = &Menu_TestAction;
+//
+//	node1->NodesCount = 0;
+//	node1->Nodes = NULL;
+//
+//	MenuNode* node2 = &((MenuNode*)Menu_RootNode.Nodes)[1];
+//	node2->Parent = &Menu_RootNode;
+//	strcpy(node2->Name, "Menu node 2");
+//	node2->LeavesCount = 1;
+//	node2->Leaves = malloc(sizeof(MenuLeaf) * 1);
+//
+//	strcpy(node2->Leaves[0].Name, "Test leaf 2-1");
+//	strcpy(node2->Leaves[0].LeftButtonText, "Enter.");
+//	node2->Leaves[0].LeftButtonAction = &Menu_TestAction;
+//
+//	node2->NodesCount = 0;
+//	node2->Nodes = NULL;
+
+	ActiveLineIndex = 0;
 	CurrentNodeLines = NULL;
 
 	Menu_SwitchNode(&Menu_RootNode);
