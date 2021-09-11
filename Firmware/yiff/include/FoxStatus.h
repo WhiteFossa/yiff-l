@@ -81,17 +81,22 @@ typedef enum
 	/**
 	 * Status display
 	 */
-	StatusDisplay = 0,
+	StatusDisplay,
 
 	/**
 	 * Antenna matching display (3.5MHz)
 	 */
-	AntennaMatchingDisplay = 1,
+	AntennaMatchingDisplay,
 
 	/**
 	 * Menu display
 	 */
-	MenuDisplay = 2
+	MenuDisplay,
+
+	/**
+	 * Popup with information
+	 */
+	InformationPopupDisplay
 }
 FoxDisplayEnum;
 

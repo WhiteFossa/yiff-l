@@ -9,8 +9,8 @@
 
 void DrawButtons(void)
 {
-	DrawButton(LeftButton, 0, 110, 59, 17);
-	DrawButton(RightButton, 68, 110, 59, 17);
+	DrawButton(LeftButton, YHL_BUTTONS_LEFT_BUTTON_LEFT, YHL_BUTTONS_TOP_LINE, YHL_BUTTONS_WIDTH, YHL_BUTTONS_HEIGHT);
+	DrawButton(RightButton, YHL_BUTTONS_RIGHT_BUTTON_LEFT, YHL_BUTTONS_TOP_LINE, YHL_BUTTONS_WIDTH, YHL_BUTTONS_HEIGHT);
 }
 
 void DrawButton(FoxButtonStruct button, uint16_t x, uint16_t y, uint16_t width, uint16_t height)

@@ -509,6 +509,11 @@ void Main_OnLeftButtonPressed(void)
 	{
 		Menu_LeftButtonHandler();
 	}
+	else if (InformationPopupDisplay == FoxState.CurrentDisplay)
+	{
+		InformationPopup_Close();
+		Menu_DrawMenuDisplay();
+	}
 }
 
 void Main_CheckRightButtonPressedEvent(void)
@@ -527,6 +532,11 @@ void Main_OnRightButtonPressed(void)
 	{
 		Menu_RightButtonHandler();
 	}
+	else if (InformationPopupDisplay == FoxState.CurrentDisplay)
+	{
+		InformationPopup_Close();
+		Menu_DrawMenuDisplay();
+	}
 }
 
 void Main_CheckEncoderButtonPressedEvent(void)
@@ -544,6 +554,11 @@ void Main_OnEncoderButtonPressed(void)
 	if (MenuDisplay == FoxState.CurrentDisplay)
 	{
 		Menu_EncoderClickHandler();
+	}
+	else if (InformationPopupDisplay == FoxState.CurrentDisplay)
+	{
+		InformationPopup_Close();
+		Menu_DrawMenuDisplay();
 	}
 }
 

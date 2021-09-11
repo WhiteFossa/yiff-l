@@ -26,12 +26,12 @@ void Menu_InitMenuDisplay(void)
 	/* Profile settings -> Show current profile */
 	strcpy(profileSettingsNode->Leaves[0].Name, "Show current profile");
 	strcpy(profileSettingsNode->Leaves[0].LeftButtonText, "Show");
-	profileSettingsNode->Leaves[0].LeftButtonAction = NULL; /* TODO: Set me*/
+	profileSettingsNode->Leaves[0].LeftButtonAction = &Menu_ShowCurrentProfileInformationPopup;
 
 	/* Profile settings -> Select profile*/
 	strcpy(profileSettingsNode->Leaves[1].Name, "Select profile");
 	strcpy(profileSettingsNode->Leaves[1].LeftButtonText, "Select");
-	profileSettingsNode->Leaves[1].LeftButtonAction = NULL; /* TODO: Set me*/
+	profileSettingsNode->Leaves[1].LeftButtonAction = NULL; /* TODO: Set me */
 
 	profileSettingsNode->NodesCount = 0;
 	profileSettingsNode->Nodes = NULL;
@@ -126,10 +126,7 @@ void Menu_InitMenuDisplay(void)
 	Menu_SwitchNode(&Menu_RootNode);
 }
 
-void Menu_TestAction(void)
-{
-	volatile uint8_t a = 10;
-}
+
 
 void Menu_SwitchNode(MenuNode* nodePtr)
 {
@@ -424,5 +421,10 @@ void Menu_ScrollDownHandler(void)
 	{
 		BaseLine = CurrentNodeLinesCount - YHL_MENU_NUMBER_OF_LINES;
 	}
+}
+
+void Menu_ShowCurrentProfileInformationPopup(void)
+{
+	InformationPopup_Show("Current profile:", EEPROM_GetProfile(EEPROM_Header.ProfileInUse).Name, MenuDisplay);
 }
 

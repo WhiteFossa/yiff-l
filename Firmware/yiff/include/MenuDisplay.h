@@ -9,9 +9,10 @@
 #define INCLUDE_MENUDISPLAY_H_
 
 #include <GraphicsBase.h>
-#include <FoxStatus.h>
 #include <Buttons.h>
+#include <InformationPopupDisplay.h>
 #include <HAL.h>
+#include <EEPROM.h>
 
 /**
  * Maximal length of item's text
@@ -128,6 +129,7 @@ typedef struct
 MenuNode;
 
 extern FoxStateStruct FoxState;
+extern FoxButtonStruct LeftButton;
 extern FoxButtonStruct RightButton;
 
 
@@ -252,6 +254,9 @@ void Menu_SwitchNode(MenuNode* nodePtr);
  */
 void Menu_GoToParentNode(void);
 
-void Menu_TestAction(void);
+/**
+ * Show information popup about current profile
+ */
+void Menu_ShowCurrentProfileInformationPopup(void);
 
 #endif /* INCLUDE_MENUDISPLAY_H_ */
