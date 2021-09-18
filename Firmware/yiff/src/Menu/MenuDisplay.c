@@ -5,7 +5,7 @@
  *      Author: fossa
  */
 
-#include <MenuDisplay.h>
+#include <Menu/MenuDisplay.h>
 
 void Menu_InitMenuDisplay(void)
 {
@@ -31,7 +31,7 @@ void Menu_InitMenuDisplay(void)
 	/* Profile settings -> Select profile*/
 	strcpy(profileSettingsNode->Leaves[1].Name, "Select profile");
 	strcpy(profileSettingsNode->Leaves[1].LeftButtonText, "Select");
-	profileSettingsNode->Leaves[1].LeftButtonAction = NULL; /* TODO: Set me */
+	profileSettingsNode->Leaves[1].LeftButtonAction = &Menu_SelectCurrentProfile;
 
 	profileSettingsNode->NodesCount = 0;
 	profileSettingsNode->Nodes = NULL;
@@ -52,76 +52,9 @@ void Menu_InitMenuDisplay(void)
 	Menu_RootNode.LeavesCount = 0;
 	Menu_RootNode.Leaves = malloc(sizeof(MenuLeaf) * Menu_RootNode.LeavesCount);
 
-
-//	Menu_RootNode.Parent = NULL;
-//	strcpy(Menu_RootNode.Name, "Menu root");
-//
-//	Menu_RootNode.LeavesCount = 8;
-//	Menu_RootNode.Leaves = malloc(sizeof(MenuLeaf) * Menu_RootNode.LeavesCount);
-//
-//	strcpy(Menu_RootNode.Leaves[0].Name, "Test leaf 1");
-//	strcpy(Menu_RootNode.Leaves[0].LeftButtonText, "Activ.");
-//	Menu_RootNode.Leaves[0].LeftButtonAction = NULL;
-//
-//	strcpy(Menu_RootNode.Leaves[1].Name, "Test leaf 2");
-//	strcpy(Menu_RootNode.Leaves[1].LeftButtonText, "Select");
-//	Menu_RootNode.Leaves[1].LeftButtonAction = NULL;
-//
-//	strcpy(Menu_RootNode.Leaves[2].Name, "Test leaf 3");
-//	strcpy(Menu_RootNode.Leaves[2].LeftButtonText, "Yiff");
-//	Menu_RootNode.Leaves[2].LeftButtonAction = NULL;
-//
-//	strcpy(Menu_RootNode.Leaves[3].Name, "Test leaf 4");
-//	strcpy(Menu_RootNode.Leaves[3].LeftButtonText, "Yerf");
-//	Menu_RootNode.Leaves[3].LeftButtonAction = NULL;
-//
-//	strcpy(Menu_RootNode.Leaves[4].Name, "Test leaf 5");
-//	strcpy(Menu_RootNode.Leaves[4].LeftButtonText, "Yuff");
-//	Menu_RootNode.Leaves[4].LeftButtonAction = NULL;
-//
-//	strcpy(Menu_RootNode.Leaves[5].Name, "Test leaf 6");
-//	strcpy(Menu_RootNode.Leaves[5].LeftButtonText, "Test");
-//	Menu_RootNode.Leaves[5].LeftButtonAction = NULL;
-//
-//	strcpy(Menu_RootNode.Leaves[6].Name, "Test leaf 7");
-//	strcpy(Menu_RootNode.Leaves[6].LeftButtonText, "Enter");
-//	Menu_RootNode.Leaves[6].LeftButtonAction = NULL;
-//
-//	strcpy(Menu_RootNode.Leaves[7].Name, "Test leaf 8");
-//	strcpy(Menu_RootNode.Leaves[7].LeftButtonText, "Test 2");
-//	Menu_RootNode.Leaves[7].LeftButtonAction = NULL;
-//
-//	Menu_RootNode.NodesCount = 2;
-//	Menu_RootNode.Nodes = malloc(sizeof(MenuNode) * Menu_RootNode.NodesCount);
-//
-//	MenuNode* node1 = &((MenuNode*)Menu_RootNode.Nodes)[0];
-//	node1->Parent = &Menu_RootNode;
-//	strcpy(node1->Name, "Menu node 1");
-//	node1->LeavesCount = 1;
-//	node1->Leaves = malloc(sizeof(MenuLeaf) * 1);
-//
-//	strcpy(node1->Leaves[0].Name, "Test leaf 1-1");
-//	strcpy(node1->Leaves[0].LeftButtonText, "Activ.");
-//	node1->Leaves[0].LeftButtonAction = &Menu_TestAction;
-//
-//	node1->NodesCount = 0;
-//	node1->Nodes = NULL;
-//
-//	MenuNode* node2 = &((MenuNode*)Menu_RootNode.Nodes)[1];
-//	node2->Parent = &Menu_RootNode;
-//	strcpy(node2->Name, "Menu node 2");
-//	node2->LeavesCount = 1;
-//	node2->Leaves = malloc(sizeof(MenuLeaf) * 1);
-//
-//	strcpy(node2->Leaves[0].Name, "Test leaf 2-1");
-//	strcpy(node2->Leaves[0].LeftButtonText, "Enter.");
-//	node2->Leaves[0].LeftButtonAction = &Menu_TestAction;
-//
-//	node2->NodesCount = 0;
-//	node2->Nodes = NULL;
-
 	ActiveLineIndex = 0;
 	CurrentNodeLines = NULL;
+	MenuDisplay_ProfilesNames = NULL;
 
 	Menu_SwitchNode(&Menu_RootNode);
 }
@@ -138,12 +71,12 @@ void Menu_SwitchNode(MenuNode* nodePtr)
 		free(CurrentNodeLines);
 	}
 
-	CurrentNodeLines = malloc(CurrentNodeLinesCount * YHK_MENU_MAX_ITEM_TEXT_MEMORY_SIZE); /* TODO: Do not forget to free me */
+	CurrentNodeLines = malloc(CurrentNodeLinesCount * YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
 
 	/* Nodes first */
 	for (uint8_t nodesCounter = 0; nodesCounter < Menu_CurrentNode.NodesCount; nodesCounter ++)
 	{
-		char* dst = (char*)(CurrentNodeLines + nodesCounter * YHK_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
+		char* dst = (char*)(CurrentNodeLines + nodesCounter * YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
 		MenuNode node = ((MenuNode*)Menu_CurrentNode.Nodes)[nodesCounter];
 		char* src = node.Name;
 		strcpy(dst, src);
@@ -153,7 +86,7 @@ void Menu_SwitchNode(MenuNode* nodePtr)
 	for (uint8_t leavesCounter = 0; leavesCounter < Menu_CurrentNode.LeavesCount; leavesCounter ++)
 	{
 		uint8_t baseCount = Menu_CurrentNode.NodesCount;
-		char* dst = (char*)(CurrentNodeLines + (baseCount + leavesCounter) * YHK_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
+		char* dst = (char*)(CurrentNodeLines + (baseCount + leavesCounter) * YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
 		char* src = Menu_CurrentNode.Leaves[leavesCounter].Name;
 		strcpy(dst, src);
 	}
@@ -202,11 +135,11 @@ void Menu_DrawMenuDisplay(void)
 	FMGL_API_ClearScreen(&fmglContext);
 
 	/* Display window - this lines will be displayed*/
-	char window[YHL_MENU_NUMBER_OF_LINES][YHK_MENU_MAX_ITEM_TEXT_MEMORY_SIZE];
+	char window[YHL_MENU_NUMBER_OF_LINES][YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE];
 
 	for (uint8_t linesCounter = 0; linesCounter < WindowLinesCount; linesCounter ++)
 	{
-		char* src = (char*)(CurrentNodeLines + (BaseLine + linesCounter) * YHK_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
+		char* src = (char*)(CurrentNodeLines + (BaseLine + linesCounter) * YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
 		char* dst = window[linesCounter];
 		strcpy(dst, src);
 	}
@@ -387,7 +320,7 @@ void Menu_DrawMenuLines(uint8_t linesCount, char* lines, uint8_t activeLineIndex
 			FMGL_API_DrawRectangleFilled(&fmglContext, 0, lineTop, rightmostPixel, lineTop + YHL_MENU_LINE_HEIGHT, OnColor, OnColor);
 		}
 
-		FMGL_API_RenderTextWithLineBreaks(&fmglContext, &font, 0, lineTop, NULL, NULL, false, lines + YHK_MENU_MAX_ITEM_TEXT_MEMORY_SIZE* line);
+		FMGL_API_RenderTextWithLineBreaks(&fmglContext, &font, 0, lineTop, NULL, NULL, false, lines + YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE * line);
 	}
 }
 
@@ -417,14 +350,48 @@ void Menu_ScrollDownHandler(void)
 
 	BaseLine ++;
 
-	if (BaseLine > CurrentNodeLinesCount - YHL_MENU_NUMBER_OF_LINES)
+	uint8_t offscreenItemsCount = CurrentNodeLinesCount - YHL_MENU_NUMBER_OF_LINES;
+
+	if (BaseLine > offscreenItemsCount)
 	{
-		BaseLine = CurrentNodeLinesCount - YHL_MENU_NUMBER_OF_LINES;
+		BaseLine = offscreenItemsCount;
 	}
 }
 
 void Menu_ShowCurrentProfileInformationPopup(void)
 {
 	InformationPopup_Show("Current profile:", EEPROM_GetProfile(EEPROM_Header.ProfileInUse).Name, MenuDisplay);
+}
+
+void Menu_SelectCurrentProfile(void)
+{
+	MenuDisplay_ProfilesNames = malloc(YHL_PROFILE_NAME_MEMORY_SIZE * EEPROM_Header.NumberOfProfiles);
+	for (uint8_t profile = 0; profile < EEPROM_Header.NumberOfProfiles; profile ++)
+	{
+		char* src = EEPROM_GetProfile(profile).Name;
+		char* dst = MenuDisplay_ProfilesNames + YHL_PROFILE_NAME_MEMORY_SIZE * profile;
+		strcpy(dst, src);
+	}
+
+	ItemSelectionDisplay_Show("Select profile",
+			MenuDisplay_ProfilesNames,
+			YHL_PROFILE_NAME_MEMORY_SIZE,
+			EEPROM_Header.NumberOfProfiles,
+			EEPROM_Header.ProfileInUse,
+			&Menu_SelectCurrentProfileCloseHandler,
+			MenuDisplay);
+}
+
+void Menu_SelectCurrentProfileCloseHandler(uint8_t profileIndex)
+{
+	free(MenuDisplay_ProfilesNames);
+	MenuDisplay_ProfilesNames = NULL;
+
+	if (profileIndex != EEPROM_Header.ProfileInUse)
+	{
+		EEPROM_SwitchProfile(profileIndex);
+	}
+
+	Menu_DrawMenuDisplay();
 }
 

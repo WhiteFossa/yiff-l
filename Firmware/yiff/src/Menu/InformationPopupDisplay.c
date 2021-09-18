@@ -5,8 +5,8 @@
  *      Author: fossa
  */
 
-#include <InformationPopupDisplay.h>
-#include <InformationPopupDisplayPrivate.h>
+#include <Menu/InformationPopupDisplay.h>
+#include <Menu/InformationPopupDisplayPrivate.h>
 
 void InformationPopup_Show(char* title, char* message, FoxDisplayEnum previousDisplay)
 {
@@ -25,7 +25,7 @@ void InformationPopup_Show(char* title, char* message, FoxDisplayEnum previousDi
 	uint16_t titleHeight;
 	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, 0, 0, &titleWidth, &titleHeight, true, title);
 
-	int16_t titleXShift = (displayWidth - titleWidth) / 2;
+	int16_t titleXShift = ((int16_t)displayWidth - (int16_t)titleWidth) / 2;
 	if (titleXShift < 0)
 	{
 		/* Didn't fit, drawing as is */
@@ -61,5 +61,4 @@ void InformationPopup_Close(void)
 	FoxState.CurrentDisplay = InformationPopup_PreviousDisplay;
 
 	FMGL_API_ClearScreen(&fmglContext);
-	return;
 }

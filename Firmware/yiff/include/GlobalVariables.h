@@ -172,6 +172,6 @@ uint8_t SwitchToThisProfileId;
 /**
  * When set profile name command issued, take new profile name from this variable
  */
-char SetThisProfileName[YHL_MAX_PROFILE_NAME_LENGTH];
+char SetThisProfileName[YHL_PROFILE_NAME_MEMORY_SIZE];
 
 #endif /* INCLUDE_GLOBALVARIABLES_H_ */

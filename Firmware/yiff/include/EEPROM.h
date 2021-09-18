@@ -18,9 +18,9 @@
 #define YHL_MAX_PROFILES_COUNT 128U
 
 /**
- * Max profile name length
+ * Profile name memory size
  */
-#define YHL_MAX_PROFILE_NAME_LENGTH 17U
+#define YHL_PROFILE_NAME_MEMORY_SIZE 17U
 
 /**
  * Newly-generated profiles have this name
@@ -129,7 +129,7 @@ typedef struct
 	/**
 	 * Profile name.
 	 */
-	char Name[YHL_MAX_PROFILE_NAME_LENGTH];
+	char Name[YHL_PROFILE_NAME_MEMORY_SIZE];
 
 	/**
 	 * Fox frequency

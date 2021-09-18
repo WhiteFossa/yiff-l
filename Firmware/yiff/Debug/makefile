@@ -27,6 +27,7 @@ RM := rm -rf
 -include src/l2hal/drivers/bluetooth/hc06/src/subdir.mk
 -include src/fmgl/src/subdir.mk
 -include src/fmgl/fonts/src/subdir.mk
+-include src/Menu/subdir.mk
 -include src/subdir.mk
 -include subdir.mk
 -include objects.mk

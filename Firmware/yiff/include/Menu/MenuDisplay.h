@@ -10,7 +10,8 @@
 
 #include <GraphicsBase.h>
 #include <Buttons.h>
-#include <InformationPopupDisplay.h>
+//#include <Menu/InformationPopupDisplay.h>
+#include <Menu/ItemSelectionDisplay.h>
 #include <HAL.h>
 #include <EEPROM.h>
 
@@ -18,7 +19,7 @@
  * Maximal length of item's text
  */
 #define YHL_MENU_MAX_ITEM_TEXT_LENGTH 31
-#define YHK_MENU_MAX_ITEM_TEXT_MEMORY_SIZE (YHL_MENU_MAX_ITEM_TEXT_LENGTH + 1)
+#define YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE (YHL_MENU_MAX_ITEM_TEXT_LENGTH + 1)
 
 /**
  * Maximal length of leaf button action text
@@ -77,7 +78,7 @@ typedef struct
 	/**
 	 * Leaf name
 	 */
-	char Name[YHK_MENU_MAX_ITEM_TEXT_MEMORY_SIZE];
+	char Name[YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE];
 
 	/**
 	 * Left button text for this node
@@ -104,7 +105,7 @@ typedef struct
 	/**
 	 * Node name
 	 */
-	char Name[YHK_MENU_MAX_ITEM_TEXT_MEMORY_SIZE];
+	char Name[YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE];
 
 	/**
 	 * How many sub-nodes this node have
@@ -168,6 +169,11 @@ uint8_t WindowLinesCount;
  * Line with this index (from CurrentNodeLines) will be displayed at the top
  */
 uint8_t BaseLine;
+
+/**
+ * Names of fox profiles
+ */
+char* MenuDisplay_ProfilesNames;
 
 /**
  * Initialize meny display
@@ -258,5 +264,15 @@ void Menu_GoToParentNode(void);
  * Show information popup about current profile
  */
 void Menu_ShowCurrentProfileInformationPopup(void);
+
+/**
+ * Call this to select current profile
+ */
+void Menu_SelectCurrentProfile(void);
+
+/**
+ * Call it when current profile is selected
+ */
+void Menu_SelectCurrentProfileCloseHandler(uint8_t profileIndex);
 
 #endif /* INCLUDE_MENUDISPLAY_H_ */

@@ -514,6 +514,10 @@ void Main_OnLeftButtonPressed(void)
 		InformationPopup_Close();
 		Menu_DrawMenuDisplay();
 	}
+	else if (ItemSelectionDisplay == FoxState.CurrentDisplay)
+	{
+		ItemSelectionDisplay_LeftClickHandler();
+	}
 }
 
 void Main_CheckRightButtonPressedEvent(void)
@@ -536,6 +540,10 @@ void Main_OnRightButtonPressed(void)
 	{
 		InformationPopup_Close();
 		Menu_DrawMenuDisplay();
+	}
+	else if (ItemSelectionDisplay == FoxState.CurrentDisplay)
+	{
+		ItemSelectionDisplay_RightClickHandler();
 	}
 }
 
@@ -560,6 +568,10 @@ void Main_OnEncoderButtonPressed(void)
 		InformationPopup_Close();
 		Menu_DrawMenuDisplay();
 	}
+	else if (ItemSelectionDisplay == FoxState.CurrentDisplay)
+	{
+		ItemSelectionDisplay_EncoderClickHandler();
+	}
 }
 
 void Main_CheckEncoderRotationEvent(void)
@@ -577,6 +589,10 @@ void Main_OnEncoderRotation(int8_t direction)
 	if (MenuDisplay == FoxState.CurrentDisplay)
 	{
 		Menu_EncoderRotationHandler(direction);
+	}
+	else if (ItemSelectionDisplay == FoxState.CurrentDisplay)
+	{
+		ItemSelectionDisplay_EncoderRotationHandler(direction);
 	}
 }
 

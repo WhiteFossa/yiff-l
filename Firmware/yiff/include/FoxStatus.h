@@ -96,7 +96,12 @@ typedef enum
 	/**
 	 * Popup with information
 	 */
-	InformationPopupDisplay
+	InformationPopupDisplay,
+
+	/**
+	 * Display, allowing to select an item
+	 */
+	ItemSelectionDisplay
 }
 FoxDisplayEnum;
 

@@ -69,7 +69,7 @@ extern L2HAL_HC06_ContextStruct HC06_Context;
 extern FoxStateStruct FoxState;
 extern PendingCommandsFlagsStruct PendingCommandsFlags;
 extern uint8_t SwitchToThisProfileId;
-extern char SetThisProfileName[YHL_MAX_PROFILE_NAME_LENGTH];
+extern char SetThisProfileName[YHL_PROFILE_NAME_MEMORY_SIZE];
 extern HardwareControlsEventsStruct HardwareControlsEvents;
 
 /**

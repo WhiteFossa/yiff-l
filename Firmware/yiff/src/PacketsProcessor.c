@@ -529,7 +529,7 @@ OnSetProfileName_Validate:
 	}
 
 	/* Response will be sent from main thread */
-	memset(SetThisProfileName, 0x00U, YHL_MAX_PROFILE_NAME_LENGTH);
+	memset(SetThisProfileName, 0x00U, YHL_PROFILE_NAME_MEMORY_SIZE);
 	memcpy(SetThisProfileName, &payload[2], nameLength);
 
 	PendingCommandsFlags.NeedToSetProfileName = true;
