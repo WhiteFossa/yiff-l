@@ -76,7 +76,7 @@ void ItemSelectionDisplay_Display(void)
 	{
 		char* src = (char*)(ItemSelectionDisplay_ItemsPtr + ItemSelectionDisplay_ItemSize * (ItemSelectionDisplay_BaseLine + line));
 		char* dst = window[line];
-		strcpy(dst, src);
+		strncpy(dst, src, YHL_ITEM_SELECTION_DISPLAY_TEXT_MEMORY_SIZE);
 	}
 
 	ItemSelectionDisplay_DrawMenuLines(ItemSelectionDisplay_WindowLinesCount,
@@ -85,8 +85,8 @@ void ItemSelectionDisplay_Display(void)
 			ItemSelectionDisplay_SelectedItemIndex - ItemSelectionDisplay_BaseLine);
 
 	/* Buttons */
-	strcpy(LeftButton.Text, "OK");
-	strcpy(RightButton.Text, "Cancel");
+	strncpy(LeftButton.Text, "OK", YHL_MAX_BUTTON_TEXT_MEMORY_SIZE);
+	strncpy(RightButton.Text, "Cancel", YHL_MAX_BUTTON_TEXT_MEMORY_SIZE);
 	DrawButtons();
 
 	FMGL_API_PushFramebuffer(&fmglContext);
@@ -102,7 +102,8 @@ void ItemSelectionDisplay_DrawMenuLines(uint8_t linesCount, char* lines, uint8_t
 	{
 		char* lineText = lines + YHL_ITEM_SELECTION_DISPLAY_TEXT_MEMORY_SIZE * line;
 
-		char buffer[YHL_ITEM_SELECTION_DISPLAY_TEXT_MEMORY_SIZE + 3];
+		uint8_t bufferSize = YHL_ITEM_SELECTION_DISPLAY_TEXT_MEMORY_SIZE + 3;
+		char buffer[bufferSize];
 		buffer[0] = '[';
 
 		if (line == selectedLineIndex)
@@ -116,7 +117,7 @@ void ItemSelectionDisplay_DrawMenuLines(uint8_t linesCount, char* lines, uint8_t
 
 
 		buffer[2] = ']';
-		strcpy(&buffer[3], lineText);
+		strncpy(&buffer[3], lineText, bufferSize);
 
 		lineTop = line * (YHL_ITEM_SELECTION_DISPLAY_LINE_HEIGHT + YHL_ITEM_SELECTION_DISPLAY_LINE_VERTICAL_SPACING) + YHL_ITEM_SELECTION_DISPLAY_LINES_TOP;
 

@@ -55,8 +55,8 @@ char* AUX_Str_MergeStrings(char* str1, char* str2)
 {
 	size_t needToAllocate = strlen(str1) + strlen(str2) + 1; /* +1 because of null-termination */
 	char* result = malloc(needToAllocate);
-	strcpy(result, str1);
-	strcat(result, str2);
+	strncpy(result, str1, needToAllocate);
+	strncat(result, str2, strlen(str2));
 
 	return result;
 }

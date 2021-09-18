@@ -49,8 +49,8 @@ void InformationPopup_Show(char* title, char* message, FoxDisplayEnum previousDi
 	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, (uint16_t)messageXShift, (uint16_t)messageYShift, NULL, NULL, false, message);
 
 	/* Buttons */
-	strcpy(LeftButton.Text, "Back");
-	strcpy(RightButton.Text, "Back");
+	strncpy(LeftButton.Text, "Back", YHL_MAX_BUTTON_TEXT_MEMORY_SIZE);
+	strncpy(RightButton.Text, "Back", YHL_MAX_BUTTON_TEXT_MEMORY_SIZE);
 	DrawButtons();
 
 	FMGL_API_PushFramebuffer(&fmglContext);

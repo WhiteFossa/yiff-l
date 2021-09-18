@@ -61,8 +61,8 @@ void L2HAL_HC06_SetName(L2HAL_HC06_ContextStruct* context, const char* name)
 		L2HAL_Error(Generic);
 	}
 
-	char processedName[L2HAL_HC06_MAX_NAME_LENGTH + 1]; /* +1 for null termination */
-	strcpy(processedName, name);
+	char processedName[L2HAL_HC06_MAX_NAME_MEMORY_SIZE];
+	strncpy(processedName, name, L2HAL_HC06_MAX_NAME_MEMORY_SIZE);
 
 	for (uint8_t i = 0; i < L2HAL_HC06_MAX_NAME_LENGTH; i++)
 	{

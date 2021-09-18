@@ -165,7 +165,7 @@ int main(int argc, char* argv[])
 	CSM_Init();
 
 	/* Loading non-profile-related data from EEPROM into fox state */
-	strcpy(FoxState.Name, EEPROM_Header.Name);
+	strncpy(FoxState.Name, EEPROM_Header.Name, YHL_FOX_NAME_BUFFER_LENGTH);
 
 	/* Loading current profile into fox state */
 	EEPROM_LoadProfileIntoFoxState(&FoxState, &EEPROM_CurrentProfile);
@@ -252,7 +252,7 @@ void Main_ProcessFoxNameChange(void)
 {
 	if (PendingCommandsFlags.FoxStateNameChanged)
 	{
-		strcpy(EEPROM_Header.Name, FoxState.Name);
+		strncpy(EEPROM_Header.Name, FoxState.Name, YHL_FOX_NAME_BUFFER_LENGTH);
 		EEPROM_UpdateHeader();
 
 		HL_RenameBluetoothDevice(FoxState.Name);
@@ -294,7 +294,7 @@ void Main_ProcessSetProfileName(void)
 {
 	if (PendingCommandsFlags.NeedToSetProfileName)
 	{
-		strcpy(EEPROM_CurrentProfile.Name, SetThisProfileName);
+		strncpy(EEPROM_CurrentProfile.Name, SetThisProfileName, YHL_PROFILE_NAME_MEMORY_SIZE);
 		PendingCommandsFlags.NeedToFlushCurrentProfileToEEPROM = true;
 
 		uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;

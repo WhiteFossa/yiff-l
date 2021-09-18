@@ -25,6 +25,8 @@
  */
 #define YHL_MAX_BUTTON_TEXT_LENGTH 16
 
+#define YHL_MAX_BUTTON_TEXT_MEMORY_SIZE (YHL_MAX_BUTTON_TEXT_LENGTH + 1)
+
 /**
  * Button descriptor.
  */
@@ -38,7 +40,7 @@ typedef struct
 	/**
 	 * Button text.
 	 */
-	char Text[YHL_MAX_BUTTON_TEXT_LENGTH + 1];
+	char Text[YHL_MAX_BUTTON_TEXT_MEMORY_SIZE];
 }
 FoxButtonStruct;
 

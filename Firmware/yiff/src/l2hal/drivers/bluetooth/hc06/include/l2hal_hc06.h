@@ -25,6 +25,11 @@
 #define L2HAL_HC06_MAX_NAME_LENGTH 16
 
 /**
+ * Maximal memory size for bluetooth name
+ */
+#define L2HAL_HC06_MAX_NAME_MEMORY_SIZE (L2HAL_HC06_MAX_NAME_LENGTH + 1)
+
+/**
  * PIN code length (4 characters + null-termination)
  */
 #define L2HAL_HC06_PIN_CODE_LENGTH 5

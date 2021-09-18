@@ -11,7 +11,7 @@
 void MenuDisplay_InitMenuDisplay(void)
 {
 	MenuDisplay_RootNode.Parent = NULL;
-	strcpy(MenuDisplay_RootNode.Name, "Fox settings");
+	strncpy(MenuDisplay_RootNode.Name, "Fox settings", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
 
 	/* Root menu nodes */
 	MenuDisplay_RootNode.NodesCount = 2;
@@ -20,18 +20,18 @@ void MenuDisplay_InitMenuDisplay(void)
 	/* Profile settings */
 	MenuNode* profileSettingsNode = &((MenuNode*)MenuDisplay_RootNode.Nodes)[0];
 	profileSettingsNode->Parent = &MenuDisplay_RootNode;
-	strcpy(profileSettingsNode->Name, "Profile settings");
+	strncpy(profileSettingsNode->Name, "Profile settings", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
 	profileSettingsNode->LeavesCount = 2;
 	profileSettingsNode->Leaves = malloc(sizeof(MenuLeaf) * profileSettingsNode->LeavesCount);
 
 	/* Profile settings -> Show current profile */
-	strcpy(profileSettingsNode->Leaves[0].Name, "Show current profile");
-	strcpy(profileSettingsNode->Leaves[0].LeftButtonText, "Show");
+	strncpy(profileSettingsNode->Leaves[0].Name, "Show current profile", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
+	strncpy(profileSettingsNode->Leaves[0].LeftButtonText, "Show", YHL_MENU_MAX_LEFT_BUTTON_TEXT_MEMORY_SIZE);
 	profileSettingsNode->Leaves[0].LeftButtonAction = &MenuDisplay_ShowCurrentProfileInformationPopup;
 
 	/* Profile settings -> Select profile*/
-	strcpy(profileSettingsNode->Leaves[1].Name, "Select profile");
-	strcpy(profileSettingsNode->Leaves[1].LeftButtonText, "Select");
+	strncpy(profileSettingsNode->Leaves[1].Name, "Select profile", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
+	strncpy(profileSettingsNode->Leaves[1].LeftButtonText, "Select", YHL_MENU_MAX_LEFT_BUTTON_TEXT_MEMORY_SIZE);
 	profileSettingsNode->Leaves[1].LeftButtonAction = &MenuDisplay_SelectCurrentProfile;
 
 	profileSettingsNode->NodesCount = 0;
@@ -41,7 +41,7 @@ void MenuDisplay_InitMenuDisplay(void)
 	/* Edit current profile */
 	MenuNode* editCurrentProfileNode = &((MenuNode*)MenuDisplay_RootNode.Nodes)[1];
 	editCurrentProfileNode->Parent = &MenuDisplay_RootNode;
-	strcpy(editCurrentProfileNode->Name, "Edit current profile");
+	strncpy(editCurrentProfileNode->Name, "Edit current profile", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
 	editCurrentProfileNode->LeavesCount = 0;
 	editCurrentProfileNode->Leaves = malloc(sizeof(MenuLeaf) * profileSettingsNode->LeavesCount);
 
@@ -59,7 +59,6 @@ void MenuDisplay_InitMenuDisplay(void)
 
 	MenuDisplay_SwitchNode(&MenuDisplay_RootNode);
 }
-
 
 
 void MenuDisplay_SwitchNode(MenuNode* nodePtr)
@@ -80,7 +79,7 @@ void MenuDisplay_SwitchNode(MenuNode* nodePtr)
 		char* dst = (char*)(MenuDisplay_CurrentNodeLines + nodesCounter * YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
 		MenuNode node = ((MenuNode*)MenuDisplay_CurrentNode.Nodes)[nodesCounter];
 		char* src = node.Name;
-		strcpy(dst, src);
+		strncpy(dst, src, YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
 	}
 
 	/* Leaves then */
@@ -89,7 +88,7 @@ void MenuDisplay_SwitchNode(MenuNode* nodePtr)
 		uint8_t baseCount = MenuDisplay_CurrentNode.NodesCount;
 		char* dst = (char*)(MenuDisplay_CurrentNodeLines + (baseCount + leavesCounter) * YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
 		char* src = MenuDisplay_CurrentNode.Leaves[leavesCounter].Name;
-		strcpy(dst, src);
+		strncpy(dst, src, YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
 	}
 
 	/* How many lines could we display */
@@ -113,8 +112,8 @@ void MenuDisplay_GoToParentNode(void)
 	{
 		/* Exiting menu */
 		FoxState.CurrentDisplay = StatusDisplay;
-		strcpy(LeftButton.Text, "Menu");
-		strcpy(RightButton.Text, "Bt. off");
+		strncpy(LeftButton.Text, "Menu", YHL_MAX_BUTTON_TEXT_MEMORY_SIZE);
+		strncpy(RightButton.Text, "Bt. off", YHL_MAX_BUTTON_TEXT_MEMORY_SIZE);
 
 		FMGL_API_ClearScreen(&fmglContext);
 		return;
@@ -142,7 +141,7 @@ void MenuDisplay_DrawMenuDisplay(void)
 	{
 		char* src = (char*)(MenuDisplay_CurrentNodeLines + (MenuDisplay_BaseLine + linesCounter) * YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
 		char* dst = window[linesCounter];
-		strcpy(dst, src);
+		strncpy(dst, src, YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
 	}
 
 	MenuDisplay_DrawMenuLines(MenuDisplay_WindowLinesCount, window, MenuDisplay_ActiveLineIndex);
@@ -152,14 +151,14 @@ void MenuDisplay_DrawMenuDisplay(void)
 	if (YHL_MENU_NOT_A_LEAF == leafIndex)
 	{
 		/* It's a node, left button text is the same for all nodes */
-		strcpy(LeftButton.Text, YHL_MENU_LEFT_BUTTON_TEXT_FOR_NODES);
+		strncpy(LeftButton.Text, YHL_MENU_LEFT_BUTTON_TEXT_FOR_NODES, YHL_MENU_MAX_LEFT_BUTTON_TEXT_MEMORY_SIZE);
 	}
 	else
 	{
-		strcpy(LeftButton.Text, MenuDisplay_CurrentNode.Leaves[leafIndex].LeftButtonText);
+		strncpy(LeftButton.Text, MenuDisplay_CurrentNode.Leaves[leafIndex].LeftButtonText, YHL_MENU_MAX_LEFT_BUTTON_TEXT_MEMORY_SIZE);
 	}
 
-	strcpy(RightButton.Text, "Back");
+	strncpy(RightButton.Text, "Back", YHL_MAX_BUTTON_TEXT_MEMORY_SIZE);
 
 	DrawButtons();
 
@@ -371,7 +370,7 @@ void MenuDisplay_SelectCurrentProfile(void)
 	{
 		char* src = EEPROM_GetProfile(profile).Name;
 		char* dst = MenuDisplay_ProfilesNames + YHL_PROFILE_NAME_MEMORY_SIZE * profile;
-		strcpy(dst, src);
+		strncpy(dst, src, YHL_PROFILE_NAME_MEMORY_SIZE);
 	}
 
 	ItemSelectionDisplay_Show("Select profile",
