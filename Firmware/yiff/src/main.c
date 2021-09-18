@@ -155,10 +155,10 @@ int main(int argc, char* argv[])
 	FoxState.CycleState.CycleState = CsPause;
 
 	LeftButton.IsPressed = false;
-	sprintf(LeftButton.Text, "Menu");
+	snprintf(LeftButton.Text, YHL_MAX_BUTTON_TEXT_MEMORY_SIZE, "Menu");
 
 	RightButton.IsPressed = false;
-	sprintf(RightButton.Text, "Bt. off");
+	snprintf(RightButton.Text, YHL_MAX_BUTTON_TEXT_MEMORY_SIZE, "Bt. off");
 
 	/* Initializing state machines */
 	GSM_Init();

@@ -91,8 +91,10 @@ void DrawBattery(float level)
 void DrawCurrentTime(uint32_t time)
 {
 	FMGL_API_DrawRectangleFilled(&fmglContext, YHL_TIME_LEFT, YHL_TIME_TOP, YHL_TIME_CLEAR_RIGHT, YHL_TIME_CLEAR_BOTTOM, OffColor, OffColor);
-	char buffer[16];
-	TimestampToHMSString(time, buffer);
+
+	uint8_t bufferSize = 16;
+	char buffer[bufferSize];
+	TimestampToHMSString(time, buffer, bufferSize);
 	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, YHL_TIME_LEFT, YHL_TIME_TOP, NULL, NULL, false, buffer);
 }
 
@@ -151,38 +153,41 @@ uint16_t DrawFoxFrequency(FoxFrequencyStruct frequency)
 
 void DrawFoxCode(FoxCodeEnum code, bool isFast, uint16_t availableWidth)
 {
-	char number[16];
-	char codeTxt[16];
+	uint8_t numberBufferSize = 16;
+	char number[numberBufferSize];
+
+	uint8_t codeTxtBufferSize = 8;
+	char codeTxt[codeTxtBufferSize];
 
 	switch(code)
 	{
 		case Finish:
-			sprintf(number, "Finish");
-			sprintf(codeTxt, "MO");
+			snprintf(number, numberBufferSize, "Finish");
+			snprintf(codeTxt, codeTxtBufferSize, "MO");
 		break;
 		case F1:
-			sprintf(number, "#1");
-			sprintf(codeTxt, "MOE");
+			snprintf(number, numberBufferSize, "#1");
+			snprintf(codeTxt, codeTxtBufferSize, "MOE");
 		break;
 		case F2:
-			sprintf(number, "#2");
-			sprintf(codeTxt, "MOI");
+			snprintf(number, numberBufferSize, "#2");
+			snprintf(codeTxt, codeTxtBufferSize, "MOI");
 		break;
 		case F3:
-			sprintf(number, "#3");
-			sprintf(codeTxt, "MOS");
+			snprintf(number, numberBufferSize, "#3");
+			snprintf(codeTxt, codeTxtBufferSize, "MOS");
 		break;
 		case F4:
-			sprintf(number, "#4");
-			sprintf(codeTxt, "MOH");
+			snprintf(number, numberBufferSize, "#4");
+			snprintf(codeTxt, codeTxtBufferSize, "MOH");
 		break;
 		case F5:
-			sprintf(number, "#5");
-			sprintf(codeTxt, "MO5");
+			snprintf(number, numberBufferSize, "#5");
+			snprintf(codeTxt, codeTxtBufferSize, "MO5");
 		break;
 		case Beacon:
-			sprintf(number, "Beacon");
-			sprintf(codeTxt, "S");
+			snprintf(number, numberBufferSize, "Beacon");
+			snprintf(codeTxt, codeTxtBufferSize, "S");
 		break;
 		default:
 			L2HAL_Error(Generic);
@@ -190,18 +195,20 @@ void DrawFoxCode(FoxCodeEnum code, bool isFast, uint16_t availableWidth)
 	}
 
 	/* Adding fox speed */
-	char speed[8];
+	uint8_t speedBufferSize = 4;
+	char speed[speedBufferSize];
 	if (isFast)
 	{
-		sprintf(speed, "F");
+		snprintf(speed, speedBufferSize, "F");
 	}
 	else
 	{
-		sprintf(speed, "S");
+		snprintf(speed, speedBufferSize, "S");
 	}
 
-	char codeTxtWithSpeed[16];
-	sprintf(codeTxtWithSpeed, "%s:%s", codeTxt, speed);
+	uint8_t codeTxtWithSpeedBufferSize = 16;
+	char codeTxtWithSpeed[codeTxtWithSpeedBufferSize];
+	snprintf(codeTxtWithSpeed, codeTxtWithSpeedBufferSize, "%s:%s", codeTxt, speed);
 
 	/* Dry runs*/
 	uint16_t numberWidth;
@@ -222,24 +229,31 @@ void DrawFoxCycle(FoxCycleStruct cycle)
 {
 	FMGL_API_DrawRectangleFilled(&fmglContext, 0, YHL_CYCLE_CLEAR_TOP, (uint16_t)(FMGL_API_GetDisplayWidth(&fmglContext) - 1U), YHL_CYCLE_CLEAR_BOTTOM, OffColor, OffColor);
 
-	char buffer[32];
-	char cycleTimeTxt[16];
+	uint8_t bufferSize = 32;
+	char buffer[bufferSize];
+
+	uint8_t cycleTimeTxtSize = 16;
+	char cycleTimeTxt[cycleTimeTxtSize];
 
 	if (cycle.IsContinuous)
 	{
-		sprintf(cycleTimeTxt, "continuous");
+		snprintf(cycleTimeTxt, cycleTimeTxtSize, "continuous");
 	}
 	else
 	{
-		char TxTimeTxt[8];
-		char PauseTimeTxt[8];
-		TimespanToMSString(cycle.TxTime, TxTimeTxt);
-		TimespanToMSString(cycle.PauseTime, PauseTimeTxt);
+		uint8_t txTimeTxtSize = 8;
+		char txTimeTxt[txTimeTxtSize];
 
-		sprintf(cycleTimeTxt, "%s/%s", TxTimeTxt, PauseTimeTxt);
+		uint8_t pauseTimeTxtSize = 8;
+		char pauseTimeTxt[pauseTimeTxtSize];
+
+		TimespanToMSString(cycle.TxTime, txTimeTxt, txTimeTxtSize);
+		TimespanToMSString(cycle.PauseTime, pauseTimeTxt, pauseTimeTxtSize);
+
+		snprintf(cycleTimeTxt, cycleTimeTxtSize, "%s/%s", txTimeTxt, pauseTimeTxt);
 	}
 
-	sprintf(buffer, "Cycle: %s", cycleTimeTxt);
+	snprintf(buffer, bufferSize, "Cycle: %s", cycleTimeTxt);
 	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, YHL_CYCLE_LEFT, YHL_CYCLE_TOP, NULL, NULL, false, buffer);
 }
 
@@ -253,16 +267,17 @@ void DrawEndingTone(uint8_t endingToneLength, FoxCycleStruct cycle)
 			OffColor,
 			OffColor);
 
-	char buffer[32];
+	uint8_t bufferSize = 32;
+	char buffer[bufferSize];
 
 	if (cycle.IsContinuous)
 	{
-		sprintf(buffer, "Ending tone: N/A");
+		snprintf(buffer, bufferSize, "Ending tone: N/A");
 		FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, YHL_ENDING_TONE_LEFT, YHL_ENDING_TONE_TOP, NULL, NULL, false, buffer);
 		return;
 	}
 
-	sprintf(buffer, "Ending tone: %ds", endingToneLength);
+	snprintf(buffer, bufferSize, "Ending tone: %ds", endingToneLength);
 	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, YHL_ENDING_TONE_LEFT, YHL_ENDING_TONE_TOP, NULL, NULL, false, buffer);
 }
 
@@ -278,44 +293,49 @@ void DrawFoxCycleState(CycleStateStruct cycleState, uint32_t currentTime, FoxCyc
 
 	if (GfsBeforeFinish != globalState.CurrentState)
 	{
-		char buffer[32];
-		sprintf(buffer, "Waiting for start");
+		uint8_t bufferSize = 32;
+		char buffer[bufferSize];
+		snprintf(buffer, bufferSize, "Waiting for start");
 		FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, YHL_CYCLE_STATE_LEFT, YHL_CYCLE_STATE_TOP, NULL, NULL, false, buffer);
 		return;
 	}
 
 	if (true == cycle.IsContinuous)
 	{
-		char buffer[32];
-		sprintf(buffer, "N/A: Continuous cycle");
+		uint8_t bufferSize = 32;
+		char buffer[bufferSize];
+		snprintf(buffer, bufferSize, "N/A: Continuous cycle");
 		FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, YHL_CYCLE_STATE_LEFT, YHL_CYCLE_STATE_TOP, NULL, NULL, false, buffer);
 		return;
 	}
 
 	uint32_t timeTillAction = cycleState.StateChangeTime - currentTime;
 
-	char timeBuffer[16];
-	TimespanToHMSString(timeTillAction, timeBuffer);
+	uint8_t timeBufferSize = 16;
+	char timeBuffer[timeBufferSize];
+	TimespanToHMSString(timeTillAction, timeBuffer, timeBufferSize);
 
-	char actionBuffer[16];
+	uint8_t actionBufferSize = 16;
+	char actionBuffer[actionBufferSize];
 	switch(cycleState.CycleState)
 	{
 		case CsTx:
 		case CsEndingTone:
-			sprintf(actionBuffer, "pause");
+			snprintf(actionBuffer, actionBufferSize, "pause");
 		break;
 		case CsPause:
 		case CsPreparation:
 		case CsReady:
-			sprintf(actionBuffer, "TX");
+			snprintf(actionBuffer, actionBufferSize, "TX");
 		break;
 		default:
 			L2HAL_Error(Generic);
 		break;
 	}
 
-	char buffer[32];
-	sprintf(buffer, "%s till %s", timeBuffer, actionBuffer);
+	uint8_t bufferSize = 32;
+	char buffer[bufferSize];
+	snprintf(buffer, bufferSize, "%s till %s", timeBuffer, actionBuffer);
 
 	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, YHL_CYCLE_STATE_LEFT, YHL_CYCLE_STATE_TOP, NULL, NULL, false, buffer);
 }
@@ -332,35 +352,39 @@ void DrawGlobalState(GlobalFoxStateStruct globalState, uint32_t currentTime)
 
 	if (GfsStandby == globalState.CurrentState)
 	{
-		char buffer[32];
-		sprintf(buffer, "Standing by");
+		uint8_t bufferSize = 32;
+		char buffer[bufferSize];
+		snprintf(buffer, bufferSize, "Standing by");
 		FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, YHL_GLOBAL_STATE_LEFT, YHL_GLOBAL_STATE_TOP, NULL, NULL, false, buffer);
 		return;
 	}
 
 	uint32_t secondsTillAction = globalState.StateChangeTime - currentTime;
 
-	char timeBuffer[16];
-	TimespanToHMSString(secondsTillAction, timeBuffer);
+	uint8_t timeBufferSize = 16;
+	char timeBuffer[timeBufferSize];
+	TimespanToHMSString(secondsTillAction, timeBuffer, timeBufferSize);
 
-	char actionBuffer[16];
+	uint8_t actionBufferSize = 16;
+	char actionBuffer[actionBufferSize];
 	switch(globalState.CurrentState)
 	{
 		case GfsPreparation:
 		case GfsReady:
 		case GfsBeforeStart:
-			sprintf(actionBuffer, "start");
+			snprintf(actionBuffer, actionBufferSize, "start");
 		break;
 		case GfsBeforeFinish:
-			sprintf(actionBuffer, "finish");
+			snprintf(actionBuffer, actionBufferSize, "finish");
 		break;
 		default:
 			L2HAL_Error(Generic);
 		break;
 	}
 
-	char buffer[32];
-	sprintf(buffer, "%s till %s", timeBuffer, actionBuffer);
+	uint8_t bufferSize = 32;
+	char buffer[bufferSize];
+	snprintf(buffer, bufferSize, "%s till %s", timeBuffer, actionBuffer);
 
 	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, YHL_GLOBAL_STATE_LEFT, YHL_GLOBAL_STATE_TOP, NULL, NULL, false, buffer);
 }
@@ -375,15 +399,15 @@ void DrawFoxPower(float power, FoxFrequencyStruct frequency)
 			OffColor,
 			OffColor);
 
+	uint8_t bufferSize = 32;
+	char buffer[bufferSize];
 	if (frequency.Is144MHz)
 	{
-		char buffer[32];
-		sprintf(buffer, "Power: N/A");
+		snprintf(buffer, bufferSize, "Power: N/A");
 		FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, YHL_POWER_LEFT, YHL_POWER_TOP, NULL, NULL, false, buffer);
 		return;
 	}
 
-	char buffer[32];
-	sprintf(buffer, "Power: %.1fW", power);
+	snprintf(buffer, bufferSize, "Power: %.1fW", power);
 	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, YHL_POWER_LEFT, YHL_POWER_TOP, NULL, NULL, false, buffer);
 }

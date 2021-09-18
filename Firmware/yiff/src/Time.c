@@ -50,32 +50,32 @@ Time TimestampToTime(uint32_t timestamp)
 	return result;
 }
 
-void TimestampToHMSString(uint32_t timestamp, char* result)
+void TimestampToHMSString(uint32_t timestamp, char* result, uint8_t resultSize)
 {
 	Time time = TimestampToTime(timestamp);
 
-	sprintf(result, "%02d:%02d:%02d", time.Hours, time.Minutes, time.Seconds);
+	snprintf(result, resultSize, "%02d:%02d:%02d", time.Hours, time.Minutes, time.Seconds);
 }
 
-void TimestampToMSString(uint32_t timestamp, char* result)
+void TimestampToMSString(uint32_t timestamp, char* result, uint8_t resultSize)
 {
 	Time time = TimestampToTime(timestamp);
 
-	sprintf(result, "%02d:%02d", time.Minutes, time.Seconds);
+	snprintf(result, resultSize, "%02d:%02d", time.Minutes, time.Seconds);
 }
 
-void TimespanToMSString(uint32_t timespan, char* result)
+void TimespanToMSString(uint32_t timespan, char* result, uint8_t resultSize)
 {
 	uint32_t timestamp = timespan + YHL_TIME_DAY_ZERO_TIMESTAMP;
 
-	TimestampToMSString(timestamp, result);
+	TimestampToMSString(timestamp, result, resultSize);
 }
 
-void TimespanToHMSString(uint32_t timespan, char* result)
+void TimespanToHMSString(uint32_t timespan, char* result, uint8_t resultSize)
 {
 	uint32_t timestamp = timespan + YHL_TIME_DAY_ZERO_TIMESTAMP;
 
-	TimestampToHMSString(timestamp, result);
+	TimestampToHMSString(timestamp, result, resultSize);
 }
 
 void NewSecondCallback(void)

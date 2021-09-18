@@ -34,8 +34,9 @@ void DrawMatchingDisplay(FoxStateStruct foxState)
 
 void DrawMatchingStatusString(uint8_t step)
 {
-	char buffer[32];
-	sprintf(buffer, "Matching: %d/%d", step, HAL_AM_MAX_VALUE);
+	uint8_t bufferSize = 32;
+	char buffer[bufferSize];
+	snprintf(buffer, bufferSize, "Matching: %d/%d", step, HAL_AM_MAX_VALUE);
 
 	uint16_t stringWidth;
 	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, 0, 0, &stringWidth, NULL, true, buffer);

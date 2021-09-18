@@ -59,22 +59,22 @@ Time TimestampToTime(uint32_t timestamp);
 /**
  * Converts time to string with hours, minutes and seconds (days are dropped)
  */
-void TimestampToHMSString(uint32_t timestamp, char* result);
+void TimestampToHMSString(uint32_t timestamp, char* result, uint8_t resultSize);
 
 /**
  * Converts time to string with minutes and seconds (days and hours are dropped)
  */
-void TimestampToMSString(uint32_t timestamp, char* result);
+void TimestampToMSString(uint32_t timestamp, char* result, uint8_t resultSize);
 
 /**
  * Converts timeSPAN to string with minutes and seconds (days and hours are dropped)
  */
-void TimespanToMSString(uint32_t timespan, char* result);
+void TimespanToMSString(uint32_t timespan, char* result, uint8_t resultSize);
 
 /**
  * Converts timeSPAN to string with hours, minutes and seconds (days are dropped)
  */
-void TimespanToHMSString(uint32_t timespan, char* result);
+void TimespanToHMSString(uint32_t timespan, char* result, uint8_t resultSize);
 
 /**
  * Returns amount of seconds since midnight (days are dropped)

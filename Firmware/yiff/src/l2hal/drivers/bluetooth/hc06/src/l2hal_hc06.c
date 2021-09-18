@@ -19,8 +19,9 @@ L2HAL_HC06_ContextStruct L2HAL_HC06_AttachToDevice(UART_HandleTypeDef* uart)
 	context.IsFound = false;
 	context.UART_Handle = uart;
 
-	char buffer[3]; /* 3, not 2, because sprintf will add null-termination */
-	sprintf(buffer, "AT");
+	uint8_t bufferSize = 3; /* 3, not 2, because snprintf will add null-termination */
+	char buffer[bufferSize];
+	snprintf(buffer, bufferSize, "AT");
 
 	if (HAL_UART_Transmit(context.UART_Handle, (uint8_t*)buffer, 2, L2HAL_HC06_UART_TIMEOUT) != HAL_OK)
 	{
@@ -76,8 +77,9 @@ void L2HAL_HC06_SetName(L2HAL_HC06_ContextStruct* context, const char* name)
 		}
 	}
 
-	char buffer[32];
-	sprintf(buffer, "AT+NAME%s", processedName);
+	uint8_t bufferSize = 32;
+	char buffer[bufferSize];
+	snprintf(buffer, bufferSize, "AT+NAME%s", processedName);
 
 	uint8_t sendLength = strlen(buffer);
 	if (HAL_UART_Transmit(context->UART_Handle, (uint8_t*)buffer, sendLength , L2HAL_HC06_UART_TIMEOUT) != HAL_OK)
@@ -101,8 +103,9 @@ void L2HAL_HC06_SetName(L2HAL_HC06_ContextStruct* context, const char* name)
 
 void L2HAL_HC06_SetPIN(L2HAL_HC06_ContextStruct* context, const char pin[L2HAL_HC06_PIN_CODE_LENGTH])
 {
-	char buffer[16];
-	sprintf(buffer, "AT+PIN%s", pin);
+	uint8_t bufferSize = 16;
+	char buffer[bufferSize];
+	snprintf(buffer, bufferSize, "AT+PIN%s", pin);
 
 	uint8_t sendLength = strlen(buffer);
 	if (HAL_UART_Transmit(context->UART_Handle, (uint8_t*)buffer, sendLength, L2HAL_HC06_UART_TIMEOUT) != HAL_OK)

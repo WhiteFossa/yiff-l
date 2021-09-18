@@ -17,7 +17,7 @@ void EEPROM_Format(void)
 
 	/* Writing main header */
 	EEPROMHeaderStruct defaultHeader;
-	sprintf(defaultHeader.Name, YHL_DEFAULT_FOX_NAME);
+	snprintf(defaultHeader.Name, YHL_PROFILE_NAME_MEMORY_SIZE, YHL_DEFAULT_FOX_NAME);
 	defaultHeader.NumberOfProfiles = 1;
 
 	/* Zero in profile address means "not allocated" */
@@ -177,7 +177,7 @@ EEPROMProfileStruct EEPROM_GenerateDefaultProfile(void)
 {
 	EEPROMProfileStruct result;
 
-	sprintf(result.Name, YHL_DEFAULT_PROFILE_NAME);
+	snprintf(result.Name, YHL_PROFILE_NAME_MEMORY_SIZE, YHL_DEFAULT_PROFILE_NAME);
 
 	result.Frequency.Is144MHz = false;
 	result.Frequency.FrequencyHz = 3500000U;
