@@ -6,6 +6,7 @@
  */
 
 #include <Menu/MenuDisplay.h>
+#include <Menu/MenuDisplayPrivate.h>
 
 void MenuDisplay_InitMenuDisplay(void)
 {
