@@ -7,18 +7,18 @@
 
 #include <Menu/MenuDisplay.h>
 
-void Menu_InitMenuDisplay(void)
+void MenuDisplay_InitMenuDisplay(void)
 {
-	Menu_RootNode.Parent = NULL;
-	strcpy(Menu_RootNode.Name, "Fox settings");
+	MenuDisplay_RootNode.Parent = NULL;
+	strcpy(MenuDisplay_RootNode.Name, "Fox settings");
 
 	/* Root menu nodes */
-	Menu_RootNode.NodesCount = 2;
-	Menu_RootNode.Nodes = malloc(sizeof(MenuNode) * Menu_RootNode.NodesCount);
+	MenuDisplay_RootNode.NodesCount = 2;
+	MenuDisplay_RootNode.Nodes = malloc(sizeof(MenuNode) * MenuDisplay_RootNode.NodesCount);
 
 	/* Profile settings */
-	MenuNode* profileSettingsNode = &((MenuNode*)Menu_RootNode.Nodes)[0];
-	profileSettingsNode->Parent = &Menu_RootNode;
+	MenuNode* profileSettingsNode = &((MenuNode*)MenuDisplay_RootNode.Nodes)[0];
+	profileSettingsNode->Parent = &MenuDisplay_RootNode;
 	strcpy(profileSettingsNode->Name, "Profile settings");
 	profileSettingsNode->LeavesCount = 2;
 	profileSettingsNode->Leaves = malloc(sizeof(MenuLeaf) * profileSettingsNode->LeavesCount);
@@ -26,20 +26,20 @@ void Menu_InitMenuDisplay(void)
 	/* Profile settings -> Show current profile */
 	strcpy(profileSettingsNode->Leaves[0].Name, "Show current profile");
 	strcpy(profileSettingsNode->Leaves[0].LeftButtonText, "Show");
-	profileSettingsNode->Leaves[0].LeftButtonAction = &Menu_ShowCurrentProfileInformationPopup;
+	profileSettingsNode->Leaves[0].LeftButtonAction = &MenuDisplay_ShowCurrentProfileInformationPopup;
 
 	/* Profile settings -> Select profile*/
 	strcpy(profileSettingsNode->Leaves[1].Name, "Select profile");
 	strcpy(profileSettingsNode->Leaves[1].LeftButtonText, "Select");
-	profileSettingsNode->Leaves[1].LeftButtonAction = &Menu_SelectCurrentProfile;
+	profileSettingsNode->Leaves[1].LeftButtonAction = &MenuDisplay_SelectCurrentProfile;
 
 	profileSettingsNode->NodesCount = 0;
 	profileSettingsNode->Nodes = NULL;
 
 
 	/* Edit current profile */
-	MenuNode* editCurrentProfileNode = &((MenuNode*)Menu_RootNode.Nodes)[1];
-	editCurrentProfileNode->Parent = &Menu_RootNode;
+	MenuNode* editCurrentProfileNode = &((MenuNode*)MenuDisplay_RootNode.Nodes)[1];
+	editCurrentProfileNode->Parent = &MenuDisplay_RootNode;
 	strcpy(editCurrentProfileNode->Name, "Edit current profile");
 	editCurrentProfileNode->LeavesCount = 0;
 	editCurrentProfileNode->Leaves = malloc(sizeof(MenuLeaf) * profileSettingsNode->LeavesCount);
@@ -49,65 +49,65 @@ void Menu_InitMenuDisplay(void)
 
 
 	/* Root menu leaves */
-	Menu_RootNode.LeavesCount = 0;
-	Menu_RootNode.Leaves = malloc(sizeof(MenuLeaf) * Menu_RootNode.LeavesCount);
+	MenuDisplay_RootNode.LeavesCount = 0;
+	MenuDisplay_RootNode.Leaves = malloc(sizeof(MenuLeaf) * MenuDisplay_RootNode.LeavesCount);
 
-	ActiveLineIndex = 0;
-	CurrentNodeLines = NULL;
+	MenuDisplay_ActiveLineIndex = 0;
+	MenuDisplay_CurrentNodeLines = NULL;
 	MenuDisplay_ProfilesNames = NULL;
 
-	Menu_SwitchNode(&Menu_RootNode);
+	MenuDisplay_SwitchNode(&MenuDisplay_RootNode);
 }
 
 
 
-void Menu_SwitchNode(MenuNode* nodePtr)
+void MenuDisplay_SwitchNode(MenuNode* nodePtr)
 {
-	Menu_CurrentNode = *nodePtr;
+	MenuDisplay_CurrentNode = *nodePtr;
 
-	CurrentNodeLinesCount = Menu_CurrentNode.NodesCount + Menu_CurrentNode.LeavesCount;
-	if (CurrentNodeLines != NULL)
+	MenuDisplay_CurrentNodeLinesCount = MenuDisplay_CurrentNode.NodesCount + MenuDisplay_CurrentNode.LeavesCount;
+	if (MenuDisplay_CurrentNodeLines != NULL)
 	{
-		free(CurrentNodeLines);
+		free(MenuDisplay_CurrentNodeLines);
 	}
 
-	CurrentNodeLines = malloc(CurrentNodeLinesCount * YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
+	MenuDisplay_CurrentNodeLines = malloc(MenuDisplay_CurrentNodeLinesCount * YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
 
 	/* Nodes first */
-	for (uint8_t nodesCounter = 0; nodesCounter < Menu_CurrentNode.NodesCount; nodesCounter ++)
+	for (uint8_t nodesCounter = 0; nodesCounter < MenuDisplay_CurrentNode.NodesCount; nodesCounter ++)
 	{
-		char* dst = (char*)(CurrentNodeLines + nodesCounter * YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
-		MenuNode node = ((MenuNode*)Menu_CurrentNode.Nodes)[nodesCounter];
+		char* dst = (char*)(MenuDisplay_CurrentNodeLines + nodesCounter * YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
+		MenuNode node = ((MenuNode*)MenuDisplay_CurrentNode.Nodes)[nodesCounter];
 		char* src = node.Name;
 		strcpy(dst, src);
 	}
 
 	/* Leaves then */
-	for (uint8_t leavesCounter = 0; leavesCounter < Menu_CurrentNode.LeavesCount; leavesCounter ++)
+	for (uint8_t leavesCounter = 0; leavesCounter < MenuDisplay_CurrentNode.LeavesCount; leavesCounter ++)
 	{
-		uint8_t baseCount = Menu_CurrentNode.NodesCount;
-		char* dst = (char*)(CurrentNodeLines + (baseCount + leavesCounter) * YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
-		char* src = Menu_CurrentNode.Leaves[leavesCounter].Name;
+		uint8_t baseCount = MenuDisplay_CurrentNode.NodesCount;
+		char* dst = (char*)(MenuDisplay_CurrentNodeLines + (baseCount + leavesCounter) * YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
+		char* src = MenuDisplay_CurrentNode.Leaves[leavesCounter].Name;
 		strcpy(dst, src);
 	}
 
 	/* How many lines could we display */
-	if (CurrentNodeLinesCount > YHL_MENU_NUMBER_OF_LINES)
+	if (MenuDisplay_CurrentNodeLinesCount > YHL_MENU_NUMBER_OF_LINES)
 	{
-		WindowLinesCount = YHL_MENU_NUMBER_OF_LINES;
+		MenuDisplay_WindowLinesCount = YHL_MENU_NUMBER_OF_LINES;
 	}
 	else
 	{
-		WindowLinesCount = CurrentNodeLinesCount;
+		MenuDisplay_WindowLinesCount = MenuDisplay_CurrentNodeLinesCount;
 	}
 
-	BaseLine = 0;
-	ActiveLineIndex = 0;
+	MenuDisplay_BaseLine = 0;
+	MenuDisplay_ActiveLineIndex = 0;
 }
 
-void Menu_GoToParentNode(void)
+void MenuDisplay_GoToParentNode(void)
 {
-	MenuNode* parent = Menu_CurrentNode.Parent;
+	MenuNode* parent = MenuDisplay_CurrentNode.Parent;
 	if (NULL == parent)
 	{
 		/* Exiting menu */
@@ -119,11 +119,11 @@ void Menu_GoToParentNode(void)
 		return;
 	}
 
-	Menu_SwitchNode(parent);
-	Menu_DrawMenuDisplay();
+	MenuDisplay_SwitchNode(parent);
+	MenuDisplay_DrawMenuDisplay();
 }
 
-void Menu_DrawMenuDisplay(void)
+void MenuDisplay_DrawMenuDisplay(void)
 {
 	if (FoxState.CurrentDisplay != MenuDisplay)
 	{
@@ -137,17 +137,17 @@ void Menu_DrawMenuDisplay(void)
 	/* Display window - this lines will be displayed*/
 	char window[YHL_MENU_NUMBER_OF_LINES][YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE];
 
-	for (uint8_t linesCounter = 0; linesCounter < WindowLinesCount; linesCounter ++)
+	for (uint8_t linesCounter = 0; linesCounter < MenuDisplay_WindowLinesCount; linesCounter ++)
 	{
-		char* src = (char*)(CurrentNodeLines + (BaseLine + linesCounter) * YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
+		char* src = (char*)(MenuDisplay_CurrentNodeLines + (MenuDisplay_BaseLine + linesCounter) * YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
 		char* dst = window[linesCounter];
 		strcpy(dst, src);
 	}
 
-	Menu_DrawMenuLines(WindowLinesCount, window, ActiveLineIndex);
+	MenuDisplay_DrawMenuLines(MenuDisplay_WindowLinesCount, window, MenuDisplay_ActiveLineIndex);
 
 	/* Buttons texts */
-	int8_t leafIndex = Menu_GetCurrentLeafIndex(Menu_GetCurrentNodeActiveLineIndex());
+	int8_t leafIndex = MenuDisplay_GetCurrentLeafIndex(MenuDisplay_GetCurrentNodeActiveLineIndex());
 	if (YHL_MENU_NOT_A_LEAF == leafIndex)
 	{
 		/* It's a node, left button text is the same for all nodes */
@@ -155,7 +155,7 @@ void Menu_DrawMenuDisplay(void)
 	}
 	else
 	{
-		strcpy(LeftButton.Text, Menu_CurrentNode.Leaves[leafIndex].LeftButtonText);
+		strcpy(LeftButton.Text, MenuDisplay_CurrentNode.Leaves[leafIndex].LeftButtonText);
 	}
 
 	strcpy(RightButton.Text, "Back");
@@ -165,14 +165,14 @@ void Menu_DrawMenuDisplay(void)
 	FMGL_API_PushFramebuffer(&fmglContext);
 }
 
-uint8_t Menu_GetCurrentNodeActiveLineIndex(void)
+uint8_t MenuDisplay_GetCurrentNodeActiveLineIndex(void)
 {
-	return BaseLine + ActiveLineIndex;
+	return MenuDisplay_BaseLine + MenuDisplay_ActiveLineIndex;
 }
 
-int8_t Menu_GetCurrentSubNodeIndex(uint8_t currentNodeActiveLineIndex)
+int8_t MenuDisplay_GetCurrentSubNodeIndex(uint8_t currentNodeActiveLineIndex)
 {
-	if (currentNodeActiveLineIndex > Menu_CurrentNode.NodesCount - 1)
+	if (currentNodeActiveLineIndex > MenuDisplay_CurrentNode.NodesCount - 1)
 	{
 		return YHL_MENU_NOT_A_NODE;
 	}
@@ -180,9 +180,9 @@ int8_t Menu_GetCurrentSubNodeIndex(uint8_t currentNodeActiveLineIndex)
 	return currentNodeActiveLineIndex;
 }
 
-int8_t Menu_GetCurrentLeafIndex(uint8_t currentNodeActiveLineIndex)
+int8_t MenuDisplay_GetCurrentLeafIndex(uint8_t currentNodeActiveLineIndex)
 {
-	int subNodeIndex = Menu_GetCurrentSubNodeIndex(currentNodeActiveLineIndex);
+	int subNodeIndex = MenuDisplay_GetCurrentSubNodeIndex(currentNodeActiveLineIndex);
 
 	if (subNodeIndex != YHL_MENU_NOT_A_NODE)
 	{
@@ -190,56 +190,56 @@ int8_t Menu_GetCurrentLeafIndex(uint8_t currentNodeActiveLineIndex)
 		return YHL_MENU_NOT_A_LEAF;
 	}
 
-	return currentNodeActiveLineIndex - Menu_CurrentNode.NodesCount;
+	return currentNodeActiveLineIndex - MenuDisplay_CurrentNode.NodesCount;
 }
 
-void Menu_LeftButtonHandler(void)
+void MenuDisplay_LeftButtonHandler(void)
 {
-	Menu_OnAction(MenuLeftButtonClick);
+	MenuDisplay_OnAction(MenuLeftButtonClick);
 }
 
-void Menu_OnAction(MenuActionEnum action)
+void MenuDisplay_OnAction(MenuActionEnum action)
 {
-	uint8_t currentNodeActiveLineIndex = Menu_GetCurrentNodeActiveLineIndex();
+	uint8_t currentNodeActiveLineIndex = MenuDisplay_GetCurrentNodeActiveLineIndex();
 
-	int8_t subNodeIndex = Menu_GetCurrentSubNodeIndex(currentNodeActiveLineIndex);
+	int8_t subNodeIndex = MenuDisplay_GetCurrentSubNodeIndex(currentNodeActiveLineIndex);
 
 	if (subNodeIndex != YHL_MENU_NOT_A_NODE)
 	{
-		MenuNode* subNode = &((MenuNode*)Menu_CurrentNode.Nodes)[subNodeIndex];
-		Menu_ActionOnNodeHandler(subNode, action);
+		MenuNode* subNode = &((MenuNode*)MenuDisplay_CurrentNode.Nodes)[subNodeIndex];
+		MenuDisplay_ActionOnNodeHandler(subNode, action);
 		return;
 	}
 
-	int8_t leafIndex = Menu_GetCurrentLeafIndex(currentNodeActiveLineIndex);
+	int8_t leafIndex = MenuDisplay_GetCurrentLeafIndex(currentNodeActiveLineIndex);
 	if (YHL_MENU_NOT_A_LEAF == leafIndex)
 	{
 		/* Not a node, not a leaf, definitely a bug */
 		L2HAL_Error(Generic);
 	}
 
-	MenuLeaf* leafPtr = &Menu_CurrentNode.Leaves[leafIndex];
-	Menu_ActionOnLeafHandler(leafPtr, action);
+	MenuLeaf* leafPtr = &MenuDisplay_CurrentNode.Leaves[leafIndex];
+	MenuDisplay_ActionOnLeafHandler(leafPtr, action);
 }
 
-void Menu_ActionOnNodeHandler(MenuNode* node, MenuActionEnum action)
+void MenuDisplay_ActionOnNodeHandler(MenuNode* node, MenuActionEnum action)
 {
 	if (MenuLeftButtonClick == action || MenuEncoderClick == action)
 	{
 		/* Entering menu node */
-		Menu_SwitchNode(node);
-		Menu_DrawMenuDisplay();
+		MenuDisplay_SwitchNode(node);
+		MenuDisplay_DrawMenuDisplay();
 		return;
 	}
 
 	if (MenuRightButtonClick == action)
 	{
 		/* Going back */
-		Menu_GoToParentNode();
+		MenuDisplay_GoToParentNode();
 	}
 }
 
-void Menu_ActionOnLeafHandler(MenuLeaf* leaf, MenuActionEnum action)
+void MenuDisplay_ActionOnLeafHandler(MenuLeaf* leaf, MenuActionEnum action)
 {
 	if (MenuLeftButtonClick == action || MenuEncoderClick == action)
 	{
@@ -253,23 +253,23 @@ void Menu_ActionOnLeafHandler(MenuLeaf* leaf, MenuActionEnum action)
 	if (MenuRightButtonClick == action)
 	{
 		/* Going back */
-		Menu_GoToParentNode();
+		MenuDisplay_GoToParentNode();
 	}
 }
 
-void Menu_RightButtonHandler(void)
+void MenuDisplay_RightButtonHandler(void)
 {
-	Menu_OnAction(MenuRightButtonClick);
+	MenuDisplay_OnAction(MenuRightButtonClick);
 }
 
-void Menu_EncoderClickHandler(void)
+void MenuDisplay_EncoderClickHandler(void)
 {
-	Menu_OnAction(MenuEncoderClick);
+	MenuDisplay_OnAction(MenuEncoderClick);
 }
 
-void Menu_EncoderRotationHandler(int8_t direction)
+void MenuDisplay_EncoderRotationHandler(int8_t direction)
 {
-	int8_t activeLineIndex = ActiveLineIndex;
+	int8_t activeLineIndex = MenuDisplay_ActiveLineIndex;
 
 	if (HAL_ENCODER_ROTATION_CLOCKWISE == direction)
 	{
@@ -285,22 +285,22 @@ void Menu_EncoderRotationHandler(int8_t direction)
 		/* Scroll up */
 		activeLineIndex = 0;
 
-		Menu_ScrollUpHandler();
+		MenuDisplay_ScrollUpHandler();
 	}
-	else if (activeLineIndex > WindowLinesCount - 1)
+	else if (activeLineIndex > MenuDisplay_WindowLinesCount - 1)
 	{
 		/* Scroll down */
-		activeLineIndex = WindowLinesCount - 1;
+		activeLineIndex = MenuDisplay_WindowLinesCount - 1;
 
-		Menu_ScrollDownHandler();
+		MenuDisplay_ScrollDownHandler();
 	}
 
-	ActiveLineIndex = activeLineIndex;
+	MenuDisplay_ActiveLineIndex = activeLineIndex;
 
-	Menu_DrawMenuDisplay();
+	MenuDisplay_DrawMenuDisplay();
 }
 
-void Menu_DrawMenuLines(uint8_t linesCount, char* lines, uint8_t activeLineIndex)
+void MenuDisplay_DrawMenuLines(uint8_t linesCount, char* lines, uint8_t activeLineIndex)
 {
 	uint16_t rightmostPixel = FMGL_API_GetDisplayWidth(&fmglContext) - 1;
 	uint16_t lineTop;
@@ -324,9 +324,9 @@ void Menu_DrawMenuLines(uint8_t linesCount, char* lines, uint8_t activeLineIndex
 	}
 }
 
-void Menu_ScrollUpHandler(void)
+void MenuDisplay_ScrollUpHandler(void)
 {
-	int16_t baseLineTmp = BaseLine;
+	int16_t baseLineTmp = MenuDisplay_BaseLine;
 
 	baseLineTmp --;
 
@@ -335,35 +335,35 @@ void Menu_ScrollUpHandler(void)
 		baseLineTmp = 0;
 	}
 
-	BaseLine = baseLineTmp;
+	MenuDisplay_BaseLine = baseLineTmp;
 }
 
 
-void Menu_ScrollDownHandler(void)
+void MenuDisplay_ScrollDownHandler(void)
 {
-	if (CurrentNodeLinesCount <= YHL_MENU_NUMBER_OF_LINES)
+	if (MenuDisplay_CurrentNodeLinesCount <= YHL_MENU_NUMBER_OF_LINES)
 	{
 		/* Scrolling disabled because of too few items */
-		BaseLine = 0;
+		MenuDisplay_BaseLine = 0;
 		return;
 	}
 
-	BaseLine ++;
+	MenuDisplay_BaseLine ++;
 
-	uint8_t offscreenItemsCount = CurrentNodeLinesCount - YHL_MENU_NUMBER_OF_LINES;
+	uint8_t offscreenItemsCount = MenuDisplay_CurrentNodeLinesCount - YHL_MENU_NUMBER_OF_LINES;
 
-	if (BaseLine > offscreenItemsCount)
+	if (MenuDisplay_BaseLine > offscreenItemsCount)
 	{
-		BaseLine = offscreenItemsCount;
+		MenuDisplay_BaseLine = offscreenItemsCount;
 	}
 }
 
-void Menu_ShowCurrentProfileInformationPopup(void)
+void MenuDisplay_ShowCurrentProfileInformationPopup(void)
 {
 	InformationPopup_Show("Current profile:", EEPROM_GetProfile(EEPROM_Header.ProfileInUse).Name, MenuDisplay);
 }
 
-void Menu_SelectCurrentProfile(void)
+void MenuDisplay_SelectCurrentProfile(void)
 {
 	MenuDisplay_ProfilesNames = malloc(YHL_PROFILE_NAME_MEMORY_SIZE * EEPROM_Header.NumberOfProfiles);
 	for (uint8_t profile = 0; profile < EEPROM_Header.NumberOfProfiles; profile ++)
@@ -378,11 +378,11 @@ void Menu_SelectCurrentProfile(void)
 			YHL_PROFILE_NAME_MEMORY_SIZE,
 			EEPROM_Header.NumberOfProfiles,
 			EEPROM_Header.ProfileInUse,
-			&Menu_SelectCurrentProfileCloseHandler,
+			&MenuDisplay_SelectCurrentProfileCloseHandler,
 			MenuDisplay);
 }
 
-void Menu_SelectCurrentProfileCloseHandler(uint8_t profileIndex)
+void MenuDisplay_SelectCurrentProfileCloseHandler(uint8_t profileIndex)
 {
 	free(MenuDisplay_ProfilesNames);
 	MenuDisplay_ProfilesNames = NULL;
@@ -392,6 +392,6 @@ void Menu_SelectCurrentProfileCloseHandler(uint8_t profileIndex)
 		EEPROM_SwitchProfile(profileIndex);
 	}
 
-	Menu_DrawMenuDisplay();
+	MenuDisplay_DrawMenuDisplay();
 }
 

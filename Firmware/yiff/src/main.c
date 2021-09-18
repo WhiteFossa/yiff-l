@@ -209,7 +209,7 @@ int main(int argc, char* argv[])
 	HAL_RegisterEncoderRotationHandler(Main_OnEncoderRotationInterrupt);
 
 	/* Preparing menus */
-	Menu_InitMenuDisplay();
+	MenuDisplay_InitMenuDisplay();
 
 	/* Debugging stuff begin */
 
@@ -507,12 +507,12 @@ void Main_OnLeftButtonPressed(void)
 	}
 	else if (MenuDisplay == FoxState.CurrentDisplay)
 	{
-		Menu_LeftButtonHandler();
+		MenuDisplay_LeftButtonHandler();
 	}
 	else if (InformationPopupDisplay == FoxState.CurrentDisplay)
 	{
 		InformationPopup_Close();
-		Menu_DrawMenuDisplay();
+		MenuDisplay_DrawMenuDisplay();
 	}
 	else if (ItemSelectionDisplay == FoxState.CurrentDisplay)
 	{
@@ -534,12 +534,12 @@ void Main_OnRightButtonPressed(void)
 {
 	if (MenuDisplay == FoxState.CurrentDisplay)
 	{
-		Menu_RightButtonHandler();
+		MenuDisplay_RightButtonHandler();
 	}
 	else if (InformationPopupDisplay == FoxState.CurrentDisplay)
 	{
 		InformationPopup_Close();
-		Menu_DrawMenuDisplay();
+		MenuDisplay_DrawMenuDisplay();
 	}
 	else if (ItemSelectionDisplay == FoxState.CurrentDisplay)
 	{
@@ -561,12 +561,12 @@ void Main_OnEncoderButtonPressed(void)
 {
 	if (MenuDisplay == FoxState.CurrentDisplay)
 	{
-		Menu_EncoderClickHandler();
+		MenuDisplay_EncoderClickHandler();
 	}
 	else if (InformationPopupDisplay == FoxState.CurrentDisplay)
 	{
 		InformationPopup_Close();
-		Menu_DrawMenuDisplay();
+		MenuDisplay_DrawMenuDisplay();
 	}
 	else if (ItemSelectionDisplay == FoxState.CurrentDisplay)
 	{
@@ -588,7 +588,7 @@ void Main_OnEncoderRotation(int8_t direction)
 {
 	if (MenuDisplay == FoxState.CurrentDisplay)
 	{
-		Menu_EncoderRotationHandler(direction);
+		MenuDisplay_EncoderRotationHandler(direction);
 	}
 	else if (ItemSelectionDisplay == FoxState.CurrentDisplay)
 	{
@@ -599,7 +599,7 @@ void Main_OnEncoderRotation(int8_t direction)
 void Main_EnterMenu(void)
 {
 	FoxState.CurrentDisplay = MenuDisplay;
-	Menu_DrawMenuDisplay();
+	MenuDisplay_DrawMenuDisplay();
 }
 
 #pragma GCC diagnostic pop

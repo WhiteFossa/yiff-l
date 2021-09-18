@@ -137,38 +137,38 @@ extern FoxButtonStruct RightButton;
 /**
  * Start node for the whole menu
  */
-MenuNode Menu_RootNode;
+MenuNode MenuDisplay_RootNode;
 
 /**
  * Current menu node
  */
-MenuNode Menu_CurrentNode;
+MenuNode MenuDisplay_CurrentNode;
 
 /**
  * Index of active line
  */
-uint8_t ActiveLineIndex;
+uint8_t MenuDisplay_ActiveLineIndex;
 
 /**
  * How many menu lines current node have
  */
-uint8_t CurrentNodeLinesCount;
+uint8_t MenuDisplay_CurrentNodeLinesCount;
 
 /**
  * Current node lines, sub-nodes first, leaves then.
- * CurrentNodeLines + lineNumber * YHK_MENU_MAX_ITEM_TEXT_MEMORY_SIZE
+ * MenuDisplay_CurrentNodeLines + lineNumber * YHK_MENU_MAX_ITEM_TEXT_MEMORY_SIZE
  */
-void* CurrentNodeLines;
+void* MenuDisplay_CurrentNodeLines;
 
 /**
  * How many lines are currently displayed
  */
-uint8_t WindowLinesCount;
+uint8_t MenuDisplay_WindowLinesCount;
 
 /**
- * Line with this index (from CurrentNodeLines) will be displayed at the top
+ * Line with this index (from MenuDisplay_CurrentNodeLines) will be displayed at the top
  */
-uint8_t BaseLine;
+uint8_t MenuDisplay_BaseLine;
 
 /**
  * Names of fox profiles
@@ -176,103 +176,103 @@ uint8_t BaseLine;
 char* MenuDisplay_ProfilesNames;
 
 /**
- * Initialize meny display
+ * Initialize menu display
  */
-void Menu_InitMenuDisplay(void);
+void MenuDisplay_InitMenuDisplay(void);
 
 /**
  * Draws current menu display
  */
-void Menu_DrawMenuDisplay(void);
+void MenuDisplay_DrawMenuDisplay(void);
 
 /**
  * Draw menu lines with selected line
  */
-void Menu_DrawMenuLines(uint8_t linesCount, char* lines, uint8_t activeLineIndex);
+void MenuDisplay_DrawMenuLines(uint8_t linesCount, char* lines, uint8_t activeLineIndex);
 
 /**
  * Call it when left button is pressed
  */
-void Menu_LeftButtonHandler(void);
+void MenuDisplay_LeftButtonHandler(void);
 
 /**
  * Call it when right button is pressed
  */
-void Menu_RightButtonHandler(void);
+void MenuDisplay_RightButtonHandler(void);
 
 /**
  * Call it when encoder is pressed
  */
-void Menu_EncoderClickHandler(void);
+void MenuDisplay_EncoderClickHandler(void);
 
 /**
  * Call it when encoder is rotated
  */
-void Menu_EncoderRotationHandler(int8_t direction);
+void MenuDisplay_EncoderRotationHandler(int8_t direction);
 
 /**
  * Called when menu need to be scrolled up
  */
-void Menu_ScrollUpHandler(void);
+void MenuDisplay_ScrollUpHandler(void);
 
 /**
  * Called when menu need to be scrolled down
  */
-void Menu_ScrollDownHandler(void);
+void MenuDisplay_ScrollDownHandler(void);
 
 /**
  * Gets active line index (globally active, not in display window)
  */
-uint8_t Menu_GetCurrentNodeActiveLineIndex(void);
+uint8_t MenuDisplay_GetCurrentNodeActiveLineIndex(void);
 
 /**
  * Gets current node active sub-node index or returns YHL_MENU_NOT_A_NODE if active line points to a leaf
  */
-int8_t Menu_GetCurrentSubNodeIndex(uint8_t currentNodeActiveLineIndex);
+int8_t MenuDisplay_GetCurrentSubNodeIndex(uint8_t currentNodeActiveLineIndex);
 
 /**
  * Gets current node active list index or returns YHL_MENU_NOT_A_LEAF if active line points to a sub-node
  */
-int8_t Menu_GetCurrentLeafIndex(uint8_t currentNodeActiveLineIndex);
+int8_t MenuDisplay_GetCurrentLeafIndex(uint8_t currentNodeActiveLineIndex);
 
 /**
  * Call it on action (e.g. button press)
  */
-void Menu_OnAction(MenuActionEnum action);
+void MenuDisplay_OnAction(MenuActionEnum action);
 
 /**
  * Called when something is happened on menu node
  */
-void Menu_ActionOnNodeHandler(MenuNode* node, MenuActionEnum action);
+void MenuDisplay_ActionOnNodeHandler(MenuNode* node, MenuActionEnum action);
 
 /**
  * Called when something is happened on menu leaf
  */
-void Menu_ActionOnLeafHandler(MenuLeaf* leaf, MenuActionEnum action);
+void MenuDisplay_ActionOnLeafHandler(MenuLeaf* leaf, MenuActionEnum action);
 
 /**
  * Make given node current
  */
-void Menu_SwitchNode(MenuNode* nodePtr);
+void MenuDisplay_SwitchNode(MenuNode* nodePtr);
 
 /**
  * Go to parent of current node
  */
-void Menu_GoToParentNode(void);
+void MenuDisplay_GoToParentNode(void);
 
 /**
  * Show information popup about current profile
  */
-void Menu_ShowCurrentProfileInformationPopup(void);
+void MenuDisplay_ShowCurrentProfileInformationPopup(void);
 
 /**
  * Call this to select current profile
  */
-void Menu_SelectCurrentProfile(void);
+void MenuDisplay_SelectCurrentProfile(void);
 
 /**
  * Call it when current profile is selected
  */
-void Menu_SelectCurrentProfileCloseHandler(uint8_t profileIndex);
+void MenuDisplay_SelectCurrentProfileCloseHandler(uint8_t profileIndex);
 
 #endif /* INCLUDE_MENUDISPLAY_H_ */
