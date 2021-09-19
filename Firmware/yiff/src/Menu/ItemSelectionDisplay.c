@@ -102,7 +102,8 @@ void ItemSelectionDisplay_DrawMenuLines(uint8_t linesCount, char* lines, uint8_t
 	{
 		char* lineText = lines + YHL_ITEM_SELECTION_DISPLAY_TEXT_MEMORY_SIZE * line;
 
-		uint8_t bufferSize = YHL_ITEM_SELECTION_DISPLAY_TEXT_MEMORY_SIZE + 3;
+		uint8_t selectionCharsSize = 4;
+		uint8_t bufferSize = YHL_ITEM_SELECTION_DISPLAY_TEXT_MEMORY_SIZE + selectionCharsSize;
 		char buffer[bufferSize];
 		buffer[0] = '[';
 
@@ -115,9 +116,10 @@ void ItemSelectionDisplay_DrawMenuLines(uint8_t linesCount, char* lines, uint8_t
 			buffer[1] = ' ';
 		}
 
-
 		buffer[2] = ']';
-		strncpy(&buffer[3], lineText, bufferSize);
+		buffer[3] = ' ';
+
+		strncpy(&buffer[selectionCharsSize], lineText, bufferSize);
 
 		lineTop = line * (YHL_ITEM_SELECTION_DISPLAY_LINE_HEIGHT + YHL_ITEM_SELECTION_DISPLAY_LINE_VERTICAL_SPACING) + YHL_ITEM_SELECTION_DISPLAY_LINES_TOP;
 

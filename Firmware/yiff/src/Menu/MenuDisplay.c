@@ -45,8 +45,29 @@ void MenuDisplay_InitMenuDisplay(void)
 	editCurrentProfileNode->LeavesCount = 0;
 	editCurrentProfileNode->Leaves = malloc(sizeof(MenuLeaf) * profileSettingsNode->LeavesCount);
 
-	editCurrentProfileNode->NodesCount = 0;
-	editCurrentProfileNode->Nodes = NULL;
+	/* Edit current profile -> Frequency */
+	editCurrentProfileNode->NodesCount = 1;
+	editCurrentProfileNode->Nodes = malloc(sizeof(MenuNode) * editCurrentProfileNode->NodesCount);
+
+	MenuNode* frequencySettingsNode = &((MenuNode*)editCurrentProfileNode->Nodes)[0];
+	frequencySettingsNode->Parent = editCurrentProfileNode;
+	strncpy(frequencySettingsNode->Name, "Frequency", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
+	frequencySettingsNode->LeavesCount = 2;
+	frequencySettingsNode->Leaves = malloc(sizeof(MenuLeaf) * frequencySettingsNode->LeavesCount);
+
+	/* Edit current profile -> Frequency -> Range */
+	strncpy(frequencySettingsNode->Leaves[0].Name, "Range", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
+	strncpy(frequencySettingsNode->Leaves[0].LeftButtonText, "Set", YHL_MENU_MAX_LEFT_BUTTON_TEXT_MEMORY_SIZE);
+	frequencySettingsNode->Leaves[0].LeftButtonAction = &MenuDisplay_SelectFrequencyRange;
+
+	/* Edit current profile -> Frequency -> Value */
+	strncpy(frequencySettingsNode->Leaves[1].Name, "Value", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
+	strncpy(frequencySettingsNode->Leaves[1].LeftButtonText, "Set", YHL_MENU_MAX_LEFT_BUTTON_TEXT_MEMORY_SIZE);
+	frequencySettingsNode->Leaves[1].LeftButtonAction = NULL; // TODO: Set me
+
+	frequencySettingsNode->NodesCount = 0;
+	frequencySettingsNode->Nodes = NULL;
+
 
 
 	/* Root menu leaves */
@@ -395,3 +416,77 @@ void MenuDisplay_SelectCurrentProfileCloseHandler(uint8_t profileIndex)
 	MenuDisplay_DrawMenuDisplay();
 }
 
+void MenuDisplay_SelectFrequencyRange(void)
+{
+	uint8_t rangesCount = 2;
+	MenuDisplay_FrequencyRangesNames = malloc(rangesCount * YHL_PROFILE_NAME_MEMORY_SIZE);
+	strncpy(MenuDisplay_FrequencyRangesNames, "3.5MHz", YHL_PROFILE_NAME_MEMORY_SIZE);
+	strncpy(MenuDisplay_FrequencyRangesNames + YHL_PROFILE_NAME_MEMORY_SIZE, "144MHz", YHL_PROFILE_NAME_MEMORY_SIZE);
+
+	uint8_t activeRangeIndex = MenuDisplay_GetFrequencyRangeIndex(EEPROM_CurrentProfile.Frequency.Is144MHz);
+
+	ItemSelectionDisplay_Show("Select range",
+			MenuDisplay_FrequencyRangesNames,
+			YHL_PROFILE_NAME_MEMORY_SIZE,
+			rangesCount,
+			activeRangeIndex,
+			&MenuDisplay_SelectFrequencyRangeCloseHandler,
+			MenuDisplay);
+}
+
+void MenuDisplay_SelectFrequencyRangeCloseHandler(uint8_t rangeIndex)
+{
+	free(MenuDisplay_FrequencyRangesNames);
+	MenuDisplay_FrequencyRangesNames = NULL;
+
+	uint8_t currentRangeIndex = MenuDisplay_GetFrequencyRangeIndex(EEPROM_CurrentProfile.Frequency.Is144MHz);
+	if (currentRangeIndex == rangeIndex)
+	{
+		/* Frequency range didn't change */
+		MenuDisplay_DrawMenuDisplay();
+		return;
+	}
+
+	bool is144MHz = MenuDisplay_GetFrequencyRangeByIndex(rangeIndex);
+
+	uint newFrequency;
+	if (is144MHz)
+	{
+		newFrequency = YHL_DEFAULT_144M_FREQUENCY;
+	}
+	else
+	{
+		newFrequency = YHL_DEFAULT_80M_FREQUENCY;
+	}
+
+	FoxState_SetFrequency(is144MHz, newFrequency);
+	PendingCommandsFlags.NeedToSetFrequency = true;
+
+	MenuDisplay_DrawMenuDisplay();
+}
+
+uint8_t MenuDisplay_GetFrequencyRangeIndex(bool is144MHz)
+{
+	if (is144MHz)
+	{
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+bool MenuDisplay_GetFrequencyRangeByIndex(uint8_t rangeIndex)
+{
+	switch(rangeIndex)
+	{
+		case 0:
+			return false;
+		case 1:
+			return true;
+		default:
+			L2HAL_Error(Generic);
+			return false; /* Never will be reached, to suppress warning */
+	}
+}

@@ -24,6 +24,12 @@ extern PendingCommandsFlagsStruct PendingCommandsFlags;
 #define YHL_MAX_2M_FREQUENCY 146000000U
 
 /**
+ * Default frequencies (for new profile and after range switch)
+ */
+#define YHL_DEFAULT_80M_FREQUENCY 3575000U
+#define YHL_DEFAULT_144M_FREQUENCY 145000000U
+
+/**
  * Minimal allowed cyclic duration
  */
 #define YHL_MIN_TX_DURATION 6U

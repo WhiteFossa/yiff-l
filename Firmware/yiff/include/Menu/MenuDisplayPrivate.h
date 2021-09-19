@@ -63,6 +63,11 @@ uint8_t MenuDisplay_BaseLine;
 char* MenuDisplay_ProfilesNames;
 
 /**
+ * Names of frequency ranges
+ */
+char* MenuDisplay_FrequencyRangesNames;
+
+/**
  * Draw menu lines with selected line
  */
 void MenuDisplay_DrawMenuLines(uint8_t linesCount, char* lines, uint8_t activeLineIndex);
@@ -131,6 +136,26 @@ void MenuDisplay_SelectCurrentProfile(void);
  * Call it when current profile is selected
  */
 void MenuDisplay_SelectCurrentProfileCloseHandler(uint8_t profileIndex);
+
+/**
+ * Call this to select frequency range
+ */
+void MenuDisplay_SelectFrequencyRange(void);
+
+/**
+ * Call this when frequency range is selected
+ */
+void MenuDisplay_SelectFrequencyRangeCloseHandler(uint8_t rangeIndex);
+
+/**
+ * Returns frequency range index depending on range type
+ */
+uint8_t MenuDisplay_GetFrequencyRangeIndex(bool is144MHz);
+
+/**
+ * Returns "Is 144 MHz" flag by range index
+ */
+bool MenuDisplay_GetFrequencyRangeByIndex(uint8_t rangeIndex);
 
 
 #endif /* INCLUDE_MENU_MENUDISPLAYPRIVATE_H_ */

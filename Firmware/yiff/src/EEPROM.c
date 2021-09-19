@@ -180,7 +180,7 @@ EEPROMProfileStruct EEPROM_GenerateDefaultProfile(void)
 	snprintf(result.Name, YHL_PROFILE_NAME_MEMORY_SIZE, YHL_DEFAULT_PROFILE_NAME);
 
 	result.Frequency.Is144MHz = false;
-	result.Frequency.FrequencyHz = 3500000U;
+	result.Frequency.FrequencyHz = YHL_DEFAULT_80M_FREQUENCY;
 
 	result.Code = F1;
 
