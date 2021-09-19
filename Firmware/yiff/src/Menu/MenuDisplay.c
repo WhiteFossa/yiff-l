@@ -462,7 +462,14 @@ void MenuDisplay_SelectFrequencyRangeCloseHandler(uint8_t rangeIndex)
 	FoxState_SetFrequency(is144MHz, newFrequency);
 	PendingCommandsFlags.NeedToSetFrequency = true;
 
-	MenuDisplay_DrawMenuDisplay();
+	uint8_t popupBufferSize = 16;
+	char popupBuffer[popupBufferSize];
+
+	float freqMHz = (float)newFrequency / 1000000.0f;
+
+	snprintf(popupBuffer, popupBufferSize, "%.3f MHz", freqMHz);
+
+	InformationPopup_Show("Frequency updated:", popupBuffer, MenuDisplay);
 }
 
 uint8_t MenuDisplay_GetFrequencyRangeIndex(bool is144MHz)

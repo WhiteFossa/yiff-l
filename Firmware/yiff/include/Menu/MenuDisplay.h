@@ -10,10 +10,10 @@
 
 #include <GraphicsBase.h>
 #include <Buttons.h>
-//#include <Menu/InformationPopupDisplay.h>
 #include <Menu/ItemSelectionDisplay.h>
 #include <HAL.h>
 #include <EEPROM.h>
+#include <printf.h>
 
 /**
  * Maximal length of item's text
