@@ -9,8 +9,15 @@
 #define INCLUDE_PACKETSPROCESSOR_H_
 
 #include <Commands.h>
+#include <l2hal.h>
+#include <FoxStatus.h>
+#include <EEPROM.h>
 
+extern L2HAL_CRCContextStruct CRC_Context;
 extern PendingCommandsFlagsStruct PendingCommandsFlags;
+extern FoxStateStruct FoxState;
+extern uint8_t SwitchToThisProfileId;
+extern char SetThisProfileName[YHL_PROFILE_NAME_MEMORY_SIZE];
 
 /**
  * Packet size minus this value is payload size

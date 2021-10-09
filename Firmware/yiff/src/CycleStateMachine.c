@@ -5,7 +5,7 @@
  *      Author: fossa
  */
 
-#include <main.h>
+#include <CycleStateMachine.h>
 
 void CSM_Init(void)
 {

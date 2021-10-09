@@ -5,7 +5,8 @@
  *      Author: fossa
  */
 
-#include <main.h>
+#include <FoxStatus.h>
+#include <l2hal_aux.h>
 
 void FoxState_Init(void)
 {

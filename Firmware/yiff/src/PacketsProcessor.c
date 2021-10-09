@@ -5,7 +5,7 @@
  *      Author: fossa
  */
 
-#include <main.h>
+#include <PacketsProcessor.h>
 
 void OnNewRawPacket(uint8_t size, uint8_t* packet)
 {

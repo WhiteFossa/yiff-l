@@ -51,6 +51,12 @@
 #include <l2hal_ad5245.h>
 #include <l2hal_ad9835.h>
 
+extern I2C_HandleTypeDef I2C_Display;
+extern I2C_HandleTypeDef I2C_Other;
+extern UART_HandleTypeDef UART_Handle;
+extern L2HAL_SSD1327_ContextStruct L2HAL_SSD1327_Context;
+extern SPI_HandleTypeDef SPIHandle;
+
 /**
  * I2C1 interrupt priorities.
  */

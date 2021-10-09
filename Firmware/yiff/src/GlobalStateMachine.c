@@ -5,7 +5,7 @@
  *      Author: fossa
  */
 
-#include <main.h>
+#include <GlobalStateMachine.h>
 
 void GSM_Init(void)
 {

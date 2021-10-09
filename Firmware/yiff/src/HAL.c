@@ -5,7 +5,7 @@
  *      Author: fossa
  */
 
-#include <main.h>
+#include <HAL.h>
 #include <HALPrivate.h>
 
 void HAL_IntiHardware(void)

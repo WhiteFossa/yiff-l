@@ -5,8 +5,9 @@
  *      Author: fossa
  */
 
-#include <main.h>
+#include <MorsePlayer.h>
 #include <MorsePlayerPrivate.h>
+#include <FoxStatusPrivate.h>
 
 void MorsePlayerInit(void)
 {

@@ -63,7 +63,7 @@ void MenuDisplay_InitMenuDisplay(void)
 	/* Edit current profile -> Frequency -> Value */
 	strncpy(frequencySettingsNode->Leaves[1].Name, "Value", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
 	strncpy(frequencySettingsNode->Leaves[1].LeftButtonText, "Set", YHL_MENU_MAX_LEFT_BUTTON_TEXT_MEMORY_SIZE);
-	frequencySettingsNode->Leaves[1].LeftButtonAction = NULL; // TODO: Set me
+	frequencySettingsNode->Leaves[1].LeftButtonAction = &MenuDisplay_EnterFrequency;
 
 	frequencySettingsNode->NodesCount = 0;
 	frequencySettingsNode->Nodes = NULL;
@@ -439,7 +439,7 @@ void MenuDisplay_SelectFrequencyRangeCloseHandler(uint8_t rangeIndex)
 	free(MenuDisplay_FrequencyRangesNames);
 	MenuDisplay_FrequencyRangesNames = NULL;
 
-	uint8_t currentRangeIndex = MenuDisplay_GetFrequencyRangeIndex(EEPROM_CurrentProfile.Frequency.Is144MHz);
+	uint8_t currentRangeIndex = MenuDisplay_GetFrequencyRangeIndex(FoxState.Frequency.Is144MHz);
 	if (currentRangeIndex == rangeIndex)
 	{
 		/* Frequency range didn't change */
@@ -496,4 +496,33 @@ bool MenuDisplay_GetFrequencyRangeByIndex(uint8_t rangeIndex)
 			L2HAL_Error(Generic);
 			return false; /* Never will be reached, to suppress warning */
 	}
+}
+
+void MenuDisplay_EnterFrequency(void)
+{
+	if (FoxState.Frequency.Is144MHz)
+	{
+		NumberInputDisplay_Show("Select frequency, MHz",
+				YHL_MIN_2M_FREQUENCY / 1000000.0f,
+				YHL_MAX_2M_FREQUENCY / 1000000.0f,
+				FoxState.Frequency.FrequencyHz,
+				0.1f,
+				&MenuDisplay_EnterFrequencyOnEnterHandler,
+				MenuDisplay);
+	}
+	else
+	{
+		NumberInputDisplay_Show("Select frequency, MHz",
+				YHL_MIN_80M_FREQUENCY / 1000000.0f,
+				YHL_MAX_80M_FREQUENCY / 1000000.0f,
+				FoxState.Frequency.FrequencyHz,
+				0.01f,
+				&MenuDisplay_EnterFrequencyOnEnterHandler,
+				MenuDisplay);
+	}
+}
+
+void MenuDisplay_EnterFrequencyOnEnterHandler(float frequency)
+{
+	InformationPopup_Show("Frequency updated", "Frequency updated", MenuDisplay);
 }

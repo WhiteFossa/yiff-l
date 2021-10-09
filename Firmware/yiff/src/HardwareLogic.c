@@ -5,7 +5,7 @@
  *      Author: fossa
  */
 
-#include <main.h>
+#include <HardwareLogic.h>
 #include <HardwareLogicPrivate.h>
 
 void HL_Init()

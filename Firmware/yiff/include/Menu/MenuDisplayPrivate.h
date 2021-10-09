@@ -157,5 +157,15 @@ uint8_t MenuDisplay_GetFrequencyRangeIndex(bool is144MHz);
  */
 bool MenuDisplay_GetFrequencyRangeByIndex(uint8_t rangeIndex);
 
+/**
+ * Call this to enter frequency
+ */
+void MenuDisplay_EnterFrequency(void);
+
+/**
+ * Call this when frequency is entered
+ */
+void MenuDisplay_EnterFrequencyOnEnterHandler(float frequency);
+
 
 #endif /* INCLUDE_MENU_MENUDISPLAYPRIVATE_H_ */

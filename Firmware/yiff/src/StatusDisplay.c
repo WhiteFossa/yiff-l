@@ -5,7 +5,7 @@
  *      Author: fossa
  */
 
-#include <main.h>
+#include <StatusDisplay.h>
 
 void DrawStatusDisplay(FoxStateStruct foxState)
 {

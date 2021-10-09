@@ -8,10 +8,12 @@
 #ifndef INCLUDE_MENU_ITEMSELECTIONDISPLAY_H_
 #define INCLUDE_MENU_ITEMSELECTIONDISPLAY_H_
 
-#include <FoxStatus.h>
 #include <GraphicsBase.h>
 #include <Buttons.h>
-#include <HAL.h>
+//#include <HAL.h>
+#include <FoxStatus.h>
+
+extern FoxStateStruct FoxState;
 
 /**
  * Position of title top
@@ -40,9 +42,6 @@
 
 #define YHL_ITEM_SELECTION_DISPLAY_TEXT_LENGTH 31
 #define YHL_ITEM_SELECTION_DISPLAY_TEXT_MEMORY_SIZE (YHL_ITEM_SELECTION_DISPLAY_TEXT_LENGTH + 1)
-
-extern FoxStateStruct FoxState;
-
 
 
 /**

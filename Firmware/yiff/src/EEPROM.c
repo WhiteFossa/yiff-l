@@ -5,7 +5,7 @@
  *      Author: fossa
  */
 
-#include <main.h>
+#include <EEPROM.h>
 
 void EEPROM_Format(void)
 {

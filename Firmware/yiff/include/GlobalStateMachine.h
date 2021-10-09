@@ -9,6 +9,10 @@
 #define INCLUDE_GLOBALSTATEMACHINE_H_
 
 #include <Time.h>
+#include <FoxStatus.h>
+#include <HardwareLogic.h>
+
+extern FoxStateStruct FoxState;
 
 /**
  * Initialize state machine

@@ -11,13 +11,26 @@
 #include <FoxStatus.h>
 #include <Buttons.h>
 #include <MorsePlayer.h>
-#include <EEPROM.h>
 #include <UART.h>
 #include <Commands.h>
+#include <EEPROM.h>
 
-/******************************
-* Hardware handles goes below *
-*******************************/
+/*************************
+ * Current date and time *
+ *************************/
+RTC_TimeTypeDef CurrentTime;
+RTC_DateTypeDef CurrentDate;
+
+/***************************
+ * EEPROM structs go below *
+ ***************************/
+EEPROMConstantHeaderStruct EEPROM_ConstantHeader;
+EEPROMHeaderStruct EEPROM_Header;
+EEPROMProfileStruct EEPROM_CurrentProfile;
+
+/****************************
+* Hardware handles go below *
+*****************************/
 
 /**
  * I2C bus handle (connected to display).
@@ -135,29 +148,13 @@ FoxButtonStruct LeftButton;
 FoxButtonStruct RightButton;
 
 /**
- * EEPROM constant header in its actual state
- */
-EEPROMConstantHeaderStruct EEPROM_ConstantHeader;
-
-/**
- * EEPROM header in its actual state
- */
-EEPROMHeaderStruct EEPROM_Header;
-
-/**
- * Current profile
- */
-EEPROMProfileStruct EEPROM_CurrentProfile;
-
-/**
  * Events from hardware controls
  */
 HardwareControlsEventsStruct HardwareControlsEvents;
 
-
-/**********************
-* Commands goes below *
-***********************/
+/********************
+* Commands go below *
+*********************/
 
 /**
  * Flags, set when commands are pending

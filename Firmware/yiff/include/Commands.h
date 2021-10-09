@@ -8,6 +8,8 @@
 #ifndef INCLUDE_COMMANDS_H_
 #define INCLUDE_COMMANDS_H_
 
+#include <l2hal_aux.h>
+
 /**
  * Flags for various commands, which fox can get
  */

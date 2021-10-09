@@ -37,6 +37,7 @@
 #ifndef __MAIN_H
 #define __MAIN_H
 
+#include <stdint.h>
 #include <l2hal.h>
 #include <StatusDisplay.h>
 #include <Buttons.h>
@@ -52,6 +53,7 @@
 #include <PacketsProcessor.h>
 #include <terminusRegular12.h>
 #include <printf.h>
+#include <GlobalVariables.h>
 
 /**
  * EEPROM-related stuff

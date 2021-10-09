@@ -8,6 +8,12 @@
 #ifndef INCLUDE_HARDWARELOGIC_H_
 #define INCLUDE_HARDWARELOGIC_H_
 
+#include <FoxStatus.h>
+#include <HAL.h>
+
+extern FoxStateStruct FoxState;
+extern L2HAL_HC06_ContextStruct HC06_Context;
+
 /**
  * Minimal and maximal voltages of 3.5MHz output stage power sources
  */

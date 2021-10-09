@@ -8,6 +8,9 @@
 #ifndef INCLUDE_MORSEPLAYER_H_
 #define INCLUDE_MORSEPLAYER_H_
 
+#include <l2hal_errors.h>
+#include <FoxStatus.h>
+
 /**
  * Length of dit in milliseconds
  */

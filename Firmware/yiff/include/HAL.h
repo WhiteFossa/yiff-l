@@ -8,6 +8,14 @@
 #ifndef INCLUDE_HAL_H_
 #define INCLUDE_HAL_H_
 
+#include <l2hal.h>
+#include <FoxStatus.h>
+#include <EEPROM.h>
+#include <HardwareLogic.h>
+
+extern EEPROMHeaderStruct EEPROM_Header;
+extern FoxStateStruct FoxState;
+
 /***************
  * PORT B pins *
  ***************/

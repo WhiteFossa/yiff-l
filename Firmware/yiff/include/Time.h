@@ -21,6 +21,9 @@
 #define YHL_TIME_MINUTE_IN_SECONDS 60
 
 #include <l2hal.h>
+#include <FoxStatus.h>
+
+extern FoxStateStruct FoxState;
 
 typedef struct
 {

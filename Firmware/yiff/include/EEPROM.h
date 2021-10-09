@@ -5,10 +5,16 @@
  *      Author: fossa
  */
 
-#include <stdint.h>
-
 #ifndef INCLUDE_EEPROM_H_
 #define INCLUDE_EEPROM_H_
+
+#include <stdint.h>
+#include <FoxStatus.h>
+#include <l2hal.h>
+
+extern L2HAL_CRCContextStruct CRC_Context;
+extern FoxStateStruct FoxState;
+extern L2HAL_24x_ContextStruct EEPROMContext;
 
 #define YHL_EEPROM_DATA_VERSION 1U
 
@@ -179,11 +185,9 @@ typedef struct
 }
 EEPROMProfileStruct;
 
-
 extern EEPROMConstantHeaderStruct EEPROM_ConstantHeader;
 extern EEPROMHeaderStruct EEPROM_Header;
 extern EEPROMProfileStruct EEPROM_CurrentProfile;
-
 
 /**
  * Initialize EEPROM (call this if EEPROM Header CRC don't match).

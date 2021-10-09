@@ -11,7 +11,7 @@
 #include <stdint.h>
 
 /**
- * Pointer to function, which will be called when menu is closed
+ * Pointer to function, which will be called when display is closed
  */
 void (*ItemSelectionDisplay_OnCloseHandler)(uint8_t newSelectedItemIndex);
 

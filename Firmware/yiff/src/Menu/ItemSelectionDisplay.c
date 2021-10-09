@@ -163,11 +163,13 @@ void ItemSelectionDisplay_EncoderRotationHandler(int8_t direction)
 {
 	int8_t activeLineIndex = ItemSelectionDisplay_ActiveLineIndex;
 
-	if (HAL_ENCODER_ROTATION_CLOCKWISE == direction)
+	//if (HAL_ENCODER_ROTATION_CLOCKWISE == direction)
+	if (1 == direction)
 	{
 		activeLineIndex ++;
 	}
-	else if (HAL_ENCODER_ROTATION_COUNTERCLOCKWISE == direction)
+	//else if (HAL_ENCODER_ROTATION_COUNTERCLOCKWISE == direction)
+	else if (-1 == direction)
 	{
 		activeLineIndex --;
 	}

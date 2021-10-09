@@ -10,6 +10,9 @@
 
 #include <Time.h>
 #include <HardwareLogic.h>
+#include <FoxStatus.h>
+
+extern FoxStateStruct FoxState;
 
 /* Initialize cycle state machine */
 void CSM_Init(void);

@@ -18,9 +18,9 @@
  */
 #define YHL_INFORMAION_POPUP_TITLE_TOP 0
 
-#include <FoxStatus.h>
 #include <GraphicsBase.h>
 #include <Buttons.h>
+#include <FoxStatus.h>
 
 extern FoxStateStruct FoxState;
 extern FoxButtonStruct LeftButton;

@@ -12,6 +12,7 @@
 #include <FoxStatus.h>
 #include <Resources/tx_on.h>
 #include <Resources/tx_off.h>
+#include <printf.h>
 
 /**
  * Battery position and sizes

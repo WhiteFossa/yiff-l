@@ -6,8 +6,7 @@
  */
 
 #include <time.h>
-#include <main.h>
-#include <TimePrivate.h>
+#include <Time.h>
 
 uint32_t TimeToTimestamp(Time time)
 {
