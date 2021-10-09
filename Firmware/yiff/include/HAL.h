@@ -12,6 +12,7 @@
 #include <FoxStatus.h>
 #include <EEPROM.h>
 #include <HardwareLogic.h>
+#include <math.h>
 
 extern EEPROMHeaderStruct EEPROM_Header;
 extern FoxStateStruct FoxState;

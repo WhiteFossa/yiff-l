@@ -11,6 +11,7 @@
 #include <Time.h>
 #include <FoxStatus.h>
 #include <HardwareLogic.h>
+#include <CycleStateMachine.h>
 
 extern FoxStateStruct FoxState;
 

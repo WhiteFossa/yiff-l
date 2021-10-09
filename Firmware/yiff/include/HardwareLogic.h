@@ -10,6 +10,8 @@
 
 #include <FoxStatus.h>
 #include <HAL.h>
+#include <MatchingDisplay.h>
+#include <PacketsProcessor.h>
 
 extern FoxStateStruct FoxState;
 extern L2HAL_HC06_ContextStruct HC06_Context;

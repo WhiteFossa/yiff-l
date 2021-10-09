@@ -6,6 +6,7 @@
  */
 
 #include <EEPROM.h>
+#include <GlobalStateMachine.h>
 
 void EEPROM_Format(void)
 {

@@ -12,6 +12,10 @@
 #include <l2hal.h>
 #include <FoxStatus.h>
 #include <EEPROM.h>
+#include <HAL.h>
+#include <RTC.h>
+#include <UART.h>
+#include <GlobalStateMachine.h>
 
 extern L2HAL_CRCContextStruct CRC_Context;
 extern PendingCommandsFlagsStruct PendingCommandsFlags;

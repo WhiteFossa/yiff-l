@@ -7,6 +7,8 @@
 
 #include <time.h>
 #include <Time.h>
+#include <GlobalStateMachine.h>
+#include <CycleStateMachine.h>
 
 uint32_t TimeToTimestamp(Time time)
 {

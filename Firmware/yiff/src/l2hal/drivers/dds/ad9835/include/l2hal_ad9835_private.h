@@ -104,6 +104,6 @@ void L2HAL_AD9835_WriteToDDS(L2HAL_AD9835_ContextStruct* context, L2HAL_AD9835_D
 /**
  * Small dumb delay (some microseconds)
  */
-void L2HAL_AD9835_SmallDelay();
+void L2HAL_AD9835_SmallDelay(void);
 
 #endif /* L2HAL_DRIVERS_DDS_AD9835_INCLUDE_L2HAL_AD9835_PRIVATE_H_ */

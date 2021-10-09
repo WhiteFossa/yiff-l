@@ -72,9 +72,4 @@ L2HAL_SysTick_ContextStruct L2HAL_SysTick_Context = { 0 };
  */
 void L2HAL_SysTick_Init(void);
 
-/**
- * Call it from SysTick_Handler().
- */
-volatile void L2HAL_SysTick_Callback(void);
-
 #endif /* L2HAL_INCLUDE_L2HAL_SYSTICK_PRIVATE_H_ */

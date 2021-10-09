@@ -53,6 +53,11 @@
 #define L2HAL_INCLUDE_L2HAL_SYSTICK_H_
 
 /**
+ * Call it from SysTick_Handler().
+ */
+void L2HAL_SysTick_Callback(void);
+
+/**
  * Registers new SysTick handler. After registration handler will be called each SysTick.
  * @param hanlder Pointer to handler.
  */

@@ -54,6 +54,10 @@
 #include <terminusRegular12.h>
 #include <printf.h>
 #include <GlobalVariables.h>
+#include <Menu/MenuDisplay.h>
+#include <Menu/ItemSelectionDisplay.h>
+#include <Menu/InformationPopupDisplay.h>
+#include <Menu/NumberInputDisplay.h>
 
 /**
  * EEPROM-related stuff

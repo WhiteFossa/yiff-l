@@ -22,6 +22,7 @@
 
 #include <l2hal.h>
 #include <FoxStatus.h>
+#include <StatusDisplay.h>
 
 extern FoxStateStruct FoxState;
 

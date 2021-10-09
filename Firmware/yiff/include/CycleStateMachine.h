@@ -11,6 +11,7 @@
 #include <Time.h>
 #include <HardwareLogic.h>
 #include <FoxStatus.h>
+#include <MorsePlayer.h>
 
 extern FoxStateStruct FoxState;
 

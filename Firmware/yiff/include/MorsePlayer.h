@@ -10,6 +10,7 @@
 
 #include <l2hal_errors.h>
 #include <FoxStatus.h>
+#include <HardwareLogic.h>
 
 /**
  * Length of dit in milliseconds
