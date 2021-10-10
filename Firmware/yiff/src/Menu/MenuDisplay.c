@@ -534,5 +534,8 @@ char* MenuDisplay_FormatFrequency(int32_t frequencyHz)
 
 void MenuDisplay_EnterFrequencyOnEnterHandler(int32_t frequency)
 {
+	FoxState_SetFrequency(FoxState.Frequency.Is144MHz, frequency);
+	PendingCommandsFlags.NeedToSetFrequency = true;
 
+	MenuDisplay_DrawMenuDisplay();
 }
