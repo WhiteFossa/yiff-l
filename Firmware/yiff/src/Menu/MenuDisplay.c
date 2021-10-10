@@ -502,27 +502,37 @@ void MenuDisplay_EnterFrequency(void)
 {
 	if (FoxState.Frequency.Is144MHz)
 	{
-		NumberInputDisplay_Show("Select frequency, MHz",
-				YHL_MIN_2M_FREQUENCY / 1000000.0f,
-				YHL_MAX_2M_FREQUENCY / 1000000.0f,
-				(float)FoxState.Frequency.FrequencyHz,
-				0.1f,
+		NumberInputDisplay_Show("Select frequency",
+				YHL_MIN_2M_FREQUENCY,
+				YHL_MAX_2M_FREQUENCY,
+				(int32_t)FoxState.Frequency.FrequencyHz,
+				50000,
+				&MenuDisplay_FormatFrequency,
 				&MenuDisplay_EnterFrequencyOnEnterHandler,
 				MenuDisplay);
 	}
 	else
 	{
-		NumberInputDisplay_Show("Select frequency, MHz",
-				YHL_MIN_80M_FREQUENCY / 1000000.0f,
-				YHL_MAX_80M_FREQUENCY / 1000000.0f,
-				(float)FoxState.Frequency.FrequencyHz,
-				0.01f,
+		NumberInputDisplay_Show("Select frequency",
+				YHL_MIN_80M_FREQUENCY,
+				YHL_MAX_80M_FREQUENCY,
+				(int32_t)FoxState.Frequency.FrequencyHz,
+				5000,
+				&MenuDisplay_FormatFrequency,
 				&MenuDisplay_EnterFrequencyOnEnterHandler,
 				MenuDisplay);
 	}
 }
 
-void MenuDisplay_EnterFrequencyOnEnterHandler(float frequency)
+char* MenuDisplay_FormatFrequency(int32_t frequencyHz)
+{
+	char* buffer = malloc(32);
+	snprintf(buffer, 32, "%.3f MHz", frequencyHz / 1000000.0f);
+
+	return buffer;
+}
+
+void MenuDisplay_EnterFrequencyOnEnterHandler(int32_t frequency)
 {
 
 }

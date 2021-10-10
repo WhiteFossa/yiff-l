@@ -12,6 +12,8 @@
 #include <Buttons.h>
 #include <HAL.h>
 #include <FoxStatus.h>
+#include <printf.h>
+#include <stdlib.h>
 
 extern FoxStateStruct FoxState;
 
@@ -25,11 +27,12 @@ extern FoxStateStruct FoxState;
  * Call it to show number input display
  */
 void NumberInputDisplay_Show(char* title,
-		float minValue,
-		float maxValue,
-		float initialValue,
-		float step,
-		void (*onCloseHandler)(float enteredValue),
+		int32_t minValue,
+		int32_t maxValue,
+		int32_t initialValue,
+		int32_t step,
+		char* (*formatter)(int32_t valueToFormat),
+		void (*onCloseHandler)(int32_t enteredValue),
 		FoxDisplayEnum previousDisplay);
 
 /**

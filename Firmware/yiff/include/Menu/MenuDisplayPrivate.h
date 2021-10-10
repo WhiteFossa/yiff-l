@@ -165,7 +165,13 @@ void MenuDisplay_EnterFrequency(void);
 /**
  * Call this when frequency is entered
  */
-void MenuDisplay_EnterFrequencyOnEnterHandler(float frequency);
+void MenuDisplay_EnterFrequencyOnEnterHandler(int32_t frequency);
+
+/**
+ * Used to format frequency in frequency input display.
+ * Do not forget to free result!
+ */
+char* MenuDisplay_FormatFrequency(int32_t frequencyHz);
 
 
 #endif /* INCLUDE_MENU_MENUDISPLAYPRIVATE_H_ */

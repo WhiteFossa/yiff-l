@@ -11,34 +11,39 @@
 #include <stdint.h>
 
 /**
+ * Pointer to function, which will be used to format value to display.
+ */
+char* (*NumberInputDisplay_Formatter)(int32_t valueToFormat);
+
+/**
  * Pointer to function, which will be called when display is closed
  */
-void (*NumberInputDisplay_OnCloseHandler)(float enteredValue);
+void (*NumberInputDisplay_OnCloseHandler)(int32_t enteredValue);
 
 /**
  * Minimal value
  */
-float NumberInputDisplay_MinValue;
+int32_t NumberInputDisplay_MinValue;
 
 /**
  * Maximal value
  */
-float NumberInputDisplay_MaxValue;
+int32_t NumberInputDisplay_MaxValue;
 
 /**
  * Initial value
  */
-float NumberInputDisplay_InitialValue;
+int32_t NumberInputDisplay_InitialValue;
 
 /**
  * Current value
  */
-float NumberInputDisplay_CurrentValue;
+int32_t NumberInputDisplay_CurrentValue;
 
 /**
  * Decrement/increment step
  */
-float NumberInputDisplay_Step;
+int32_t NumberInputDisplay_Step;
 
 /**
 * Return to this display when number is entered
