@@ -54,14 +54,13 @@ void ItemSelectionDisplay_Display(void)
 	FMGL_API_ClearScreen(&fmglContext);
 
 	uint16_t displayWidth = FMGL_API_GetDisplayWidth(&fmglContext);
-	uint16_t displayHeight = FMGL_API_GetDisplayHeight(&fmglContext);
 
 	/* Title */
 	uint16_t titleWidth;
 	uint16_t titleHeight;
 	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, 0, 0, &titleWidth, &titleHeight, true, ItemSelectionDisplay_Title);
 
-	int16_t titleXShift = ((int16_t)displayWidth - (int16_t)titleWidth) / 2;
+	int32_t titleXShift = (displayWidth - titleWidth) / 2;
 	if (titleXShift < 0)
 	{
 		/* Didn't fit, drawing as is */
@@ -80,7 +79,7 @@ void ItemSelectionDisplay_Display(void)
 	}
 
 	ItemSelectionDisplay_DrawMenuLines(ItemSelectionDisplay_WindowLinesCount,
-			window,
+			(char*)window,
 			ItemSelectionDisplay_ActiveLineIndex,
 			ItemSelectionDisplay_SelectedItemIndex - ItemSelectionDisplay_BaseLine);
 
@@ -95,7 +94,7 @@ void ItemSelectionDisplay_Display(void)
 void ItemSelectionDisplay_DrawMenuLines(uint8_t linesCount, char* lines, uint8_t activeLineIndex, int16_t selectedLineIndex)
 {
 	uint16_t rightmostPixel = FMGL_API_GetDisplayWidth(&fmglContext) - 1;
-	uint16_t lineTop;
+	uint32_t lineTop;
 
 	FMGL_API_FontSettings font;
 	for (uint8_t line = 0; line < linesCount; line ++)
@@ -109,7 +108,7 @@ void ItemSelectionDisplay_DrawMenuLines(uint8_t linesCount, char* lines, uint8_t
 
 		if (line == selectedLineIndex)
 		{
-			buffer[1] = 0x95;
+			buffer[1] = (char)0x95;
 		}
 		else
 		{
@@ -130,10 +129,10 @@ void ItemSelectionDisplay_DrawMenuLines(uint8_t linesCount, char* lines, uint8_t
 		else
 		{
 			font = invertedCommonFont;
-			FMGL_API_DrawRectangleFilled(&fmglContext, 0, lineTop, rightmostPixel, lineTop + YHL_ITEM_SELECTION_DISPLAY_LINE_HEIGHT, OnColor, OnColor);
+			FMGL_API_DrawRectangleFilled(&fmglContext, 0, (uint16_t)lineTop, rightmostPixel, (uint16_t)lineTop + YHL_ITEM_SELECTION_DISPLAY_LINE_HEIGHT, OnColor, OnColor);
 		}
 
-		FMGL_API_RenderTextWithLineBreaks(&fmglContext, &font, 0, lineTop, NULL, NULL, false, buffer);
+		FMGL_API_RenderTextWithLineBreaks(&fmglContext, &font, 0, (uint16_t)lineTop, NULL, NULL, false, buffer);
 	}
 }
 
@@ -161,15 +160,13 @@ void ItemSelectionDisplay_RightClickHandler(void)
 
 void ItemSelectionDisplay_EncoderRotationHandler(int8_t direction)
 {
-	int8_t activeLineIndex = ItemSelectionDisplay_ActiveLineIndex;
+	int16_t activeLineIndex = ItemSelectionDisplay_ActiveLineIndex;
 
-	//if (HAL_ENCODER_ROTATION_CLOCKWISE == direction)
-	if (1 == direction)
+	if (HAL_ENCODER_ROTATION_CLOCKWISE == direction)
 	{
 		activeLineIndex ++;
 	}
-	//else if (HAL_ENCODER_ROTATION_COUNTERCLOCKWISE == direction)
-	else if (-1 == direction)
+	else if (HAL_ENCODER_ROTATION_COUNTERCLOCKWISE == direction)
 	{
 		activeLineIndex --;
 	}
@@ -189,7 +186,7 @@ void ItemSelectionDisplay_EncoderRotationHandler(int8_t direction)
 		ItemSelectionDisplay_ScrollDownHandler();
 	}
 
-	ItemSelectionDisplay_ActiveLineIndex = activeLineIndex;
+	ItemSelectionDisplay_ActiveLineIndex = (uint8_t)activeLineIndex;
 
 	ItemSelectionDisplay_Display();
 }
@@ -206,7 +203,7 @@ void ItemSelectionDisplay_ScrollUpHandler(void)
 		baseLineTmp = 0;
 	}
 
-	ItemSelectionDisplay_BaseLine = baseLineTmp;
+	ItemSelectionDisplay_BaseLine = (uint8_t)baseLineTmp;
 }
 
 

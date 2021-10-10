@@ -41,7 +41,7 @@ void (*HAL_U80mNewMeasurementCallback)(void);
 /**
  * Current U80m regulator code
  */
-float HAL_CurrentU80mCode;
+uint8_t HAL_CurrentU80mCode;
 
 /**
  * Averages counter

@@ -77,7 +77,7 @@ void NumberInputDisplay_Display(void)
 	uint16_t titleHeight;
 	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, 0, 0, &titleWidth, &titleHeight, true, NumberInputDisplay_Title);
 
-	int16_t titleXShift = ((int16_t)displayWidth - (int16_t)titleWidth) / 2;
+	int32_t titleXShift = (displayWidth - titleWidth) / 2;
 	if (titleXShift < 0)
 	{
 		/* Didn't fit, drawing as is */

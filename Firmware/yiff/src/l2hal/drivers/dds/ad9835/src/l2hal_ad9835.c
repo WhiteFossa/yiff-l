@@ -198,10 +198,10 @@ void L2HAL_AD9835_Write16PhaseBits(L2HAL_AD9835_ContextStruct* context, enum L2H
 
 void L2HAL_AD9835_WriteFrequencyWord(L2HAL_AD9835_ContextStruct* context, enum L2HAL_AD9835_FrequencyRegisters frequencyRegister, uint32_t data)
 {
-	uint8_t byte3 = (data & 0xFF000000UL) >> 24;
-	uint8_t byte2 = (data & 0x00FF0000UL) >> 16;
-	uint8_t byte1 = (data & 0x0000FF00UL) >> 8;
-	uint8_t byte0 = data & 0x000000FFUL;
+	uint8_t byte3 = (uint8_t)((data & 0xFF000000UL) >> 24);
+	uint8_t byte2 = (uint8_t)((data & 0x00FF0000UL) >> 16);
+	uint8_t byte1 = (uint8_t)((data & 0x0000FF00UL) >> 8);
+	uint8_t byte0 = (uint8_t)(data & 0x000000FFUL);
 
 	switch (frequencyRegister)
 	{
@@ -222,8 +222,8 @@ void L2HAL_AD9835_WriteFrequencyWord(L2HAL_AD9835_ContextStruct* context, enum L
 
 void L2HAL_AD9835_WritePhaseWord(L2HAL_AD9835_ContextStruct* context, enum L2HAL_AD9835_PhaseRegisters phaseRegister, uint16_t data)
 {
-	uint8_t byte1 = (data & 0x0000FF00UL) >> 8;
-	uint8_t byte0 = data & 0x000000FFUL;
+	uint8_t byte1 = (uint8_t)((data & 0x0000FF00UL) >> 8);
+	uint8_t byte0 = (uint8_t)(data & 0x000000FFUL);
 
 	switch (phaseRegister)
 	{

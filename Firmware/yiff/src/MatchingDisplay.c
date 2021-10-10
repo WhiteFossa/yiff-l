@@ -41,13 +41,13 @@ void DrawMatchingStatusString(uint8_t step)
 	uint16_t stringWidth;
 	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, 0, 0, &stringWidth, NULL, true, buffer);
 
-	int16_t spacing = (FMGL_API_GetDisplayWidth(&fmglContext) - stringWidth) / 2;
+	int32_t spacing = (FMGL_API_GetDisplayWidth(&fmglContext) - stringWidth) / 2;
 	if (spacing < 0)
 	{
 		spacing = 0;
 	}
 
-	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, spacing, YHL_ANTENNA_MATCHING_PROGRESS_TOP, NULL, NULL, false, buffer);
+	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, (uint16_t)spacing, YHL_ANTENNA_MATCHING_PROGRESS_TOP, NULL, NULL, false, buffer);
 }
 
 void DrawMatchingGraph(MatchingDisplayStruct matchingData)
@@ -61,6 +61,7 @@ void DrawMatchingGraph(MatchingDisplayStruct matchingData)
 		}
 	}
 
+	/* Protection from division by zero */
 	if (0 == maxValue)
 	{
 		maxValue = 0.1f;
@@ -71,12 +72,12 @@ void DrawMatchingGraph(MatchingDisplayStruct matchingData)
 	for (uint8_t step = 0; step < HAL_AM_MAX_VALUE; step++)
 	{
 		uint16_t x = (uint16_t)step * 2U;
-		uint16_t y = YHL_ANTENNA_MATCHING_GRAPH_BOTTOM - floor(matchingData.MatchingLevels[step] * scalingFactor + 0.5f);
+		int32_t y = YHL_ANTENNA_MATCHING_GRAPH_BOTTOM - floor(matchingData.MatchingLevels[step] * scalingFactor + 0.5f);
 		if (y < 0)
 		{
 			y = 0;
 		}
 
-		FMGL_API_DrawRectangleFilled(&fmglContext, x, YHL_ANTENNA_MATCHING_GRAPH_BOTTOM, x + 1, y, OnColor, OnColor);
+		FMGL_API_DrawRectangleFilled(&fmglContext, x, YHL_ANTENNA_MATCHING_GRAPH_BOTTOM, x + 1, (uint16_t)y, OnColor, OnColor);
 	}
 }

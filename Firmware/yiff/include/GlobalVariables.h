@@ -33,6 +33,11 @@ EEPROMProfileStruct EEPROM_CurrentProfile;
 *****************************/
 
 /**
+ * SysTick driver context.
+ */
+L2HAL_SysTick_ContextStruct L2HAL_SysTick_Context = { 0 };
+
+/**
  * I2C bus handle (connected to display).
  */
 I2C_HandleTypeDef I2C_Display;

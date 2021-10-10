@@ -525,7 +525,7 @@ void HAL_WakeSynthesizerUp(void)
 
 void HAL_SetupSynthesizer(float frequency)
 {
-	uint32_t frequencyWord = floor(HAL_SYNTHESIZER_MAX_PHA * frequency / HAL_SYNTHESIZER_BASE_CLOCK+ 0.5f);
+	uint32_t frequencyWord = (uint32_t)floor(HAL_SYNTHESIZER_MAX_PHA * frequency / HAL_SYNTHESIZER_BASE_CLOCK+ 0.5f);
 
 	L2HAL_AD9835_WriteFrequencyWord(&SynthesizerContext, Freg0, frequencyWord);
 	HAL_WakeSynthesizerUp();

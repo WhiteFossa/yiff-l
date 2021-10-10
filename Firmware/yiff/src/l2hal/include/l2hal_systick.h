@@ -52,6 +52,27 @@
 #ifndef L2HAL_INCLUDE_L2HAL_SYSTICK_H_
 #define L2HAL_INCLUDE_L2HAL_SYSTICK_H_
 
+#include <stdint.h>
+
+/**
+ * Context, associated with SysTick driver.
+ */
+typedef struct
+{
+	/**
+	 * Amount of registered SysTick handlers.
+	 */
+	uint16_t HandlersCount;
+
+	/**
+	 * Array of pointers to registered SysTick handlers.
+	 */
+	void (**Handlers)(void);
+
+} L2HAL_SysTick_ContextStruct;
+
+extern L2HAL_SysTick_ContextStruct L2HAL_SysTick_Context;
+
 /**
  * Call it from SysTick_Handler().
  */

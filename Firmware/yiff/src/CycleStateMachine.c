@@ -41,7 +41,7 @@ void CSM_Tick(void)
 		L2HAL_Error(Generic);
 	}
 
-	CycleStateEnum newState = CSM_GetStateByCycleTime(timeSinceCycleStart);
+	CycleStateEnum newState = CSM_GetStateByCycleTime((uint32_t)timeSinceCycleStart);
 
 	if (newState != FoxState.CycleState.CycleState)
 	{
@@ -73,7 +73,7 @@ void CSM_Tick(void)
 	}
 
 	/* After state switch */
-	CSM_RecalculateStateChangeTime(timeSinceCycleStart);
+	CSM_RecalculateStateChangeTime((uint16_t)timeSinceCycleStart);
 }
 
 int16_t CSM_GetCycleTime(void)
@@ -87,12 +87,11 @@ int16_t CSM_GetCycleTime(void)
 
 	uint32_t cycleLength = FoxState.Cycle.TxTime + FoxState.Cycle.PauseTime;
 
-	return secondsSinceFoxStart % cycleLength;
+	return (int16_t)(secondsSinceFoxStart % cycleLength);
 }
 
-CycleStateEnum CSM_GetStateByCycleTime(int16_t cycleTime)
+CycleStateEnum CSM_GetStateByCycleTime(uint32_t timeSinceCycleStart)
 {
-	uint32_t timeSinceCycleStart = cycleTime;
 	uint32_t endingToneStartTime = FoxState.Cycle.TxTime - FoxState.EndingToneLength;
 	uint32_t pauseStartTime = FoxState.Cycle.TxTime;
 	uint32_t preparationStartTime = FoxState.Cycle.TxTime + FoxState.Cycle.PauseTime - YHL_HL_FOX_PREPARATION_TIME;

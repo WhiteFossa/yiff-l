@@ -50,6 +50,7 @@
  */
 #define L2HAL_MAX_PORTS_COUNT 4
 
+#pragma GCC diagnostic ignored "-Wunused-variable"
 /**
  * Indexes to ports, i.e. 0 -> GPIOA, 1 -> GPIOB etc.
  */

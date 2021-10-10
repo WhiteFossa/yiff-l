@@ -90,12 +90,12 @@ uint8_t MenuDisplay_GetCurrentNodeActiveLineIndex(void);
 /**
  * Gets current node active sub-node index or returns YHL_MENU_NOT_A_NODE if active line points to a leaf
  */
-int8_t MenuDisplay_GetCurrentSubNodeIndex(uint8_t currentNodeActiveLineIndex);
+int16_t MenuDisplay_GetCurrentSubNodeIndex(uint8_t currentNodeActiveLineIndex);
 
 /**
  * Gets current node active list index or returns YHL_MENU_NOT_A_LEAF if active line points to a sub-node
  */
-int8_t MenuDisplay_GetCurrentLeafIndex(uint8_t currentNodeActiveLineIndex);
+int16_t MenuDisplay_GetCurrentLeafIndex(uint8_t currentNodeActiveLineIndex);
 
 /**
  * Call it on action (e.g. button press)

@@ -44,28 +44,7 @@
 
 #include <l2hal_errors.h>
 #include <l2hal_systick.h>
-
-/**
- * Context, associated with SysTick driver.
- */
-typedef struct
-{
-	/**
-	 * Amount of registered SysTick handlers.
-	 */
-	uint16_t HandlersCount;
-
-	/**
-	 * Array of pointers to registered SysTick handlers.
-	 */
-	void (**Handlers)(void);
-
-} L2HAL_SysTick_ContextStruct;
-
-/**
- * SysTick driver context.
- */
-L2HAL_SysTick_ContextStruct L2HAL_SysTick_Context = { 0 };
+#include <stdlib.h>
 
 /**
  * Call it to initialize SysTick driver. Place it into void L2HAL_Init(void) after clocks initialization.

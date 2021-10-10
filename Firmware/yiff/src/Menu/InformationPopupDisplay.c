@@ -25,7 +25,7 @@ void InformationPopup_Show(char* title, char* message, FoxDisplayEnum previousDi
 	uint16_t titleHeight;
 	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, 0, 0, &titleWidth, &titleHeight, true, title);
 
-	int16_t titleXShift = ((int16_t)displayWidth - (int16_t)titleWidth) / 2;
+	int32_t titleXShift = (displayWidth - titleWidth) / 2;
 	if (titleXShift < 0)
 	{
 		/* Didn't fit, drawing as is */
@@ -34,18 +34,24 @@ void InformationPopup_Show(char* title, char* message, FoxDisplayEnum previousDi
 	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, (uint16_t)titleXShift, YHL_INFORMAION_POPUP_TITLE_TOP, NULL, NULL, false, title);
 
 	/* Message */
-	uint16_t usableYSpace = displayHeight - titleHeight - YHL_BUTTONS_HEIGHT;
+	int32_t usableYSpace = displayHeight - titleHeight - YHL_BUTTONS_HEIGHT;
+
+	if (usableYSpace < 0)
+	{
+		usableYSpace = 0;
+	}
+
 	uint16_t messageWidth;
 	uint16_t messageHeight;
 	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, 0, 0, &messageWidth, &messageHeight, true, message);
 
-	int messageXShift = (displayWidth - messageWidth) / 2;
+	int32_t messageXShift = (displayWidth - messageWidth) / 2;
 	if (messageXShift < 0)
 	{
 		messageXShift = 0;
 	}
 
-	int messageYShift = ((usableYSpace - messageHeight) / 2) + titleHeight;
+	int32_t messageYShift = ((usableYSpace - messageHeight) / 2) + titleHeight;
 	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, (uint16_t)messageXShift, (uint16_t)messageYShift, NULL, NULL, false, message);
 
 	/* Buttons */

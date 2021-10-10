@@ -94,7 +94,7 @@ uint8_t L2HAL_Buttons_GetPortIndex(GPIO_TypeDef* port);
 /**
  * SysTick handler, registered during driver first instance initialization.
  */
-void L2HAL_Buttons_SysTickHandler();
+void L2HAL_Buttons_SysTickHandler(void);
 
 
 #endif /* L2HAL_DRIVERS_INPUT_BUTTONS_INCLUDE_L2HAL_BUTTONS_PRIVATE_H_ */

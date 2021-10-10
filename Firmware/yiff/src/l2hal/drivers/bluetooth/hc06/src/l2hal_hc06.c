@@ -81,7 +81,7 @@ void L2HAL_HC06_SetName(L2HAL_HC06_ContextStruct* context, const char* name)
 	char buffer[bufferSize];
 	snprintf(buffer, bufferSize, "AT+NAME%s", processedName);
 
-	uint8_t sendLength = strlen(buffer);
+	uint8_t sendLength = (uint8_t)strlen(buffer);
 	if (HAL_UART_Transmit(context->UART_Handle, (uint8_t*)buffer, sendLength , L2HAL_HC06_UART_TIMEOUT) != HAL_OK)
 	{
 		L2HAL_Error(Generic);
@@ -107,7 +107,7 @@ void L2HAL_HC06_SetPIN(L2HAL_HC06_ContextStruct* context, const char pin[L2HAL_H
 	char buffer[bufferSize];
 	snprintf(buffer, bufferSize, "AT+PIN%s", pin);
 
-	uint8_t sendLength = strlen(buffer);
+	uint8_t sendLength = (uint8_t)strlen(buffer);
 	if (HAL_UART_Transmit(context->UART_Handle, (uint8_t*)buffer, sendLength, L2HAL_HC06_UART_TIMEOUT) != HAL_OK)
 	{
 		L2HAL_Error(Generic);

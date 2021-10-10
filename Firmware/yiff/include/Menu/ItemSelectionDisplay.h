@@ -10,7 +10,7 @@
 
 #include <GraphicsBase.h>
 #include <Buttons.h>
-//#include <HAL.h>
+#include <HAL.h>
 #include <FoxStatus.h>
 
 extern FoxStateStruct FoxState;
@@ -18,22 +18,22 @@ extern FoxStateStruct FoxState;
 /**
  * Position of title top
  */
-#define YHL_ITEM_SELECTION_DISPLAY_TITLE_TOP 0
+#define YHL_ITEM_SELECTION_DISPLAY_TITLE_TOP 0U
 
 /**
  * Starting from this position we display items
  */
-#define YHL_ITEM_SELECTION_DISPLAY_LINES_TOP 16
+#define YHL_ITEM_SELECTION_DISPLAY_LINES_TOP 16U
 
 /**
  * Line height
  */
-#define YHL_ITEM_SELECTION_DISPLAY_LINE_HEIGHT 12
+#define YHL_ITEM_SELECTION_DISPLAY_LINE_HEIGHT 12U
 
 /**
  * Vertical spacing between lines
  */
-#define YHL_ITEM_SELECTION_DISPLAY_LINE_VERTICAL_SPACING 2
+#define YHL_ITEM_SELECTION_DISPLAY_LINE_VERTICAL_SPACING 2U
 
 /**
  * Maximum amount of lines

@@ -35,6 +35,7 @@
  */
 
 #include <l2hal.h>
+#include <l2hal_systick_private.h>
 
 void L2HAL_Init(void)
 {

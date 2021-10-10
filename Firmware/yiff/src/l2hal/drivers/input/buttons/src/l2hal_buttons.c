@@ -36,7 +36,7 @@
 
 #include <l2hal_buttons_private.h>
 
-void L2HAL_Buttons_SysTickHandler()
+void L2HAL_Buttons_SysTickHandler(void)
 {
 	/* Decreasing all buttons debouncing timers */
 	for (uint8_t contextIndex = 0; contextIndex < L2HAL_Buttons_Metacontext.ContextsCount; contextIndex ++)

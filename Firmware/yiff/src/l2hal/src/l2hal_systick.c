@@ -34,6 +34,7 @@
 	-------------------------------------------------------------------------
  */
 
+#include <l2hal_systick.h>
 #include <l2hal_systick_private.h>
 
 void L2HAL_SysTick_Init(void)

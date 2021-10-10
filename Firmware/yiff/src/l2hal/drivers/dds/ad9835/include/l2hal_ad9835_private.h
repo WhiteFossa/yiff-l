@@ -84,7 +84,7 @@ typedef struct
 	 * AD9835 FSYNC pin is connected to this port and pin.
 	 */
 	GPIO_TypeDef* FSYNCPort;
-	uint32_t FSYNCPin;
+	uint16_t FSYNCPin;
 
 }
 L2HAL_AD9835_ContextStruct;

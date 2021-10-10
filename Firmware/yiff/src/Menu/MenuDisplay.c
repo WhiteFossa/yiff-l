@@ -165,10 +165,10 @@ void MenuDisplay_DrawMenuDisplay(void)
 		strncpy(dst, src, YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
 	}
 
-	MenuDisplay_DrawMenuLines(MenuDisplay_WindowLinesCount, window, MenuDisplay_ActiveLineIndex);
+	MenuDisplay_DrawMenuLines(MenuDisplay_WindowLinesCount, (char*)window, MenuDisplay_ActiveLineIndex);
 
 	/* Buttons texts */
-	int8_t leafIndex = MenuDisplay_GetCurrentLeafIndex(MenuDisplay_GetCurrentNodeActiveLineIndex());
+	int16_t leafIndex = MenuDisplay_GetCurrentLeafIndex(MenuDisplay_GetCurrentNodeActiveLineIndex());
 	if (YHL_MENU_NOT_A_LEAF == leafIndex)
 	{
 		/* It's a node, left button text is the same for all nodes */
@@ -191,7 +191,7 @@ uint8_t MenuDisplay_GetCurrentNodeActiveLineIndex(void)
 	return MenuDisplay_BaseLine + MenuDisplay_ActiveLineIndex;
 }
 
-int8_t MenuDisplay_GetCurrentSubNodeIndex(uint8_t currentNodeActiveLineIndex)
+int16_t MenuDisplay_GetCurrentSubNodeIndex(uint8_t currentNodeActiveLineIndex)
 {
 	if (currentNodeActiveLineIndex > MenuDisplay_CurrentNode.NodesCount - 1)
 	{
@@ -201,7 +201,7 @@ int8_t MenuDisplay_GetCurrentSubNodeIndex(uint8_t currentNodeActiveLineIndex)
 	return currentNodeActiveLineIndex;
 }
 
-int8_t MenuDisplay_GetCurrentLeafIndex(uint8_t currentNodeActiveLineIndex)
+int16_t MenuDisplay_GetCurrentLeafIndex(uint8_t currentNodeActiveLineIndex)
 {
 	int subNodeIndex = MenuDisplay_GetCurrentSubNodeIndex(currentNodeActiveLineIndex);
 
@@ -223,7 +223,7 @@ void MenuDisplay_OnAction(MenuActionEnum action)
 {
 	uint8_t currentNodeActiveLineIndex = MenuDisplay_GetCurrentNodeActiveLineIndex();
 
-	int8_t subNodeIndex = MenuDisplay_GetCurrentSubNodeIndex(currentNodeActiveLineIndex);
+	int16_t subNodeIndex = MenuDisplay_GetCurrentSubNodeIndex(currentNodeActiveLineIndex);
 
 	if (subNodeIndex != YHL_MENU_NOT_A_NODE)
 	{
@@ -232,7 +232,7 @@ void MenuDisplay_OnAction(MenuActionEnum action)
 		return;
 	}
 
-	int8_t leafIndex = MenuDisplay_GetCurrentLeafIndex(currentNodeActiveLineIndex);
+	int16_t leafIndex = MenuDisplay_GetCurrentLeafIndex(currentNodeActiveLineIndex);
 	if (YHL_MENU_NOT_A_LEAF == leafIndex)
 	{
 		/* Not a node, not a leaf, definitely a bug */
@@ -290,7 +290,7 @@ void MenuDisplay_EncoderClickHandler(void)
 
 void MenuDisplay_EncoderRotationHandler(int8_t direction)
 {
-	int8_t activeLineIndex = MenuDisplay_ActiveLineIndex;
+	int16_t activeLineIndex = MenuDisplay_ActiveLineIndex;
 
 	if (HAL_ENCODER_ROTATION_CLOCKWISE == direction)
 	{
@@ -316,7 +316,7 @@ void MenuDisplay_EncoderRotationHandler(int8_t direction)
 		MenuDisplay_ScrollDownHandler();
 	}
 
-	MenuDisplay_ActiveLineIndex = activeLineIndex;
+	MenuDisplay_ActiveLineIndex = (uint8_t)activeLineIndex;
 
 	MenuDisplay_DrawMenuDisplay();
 }
@@ -356,7 +356,7 @@ void MenuDisplay_ScrollUpHandler(void)
 		baseLineTmp = 0;
 	}
 
-	MenuDisplay_BaseLine = baseLineTmp;
+	MenuDisplay_BaseLine = (uint8_t)baseLineTmp;
 }
 
 
@@ -505,7 +505,7 @@ void MenuDisplay_EnterFrequency(void)
 		NumberInputDisplay_Show("Select frequency, MHz",
 				YHL_MIN_2M_FREQUENCY / 1000000.0f,
 				YHL_MAX_2M_FREQUENCY / 1000000.0f,
-				FoxState.Frequency.FrequencyHz,
+				(float)FoxState.Frequency.FrequencyHz,
 				0.1f,
 				&MenuDisplay_EnterFrequencyOnEnterHandler,
 				MenuDisplay);
@@ -515,7 +515,7 @@ void MenuDisplay_EnterFrequency(void)
 		NumberInputDisplay_Show("Select frequency, MHz",
 				YHL_MIN_80M_FREQUENCY / 1000000.0f,
 				YHL_MAX_80M_FREQUENCY / 1000000.0f,
-				FoxState.Frequency.FrequencyHz,
+				(float)FoxState.Frequency.FrequencyHz,
 				0.01f,
 				&MenuDisplay_EnterFrequencyOnEnterHandler,
 				MenuDisplay);
@@ -524,5 +524,5 @@ void MenuDisplay_EnterFrequency(void)
 
 void MenuDisplay_EnterFrequencyOnEnterHandler(float frequency)
 {
-	InformationPopup_Show("Frequency updated", "Frequency updated", MenuDisplay);
+
 }

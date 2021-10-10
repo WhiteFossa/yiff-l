@@ -43,7 +43,7 @@ int16_t CSM_GetCycleTime(void);
 /**
  * Get current cycle state by time since cycle begin
  */
-CycleStateEnum CSM_GetStateByCycleTime(int16_t cycleTime);
+CycleStateEnum CSM_GetStateByCycleTime(uint32_t timeSinceCycleStart);
 
 /**
  * Prepare fox

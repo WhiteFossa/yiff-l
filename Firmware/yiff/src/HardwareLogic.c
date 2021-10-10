@@ -61,7 +61,7 @@ void HL_U80mMeasurementCallback(void)
 
 	float currentVoltage = HAL_GetU80mVolts();
 
-	float delta = fabs(currentVoltage - HL_U80mTarget);
+	float delta = (float)fabs(currentVoltage - HL_U80mTarget);
 
 	if (delta <= YHL_HL_U80M_TOLERANCY)
 	{
@@ -97,11 +97,11 @@ void HL_U80mMeasurementCallback(void)
 	if (currentVoltage < HL_U80mTarget)
 	{
 		/* Need to increase voltage -> decrease code */
-		newRegulatorCode -= codeDelta;
+		newRegulatorCode -= floor(codeDelta + 0.5f);
 	}
 	else
 	{
-		newRegulatorCode += codeDelta;
+		newRegulatorCode += floor(codeDelta + 0.5f);
 	}
 
 	if (newRegulatorCode < 0)
@@ -137,7 +137,7 @@ void HL_PrepareFoxFor80mCycle(void)
 	HAL_Delay(HAL_REGULATORS_SPIN_UP_TIME);
 
 	/* Setting up frequency synthesizer */
-	HAL_SetupSynthesizer(FoxState.Frequency.FrequencyHz);
+	HAL_SetupSynthesizer((float)FoxState.Frequency.FrequencyHz);
 
 	/* Converting required power into voltage and setting U80m */
 	HL_SetupU80m(HAL_GetU80mFromPower(FoxState.Power));
@@ -173,7 +173,7 @@ void HL_PrepareFoxFor2mCycle(void)
 	HAL_Delay(HAL_REGULATORS_SPIN_UP_TIME);
 
 	/* Setting up frequency synthesizer */
-	HAL_SetupSynthesizer(FoxState.Frequency.FrequencyHz / YHL_HL_2M_FREQUENCY_MULTIPLICATION_FACTOR);
+	HAL_SetupSynthesizer((float)FoxState.Frequency.FrequencyHz / YHL_HL_2M_FREQUENCY_MULTIPLICATION_FACTOR);
 }
 
 void HL_UnPrepareFoxFrom2mCycle(void)
@@ -321,7 +321,7 @@ void HL_RenameBluetoothDevice(char* newName)
 		L2HAL_Error(Generic);
 	}
 
-	L2HAL_HC06_SetName(&HC06_Context, FoxState.Name);
+	L2HAL_HC06_SetName(&HC06_Context, newName);
 	L2HAL_HC06_SetPIN(&HC06_Context, YHL_HL_BLUETOOTH_PIN);
 }
 

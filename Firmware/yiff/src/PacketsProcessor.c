@@ -400,7 +400,7 @@ OnGetProfileName_Validate:
 	}
 
 	EEPROMProfileStruct profile = EEPROM_GetProfile(profileId);
-	uint8_t nameLength = strlen(profile.Name);
+	uint8_t nameLength = (uint8_t)strlen(profile.Name);
 	uint8_t responseLength = nameLength + 3;
 
 	uint8_t* response = malloc(responseLength);
@@ -924,7 +924,7 @@ void OnGetFoxPower(uint8_t payloadSize, uint8_t* payload)
 	}
 
 	float response = FoxState.Power;
-	SendResponse(GetFoxPower, 4, &response);
+	SendResponse(GetFoxPower, 4, (uint8_t*)&response);
 }
 
 void OnSetFoxPower(uint8_t payloadSize, uint8_t* payload)
@@ -972,7 +972,7 @@ void OnGetBatteryLevel(uint8_t payloadSize, uint8_t* payload)
 	}
 
 	float response = FoxState.BatteryLevel;
-	SendResponse(GetBatteryLevel, 4, &response);
+	SendResponse(GetBatteryLevel, 4, (uint8_t*)&response);
 }
 
 void OnGetUAntADC(uint8_t payloadSize, uint8_t* payload)
@@ -983,7 +983,7 @@ void OnGetUAntADC(uint8_t payloadSize, uint8_t* payload)
 	}
 
 	float response = HAL_GetUAntADC();
-	SendResponse(GetUAntADC, 4, &response);
+	SendResponse(GetUAntADC, 4, (uint8_t*)&response);
 }
 
 void OnGetUBattADC(uint8_t payloadSize, uint8_t* payload)
@@ -994,7 +994,7 @@ void OnGetUBattADC(uint8_t payloadSize, uint8_t* payload)
 	}
 
 	float response = HAL_GetUBattADC();
-	SendResponse(GetUBattADC, 4, &response);
+	SendResponse(GetUBattADC, 4, (uint8_t*)&response);
 }
 
 void OnGetU80mADC(uint8_t payloadSize, uint8_t* payload)
@@ -1005,7 +1005,7 @@ void OnGetU80mADC(uint8_t payloadSize, uint8_t* payload)
 	}
 
 	float response = HAL_GetU80mADC();
-	SendResponse(GetU80mADC, 4, &response);
+	SendResponse(GetU80mADC, 4, (uint8_t*)&response);
 }
 
 void OnGetUBattVolts(uint8_t payloadSize, uint8_t* payload)
@@ -1016,7 +1016,7 @@ void OnGetUBattVolts(uint8_t payloadSize, uint8_t* payload)
 	}
 
 	float response = HAL_GetUbattVolts();
-	SendResponse(GetUbattVolts, 4, &response);
+	SendResponse(GetUbattVolts, 4, (uint8_t*)&response);
 }
 
 void OnGetU80mVolts(uint8_t payloadSize, uint8_t* payload)
@@ -1027,7 +1027,7 @@ void OnGetU80mVolts(uint8_t payloadSize, uint8_t* payload)
 	}
 
 	float response = HAL_GetU80mVolts();
-	SendResponse(GetU80mVolts, 4, &response);
+	SendResponse(GetU80mVolts, 4, (uint8_t*)&response);
 }
 
 void EmitFoxArmedEvent(void)
