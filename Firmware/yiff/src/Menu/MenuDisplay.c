@@ -46,7 +46,7 @@ void MenuDisplay_InitMenuDisplay(void)
 	editCurrentProfileNode->Leaves = malloc(sizeof(MenuLeaf) * profileSettingsNode->LeavesCount);
 
 	/* Edit current profile -> Frequency */
-	editCurrentProfileNode->NodesCount = 1;
+	editCurrentProfileNode->NodesCount = 2;
 	editCurrentProfileNode->Nodes = malloc(sizeof(MenuNode) * editCurrentProfileNode->NodesCount);
 
 	MenuNode* frequencySettingsNode = &((MenuNode*)editCurrentProfileNode->Nodes)[0];
@@ -68,7 +68,25 @@ void MenuDisplay_InitMenuDisplay(void)
 	frequencySettingsNode->NodesCount = 0;
 	frequencySettingsNode->Nodes = NULL;
 
+	/* Edit current profile -> Code and speed */
+	MenuNode* codeAndSpeedSettingsNode = &((MenuNode*)editCurrentProfileNode->Nodes)[1];
+	codeAndSpeedSettingsNode->Parent = editCurrentProfileNode;
+	strncpy(codeAndSpeedSettingsNode->Name, "Code and speed", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
+	codeAndSpeedSettingsNode->LeavesCount = 2;
+	codeAndSpeedSettingsNode->Leaves = malloc(sizeof(MenuLeaf) * codeAndSpeedSettingsNode->LeavesCount);
 
+	/* Edit current profile -> Code and speed -> Code */
+	strncpy(codeAndSpeedSettingsNode->Leaves[0].Name, "Code", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
+	strncpy(codeAndSpeedSettingsNode->Leaves[0].LeftButtonText, "Select", YHL_MENU_MAX_LEFT_BUTTON_TEXT_MEMORY_SIZE);
+	codeAndSpeedSettingsNode->Leaves[0].LeftButtonAction = &MenuDisplay_SelectCode;
+
+	/* Edit current profile -> Code and speed -> Speed */
+	strncpy(codeAndSpeedSettingsNode->Leaves[1].Name, "Speed", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
+	strncpy(codeAndSpeedSettingsNode->Leaves[1].LeftButtonText, "Select", YHL_MENU_MAX_LEFT_BUTTON_TEXT_MEMORY_SIZE);
+	codeAndSpeedSettingsNode->Leaves[1].LeftButtonAction = NULL;
+
+	codeAndSpeedSettingsNode->NodesCount = 0;
+	codeAndSpeedSettingsNode->Nodes = NULL;
 
 	/* Root menu leaves */
 	MenuDisplay_RootNode.LeavesCount = 0;
@@ -536,6 +554,39 @@ void MenuDisplay_EnterFrequencyOnEnterHandler(int32_t frequency)
 {
 	FoxState_SetFrequency(FoxState.Frequency.Is144MHz, frequency);
 	PendingCommandsFlags.NeedToSetFrequency = true;
+
+	MenuDisplay_DrawMenuDisplay();
+}
+
+void MenuDisplay_SelectCode(void)
+{
+	uint8_t codesCount = 7;
+	MenuDisplay_FoxCodesNames = malloc(codesCount * YHL_PROFILE_NAME_MEMORY_SIZE);
+	strncpy(MenuDisplay_FoxCodesNames, "Finish (MO)", YHL_PROFILE_NAME_MEMORY_SIZE);
+	strncpy(MenuDisplay_FoxCodesNames + YHL_PROFILE_NAME_MEMORY_SIZE, "1 (MOE)", YHL_PROFILE_NAME_MEMORY_SIZE);
+	strncpy(MenuDisplay_FoxCodesNames + 2 * YHL_PROFILE_NAME_MEMORY_SIZE, "2 (MOI)", YHL_PROFILE_NAME_MEMORY_SIZE);
+	strncpy(MenuDisplay_FoxCodesNames + 3 * YHL_PROFILE_NAME_MEMORY_SIZE, "3 (MOS)", YHL_PROFILE_NAME_MEMORY_SIZE);
+	strncpy(MenuDisplay_FoxCodesNames + 4 * YHL_PROFILE_NAME_MEMORY_SIZE, "4 (MOH)", YHL_PROFILE_NAME_MEMORY_SIZE);
+	strncpy(MenuDisplay_FoxCodesNames + 5 * YHL_PROFILE_NAME_MEMORY_SIZE, "5 (MO5)", YHL_PROFILE_NAME_MEMORY_SIZE);
+	strncpy(MenuDisplay_FoxCodesNames + 6 * YHL_PROFILE_NAME_MEMORY_SIZE, "Beacon (S)", YHL_PROFILE_NAME_MEMORY_SIZE);
+
+	ItemSelectionDisplay_Show("Select code",
+			MenuDisplay_FoxCodesNames,
+			YHL_PROFILE_NAME_MEMORY_SIZE,
+			codesCount,
+			(uint8_t)FoxState.Code,
+			&MenyDisplay_SelectCodeCloseHandler,
+			MenuDisplay);
+}
+
+
+void MenyDisplay_SelectCodeCloseHandler(uint8_t codeIndex)
+{
+	free(MenuDisplay_FoxCodesNames);
+	MenuDisplay_FoxCodesNames = NULL;
+
+	FoxState.Code = (FoxCodeEnum)codeIndex;
+	PendingCommandsFlags.NeedToSetCode = true;
 
 	MenuDisplay_DrawMenuDisplay();
 }

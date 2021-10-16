@@ -68,6 +68,11 @@ char* MenuDisplay_ProfilesNames;
 char* MenuDisplay_FrequencyRangesNames;
 
 /**
+ * Names of fox codes
+ */
+char* MenuDisplay_FoxCodesNames;
+
+/**
  * Draw menu lines with selected line
  */
 void MenuDisplay_DrawMenuLines(uint8_t linesCount, char* lines, uint8_t activeLineIndex);
@@ -172,6 +177,16 @@ void MenuDisplay_EnterFrequencyOnEnterHandler(int32_t frequency);
  * Do not forget to free result!
  */
 char* MenuDisplay_FormatFrequency(int32_t frequencyHz);
+
+/**
+ * Call this to select fox code
+ */
+void MenuDisplay_SelectCode(void);
+
+/**
+ * Call this when fox code is selected
+ */
+void MenyDisplay_SelectCodeCloseHandler(uint8_t codeIndex);
 
 
 #endif /* INCLUDE_MENU_MENUDISPLAYPRIVATE_H_ */
