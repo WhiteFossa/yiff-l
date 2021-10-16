@@ -83,7 +83,7 @@ void MenuDisplay_InitMenuDisplay(void)
 	/* Edit current profile -> Code and speed -> Speed */
 	strncpy(codeAndSpeedSettingsNode->Leaves[1].Name, "Speed", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
 	strncpy(codeAndSpeedSettingsNode->Leaves[1].LeftButtonText, "Select", YHL_MENU_MAX_LEFT_BUTTON_TEXT_MEMORY_SIZE);
-	codeAndSpeedSettingsNode->Leaves[1].LeftButtonAction = NULL;
+	codeAndSpeedSettingsNode->Leaves[1].LeftButtonAction = MenuDisplay_SelectFoxSpeed;
 
 	codeAndSpeedSettingsNode->NodesCount = 0;
 	codeAndSpeedSettingsNode->Nodes = NULL;
@@ -589,4 +589,60 @@ void MenyDisplay_SelectCodeCloseHandler(uint8_t codeIndex)
 	PendingCommandsFlags.NeedToSetCode = true;
 
 	MenuDisplay_DrawMenuDisplay();
+}
+
+
+void MenuDisplay_SelectFoxSpeed(void)
+{
+	uint8_t speedsCount = 2;
+	MenuDisplay_FoxSpeedsNames = malloc(speedsCount * YHL_PROFILE_NAME_MEMORY_SIZE);
+	strncpy(MenuDisplay_FoxSpeedsNames, "Slow", YHL_PROFILE_NAME_MEMORY_SIZE);
+	strncpy(MenuDisplay_FoxSpeedsNames + YHL_PROFILE_NAME_MEMORY_SIZE, "Fast", YHL_PROFILE_NAME_MEMORY_SIZE);
+
+
+	ItemSelectionDisplay_Show("Select speed",
+			MenuDisplay_FoxSpeedsNames,
+			YHL_PROFILE_NAME_MEMORY_SIZE,
+			speedsCount,
+			MenuDisplay_FoxSpeedToIndex(FoxState.IsFast),
+			&MenyDisplay_SelectFoxSpeedCloseHandler,
+			MenuDisplay);
+}
+
+
+void MenyDisplay_SelectFoxSpeedCloseHandler(uint8_t speedIndex)
+{
+	free(MenuDisplay_FoxSpeedsNames);
+	MenuDisplay_FoxSpeedsNames = NULL;
+
+	FoxState.IsFast = MenuDisplay_IndexToFoxSpeed(speedIndex);
+	PendingCommandsFlags.NeedToSetSpeed = true;
+
+	MenuDisplay_DrawMenuDisplay();
+}
+
+
+uint8_t MenuDisplay_FoxSpeedToIndex(bool isFast)
+{
+	if (isFast)
+	{
+		return 1;
+	}
+
+	return 0;
+}
+
+
+bool MenuDisplay_IndexToFoxSpeed(uint8_t index)
+{
+	switch (index)
+	{
+		case 0:
+			return false;
+		case 1:
+			return true;
+		default:
+			L2HAL_Error(Generic);
+			return false; /* Never will be reached */
+	}
 }

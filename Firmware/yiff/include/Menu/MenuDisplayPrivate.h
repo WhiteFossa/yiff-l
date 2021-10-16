@@ -73,6 +73,11 @@ char* MenuDisplay_FrequencyRangesNames;
 char* MenuDisplay_FoxCodesNames;
 
 /**
+ * Names of fox speeds
+ */
+char* MenuDisplay_FoxSpeedsNames;
+
+/**
  * Draw menu lines with selected line
  */
 void MenuDisplay_DrawMenuLines(uint8_t linesCount, char* lines, uint8_t activeLineIndex);
@@ -187,6 +192,26 @@ void MenuDisplay_SelectCode(void);
  * Call this when fox code is selected
  */
 void MenyDisplay_SelectCodeCloseHandler(uint8_t codeIndex);
+
+/**
+ * Call this to select fox speed
+ */
+void MenuDisplay_SelectFoxSpeed(void);
+
+/**
+ * Call this when fox speed is selected
+ */
+void MenyDisplay_SelectFoxSpeedCloseHandler(uint8_t speedIndex);
+
+/**
+ * Converts fox speed to selected item index
+ */
+uint8_t MenuDisplay_FoxSpeedToIndex(bool isFast);
+
+/**
+ * Converts selected item index to fox speed.
+ */
+bool MenuDisplay_IndexToFoxSpeed(uint8_t index);
 
 
 #endif /* INCLUDE_MENU_MENUDISPLAYPRIVATE_H_ */
