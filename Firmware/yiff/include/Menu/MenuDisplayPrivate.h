@@ -9,6 +9,26 @@
 #define INCLUDE_MENU_MENUDISPLAYPRIVATE_H_
 
 /**
+ * Max length + 1 for frequency ranges names
+ */
+#define YHL_MENU_FREQUENCY_RANGE_MEMORY_SIZE 17U
+
+/**
+ * Max length + 1 for fox codes names
+ */
+#define YHL_MENU_FOX_CODES_MEMORY_SIZE 17U
+
+/**
+ * Max length + 1 for fox speeds names
+ */
+#define YHL_MENU_FOX_SPEEDS_MEMORY_SIZE 17U
+
+/**
+ * Max length + 1 for cycle types names
+ */
+#define YHL_MENU_CYCLE_TYPE_MEMORY_SIZE 17U
+
+/**
  * What happened on menu item
  */
 typedef enum
@@ -76,6 +96,11 @@ char* MenuDisplay_FoxCodesNames;
  * Names of fox speeds
  */
 char* MenuDisplay_FoxSpeedsNames;
+
+/**
+ * Names of cycle types
+ */
+char* MenuDisplay_CycleTypesNames;
 
 /**
  * Draw menu lines with selected line
@@ -213,5 +238,40 @@ uint8_t MenuDisplay_FoxSpeedToIndex(bool isFast);
  */
 bool MenuDisplay_IndexToFoxSpeed(uint8_t index);
 
+/**
+ * Call this to select cycle type
+ */
+void MenuDisplay_SelectIsContinuousCycle(void);
+
+/**
+ * Call this when cycle type is selected
+ */
+void MenuDisplay_SelectIsContinuousCycleHandler(uint8_t cycleTypeIndex);
+
+/**
+ * Converts fox cycle type into item index
+ */
+uint8_t MenuDisplay_CycleTypeToIndex(bool isContinuous);
+
+/**
+ * Converts item index to fox cycle type
+ */
+bool MenuDisplay_IndexToCycleType(uint8_t index);
+
+/**
+ * Call this to enter ending tone duration
+ */
+void MenuDisplay_EnterEndingToneDuration(void);
+
+/**
+ * Call this when ending tone duration is entered
+ */
+void MenuDisplay_EnterEndingToneDurationOnEnterHandler(int32_t duration);
+
+/**
+ * Used to format ending tone duration in ending tone duration input display.
+ * Do not forget to free result!
+ */
+char* MenuDisplay_FormatEndingToneDuration(int32_t duration);
 
 #endif /* INCLUDE_MENU_MENUDISPLAYPRIVATE_H_ */

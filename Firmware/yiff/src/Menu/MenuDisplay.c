@@ -46,7 +46,7 @@ void MenuDisplay_InitMenuDisplay(void)
 	editCurrentProfileNode->Leaves = malloc(sizeof(MenuLeaf) * profileSettingsNode->LeavesCount);
 
 	/* Edit current profile -> Frequency */
-	editCurrentProfileNode->NodesCount = 2;
+	editCurrentProfileNode->NodesCount = 3;
 	editCurrentProfileNode->Nodes = malloc(sizeof(MenuNode) * editCurrentProfileNode->NodesCount);
 
 	MenuNode* frequencySettingsNode = &((MenuNode*)editCurrentProfileNode->Nodes)[0];
@@ -87,6 +87,37 @@ void MenuDisplay_InitMenuDisplay(void)
 
 	codeAndSpeedSettingsNode->NodesCount = 0;
 	codeAndSpeedSettingsNode->Nodes = NULL;
+
+	/* Edit current profile -> Cycle */
+	MenuNode* cycleSettingsNode = &((MenuNode*)editCurrentProfileNode->Nodes)[2];
+	cycleSettingsNode->Parent = editCurrentProfileNode;
+	strncpy(cycleSettingsNode->Name, "Cycle", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
+	cycleSettingsNode->LeavesCount = 4;
+	cycleSettingsNode->Leaves = malloc(sizeof(MenuLeaf) * cycleSettingsNode->LeavesCount);
+
+	/* Edit current profile -> Cycle -> Is continuous */
+	strncpy(cycleSettingsNode->Leaves[0].Name, "Is continuous?", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
+	strncpy(cycleSettingsNode->Leaves[0].LeftButtonText, "Select", YHL_MENU_MAX_LEFT_BUTTON_TEXT_MEMORY_SIZE);
+	cycleSettingsNode->Leaves[0].LeftButtonAction = &MenuDisplay_SelectIsContinuousCycle;
+
+	/* Edit current profile -> Cycle -> TX time */
+	strncpy(cycleSettingsNode->Leaves[1].Name, "TX time", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
+	strncpy(cycleSettingsNode->Leaves[1].LeftButtonText, "Set", YHL_MENU_MAX_LEFT_BUTTON_TEXT_MEMORY_SIZE);
+	cycleSettingsNode->Leaves[1].LeftButtonAction = NULL;
+
+	/* Edit current profile -> Cycle -> Pause time */
+	strncpy(cycleSettingsNode->Leaves[2].Name, "Pause time", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
+	strncpy(cycleSettingsNode->Leaves[2].LeftButtonText, "Set", YHL_MENU_MAX_LEFT_BUTTON_TEXT_MEMORY_SIZE);
+	cycleSettingsNode->Leaves[2].LeftButtonAction = NULL;
+
+	/* Edit current profile -> Cycle -> Ending tone duration */
+	strncpy(cycleSettingsNode->Leaves[3].Name, "Ending tone duration", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
+	strncpy(cycleSettingsNode->Leaves[3].LeftButtonText, "Set", YHL_MENU_MAX_LEFT_BUTTON_TEXT_MEMORY_SIZE);
+	cycleSettingsNode->Leaves[3].LeftButtonAction = MenuDisplay_EnterEndingToneDuration;
+
+	cycleSettingsNode->NodesCount = 0;
+	cycleSettingsNode->Nodes = NULL;
+
 
 	/* Root menu leaves */
 	MenuDisplay_RootNode.LeavesCount = 0;
@@ -437,15 +468,15 @@ void MenuDisplay_SelectCurrentProfileCloseHandler(uint8_t profileIndex)
 void MenuDisplay_SelectFrequencyRange(void)
 {
 	uint8_t rangesCount = 2;
-	MenuDisplay_FrequencyRangesNames = malloc(rangesCount * YHL_PROFILE_NAME_MEMORY_SIZE);
-	strncpy(MenuDisplay_FrequencyRangesNames, "3.5MHz", YHL_PROFILE_NAME_MEMORY_SIZE);
-	strncpy(MenuDisplay_FrequencyRangesNames + YHL_PROFILE_NAME_MEMORY_SIZE, "144MHz", YHL_PROFILE_NAME_MEMORY_SIZE);
+	MenuDisplay_FrequencyRangesNames = malloc(rangesCount * YHL_MENU_FREQUENCY_RANGE_MEMORY_SIZE);
+	strncpy(MenuDisplay_FrequencyRangesNames, "3.5MHz", YHL_MENU_FREQUENCY_RANGE_MEMORY_SIZE);
+	strncpy(MenuDisplay_FrequencyRangesNames + YHL_MENU_FREQUENCY_RANGE_MEMORY_SIZE, "144MHz", YHL_MENU_FREQUENCY_RANGE_MEMORY_SIZE);
 
 	uint8_t activeRangeIndex = MenuDisplay_GetFrequencyRangeIndex(EEPROM_CurrentProfile.Frequency.Is144MHz);
 
 	ItemSelectionDisplay_Show("Select range",
 			MenuDisplay_FrequencyRangesNames,
-			YHL_PROFILE_NAME_MEMORY_SIZE,
+			YHL_MENU_FREQUENCY_RANGE_MEMORY_SIZE,
 			rangesCount,
 			activeRangeIndex,
 			&MenuDisplay_SelectFrequencyRangeCloseHandler,
@@ -561,18 +592,18 @@ void MenuDisplay_EnterFrequencyOnEnterHandler(int32_t frequency)
 void MenuDisplay_SelectCode(void)
 {
 	uint8_t codesCount = 7;
-	MenuDisplay_FoxCodesNames = malloc(codesCount * YHL_PROFILE_NAME_MEMORY_SIZE);
-	strncpy(MenuDisplay_FoxCodesNames, "Finish (MO)", YHL_PROFILE_NAME_MEMORY_SIZE);
-	strncpy(MenuDisplay_FoxCodesNames + YHL_PROFILE_NAME_MEMORY_SIZE, "1 (MOE)", YHL_PROFILE_NAME_MEMORY_SIZE);
-	strncpy(MenuDisplay_FoxCodesNames + 2 * YHL_PROFILE_NAME_MEMORY_SIZE, "2 (MOI)", YHL_PROFILE_NAME_MEMORY_SIZE);
-	strncpy(MenuDisplay_FoxCodesNames + 3 * YHL_PROFILE_NAME_MEMORY_SIZE, "3 (MOS)", YHL_PROFILE_NAME_MEMORY_SIZE);
-	strncpy(MenuDisplay_FoxCodesNames + 4 * YHL_PROFILE_NAME_MEMORY_SIZE, "4 (MOH)", YHL_PROFILE_NAME_MEMORY_SIZE);
-	strncpy(MenuDisplay_FoxCodesNames + 5 * YHL_PROFILE_NAME_MEMORY_SIZE, "5 (MO5)", YHL_PROFILE_NAME_MEMORY_SIZE);
-	strncpy(MenuDisplay_FoxCodesNames + 6 * YHL_PROFILE_NAME_MEMORY_SIZE, "Beacon (S)", YHL_PROFILE_NAME_MEMORY_SIZE);
+	MenuDisplay_FoxCodesNames = malloc(codesCount * YHL_MENU_FOX_CODES_MEMORY_SIZE);
+	strncpy(MenuDisplay_FoxCodesNames, "Finish (MO)", YHL_MENU_FOX_CODES_MEMORY_SIZE);
+	strncpy(MenuDisplay_FoxCodesNames + YHL_MENU_FOX_CODES_MEMORY_SIZE, "1 (MOE)", YHL_MENU_FOX_CODES_MEMORY_SIZE);
+	strncpy(MenuDisplay_FoxCodesNames + 2 * YHL_MENU_FOX_CODES_MEMORY_SIZE, "2 (MOI)", YHL_MENU_FOX_CODES_MEMORY_SIZE);
+	strncpy(MenuDisplay_FoxCodesNames + 3 * YHL_MENU_FOX_CODES_MEMORY_SIZE, "3 (MOS)", YHL_MENU_FOX_CODES_MEMORY_SIZE);
+	strncpy(MenuDisplay_FoxCodesNames + 4 * YHL_MENU_FOX_CODES_MEMORY_SIZE, "4 (MOH)", YHL_MENU_FOX_CODES_MEMORY_SIZE);
+	strncpy(MenuDisplay_FoxCodesNames + 5 * YHL_MENU_FOX_CODES_MEMORY_SIZE, "5 (MO5)", YHL_MENU_FOX_CODES_MEMORY_SIZE);
+	strncpy(MenuDisplay_FoxCodesNames + 6 * YHL_MENU_FOX_CODES_MEMORY_SIZE, "Beacon (S)", YHL_MENU_FOX_CODES_MEMORY_SIZE);
 
 	ItemSelectionDisplay_Show("Select code",
 			MenuDisplay_FoxCodesNames,
-			YHL_PROFILE_NAME_MEMORY_SIZE,
+			YHL_MENU_FOX_CODES_MEMORY_SIZE,
 			codesCount,
 			(uint8_t)FoxState.Code,
 			&MenyDisplay_SelectCodeCloseHandler,
@@ -595,14 +626,14 @@ void MenyDisplay_SelectCodeCloseHandler(uint8_t codeIndex)
 void MenuDisplay_SelectFoxSpeed(void)
 {
 	uint8_t speedsCount = 2;
-	MenuDisplay_FoxSpeedsNames = malloc(speedsCount * YHL_PROFILE_NAME_MEMORY_SIZE);
-	strncpy(MenuDisplay_FoxSpeedsNames, "Slow", YHL_PROFILE_NAME_MEMORY_SIZE);
-	strncpy(MenuDisplay_FoxSpeedsNames + YHL_PROFILE_NAME_MEMORY_SIZE, "Fast", YHL_PROFILE_NAME_MEMORY_SIZE);
+	MenuDisplay_FoxSpeedsNames = malloc(speedsCount * YHL_MENU_FOX_SPEEDS_MEMORY_SIZE);
+	strncpy(MenuDisplay_FoxSpeedsNames, "Slow", YHL_MENU_FOX_SPEEDS_MEMORY_SIZE);
+	strncpy(MenuDisplay_FoxSpeedsNames + YHL_MENU_FOX_SPEEDS_MEMORY_SIZE, "Fast", YHL_MENU_FOX_SPEEDS_MEMORY_SIZE);
 
 
 	ItemSelectionDisplay_Show("Select speed",
 			MenuDisplay_FoxSpeedsNames,
-			YHL_PROFILE_NAME_MEMORY_SIZE,
+			YHL_MENU_FOX_SPEEDS_MEMORY_SIZE,
 			speedsCount,
 			MenuDisplay_FoxSpeedToIndex(FoxState.IsFast),
 			&MenyDisplay_SelectFoxSpeedCloseHandler,
@@ -645,4 +676,96 @@ bool MenuDisplay_IndexToFoxSpeed(uint8_t index)
 			L2HAL_Error(Generic);
 			return false; /* Never will be reached */
 	}
+}
+
+
+void MenuDisplay_SelectIsContinuousCycle(void)
+{
+	uint8_t cycleTypesCount = 2;
+	MenuDisplay_CycleTypesNames = malloc(cycleTypesCount * YHL_MENU_CYCLE_TYPE_MEMORY_SIZE);
+	strncpy(MenuDisplay_CycleTypesNames, "Yes", YHL_MENU_CYCLE_TYPE_MEMORY_SIZE);
+	strncpy(MenuDisplay_CycleTypesNames + YHL_MENU_CYCLE_TYPE_MEMORY_SIZE, "No", YHL_MENU_CYCLE_TYPE_MEMORY_SIZE);
+
+
+	ItemSelectionDisplay_Show("Is continuous?",
+			MenuDisplay_CycleTypesNames,
+			YHL_MENU_CYCLE_TYPE_MEMORY_SIZE,
+			cycleTypesCount,
+			MenuDisplay_CycleTypeToIndex(FoxState.Cycle.IsContinuous),
+			&MenuDisplay_SelectIsContinuousCycleHandler,
+			MenuDisplay);
+}
+
+
+void MenuDisplay_SelectIsContinuousCycleHandler(uint8_t cycleTypeIndex)
+{
+	free(MenuDisplay_CycleTypesNames);
+	MenuDisplay_CycleTypesNames = NULL;
+
+	FoxState.Cycle.IsContinuous = MenuDisplay_IndexToCycleType(cycleTypeIndex);
+	PendingCommandsFlags.NeedToSetCycle = true;
+
+	MenuDisplay_DrawMenuDisplay();
+}
+
+
+uint8_t MenuDisplay_CycleTypeToIndex(bool isContinuous)
+{
+	if (isContinuous)
+	{
+		return 0;
+	}
+
+	return 1;
+}
+
+bool MenuDisplay_IndexToCycleType(uint8_t index)
+{
+	switch (index)
+	{
+		case 0:
+			return true;
+		case 1:
+			return false;
+		default:
+			L2HAL_Error(Generic);
+			return false; /* Never will be reached */
+	}
+}
+
+
+void MenuDisplay_EnterEndingToneDuration(void)
+{
+	if (FoxState.Cycle.IsContinuous)
+	{
+		InformationPopup_Show("Not available!", "Cycle is continuous.", MenuDisplay);
+		return;
+	}
+
+	NumberInputDisplay_Show("Ending tone duration",
+					0,
+					10,
+					(int32_t)FoxState.EndingToneLength,
+					1,
+					&MenuDisplay_FormatEndingToneDuration,
+					&MenuDisplay_EnterEndingToneDurationOnEnterHandler,
+					MenuDisplay);
+}
+
+
+void MenuDisplay_EnterEndingToneDurationOnEnterHandler(int32_t duration)
+{
+	FoxState_SetEndingtoneDuration((uint8_t)duration);
+	PendingCommandsFlags.NeedToSetEndingToneDuration = true;
+
+	MenuDisplay_DrawMenuDisplay();
+}
+
+
+char* MenuDisplay_FormatEndingToneDuration(int32_t duration)
+{
+	char* buffer = malloc(32);
+	snprintf(buffer, 32, "%ds", duration);
+
+	return buffer;
 }
