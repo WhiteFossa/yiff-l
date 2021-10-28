@@ -13,6 +13,7 @@
 #include <Menu/ItemSelectionDisplay.h>
 #include <Menu/InformationPopupDisplay.h>
 #include <Menu/NumberInputDisplay.h>
+#include <Menu/TimeInputDisplay.h>
 #include <HAL.h>
 #include <EEPROM.h>
 #include <printf.h>

@@ -56,9 +56,19 @@ Time;
 uint32_t TimeToTimestamp(Time time);
 
 /**
+ * Converts time structure to timespan
+ */
+uint32_t TimeToTimespan(Time time);
+
+/**
  * Converts timestamp to time structure
  */
 Time TimestampToTime(uint32_t timestamp);
+
+/**
+ * Converts timespan to time structure
+ */
+Time TimespanToTime(uint32_t timespan);
 
 /**
  * Converts time to string with hours, minutes and seconds (days are dropped)

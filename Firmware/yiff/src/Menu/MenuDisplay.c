@@ -103,7 +103,7 @@ void MenuDisplay_InitMenuDisplay(void)
 	/* Edit current profile -> Cycle -> TX time */
 	strncpy(cycleSettingsNode->Leaves[1].Name, "TX time", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
 	strncpy(cycleSettingsNode->Leaves[1].LeftButtonText, "Set", YHL_MENU_MAX_LEFT_BUTTON_TEXT_MEMORY_SIZE);
-	cycleSettingsNode->Leaves[1].LeftButtonAction = NULL;
+	cycleSettingsNode->Leaves[1].LeftButtonAction = MenuDisplay_EnterTxDuration;
 
 	/* Edit current profile -> Cycle -> Pause time */
 	strncpy(cycleSettingsNode->Leaves[2].Name, "Pause time", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
@@ -738,18 +738,24 @@ void MenuDisplay_EnterEndingToneDuration(void)
 {
 	if (FoxState.Cycle.IsContinuous)
 	{
-		InformationPopup_Show("Not available!", "Cycle is continuous.", MenuDisplay);
+		MenuDisplay_ShowCycleIsContinuousWarning();
 		return;
 	}
 
 	NumberInputDisplay_Show("Ending tone duration",
 					0,
-					10,
+					YHL_MENU_MAX_ENDINGTONE_DURATION,
 					(int32_t)FoxState.EndingToneLength,
 					1,
 					&MenuDisplay_FormatEndingToneDuration,
 					&MenuDisplay_EnterEndingToneDurationOnEnterHandler,
 					MenuDisplay);
+}
+
+
+void MenuDisplay_ShowCycleIsContinuousWarning(void)
+{
+	InformationPopup_Show("Not available!", "Cycle is continuous.", MenuDisplay);
 }
 
 
@@ -768,4 +774,26 @@ char* MenuDisplay_FormatEndingToneDuration(int32_t duration)
 	snprintf(buffer, 32, "%ds", duration);
 
 	return buffer;
+}
+
+
+void MenuDisplay_EnterTxDuration(void)
+{
+	if (FoxState.Cycle.IsContinuous)
+	{
+		MenuDisplay_ShowCycleIsContinuousWarning();
+		return;
+	}
+
+	TimeInputDisplay_Show("Enter TX duration",
+		10,
+		3600,
+		FoxState.Cycle.TxTime,
+		&MenuDisplay_EnterTxDurationEnterHandler,
+		MenuDisplay);
+}
+
+void MenuDisplay_EnterTxDurationEnterHandler(uint32_t duration)
+{
+	MenuDisplay_DrawMenuDisplay();
 }

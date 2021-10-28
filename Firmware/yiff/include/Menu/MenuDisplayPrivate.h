@@ -29,6 +29,11 @@
 #define YHL_MENU_CYCLE_TYPE_MEMORY_SIZE 17U
 
 /**
+ * Maximal ending tone duration in seconds
+ */
+#define YHL_MENU_MAX_ENDINGTONE_DURATION 10U
+
+/**
  * What happened on menu item
  */
 typedef enum
@@ -273,5 +278,21 @@ void MenuDisplay_EnterEndingToneDurationOnEnterHandler(int32_t duration);
  * Do not forget to free result!
  */
 char* MenuDisplay_FormatEndingToneDuration(int32_t duration);
+
+/**
+ * Call this to show "cycle is continuous" warning
+ */
+void MenuDisplay_ShowCycleIsContinuousWarning(void);
+
+/**
+ * Call this to enter Tx duration
+ */
+void MenuDisplay_EnterTxDuration(void);
+
+/**
+ * Call this when Tx duration is entered
+ */
+void MenuDisplay_EnterTxDurationEnterHandler(uint32_t duration);
+
 
 #endif /* INCLUDE_MENU_MENUDISPLAYPRIVATE_H_ */

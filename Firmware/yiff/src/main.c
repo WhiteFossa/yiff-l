@@ -523,6 +523,10 @@ void Main_OnLeftButtonPressed(void)
 	{
 		NumberInputDisplay_LeftClickHandler();
 	}
+	else if (TimeInputDisplay == FoxState.CurrentDisplay)
+	{
+		TimeInputDisplay_LeftClickHandler();
+	}
 }
 
 void Main_CheckRightButtonPressedEvent(void)
@@ -553,6 +557,10 @@ void Main_OnRightButtonPressed(void)
 	else if (NumberInputDisplay == FoxState.CurrentDisplay)
 	{
 		NumberInputDisplay_RightClickHandler();
+	}
+	else if (TimeInputDisplay == FoxState.CurrentDisplay)
+	{
+		TimeInputDisplay_RightClickHandler();
 	}
 }
 
@@ -585,6 +593,10 @@ void Main_OnEncoderButtonPressed(void)
 	{
 		NumberInputDisplay_EncoderClickHandler();
 	}
+	else if (TimeInputDisplay == FoxState.CurrentDisplay)
+	{
+		TimeInputDisplay_EncoderClickHandler();
+	}
 }
 
 void Main_CheckEncoderRotationEvent(void)
@@ -610,6 +622,10 @@ void Main_OnEncoderRotation(int8_t direction)
 	else if (NumberInputDisplay == FoxState.CurrentDisplay)
 	{
 		NumberInputDisplay_EncoderRotationHandler(direction);
+	}
+	else if (TimeInputDisplay == FoxState.CurrentDisplay)
+	{
+		TimeInputDisplay_EncoderRotationHandler(direction);
 	}
 }
 

@@ -30,6 +30,7 @@
 #include <Menu/ItemSelectionDisplay.h>
 #include <Menu/InformationPopupDisplay.h>
 #include <Menu/NumberInputDisplay.h>
+#include <Menu/TimeInputDisplay.h>
 
 /**
  * EEPROM-related stuff

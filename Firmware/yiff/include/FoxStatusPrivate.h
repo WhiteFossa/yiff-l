@@ -93,7 +93,12 @@ typedef enum
 	/**
 	 * Display, allowing to enter a number
 	 */
-	NumberInputDisplay
+	NumberInputDisplay,
+
+	/**
+	 * Display, allowing to enter a time
+	 */
+	TimeInputDisplay
 }
 FoxDisplayEnum;
 

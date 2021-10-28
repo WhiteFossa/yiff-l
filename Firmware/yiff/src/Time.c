@@ -19,6 +19,11 @@ uint32_t TimeToTimestamp(Time time)
 			+ (int32_t)time.Seconds;
 }
 
+uint32_t TimeToTimespan(Time time)
+{
+	return TimeToTimestamp(time) - YHL_TIME_DAY_ZERO_TIMESTAMP;
+}
+
 Time TimestampToTime(uint32_t timestamp)
 {
 	int64_t timestampLong = timestamp;
@@ -49,6 +54,13 @@ Time TimestampToTime(uint32_t timestamp)
 	result.Seconds = (uint8_t)timestampLong;
 
 	return result;
+}
+
+Time TimespanToTime(uint32_t timespan)
+{
+	uint32_t timestamp = timespan + YHL_TIME_DAY_ZERO_TIMESTAMP;
+
+	return TimestampToTime(timestamp);
 }
 
 void TimestampToHMSString(uint32_t timestamp, char* result, uint8_t resultSize)
