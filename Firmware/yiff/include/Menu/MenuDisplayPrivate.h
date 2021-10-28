@@ -34,6 +34,11 @@
 #define YHL_MENU_MAX_ENDINGTONE_DURATION 10U
 
 /**
+ * Maximal transmission duration
+ */
+#define YHL_MENU_MAX_TX_DURATION 3600U
+
+/**
  * What happened on menu item
  */
 typedef enum

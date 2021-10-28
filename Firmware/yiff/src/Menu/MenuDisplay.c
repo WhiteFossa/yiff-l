@@ -786,8 +786,8 @@ void MenuDisplay_EnterTxDuration(void)
 	}
 
 	TimeInputDisplay_Show("Enter TX duration",
-		10,
-		3600,
+		YHL_MIN_TX_DURATION,
+		YHL_MENU_MAX_TX_DURATION,
 		FoxState.Cycle.TxTime,
 		&MenuDisplay_EnterTxDurationEnterHandler,
 		MenuDisplay);
@@ -795,5 +795,8 @@ void MenuDisplay_EnterTxDuration(void)
 
 void MenuDisplay_EnterTxDurationEnterHandler(uint32_t duration)
 {
+	FoxState_SetCycleDurations(duration, FoxState.Cycle.PauseTime);
+	PendingCommandsFlags.NeedToSetCycle = true;
+
 	MenuDisplay_DrawMenuDisplay();
 }

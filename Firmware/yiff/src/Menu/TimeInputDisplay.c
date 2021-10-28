@@ -238,6 +238,10 @@ void TimeInputDisplay_EncoderRotationHandler(int8_t direction)
 		TimeInputDisplay_MinutesValue = preRotationMinutes;
 		TimeInputDisplay_SecondsValue = preRotationSeconds;
 	}
+	else
+	{
+		TimeInputDisplay_CurrentTime = currentValueAsTimespan;
+	}
 
 	TimeInputDisplay_Display();
 }
