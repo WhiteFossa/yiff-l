@@ -39,6 +39,11 @@
 #define YHL_MENU_MAX_TX_DURATION 3600U
 
 /**
+ * Maximal pause duration
+ */
+#define YHL_MENU_MAX_PAUSE_DURATION 3600U
+
+/**
  * What happened on menu item
  */
 typedef enum
@@ -298,6 +303,16 @@ void MenuDisplay_EnterTxDuration(void);
  * Call this when Tx duration is entered
  */
 void MenuDisplay_EnterTxDurationEnterHandler(uint32_t duration);
+
+/**
+ * Call this to enter pause duration
+ */
+void MenuDisplay_EnterPauseDuration(void);
+
+/**
+ * Call this when pause duration is entered
+ */
+void MenuDisplay_EnterPauseDurationEnterHandler(uint32_t duration);
 
 
 #endif /* INCLUDE_MENU_MENUDISPLAYPRIVATE_H_ */

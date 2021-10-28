@@ -83,7 +83,7 @@ void MenuDisplay_InitMenuDisplay(void)
 	/* Edit current profile -> Code and speed -> Speed */
 	strncpy(codeAndSpeedSettingsNode->Leaves[1].Name, "Speed", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
 	strncpy(codeAndSpeedSettingsNode->Leaves[1].LeftButtonText, "Select", YHL_MENU_MAX_LEFT_BUTTON_TEXT_MEMORY_SIZE);
-	codeAndSpeedSettingsNode->Leaves[1].LeftButtonAction = MenuDisplay_SelectFoxSpeed;
+	codeAndSpeedSettingsNode->Leaves[1].LeftButtonAction = &MenuDisplay_SelectFoxSpeed;
 
 	codeAndSpeedSettingsNode->NodesCount = 0;
 	codeAndSpeedSettingsNode->Nodes = NULL;
@@ -103,17 +103,17 @@ void MenuDisplay_InitMenuDisplay(void)
 	/* Edit current profile -> Cycle -> TX time */
 	strncpy(cycleSettingsNode->Leaves[1].Name, "TX time", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
 	strncpy(cycleSettingsNode->Leaves[1].LeftButtonText, "Set", YHL_MENU_MAX_LEFT_BUTTON_TEXT_MEMORY_SIZE);
-	cycleSettingsNode->Leaves[1].LeftButtonAction = MenuDisplay_EnterTxDuration;
+	cycleSettingsNode->Leaves[1].LeftButtonAction = &MenuDisplay_EnterTxDuration;
 
 	/* Edit current profile -> Cycle -> Pause time */
 	strncpy(cycleSettingsNode->Leaves[2].Name, "Pause time", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
 	strncpy(cycleSettingsNode->Leaves[2].LeftButtonText, "Set", YHL_MENU_MAX_LEFT_BUTTON_TEXT_MEMORY_SIZE);
-	cycleSettingsNode->Leaves[2].LeftButtonAction = NULL;
+	cycleSettingsNode->Leaves[2].LeftButtonAction = &MenuDisplay_EnterPauseDuration;
 
 	/* Edit current profile -> Cycle -> Ending tone duration */
 	strncpy(cycleSettingsNode->Leaves[3].Name, "Ending tone duration", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
 	strncpy(cycleSettingsNode->Leaves[3].LeftButtonText, "Set", YHL_MENU_MAX_LEFT_BUTTON_TEXT_MEMORY_SIZE);
-	cycleSettingsNode->Leaves[3].LeftButtonAction = MenuDisplay_EnterEndingToneDuration;
+	cycleSettingsNode->Leaves[3].LeftButtonAction = &MenuDisplay_EnterEndingToneDuration;
 
 	cycleSettingsNode->NodesCount = 0;
 	cycleSettingsNode->Nodes = NULL;
@@ -793,9 +793,36 @@ void MenuDisplay_EnterTxDuration(void)
 		MenuDisplay);
 }
 
+
 void MenuDisplay_EnterTxDurationEnterHandler(uint32_t duration)
 {
 	FoxState_SetCycleDurations(duration, FoxState.Cycle.PauseTime);
+	PendingCommandsFlags.NeedToSetCycle = true;
+
+	MenuDisplay_DrawMenuDisplay();
+}
+
+
+void MenuDisplay_EnterPauseDuration(void)
+{
+	if (FoxState.Cycle.IsContinuous)
+	{
+		MenuDisplay_ShowCycleIsContinuousWarning();
+		return;
+	}
+
+	TimeInputDisplay_Show("Enter pause duration",
+			YHL_MIN_PAUSE_DURATION,
+			YHL_MENU_MAX_PAUSE_DURATION,
+			FoxState.Cycle.PauseTime,
+			&MenuDisplay_EnterPauseDurationEnterHandler,
+			MenuDisplay);
+}
+
+
+void MenuDisplay_EnterPauseDurationEnterHandler(uint32_t duration)
+{
+	FoxState_SetCycleDurations(FoxState.Cycle.TxTime, duration);
 	PendingCommandsFlags.NeedToSetCycle = true;
 
 	MenuDisplay_DrawMenuDisplay();
