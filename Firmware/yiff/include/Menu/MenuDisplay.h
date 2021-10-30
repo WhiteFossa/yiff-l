@@ -23,7 +23,7 @@
 /**
  * Maximal length of item's text
  */
-#define YHL_MENU_MAX_ITEM_TEXT_LENGTH 20
+#define YHL_MENU_MAX_ITEM_TEXT_LENGTH 32
 #define YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE (YHL_MENU_MAX_ITEM_TEXT_LENGTH + 1)
 
 /**
@@ -116,9 +116,9 @@ typedef struct
 	uint8_t LeavesCount;
 
 	/**
-	 * Pointer to leaves array
+	 * Pointer to pointers to leaves
 	 */
-	MenuLeaf* Leaves;
+	MenuLeaf** Leaves;
 }
 MenuNode;
 
