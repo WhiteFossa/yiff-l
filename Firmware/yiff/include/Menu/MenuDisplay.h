@@ -71,12 +71,12 @@ typedef struct
 	/**
 	 * Leaf name
 	 */
-	char Name[YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE];
+	const char Name[YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE];
 
 	/**
 	 * Left button text for this node
 	 */
-	char LeftButtonText[YHL_MENU_MAX_LEFT_BUTTON_TEXT_MEMORY_SIZE];
+	const char LeftButtonText[YHL_MENU_MAX_LEFT_BUTTON_TEXT_MEMORY_SIZE];
 
 	/**
 	 * This function is called (if not null) when left button is pressed on the menu leaf
@@ -98,7 +98,7 @@ typedef struct
 	/**
 	 * Node name
 	 */
-	char* NamePtr;
+	const char* NamePtr;
 
 	/**
 	 * How many sub-nodes this node have
@@ -118,7 +118,7 @@ typedef struct
 	/**
 	 * Pointer to pointers to leaves
 	 */
-	MenuLeaf** Leaves;
+	const MenuLeaf** Leaves;
 }
 MenuNode;
 

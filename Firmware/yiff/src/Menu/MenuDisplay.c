@@ -138,7 +138,7 @@ void MenuDisplay_SwitchNode(MenuNode* nodePtr)
 	{
 		char* dst = (char*)(MenuDisplay_CurrentNodeLines + nodesCounter * YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
 		MenuNode node = ((MenuNode*)MenuDisplay_CurrentNode.Nodes)[nodesCounter];
-		char* src = node.NamePtr;
+		const char* src = node.NamePtr;
 		strncpy(dst, src, YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
 	}
 
@@ -147,7 +147,7 @@ void MenuDisplay_SwitchNode(MenuNode* nodePtr)
 	{
 		uint8_t baseCount = MenuDisplay_CurrentNode.NodesCount;
 		char* dst = (char*)(MenuDisplay_CurrentNodeLines + (baseCount + leavesCounter) * YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
-		char* src = MenuDisplay_CurrentNode.Leaves[leavesCounter]->Name;
+		const char* src = MenuDisplay_CurrentNode.Leaves[leavesCounter]->Name;
 		strncpy(dst, src, YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
 	}
 
@@ -277,7 +277,7 @@ void MenuDisplay_OnAction(MenuActionEnum action)
 		L2HAL_Error(Generic);
 	}
 
-	MenuLeaf* leafPtr = MenuDisplay_CurrentNode.Leaves[leafIndex];
+	const MenuLeaf* leafPtr = MenuDisplay_CurrentNode.Leaves[leafIndex];
 	MenuDisplay_ActionOnLeafHandler(leafPtr, action);
 }
 
@@ -298,7 +298,7 @@ void MenuDisplay_ActionOnNodeHandler(MenuNode* node, MenuActionEnum action)
 	}
 }
 
-void MenuDisplay_ActionOnLeafHandler(MenuLeaf* leaf, MenuActionEnum action)
+void MenuDisplay_ActionOnLeafHandler(const MenuLeaf* leaf, MenuActionEnum action)
 {
 	if (MenuLeftButtonClick == action || MenuEncoderClick == action)
 	{

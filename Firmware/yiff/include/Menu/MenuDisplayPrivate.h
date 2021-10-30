@@ -160,7 +160,7 @@ void MenuDisplay_ActionOnNodeHandler(MenuNode* node, MenuActionEnum action);
 /**
  * Called when something is happened on menu leaf
  */
-void MenuDisplay_ActionOnLeafHandler(MenuLeaf* leaf, MenuActionEnum action);
+void MenuDisplay_ActionOnLeafHandler(const MenuLeaf* leaf, MenuActionEnum action);
 
 /**
  * Make given node current
