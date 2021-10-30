@@ -314,5 +314,15 @@ void MenuDisplay_EnterPauseDuration(void);
  */
 void MenuDisplay_EnterPauseDurationEnterHandler(uint32_t duration);
 
+/**
+ * Call this to enter fox start time
+ */
+void MenuDisplay_EnterStartTime(void);
+
+/**
+ * Call this when fox start time is entered
+ */
+void MenuDisplay_EnterStartTimeEnterHandler(uint32_t secondsSinceMidnight);
+
 
 #endif /* INCLUDE_MENU_MENUDISPLAYPRIVATE_H_ */

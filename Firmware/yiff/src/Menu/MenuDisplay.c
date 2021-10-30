@@ -45,10 +45,10 @@ void MenuDisplay_InitMenuDisplay(void)
 	editCurrentProfileNode->LeavesCount = 0;
 	editCurrentProfileNode->Leaves = malloc(sizeof(MenuLeaf) * profileSettingsNode->LeavesCount);
 
-	/* Edit current profile -> Frequency */
-	editCurrentProfileNode->NodesCount = 3;
+	editCurrentProfileNode->NodesCount = 4;
 	editCurrentProfileNode->Nodes = malloc(sizeof(MenuNode) * editCurrentProfileNode->NodesCount);
 
+	/* Edit current profile -> Frequency */
 	MenuNode* frequencySettingsNode = &((MenuNode*)editCurrentProfileNode->Nodes)[0];
 	frequencySettingsNode->Parent = editCurrentProfileNode;
 	strncpy(frequencySettingsNode->Name, "Frequency", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
@@ -118,6 +118,25 @@ void MenuDisplay_InitMenuDisplay(void)
 	cycleSettingsNode->NodesCount = 0;
 	cycleSettingsNode->Nodes = NULL;
 
+	/* Edit current profile -> Run times */
+	MenuNode* runTimesSettingsNode = &((MenuNode*)editCurrentProfileNode->Nodes)[3];
+	runTimesSettingsNode->Parent = editCurrentProfileNode;
+	strncpy(runTimesSettingsNode->Name, "Run times", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
+	runTimesSettingsNode->LeavesCount = 2;
+	runTimesSettingsNode->Leaves = malloc(sizeof(MenuLeaf) * runTimesSettingsNode->LeavesCount);
+
+	/* Edit current profile -> Run times -> Start time */
+	strncpy(runTimesSettingsNode->Leaves[0].Name, "Start time", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
+	strncpy(runTimesSettingsNode->Leaves[0].LeftButtonText, "Set", YHL_MENU_MAX_LEFT_BUTTON_TEXT_MEMORY_SIZE);
+	runTimesSettingsNode->Leaves[0].LeftButtonAction = &MenuDisplay_EnterStartTime;
+
+	/* Edit current profile -> Run times -> Finish time */
+	strncpy(runTimesSettingsNode->Leaves[1].Name, "Finish time", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
+	strncpy(runTimesSettingsNode->Leaves[1].LeftButtonText, "Set", YHL_MENU_MAX_LEFT_BUTTON_TEXT_MEMORY_SIZE);
+	runTimesSettingsNode->Leaves[1].LeftButtonAction = NULL;
+
+	runTimesSettingsNode->NodesCount = 0;
+	runTimesSettingsNode->Nodes = NULL;
 
 	/* Root menu leaves */
 	MenuDisplay_RootNode.LeavesCount = 0;
@@ -812,11 +831,11 @@ void MenuDisplay_EnterPauseDuration(void)
 	}
 
 	TimeInputDisplay_Show("Enter pause duration",
-			YHL_MIN_PAUSE_DURATION,
-			YHL_MENU_MAX_PAUSE_DURATION,
-			FoxState.Cycle.PauseTime,
-			&MenuDisplay_EnterPauseDurationEnterHandler,
-			MenuDisplay);
+		YHL_MIN_PAUSE_DURATION,
+		YHL_MENU_MAX_PAUSE_DURATION,
+		FoxState.Cycle.PauseTime,
+		&MenuDisplay_EnterPauseDurationEnterHandler,
+		MenuDisplay);
 }
 
 
@@ -824,6 +843,26 @@ void MenuDisplay_EnterPauseDurationEnterHandler(uint32_t duration)
 {
 	FoxState_SetCycleDurations(FoxState.Cycle.TxTime, duration);
 	PendingCommandsFlags.NeedToSetCycle = true;
+
+	MenuDisplay_DrawMenuDisplay();
+}
+
+
+void MenuDisplay_EnterStartTime(void)
+{
+	TimeInputDisplay_Show("Enter start time",
+		0,
+		YHL_TIME_DAY_IN_SECONDS - 1,
+		TimestampToSecondsSinceMidnight(FoxState.GlobalState.StartTime),
+		&MenuDisplay_EnterStartTimeEnterHandler,
+		MenuDisplay);
+}
+
+
+void MenuDisplay_EnterStartTimeEnterHandler(uint32_t secondsSinceMidnight)
+{
+	FoxState_SetBeginAndEndTimes(GetMidnightTimestamp(FoxState.CurrentTime) + secondsSinceMidnight, FoxState.GlobalState.EndTime);
+	PendingCommandsFlags.NeedToSetBeginAndEndTimes = true;
 
 	MenuDisplay_DrawMenuDisplay();
 }
