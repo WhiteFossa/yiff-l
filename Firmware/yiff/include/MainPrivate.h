@@ -154,5 +154,10 @@ void Main_OnEncoderRotation(int8_t direction);
  */
 void Main_EnterMenu(void);
 
+/**
+ * Set default buttons actions
+ */
+void Main_SetDefaultButtonsActions(void);
+
 
 #endif /* INCLUDE_MAINPRIVATE_H_ */

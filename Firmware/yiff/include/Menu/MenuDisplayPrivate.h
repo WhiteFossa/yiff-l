@@ -334,4 +334,9 @@ void MenuDisplay_EnterFinishTime(void);
  */
 void MenuDisplay_EnterFinishTimeEnterHandler(uint32_t secondsSinceMidnight);
 
+/**
+ * Call this to arm fox
+ */
+void MenuDisplay_Arm(void);
+
 #endif /* INCLUDE_MENU_MENUDISPLAYPRIVATE_H_ */

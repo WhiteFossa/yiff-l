@@ -156,10 +156,8 @@ int main(int argc, char* argv[])
 	FoxState.CycleState.CycleState = CsPause;
 
 	LeftButton.IsPressed = false;
-	snprintf(LeftButton.Text, YHL_MAX_BUTTON_TEXT_MEMORY_SIZE, "Menu");
-
 	RightButton.IsPressed = false;
-	snprintf(RightButton.Text, YHL_MAX_BUTTON_TEXT_MEMORY_SIZE, "Bt. off");
+	Main_SetDefaultButtonsActions();
 
 	/* Initializing state machines */
 	GSM_Init();
@@ -448,6 +446,7 @@ void Main_PrepareAndMatchAntenna(void)
 	HL_PrepareAndMatch80m();
 
 	FoxState.CurrentDisplay = StatusDisplay;
+	Main_SetDefaultButtonsActions();
 	FoxState.GlobalState.IsMatchingInProgress = false;
 	free(FoxState.MatchingDisplayData.MatchingLevels);
 
@@ -633,6 +632,12 @@ void Main_EnterMenu(void)
 {
 	FoxState.CurrentDisplay = MenuDisplay;
 	MenuDisplay_DrawMenuDisplay();
+}
+
+void Main_SetDefaultButtonsActions(void)
+{
+	snprintf(LeftButton.Text, YHL_MAX_BUTTON_TEXT_MEMORY_SIZE, "Menu");
+	snprintf(RightButton.Text, YHL_MAX_BUTTON_TEXT_MEMORY_SIZE, "Bt. off");
 }
 
 #pragma GCC diagnostic pop

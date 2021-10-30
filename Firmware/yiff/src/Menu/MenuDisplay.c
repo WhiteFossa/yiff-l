@@ -14,7 +14,7 @@ void MenuDisplay_InitMenuDisplay(void)
 	strncpy(MenuDisplay_RootNode.Name, "Fox settings", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
 
 	/* Root menu nodes */
-	MenuDisplay_RootNode.NodesCount = 2;
+	MenuDisplay_RootNode.NodesCount = 3;
 	MenuDisplay_RootNode.Nodes = malloc(sizeof(MenuNode) * MenuDisplay_RootNode.NodesCount);
 
 	/* Profile settings */
@@ -36,7 +36,6 @@ void MenuDisplay_InitMenuDisplay(void)
 
 	profileSettingsNode->NodesCount = 0;
 	profileSettingsNode->Nodes = NULL;
-
 
 	/* Edit current profile */
 	MenuNode* editCurrentProfileNode = &((MenuNode*)MenuDisplay_RootNode.Nodes)[1];
@@ -137,6 +136,26 @@ void MenuDisplay_InitMenuDisplay(void)
 
 	runTimesSettingsNode->NodesCount = 0;
 	runTimesSettingsNode->Nodes = NULL;
+
+	/* Arming */
+	MenuNode* armingSettingsNode = &((MenuNode*)MenuDisplay_RootNode.Nodes)[2];
+	armingSettingsNode->Parent = &MenuDisplay_RootNode;
+	strncpy(armingSettingsNode->Name, "Arming", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
+	armingSettingsNode->LeavesCount = 2;
+	armingSettingsNode->Leaves = malloc(sizeof(MenuLeaf) * armingSettingsNode->LeavesCount);
+
+	/* Arming -> Arm */
+	strncpy(armingSettingsNode->Leaves[0].Name, "Arm", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
+	strncpy(armingSettingsNode->Leaves[0].LeftButtonText, "Arm", YHL_MENU_MAX_LEFT_BUTTON_TEXT_MEMORY_SIZE);
+	armingSettingsNode->Leaves[0].LeftButtonAction = &MenuDisplay_Arm;
+
+	/* Arming -> Disarm */
+	strncpy(armingSettingsNode->Leaves[1].Name, "Disarm", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
+	strncpy(armingSettingsNode->Leaves[1].LeftButtonText, "Disarm", YHL_MENU_MAX_LEFT_BUTTON_TEXT_MEMORY_SIZE);
+	armingSettingsNode->Leaves[1].LeftButtonAction = NULL;
+
+	armingSettingsNode->NodesCount = 0;
+	armingSettingsNode->Nodes = NULL;
 
 	/* Root menu leaves */
 	MenuDisplay_RootNode.LeavesCount = 0;
@@ -885,4 +904,16 @@ void MenuDisplay_EnterFinishTimeEnterHandler(uint32_t secondsSinceMidnight)
 	PendingCommandsFlags.NeedToSetBeginAndEndTimes = true;
 
 	MenuDisplay_DrawMenuDisplay();
+}
+
+
+void MenuDisplay_Arm(void)
+{
+	if (FoxState.GlobalState.IsArmed)
+	{
+		InformationPopup_Show("Already armed!", "Fox is already armed!", MenuDisplay);
+		return;
+	}
+
+	PendingCommandsFlags.NeedToArmFox = true;
 }
