@@ -133,7 +133,7 @@ void MenuDisplay_InitMenuDisplay(void)
 	/* Edit current profile -> Run times -> Finish time */
 	strncpy(runTimesSettingsNode->Leaves[1].Name, "Finish time", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
 	strncpy(runTimesSettingsNode->Leaves[1].LeftButtonText, "Set", YHL_MENU_MAX_LEFT_BUTTON_TEXT_MEMORY_SIZE);
-	runTimesSettingsNode->Leaves[1].LeftButtonAction = NULL;
+	runTimesSettingsNode->Leaves[1].LeftButtonAction = &MenuDisplay_EnterFinishTime;
 
 	runTimesSettingsNode->NodesCount = 0;
 	runTimesSettingsNode->Nodes = NULL;
@@ -862,6 +862,26 @@ void MenuDisplay_EnterStartTime(void)
 void MenuDisplay_EnterStartTimeEnterHandler(uint32_t secondsSinceMidnight)
 {
 	FoxState_SetBeginAndEndTimes(GetMidnightTimestamp(FoxState.CurrentTime) + secondsSinceMidnight, FoxState.GlobalState.EndTime);
+	PendingCommandsFlags.NeedToSetBeginAndEndTimes = true;
+
+	MenuDisplay_DrawMenuDisplay();
+}
+
+
+void MenuDisplay_EnterFinishTime(void)
+{
+	TimeInputDisplay_Show("Enter finish time",
+		0,
+		YHL_TIME_DAY_IN_SECONDS - 1,
+		TimestampToSecondsSinceMidnight(FoxState.GlobalState.EndTime),
+		&MenuDisplay_EnterFinishTimeEnterHandler,
+		MenuDisplay);
+}
+
+
+void MenuDisplay_EnterFinishTimeEnterHandler(uint32_t secondsSinceMidnight)
+{
+	FoxState_SetBeginAndEndTimes(FoxState.GlobalState.StartTime, GetMidnightTimestamp(FoxState.CurrentTime) + secondsSinceMidnight);
 	PendingCommandsFlags.NeedToSetBeginAndEndTimes = true;
 
 	MenuDisplay_DrawMenuDisplay();
