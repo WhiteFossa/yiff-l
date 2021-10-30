@@ -11,7 +11,7 @@
 void MenuDisplay_InitMenuDisplay(void)
 {
 	MenuDisplay_RootNode.Parent = NULL;
-	strncpy(MenuDisplay_RootNode.Name, "Fox settings", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
+	MenuDisplay_RootNode.NamePtr = MenuDisplay_RootNodeName;
 
 	/* Root menu nodes */
 	MenuDisplay_RootNode.NodesCount = 3;
@@ -20,7 +20,7 @@ void MenuDisplay_InitMenuDisplay(void)
 	/* Profile settings */
 	MenuNode* profileSettingsNode = &((MenuNode*)MenuDisplay_RootNode.Nodes)[0];
 	profileSettingsNode->Parent = &MenuDisplay_RootNode;
-	strncpy(profileSettingsNode->Name, "Profile settings", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
+	profileSettingsNode->NamePtr = MenuDisplay_ProfileSettingsNodeName;
 	profileSettingsNode->LeavesCount = 2;
 	profileSettingsNode->Leaves = malloc(sizeof(MenuLeaf*) * profileSettingsNode->LeavesCount);
 
@@ -34,7 +34,7 @@ void MenuDisplay_InitMenuDisplay(void)
 	/* Edit current profile */
 	MenuNode* editCurrentProfileNode = &((MenuNode*)MenuDisplay_RootNode.Nodes)[1];
 	editCurrentProfileNode->Parent = &MenuDisplay_RootNode;
-	strncpy(editCurrentProfileNode->Name, "Edit current profile", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
+	editCurrentProfileNode->NamePtr = MenuDisplay_EditCurrentProfileNodeName;
 	editCurrentProfileNode->LeavesCount = 0;
 	editCurrentProfileNode->Leaves = malloc(sizeof(MenuLeaf) * profileSettingsNode->LeavesCount);
 
@@ -44,7 +44,7 @@ void MenuDisplay_InitMenuDisplay(void)
 	/* Edit current profile -> Frequency */
 	MenuNode* frequencySettingsNode = &((MenuNode*)editCurrentProfileNode->Nodes)[0];
 	frequencySettingsNode->Parent = editCurrentProfileNode;
-	strncpy(frequencySettingsNode->Name, "Frequency", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
+	frequencySettingsNode->NamePtr = MenuDisplay_FrequencyNodeName;
 	frequencySettingsNode->LeavesCount = 2;
 	frequencySettingsNode->Leaves = malloc(sizeof(MenuLeaf*) * frequencySettingsNode->LeavesCount);
 
@@ -57,7 +57,7 @@ void MenuDisplay_InitMenuDisplay(void)
 	/* Edit current profile -> Code and speed */
 	MenuNode* codeAndSpeedSettingsNode = &((MenuNode*)editCurrentProfileNode->Nodes)[1];
 	codeAndSpeedSettingsNode->Parent = editCurrentProfileNode;
-	strncpy(codeAndSpeedSettingsNode->Name, "Code and speed", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
+	codeAndSpeedSettingsNode->NamePtr = MenuDisplay_CodeAndSpeedNodeName;
 	codeAndSpeedSettingsNode->LeavesCount = 2;
 	codeAndSpeedSettingsNode->Leaves = malloc(sizeof(MenuLeaf*) * codeAndSpeedSettingsNode->LeavesCount);
 
@@ -70,7 +70,7 @@ void MenuDisplay_InitMenuDisplay(void)
 	/* Edit current profile -> Cycle */
 	MenuNode* cycleSettingsNode = &((MenuNode*)editCurrentProfileNode->Nodes)[2];
 	cycleSettingsNode->Parent = editCurrentProfileNode;
-	strncpy(cycleSettingsNode->Name, "Cycle", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
+	cycleSettingsNode->NamePtr = MenuDisplay_CycleNodeName;
 	cycleSettingsNode->LeavesCount = 4;
 	cycleSettingsNode->Leaves = malloc(sizeof(MenuLeaf*) * cycleSettingsNode->LeavesCount);
 
@@ -86,7 +86,7 @@ void MenuDisplay_InitMenuDisplay(void)
 	/* Edit current profile -> Run times */
 	MenuNode* runTimesSettingsNode = &((MenuNode*)editCurrentProfileNode->Nodes)[3];
 	runTimesSettingsNode->Parent = editCurrentProfileNode;
-	strncpy(runTimesSettingsNode->Name, "Run times", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
+	runTimesSettingsNode->NamePtr = MenuDisplay_RunTimesNodeName;
 	runTimesSettingsNode->LeavesCount = 2;
 	runTimesSettingsNode->Leaves = malloc(sizeof(MenuLeaf*) * runTimesSettingsNode->LeavesCount);
 
@@ -99,7 +99,7 @@ void MenuDisplay_InitMenuDisplay(void)
 	/* Arming */
 	MenuNode* armingSettingsNode = &((MenuNode*)MenuDisplay_RootNode.Nodes)[2];
 	armingSettingsNode->Parent = &MenuDisplay_RootNode;
-	strncpy(armingSettingsNode->Name, "Arming", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
+	armingSettingsNode->NamePtr = MenuDisplay_ArmingNodeName;
 	armingSettingsNode->LeavesCount = 2;
 	armingSettingsNode->Leaves = malloc(sizeof(MenuLeaf*) * armingSettingsNode->LeavesCount);
 
@@ -138,7 +138,7 @@ void MenuDisplay_SwitchNode(MenuNode* nodePtr)
 	{
 		char* dst = (char*)(MenuDisplay_CurrentNodeLines + nodesCounter * YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
 		MenuNode node = ((MenuNode*)MenuDisplay_CurrentNode.Nodes)[nodesCounter];
-		char* src = node.Name;
+		char* src = node.NamePtr;
 		strncpy(dst, src, YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
 	}
 

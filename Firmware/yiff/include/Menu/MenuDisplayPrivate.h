@@ -484,4 +484,45 @@ static const MenuLeaf MenuDisplay_DisarmLeaf =
 	.LeftButtonAction = &MenuDisplay_Disarm
 };
 
+/**
+ * Root
+ */
+static const char* MenuDisplay_RootNodeName = "";
+
+/**
+ * Profile settings
+ */
+static const char* MenuDisplay_ProfileSettingsNodeName = "Profile settings";
+
+/**
+ * Edit current profile
+ */
+static const char* MenuDisplay_EditCurrentProfileNodeName = "Edit current profile";
+
+/**
+ * Edit current profile -> Frequency
+ */
+static const char* MenuDisplay_FrequencyNodeName = "Frequency";
+
+/**
+ * Edit current profile -> Code and speed
+ */
+static const char* MenuDisplay_CodeAndSpeedNodeName = "Code and speed";
+
+/**
+ * Edit current profile -> Cycle
+ */
+static const char* MenuDisplay_CycleNodeName = "Cycle";
+
+/**
+ * Edit current profile -> Run times
+ */
+static const char* MenuDisplay_RunTimesNodeName = "Run times";
+
+/**
+ * Arming
+ */
+static const char* MenuDisplay_ArmingNodeName = "Arming";
+
+
 #endif /* INCLUDE_MENU_MENUDISPLAYPRIVATE_H_ */

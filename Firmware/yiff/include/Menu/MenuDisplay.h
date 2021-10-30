@@ -98,7 +98,7 @@ typedef struct
 	/**
 	 * Node name
 	 */
-	char Name[YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE];
+	char* NamePtr;
 
 	/**
 	 * How many sub-nodes this node have
