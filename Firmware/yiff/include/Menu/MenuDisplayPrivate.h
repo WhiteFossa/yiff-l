@@ -344,4 +344,185 @@ void MenuDisplay_Arm(void);
  */
 void MenuDisplay_Disarm(void);
 
+/**
+ * Profile settings -> Show current profile
+ */
+static const MenuLeaf MenuDisplay_ShowCurrentProfileLeaf =
+{
+	.Name = "Show current profile",
+	.LeftButtonText = "Show",
+	.LeftButtonAction = &MenuDisplay_ShowCurrentProfileInformationPopup
+};
+
+/**
+ * Profile settings -> Select profile
+ */
+static const MenuLeaf MenuDisplay_SelectProfileLeaf =
+{
+	.Name = "Select profile",
+	.LeftButtonText = "Select",
+	.LeftButtonAction = &MenuDisplay_SelectCurrentProfile
+};
+
+/**
+ * Edit current profile -> Frequency -> Range
+ */
+static const MenuLeaf MenuDisplay_FrequencyRangeLeaf =
+{
+	.Name = "Range",
+	.LeftButtonText = "Set",
+	.LeftButtonAction = &MenuDisplay_SelectFrequencyRange
+};
+
+/**
+ * Edit current profile -> Frequency -> Value
+ */
+static const MenuLeaf MenuDisplay_FrequencyValueLeaf =
+{
+	.Name = "Value",
+	.LeftButtonText = "Set",
+	.LeftButtonAction = &MenuDisplay_EnterFrequency
+};
+
+/**
+ * Edit current profile -> Code and speed -> Code
+ */
+static const MenuLeaf MenuDisplay_CodeLeaf =
+{
+	.Name = "Code",
+	.LeftButtonText = "Select",
+	.LeftButtonAction = &MenuDisplay_SelectCode
+};
+
+/**
+ * Edit current profile -> Code and speed -> Speed
+ */
+static const MenuLeaf MenuDisplay_SpeedLeaf =
+{
+	.Name = "Speed",
+	.LeftButtonText = "Select",
+	.LeftButtonAction = &MenuDisplay_SelectFoxSpeed
+};
+
+/**
+ * Edit current profile -> Cycle -> Is continuous
+ */
+static const MenuLeaf MenuDisplay_IsContinuousLeaf =
+{
+	.Name = "Is continuous?",
+	.LeftButtonText = "Select",
+	.LeftButtonAction = &MenuDisplay_SelectIsContinuousCycle
+};
+
+/**
+ * Edit current profile -> Cycle -> TX time
+ */
+static const MenuLeaf MenuDisplay_TxTimeLeaf =
+{
+	.Name = "TX time",
+	.LeftButtonText = "Set",
+	.LeftButtonAction = &MenuDisplay_EnterTxDuration
+};
+
+/**
+ * Edit current profile -> Cycle -> Pause time
+ */
+static const MenuLeaf MenuDisplay_PauseTimeLeaf =
+{
+	.Name = "Pause time",
+	.LeftButtonText = "Set",
+	.LeftButtonAction = &MenuDisplay_EnterPauseDuration
+};
+
+/**
+ * Edit current profile -> Cycle -> Ending tone duration
+ */
+static const MenuLeaf MenuDisplay_EndingToneLeaf =
+{
+	.Name = "Ending tone duration",
+	.LeftButtonText = "Set",
+	.LeftButtonAction = &MenuDisplay_EnterEndingToneDuration
+};
+
+/**
+ * Edit current profile -> Run times -> Start time
+ */
+static const MenuLeaf MenuDisplay_StartTimeLeaf =
+{
+	.Name = "Start time",
+	.LeftButtonText = "Set",
+	.LeftButtonAction = &MenuDisplay_EnterStartTime
+};
+
+/**
+ * Edit current profile -> Run times -> Finish time
+ */
+static const MenuLeaf MenuDisplay_FinishTimeLeaf =
+{
+	.Name = "Finish time",
+	.LeftButtonText = "Set",
+	.LeftButtonAction = &MenuDisplay_EnterFinishTime
+};
+
+/**
+ * Arming -> Arm
+ */
+static const MenuLeaf MenuDisplay_ArmLeaf =
+{
+	.Name = "Arm",
+	.LeftButtonText = "Arm",
+	.LeftButtonAction = &MenuDisplay_Arm
+};
+
+/**
+ * Arming -> Disarm
+ */
+static const MenuLeaf MenuDisplay_DisarmLeaf =
+{
+	.Name = "Disarm",
+	.LeftButtonText = "Disarm",
+	.LeftButtonAction = &MenuDisplay_Disarm
+};
+
+/**
+ * Root
+ */
+static const char* MenuDisplay_RootNodeName = "";
+
+/**
+ * Profile settings
+ */
+static const char* MenuDisplay_ProfileSettingsNodeName = "Profile settings";
+
+/**
+ * Edit current profile
+ */
+static const char* MenuDisplay_EditCurrentProfileNodeName = "Edit current profile";
+
+/**
+ * Edit current profile -> Frequency
+ */
+static const char* MenuDisplay_FrequencyNodeName = "Frequency";
+
+/**
+ * Edit current profile -> Code and speed
+ */
+static const char* MenuDisplay_CodeAndSpeedNodeName = "Code and speed";
+
+/**
+ * Edit current profile -> Cycle
+ */
+static const char* MenuDisplay_CycleNodeName = "Cycle";
+
+/**
+ * Edit current profile -> Run times
+ */
+static const char* MenuDisplay_RunTimesNodeName = "Run times";
+
+/**
+ * Arming
+ */
+static const char* MenuDisplay_ArmingNodeName = "Arming";
+
+
 #endif /* INCLUDE_MENU_MENUDISPLAYPRIVATE_H_ */

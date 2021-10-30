@@ -11,7 +11,7 @@
 void MenuDisplay_InitMenuDisplay(void)
 {
 	MenuDisplay_RootNode.Parent = NULL;
-	strncpy(MenuDisplay_RootNode.Name, "Fox settings", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
+	MenuDisplay_RootNode.NamePtr = MenuDisplay_RootNodeName;
 
 	/* Root menu nodes */
 	MenuDisplay_RootNode.NodesCount = 3;
@@ -20,19 +20,13 @@ void MenuDisplay_InitMenuDisplay(void)
 	/* Profile settings */
 	MenuNode* profileSettingsNode = &((MenuNode*)MenuDisplay_RootNode.Nodes)[0];
 	profileSettingsNode->Parent = &MenuDisplay_RootNode;
-	strncpy(profileSettingsNode->Name, "Profile settings", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
+	profileSettingsNode->NamePtr = MenuDisplay_ProfileSettingsNodeName;
 	profileSettingsNode->LeavesCount = 2;
-	profileSettingsNode->Leaves = malloc(sizeof(MenuLeaf) * profileSettingsNode->LeavesCount);
+	profileSettingsNode->Leaves = malloc(sizeof(MenuLeaf*) * profileSettingsNode->LeavesCount);
 
-	/* Profile settings -> Show current profile */
-	strncpy(profileSettingsNode->Leaves[0].Name, "Show current profile", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
-	strncpy(profileSettingsNode->Leaves[0].LeftButtonText, "Show", YHL_MENU_MAX_LEFT_BUTTON_TEXT_MEMORY_SIZE);
-	profileSettingsNode->Leaves[0].LeftButtonAction = &MenuDisplay_ShowCurrentProfileInformationPopup;
 
-	/* Profile settings -> Select profile*/
-	strncpy(profileSettingsNode->Leaves[1].Name, "Select profile", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
-	strncpy(profileSettingsNode->Leaves[1].LeftButtonText, "Select", YHL_MENU_MAX_LEFT_BUTTON_TEXT_MEMORY_SIZE);
-	profileSettingsNode->Leaves[1].LeftButtonAction = &MenuDisplay_SelectCurrentProfile;
+	profileSettingsNode->Leaves[0] = &MenuDisplay_ShowCurrentProfileLeaf; /* Profile settings -> Show current profile */
+	profileSettingsNode->Leaves[1] = &MenuDisplay_SelectProfileLeaf; /* Profile settings -> Select profile*/
 
 	profileSettingsNode->NodesCount = 0;
 	profileSettingsNode->Nodes = NULL;
@@ -40,7 +34,7 @@ void MenuDisplay_InitMenuDisplay(void)
 	/* Edit current profile */
 	MenuNode* editCurrentProfileNode = &((MenuNode*)MenuDisplay_RootNode.Nodes)[1];
 	editCurrentProfileNode->Parent = &MenuDisplay_RootNode;
-	strncpy(editCurrentProfileNode->Name, "Edit current profile", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
+	editCurrentProfileNode->NamePtr = MenuDisplay_EditCurrentProfileNodeName;
 	editCurrentProfileNode->LeavesCount = 0;
 	editCurrentProfileNode->Leaves = malloc(sizeof(MenuLeaf) * profileSettingsNode->LeavesCount);
 
@@ -50,19 +44,12 @@ void MenuDisplay_InitMenuDisplay(void)
 	/* Edit current profile -> Frequency */
 	MenuNode* frequencySettingsNode = &((MenuNode*)editCurrentProfileNode->Nodes)[0];
 	frequencySettingsNode->Parent = editCurrentProfileNode;
-	strncpy(frequencySettingsNode->Name, "Frequency", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
+	frequencySettingsNode->NamePtr = MenuDisplay_FrequencyNodeName;
 	frequencySettingsNode->LeavesCount = 2;
-	frequencySettingsNode->Leaves = malloc(sizeof(MenuLeaf) * frequencySettingsNode->LeavesCount);
+	frequencySettingsNode->Leaves = malloc(sizeof(MenuLeaf*) * frequencySettingsNode->LeavesCount);
 
-	/* Edit current profile -> Frequency -> Range */
-	strncpy(frequencySettingsNode->Leaves[0].Name, "Range", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
-	strncpy(frequencySettingsNode->Leaves[0].LeftButtonText, "Set", YHL_MENU_MAX_LEFT_BUTTON_TEXT_MEMORY_SIZE);
-	frequencySettingsNode->Leaves[0].LeftButtonAction = &MenuDisplay_SelectFrequencyRange;
-
-	/* Edit current profile -> Frequency -> Value */
-	strncpy(frequencySettingsNode->Leaves[1].Name, "Value", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
-	strncpy(frequencySettingsNode->Leaves[1].LeftButtonText, "Set", YHL_MENU_MAX_LEFT_BUTTON_TEXT_MEMORY_SIZE);
-	frequencySettingsNode->Leaves[1].LeftButtonAction = &MenuDisplay_EnterFrequency;
+	frequencySettingsNode->Leaves[0] = &MenuDisplay_FrequencyRangeLeaf; /* Edit current profile -> Frequency -> Range */
+	frequencySettingsNode->Leaves[1] = &MenuDisplay_FrequencyValueLeaf; /* Edit current profile -> Frequency -> Value */
 
 	frequencySettingsNode->NodesCount = 0;
 	frequencySettingsNode->Nodes = NULL;
@@ -70,19 +57,12 @@ void MenuDisplay_InitMenuDisplay(void)
 	/* Edit current profile -> Code and speed */
 	MenuNode* codeAndSpeedSettingsNode = &((MenuNode*)editCurrentProfileNode->Nodes)[1];
 	codeAndSpeedSettingsNode->Parent = editCurrentProfileNode;
-	strncpy(codeAndSpeedSettingsNode->Name, "Code and speed", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
+	codeAndSpeedSettingsNode->NamePtr = MenuDisplay_CodeAndSpeedNodeName;
 	codeAndSpeedSettingsNode->LeavesCount = 2;
-	codeAndSpeedSettingsNode->Leaves = malloc(sizeof(MenuLeaf) * codeAndSpeedSettingsNode->LeavesCount);
+	codeAndSpeedSettingsNode->Leaves = malloc(sizeof(MenuLeaf*) * codeAndSpeedSettingsNode->LeavesCount);
 
-	/* Edit current profile -> Code and speed -> Code */
-	strncpy(codeAndSpeedSettingsNode->Leaves[0].Name, "Code", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
-	strncpy(codeAndSpeedSettingsNode->Leaves[0].LeftButtonText, "Select", YHL_MENU_MAX_LEFT_BUTTON_TEXT_MEMORY_SIZE);
-	codeAndSpeedSettingsNode->Leaves[0].LeftButtonAction = &MenuDisplay_SelectCode;
-
-	/* Edit current profile -> Code and speed -> Speed */
-	strncpy(codeAndSpeedSettingsNode->Leaves[1].Name, "Speed", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
-	strncpy(codeAndSpeedSettingsNode->Leaves[1].LeftButtonText, "Select", YHL_MENU_MAX_LEFT_BUTTON_TEXT_MEMORY_SIZE);
-	codeAndSpeedSettingsNode->Leaves[1].LeftButtonAction = &MenuDisplay_SelectFoxSpeed;
+	codeAndSpeedSettingsNode->Leaves[0] = &MenuDisplay_CodeLeaf; /* Edit current profile -> Code and speed -> Code */
+	codeAndSpeedSettingsNode->Leaves[1] = &MenuDisplay_SpeedLeaf; /* Edit current profile -> Code and speed -> Speed */
 
 	codeAndSpeedSettingsNode->NodesCount = 0;
 	codeAndSpeedSettingsNode->Nodes = NULL;
@@ -90,29 +70,15 @@ void MenuDisplay_InitMenuDisplay(void)
 	/* Edit current profile -> Cycle */
 	MenuNode* cycleSettingsNode = &((MenuNode*)editCurrentProfileNode->Nodes)[2];
 	cycleSettingsNode->Parent = editCurrentProfileNode;
-	strncpy(cycleSettingsNode->Name, "Cycle", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
+	cycleSettingsNode->NamePtr = MenuDisplay_CycleNodeName;
 	cycleSettingsNode->LeavesCount = 4;
-	cycleSettingsNode->Leaves = malloc(sizeof(MenuLeaf) * cycleSettingsNode->LeavesCount);
+	cycleSettingsNode->Leaves = malloc(sizeof(MenuLeaf*) * cycleSettingsNode->LeavesCount);
 
-	/* Edit current profile -> Cycle -> Is continuous */
-	strncpy(cycleSettingsNode->Leaves[0].Name, "Is continuous?", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
-	strncpy(cycleSettingsNode->Leaves[0].LeftButtonText, "Select", YHL_MENU_MAX_LEFT_BUTTON_TEXT_MEMORY_SIZE);
-	cycleSettingsNode->Leaves[0].LeftButtonAction = &MenuDisplay_SelectIsContinuousCycle;
+	cycleSettingsNode->Leaves[0] = &MenuDisplay_IsContinuousLeaf; /* Edit current profile -> Cycle -> Is continuous */
+	cycleSettingsNode->Leaves[1] = &MenuDisplay_TxTimeLeaf; /* Edit current profile -> Cycle -> TX time */
+	cycleSettingsNode->Leaves[2] = &MenuDisplay_PauseTimeLeaf; /* Edit current profile -> Cycle -> Pause time */
+	cycleSettingsNode->Leaves[3] = &MenuDisplay_EndingToneLeaf; /* Edit current profile -> Cycle -> Ending tone duration */
 
-	/* Edit current profile -> Cycle -> TX time */
-	strncpy(cycleSettingsNode->Leaves[1].Name, "TX time", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
-	strncpy(cycleSettingsNode->Leaves[1].LeftButtonText, "Set", YHL_MENU_MAX_LEFT_BUTTON_TEXT_MEMORY_SIZE);
-	cycleSettingsNode->Leaves[1].LeftButtonAction = &MenuDisplay_EnterTxDuration;
-
-	/* Edit current profile -> Cycle -> Pause time */
-	strncpy(cycleSettingsNode->Leaves[2].Name, "Pause time", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
-	strncpy(cycleSettingsNode->Leaves[2].LeftButtonText, "Set", YHL_MENU_MAX_LEFT_BUTTON_TEXT_MEMORY_SIZE);
-	cycleSettingsNode->Leaves[2].LeftButtonAction = &MenuDisplay_EnterPauseDuration;
-
-	/* Edit current profile -> Cycle -> Ending tone duration */
-	strncpy(cycleSettingsNode->Leaves[3].Name, "Ending tone duration", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
-	strncpy(cycleSettingsNode->Leaves[3].LeftButtonText, "Set", YHL_MENU_MAX_LEFT_BUTTON_TEXT_MEMORY_SIZE);
-	cycleSettingsNode->Leaves[3].LeftButtonAction = &MenuDisplay_EnterEndingToneDuration;
 
 	cycleSettingsNode->NodesCount = 0;
 	cycleSettingsNode->Nodes = NULL;
@@ -120,19 +86,12 @@ void MenuDisplay_InitMenuDisplay(void)
 	/* Edit current profile -> Run times */
 	MenuNode* runTimesSettingsNode = &((MenuNode*)editCurrentProfileNode->Nodes)[3];
 	runTimesSettingsNode->Parent = editCurrentProfileNode;
-	strncpy(runTimesSettingsNode->Name, "Run times", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
+	runTimesSettingsNode->NamePtr = MenuDisplay_RunTimesNodeName;
 	runTimesSettingsNode->LeavesCount = 2;
-	runTimesSettingsNode->Leaves = malloc(sizeof(MenuLeaf) * runTimesSettingsNode->LeavesCount);
+	runTimesSettingsNode->Leaves = malloc(sizeof(MenuLeaf*) * runTimesSettingsNode->LeavesCount);
 
-	/* Edit current profile -> Run times -> Start time */
-	strncpy(runTimesSettingsNode->Leaves[0].Name, "Start time", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
-	strncpy(runTimesSettingsNode->Leaves[0].LeftButtonText, "Set", YHL_MENU_MAX_LEFT_BUTTON_TEXT_MEMORY_SIZE);
-	runTimesSettingsNode->Leaves[0].LeftButtonAction = &MenuDisplay_EnterStartTime;
-
-	/* Edit current profile -> Run times -> Finish time */
-	strncpy(runTimesSettingsNode->Leaves[1].Name, "Finish time", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
-	strncpy(runTimesSettingsNode->Leaves[1].LeftButtonText, "Set", YHL_MENU_MAX_LEFT_BUTTON_TEXT_MEMORY_SIZE);
-	runTimesSettingsNode->Leaves[1].LeftButtonAction = &MenuDisplay_EnterFinishTime;
+	runTimesSettingsNode->Leaves[0] = &MenuDisplay_StartTimeLeaf; /* Edit current profile -> Run times -> Start time */
+	runTimesSettingsNode->Leaves[1] = &MenuDisplay_FinishTimeLeaf; /* Edit current profile -> Run times -> Finish time */
 
 	runTimesSettingsNode->NodesCount = 0;
 	runTimesSettingsNode->Nodes = NULL;
@@ -140,19 +99,12 @@ void MenuDisplay_InitMenuDisplay(void)
 	/* Arming */
 	MenuNode* armingSettingsNode = &((MenuNode*)MenuDisplay_RootNode.Nodes)[2];
 	armingSettingsNode->Parent = &MenuDisplay_RootNode;
-	strncpy(armingSettingsNode->Name, "Arming", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
+	armingSettingsNode->NamePtr = MenuDisplay_ArmingNodeName;
 	armingSettingsNode->LeavesCount = 2;
-	armingSettingsNode->Leaves = malloc(sizeof(MenuLeaf) * armingSettingsNode->LeavesCount);
+	armingSettingsNode->Leaves = malloc(sizeof(MenuLeaf*) * armingSettingsNode->LeavesCount);
 
-	/* Arming -> Arm */
-	strncpy(armingSettingsNode->Leaves[0].Name, "Arm", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
-	strncpy(armingSettingsNode->Leaves[0].LeftButtonText, "Arm", YHL_MENU_MAX_LEFT_BUTTON_TEXT_MEMORY_SIZE);
-	armingSettingsNode->Leaves[0].LeftButtonAction = &MenuDisplay_Arm;
-
-	/* Arming -> Disarm */
-	strncpy(armingSettingsNode->Leaves[1].Name, "Disarm", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
-	strncpy(armingSettingsNode->Leaves[1].LeftButtonText, "Disarm", YHL_MENU_MAX_LEFT_BUTTON_TEXT_MEMORY_SIZE);
-	armingSettingsNode->Leaves[1].LeftButtonAction = &MenuDisplay_Disarm;
+	armingSettingsNode->Leaves[0] = &MenuDisplay_ArmLeaf; /* Arming -> Arm */
+	armingSettingsNode->Leaves[1] = &MenuDisplay_DisarmLeaf; /* Arming -> Disarm */
 
 	armingSettingsNode->NodesCount = 0;
 	armingSettingsNode->Nodes = NULL;
@@ -186,7 +138,7 @@ void MenuDisplay_SwitchNode(MenuNode* nodePtr)
 	{
 		char* dst = (char*)(MenuDisplay_CurrentNodeLines + nodesCounter * YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
 		MenuNode node = ((MenuNode*)MenuDisplay_CurrentNode.Nodes)[nodesCounter];
-		char* src = node.Name;
+		char* src = node.NamePtr;
 		strncpy(dst, src, YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
 	}
 
@@ -195,7 +147,7 @@ void MenuDisplay_SwitchNode(MenuNode* nodePtr)
 	{
 		uint8_t baseCount = MenuDisplay_CurrentNode.NodesCount;
 		char* dst = (char*)(MenuDisplay_CurrentNodeLines + (baseCount + leavesCounter) * YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
-		char* src = MenuDisplay_CurrentNode.Leaves[leavesCounter].Name;
+		char* src = MenuDisplay_CurrentNode.Leaves[leavesCounter]->Name;
 		strncpy(dst, src, YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
 	}
 
@@ -262,7 +214,7 @@ void MenuDisplay_DrawMenuDisplay(void)
 	}
 	else
 	{
-		strncpy(LeftButton.Text, MenuDisplay_CurrentNode.Leaves[leafIndex].LeftButtonText, YHL_MENU_MAX_LEFT_BUTTON_TEXT_MEMORY_SIZE);
+		strncpy(LeftButton.Text, MenuDisplay_CurrentNode.Leaves[leafIndex]->LeftButtonText, YHL_MENU_MAX_LEFT_BUTTON_TEXT_MEMORY_SIZE);
 	}
 
 	strncpy(RightButton.Text, "Back", YHL_MAX_BUTTON_TEXT_MEMORY_SIZE);
@@ -325,7 +277,7 @@ void MenuDisplay_OnAction(MenuActionEnum action)
 		L2HAL_Error(Generic);
 	}
 
-	MenuLeaf* leafPtr = &MenuDisplay_CurrentNode.Leaves[leafIndex];
+	MenuLeaf* leafPtr = MenuDisplay_CurrentNode.Leaves[leafIndex];
 	MenuDisplay_ActionOnLeafHandler(leafPtr, action);
 }
 
