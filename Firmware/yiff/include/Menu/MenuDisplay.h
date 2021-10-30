@@ -17,6 +17,8 @@
 #include <HAL.h>
 #include <EEPROM.h>
 #include <printf.h>
+#include <GlobalStateMachine.h>
+#include <main.h>
 
 /**
  * Maximal length of item's text

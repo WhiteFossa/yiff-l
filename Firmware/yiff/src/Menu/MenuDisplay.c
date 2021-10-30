@@ -152,7 +152,7 @@ void MenuDisplay_InitMenuDisplay(void)
 	/* Arming -> Disarm */
 	strncpy(armingSettingsNode->Leaves[1].Name, "Disarm", YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
 	strncpy(armingSettingsNode->Leaves[1].LeftButtonText, "Disarm", YHL_MENU_MAX_LEFT_BUTTON_TEXT_MEMORY_SIZE);
-	armingSettingsNode->Leaves[1].LeftButtonAction = NULL;
+	armingSettingsNode->Leaves[1].LeftButtonAction = &MenuDisplay_Disarm;
 
 	armingSettingsNode->NodesCount = 0;
 	armingSettingsNode->Nodes = NULL;
@@ -220,8 +220,7 @@ void MenuDisplay_GoToParentNode(void)
 	{
 		/* Exiting menu */
 		FoxState.CurrentDisplay = StatusDisplay;
-		strncpy(LeftButton.Text, "Menu", YHL_MAX_BUTTON_TEXT_MEMORY_SIZE);
-		strncpy(RightButton.Text, "Bt. off", YHL_MAX_BUTTON_TEXT_MEMORY_SIZE);
+		Main_SetDefaultButtonsActions();
 
 		FMGL_API_ClearScreen(&fmglContext);
 		return;
@@ -916,4 +915,16 @@ void MenuDisplay_Arm(void)
 	}
 
 	PendingCommandsFlags.NeedToArmFox = true;
+}
+
+void MenuDisplay_Disarm(void)
+{
+	if (!FoxState.GlobalState.IsArmed)
+	{
+		InformationPopup_Show("Not armed!", "Fox isn't armed!", MenuDisplay);
+		return;
+	}
+	GSM_Disarm();
+
+	InformationPopup_Show("Disarmed!", "Fox disarmed.", MenuDisplay);
 }

@@ -339,4 +339,9 @@ void MenuDisplay_EnterFinishTimeEnterHandler(uint32_t secondsSinceMidnight);
  */
 void MenuDisplay_Arm(void);
 
+/**
+ * Call this to disarm fox
+ */
+void MenuDisplay_Disarm(void);
+
 #endif /* INCLUDE_MENU_MENUDISPLAYPRIVATE_H_ */

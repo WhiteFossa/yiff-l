@@ -42,4 +42,9 @@
  */
 void Main_PrepareAndMatchAntenna(void);
 
+/**
+ * Set default buttons actions
+ */
+void Main_SetDefaultButtonsActions(void);
+
 #endif /* __MAIN_H */
