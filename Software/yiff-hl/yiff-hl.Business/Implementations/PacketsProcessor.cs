@@ -52,6 +52,7 @@ namespace yiff_hl.Business.Implementations
         private OnResponseDelegate onGetU80mADCResponse;
         private OnResponseDelegate onGetUBattVoltsResponse;
         private OnResponseDelegate onGetU80mVoltsResponse;
+        private OnResponseDelegate onGetLastFailureCodeResponse;
 
         #endregion
 
@@ -438,6 +439,14 @@ namespace yiff_hl.Business.Implementations
                     onGetU80mVoltsResponse(responsePayload);
                     break;
 
+                // Get last failure code
+                case CommandType.GetLastFailureCode:
+                    CheckOnResponseDelegate(onGetLastFailureCodeResponse);
+
+                    onGetLastFailureCodeResponse(responsePayload);
+
+                    break;
+
                 default:
                     return; // We've got some junk
             }
@@ -668,6 +677,11 @@ namespace yiff_hl.Business.Implementations
         public void SetOnGetU80mVoltsResponse(OnResponseDelegate onGetU80mVoltsResponse)
         {
             this.onGetU80mVoltsResponse = onGetU80mVoltsResponse ?? throw new ArgumentNullException(nameof(onGetU80mVoltsResponse));
+        }
+
+        public void SetOnGetLastFailureCode(OnResponseDelegate onGetLastFailureCodeResponse)
+        {
+            this.onGetLastFailureCodeResponse = onGetLastFailureCodeResponse ?? throw new ArgumentNullException(nameof(onGetLastFailureCodeResponse));
         }
 
         public void RegisterOnFoxArmedEventHandler(OnFoxArmedEventDelegate onFoxArmedEvent)

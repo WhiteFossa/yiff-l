@@ -67,6 +67,8 @@
 
         GetUBattVolts = 0x1E,
 
-        GetU80mVolts = 0x1F
+        GetU80mVolts = 0x1F,
+
+        GetLastFailureCode = 0x20
     }
 }

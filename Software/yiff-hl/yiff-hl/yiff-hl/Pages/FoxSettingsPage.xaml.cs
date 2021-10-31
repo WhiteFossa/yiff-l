@@ -923,6 +923,30 @@ namespace yiff_hl.Pages
 
         #endregion
 
+        #region Get last failure code
+
+        private void OnGetLastFailureCodeClicked(object sender, EventArgs e)
+        {
+            GetLastFailureCode();
+        }
+
+        private void GetLastFailureCode()
+        {
+            var command = new GetLastFailureCodeCommand(packetsProcessor);
+            command.SetResponseDelegate(OnGetLastFailureCodeResponse);
+            command.SendGetLastFailureCommand();
+        }
+
+        private void OnGetLastFailureCodeResponse(uint code)
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                edLastFailure.Text = $"{code}";
+            });
+        }
+
+        #endregion
+
         #region On Fox Is Armed event
 
         private void OnFoxIsArmed(IFoxArmedEvent foxArmedEvent)

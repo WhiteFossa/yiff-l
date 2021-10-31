@@ -462,7 +462,24 @@
                                 WidthRequest="200" />
 
                         </StackLayout>
-                        
+
+                        <StackLayout
+                            Orientation="Horizontal">
+
+                            <Label
+                                Text="Last failure"
+                            />
+
+                            <Editor
+                                x:Name="edLastFailure"
+                                WidthRequest="200" />
+                        </StackLayout>
+
+                        <Button
+                            Text="Get last failure code"
+                            Clicked="OnGetLastFailureCodeClicked"
+                            />
+
                     </StackLayout>
                 </Frame>
 
