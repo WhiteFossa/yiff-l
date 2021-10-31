@@ -380,6 +380,11 @@ void MenuDisplay_EnterTxPowerOnEnterHandler(int32_t power);
  */
 char* MenuDisplay_FormatTxPower(int32_t TxPower);
 
+/**
+ * Call it to show warning message about armed fox
+ */
+void MenuDisplay_ShowArmedWarning(void);
+
 
 /**
  * Profile settings -> Show current profile

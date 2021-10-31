@@ -436,6 +436,12 @@ void MenuDisplay_ShowCurrentProfileInformationPopup(void)
 
 void MenuDisplay_SelectCurrentProfile(void)
 {
+	if (FoxState.GlobalState.IsArmed)
+	{
+		MenuDisplay_ShowArmedWarning();
+		return;
+	}
+
 	MenuDisplay_ProfilesNames = malloc(YHL_PROFILE_NAME_MEMORY_SIZE * EEPROM_Header.NumberOfProfiles);
 	for (uint8_t profile = 0; profile < EEPROM_Header.NumberOfProfiles; profile ++)
 	{
@@ -468,6 +474,12 @@ void MenuDisplay_SelectCurrentProfileCloseHandler(uint8_t profileIndex)
 
 void MenuDisplay_SelectFrequencyRange(void)
 {
+	if (FoxState.GlobalState.IsArmed)
+	{
+		MenuDisplay_ShowArmedWarning();
+		return;
+	}
+
 	uint8_t rangesCount = 2;
 	MenuDisplay_FrequencyRangesNames = malloc(rangesCount * YHL_MENU_FREQUENCY_RANGE_MEMORY_SIZE);
 	strncpy(MenuDisplay_FrequencyRangesNames, "3.5MHz", YHL_MENU_FREQUENCY_RANGE_MEMORY_SIZE);
@@ -550,6 +562,12 @@ bool MenuDisplay_GetFrequencyRangeByIndex(uint8_t rangeIndex)
 
 void MenuDisplay_EnterFrequency(void)
 {
+	if (FoxState.GlobalState.IsArmed)
+	{
+		MenuDisplay_ShowArmedWarning();
+		return;
+	}
+
 	if (FoxState.Frequency.Is144MHz)
 	{
 		NumberInputDisplay_Show("Select frequency",
@@ -592,6 +610,12 @@ void MenuDisplay_EnterFrequencyOnEnterHandler(int32_t frequency)
 
 void MenuDisplay_SelectCode(void)
 {
+	if (FoxState.GlobalState.IsArmed)
+	{
+		MenuDisplay_ShowArmedWarning();
+		return;
+	}
+
 	uint8_t codesCount = 7;
 	MenuDisplay_FoxCodesNames = malloc(codesCount * YHL_MENU_FOX_CODES_MEMORY_SIZE);
 	strncpy(MenuDisplay_FoxCodesNames, "Finish (MO)", YHL_MENU_FOX_CODES_MEMORY_SIZE);
@@ -626,6 +650,12 @@ void MenyDisplay_SelectCodeCloseHandler(uint8_t codeIndex)
 
 void MenuDisplay_SelectFoxSpeed(void)
 {
+	if (FoxState.GlobalState.IsArmed)
+	{
+		MenuDisplay_ShowArmedWarning();
+		return;
+	}
+
 	uint8_t speedsCount = 2;
 	MenuDisplay_FoxSpeedsNames = malloc(speedsCount * YHL_MENU_FOX_SPEEDS_MEMORY_SIZE);
 	strncpy(MenuDisplay_FoxSpeedsNames, "Slow", YHL_MENU_FOX_SPEEDS_MEMORY_SIZE);
@@ -682,6 +712,12 @@ bool MenuDisplay_IndexToFoxSpeed(uint8_t index)
 
 void MenuDisplay_SelectIsContinuousCycle(void)
 {
+	if (FoxState.GlobalState.IsArmed)
+	{
+		MenuDisplay_ShowArmedWarning();
+		return;
+	}
+
 	uint8_t cycleTypesCount = 2;
 	MenuDisplay_CycleTypesNames = malloc(cycleTypesCount * YHL_MENU_CYCLE_TYPE_MEMORY_SIZE);
 	strncpy(MenuDisplay_CycleTypesNames, "Yes", YHL_MENU_CYCLE_TYPE_MEMORY_SIZE);
@@ -737,6 +773,12 @@ bool MenuDisplay_IndexToCycleType(uint8_t index)
 
 void MenuDisplay_EnterEndingToneDuration(void)
 {
+	if (FoxState.GlobalState.IsArmed)
+	{
+		MenuDisplay_ShowArmedWarning();
+		return;
+	}
+
 	if (FoxState.Cycle.IsContinuous)
 	{
 		MenuDisplay_ShowCycleIsContinuousWarning();
@@ -780,6 +822,12 @@ char* MenuDisplay_FormatEndingToneDuration(int32_t duration)
 
 void MenuDisplay_EnterTxDuration(void)
 {
+	if (FoxState.GlobalState.IsArmed)
+	{
+		MenuDisplay_ShowArmedWarning();
+		return;
+	}
+
 	if (FoxState.Cycle.IsContinuous)
 	{
 		MenuDisplay_ShowCycleIsContinuousWarning();
@@ -806,6 +854,12 @@ void MenuDisplay_EnterTxDurationEnterHandler(uint32_t duration)
 
 void MenuDisplay_EnterPauseDuration(void)
 {
+	if (FoxState.GlobalState.IsArmed)
+	{
+		MenuDisplay_ShowArmedWarning();
+		return;
+	}
+
 	if (FoxState.Cycle.IsContinuous)
 	{
 		MenuDisplay_ShowCycleIsContinuousWarning();
@@ -832,6 +886,12 @@ void MenuDisplay_EnterPauseDurationEnterHandler(uint32_t duration)
 
 void MenuDisplay_EnterStartTime(void)
 {
+	if (FoxState.GlobalState.IsArmed)
+	{
+		MenuDisplay_ShowArmedWarning();
+		return;
+	}
+
 	TimeInputDisplay_Show("Enter start time",
 		0,
 		YHL_TIME_DAY_IN_SECONDS - 1,
@@ -852,6 +912,12 @@ void MenuDisplay_EnterStartTimeEnterHandler(uint32_t secondsSinceMidnight)
 
 void MenuDisplay_EnterFinishTime(void)
 {
+	if (FoxState.GlobalState.IsArmed)
+	{
+		MenuDisplay_ShowArmedWarning();
+		return;
+	}
+
 	TimeInputDisplay_Show("Enter finish time",
 		0,
 		YHL_TIME_DAY_IN_SECONDS - 1,
@@ -896,6 +962,12 @@ void MenuDisplay_Disarm(void)
 
 void MenuDisplay_EnterTxPower(void)
 {
+	if (FoxState.GlobalState.IsArmed)
+	{
+		MenuDisplay_ShowArmedWarning();
+		return;
+	}
+
 	if (FoxState.Frequency.Is144MHz)
 	{
 		InformationPopup_Show("Not available!", "Only for 3.5MHz range", MenuDisplay);
@@ -930,4 +1002,9 @@ char* MenuDisplay_FormatTxPower(int32_t TxPower)
 	snprintf(buffer, 8, "%.1f W", TxPower / (float)YHL_MENU_TX_POWER_MULTIPLIER);
 
 	return buffer;
+}
+
+void MenuDisplay_ShowArmedWarning(void)
+{
+	InformationPopup_Show("Fox is armed!", "Settings are locked!", MenuDisplay);
 }
