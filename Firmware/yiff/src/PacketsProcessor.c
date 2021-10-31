@@ -215,6 +215,11 @@ void OnNewCommandToFox(uint8_t payloadSize, uint8_t* payload)
 			/* Get U80m in volts */
 			OnGetU80mVolts(payloadSize, payload);
 			break;
+
+		case GetLastFailureCode:
+			/* Get last failure code */
+			OnGetLastFailureCode(payloadSize, payload);
+			break;
 	}
 
 	free(payload);
@@ -1028,6 +1033,17 @@ void OnGetU80mVolts(uint8_t payloadSize, uint8_t* payload)
 
 	float response = HAL_GetU80mVolts();
 	SendResponse(GetU80mVolts, 4, (uint8_t*)&response);
+}
+
+void OnGetLastFailureCode(uint8_t payloadSize, uint8_t* payload)
+{
+	if (payloadSize != 1)
+	{
+		return;
+	}
+
+	uint32_t response = EEPROM_Header.LastFailure;
+	SendResponse(GetLastFailureCode, 4, (uint8_t*)&response);
 }
 
 void EmitFoxArmedEvent(void)

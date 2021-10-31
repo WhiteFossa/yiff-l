@@ -127,7 +127,9 @@ typedef enum
 
 	GetUbattVolts = 0x1E,
 
-	GetU80mVolts = 0x1F
+	GetU80mVolts = 0x1F,
+
+	GetLastFailureCode = 0x20
 }
 CommandToFoxEnum;
 
@@ -332,6 +334,11 @@ void OnGetUBattVolts(uint8_t payloadSize, uint8_t* payload);
  * Called when "Get U80m Volts" command comes
  */
 void OnGetU80mVolts(uint8_t payloadSize, uint8_t* payload);
+
+/**
+ * Called when "Get last failure code" command comes
+ */
+void OnGetLastFailureCode(uint8_t payloadSize, uint8_t* payload);
 
 /**
  * Emits "FoxArmed" event

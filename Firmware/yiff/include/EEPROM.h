@@ -11,6 +11,7 @@
 #include <stdint.h>
 #include <FoxStatus.h>
 #include <l2hal.h>
+#include <SelfDiagnostics.h>
 
 extern L2HAL_CRCContextStruct CRC_Context;
 extern FoxStateStruct FoxState;
@@ -76,7 +77,7 @@ typedef struct
 	 * CRC
 	 */
 	uint32_t CRCSum;
-}
+} __attribute__((packed))
 EEPROMConstantHeaderStruct;
 
 
@@ -121,10 +122,15 @@ typedef struct
 	float P80mB;
 
 	/**
+	 * Code of last failure
+	 */
+	YhlFailureCausesEnum LastFailure;
+
+	/**
 	 * CRC
 	 */
 	uint32_t CRCSum;
-}
+} __attribute__((packed))
 EEPROMHeaderStruct;
 
 /**
@@ -181,8 +187,7 @@ typedef struct
 	 * CRC
 	 */
 	uint32_t CRCSum;
-
-}
+} __attribute__((packed))
 EEPROMProfileStruct;
 
 extern EEPROMConstantHeaderStruct EEPROM_ConstantHeader;

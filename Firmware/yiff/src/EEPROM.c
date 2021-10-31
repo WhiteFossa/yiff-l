@@ -37,6 +37,9 @@ void EEPROM_Format(void)
 	defaultHeader.P80mA = YHL_DEFAULT_P80M_A;
 	defaultHeader.P80mB = YHL_DEFAULT_P80M_B;
 
+	/* No failure after format */
+	defaultHeader.LastFailure = YhlFailureCause_OK;
+
 	defaultHeader.CRCSum = 0;
 	EEPROM_WriteHeader(&defaultHeader, constantHeader.HeaderAddress);
 }
