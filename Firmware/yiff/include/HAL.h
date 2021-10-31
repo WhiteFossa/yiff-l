@@ -396,7 +396,9 @@ void HAL_WakeSynthesizerUp(void);
  */
 void HAL_SetupSynthesizer(float frequency);
 
-/* Enables timer, which generate 144MHz modulation tone */
+/**
+ * Enables timer, which generate 144MHz modulation tone
+ */
 void HAL_Enable2mToneGenerator(void);
 
 /**
@@ -444,5 +446,10 @@ void HAL_RegisterEncoderRotationHandler(void (*handler)(int8_t));
  * Call it on every SysTick
  */
 void HAL_OnTick(void);
+
+/**
+ * Shutdown everything except MCU in case of failure.
+ */
+void HAL_EmergencyShutdown(void);
 
 #endif /* INCLUDE_HAL_H_ */

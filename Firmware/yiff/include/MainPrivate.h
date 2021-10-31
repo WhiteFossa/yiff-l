@@ -31,6 +31,7 @@
 #include <Menu/InformationPopupDisplay.h>
 #include <Menu/NumberInputDisplay.h>
 #include <Menu/TimeInputDisplay.h>
+#include <SelfDiagnostics.h>
 
 /**
  * EEPROM-related stuff
