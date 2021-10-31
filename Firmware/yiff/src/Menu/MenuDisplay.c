@@ -14,16 +14,27 @@ void MenuDisplay_InitMenuDisplay(void)
 	MenuDisplay_RootNode.NamePtr = MenuDisplay_RootNodeName;
 
 	/* Root menu nodes */
-	MenuDisplay_RootNode.NodesCount = 3;
+	MenuDisplay_RootNode.NodesCount = 4;
 	MenuDisplay_RootNode.Nodes = malloc(sizeof(MenuNode) * MenuDisplay_RootNode.NodesCount);
 
+	/* Clock */
+	MenuNode* clockNode = &((MenuNode*)MenuDisplay_RootNode.Nodes)[0];
+	clockNode->Parent = &MenuDisplay_RootNode;
+	clockNode->NamePtr = MenuDisplay_ClockNodeName;
+	clockNode->LeavesCount = 1;
+	clockNode->Leaves = malloc(sizeof(MenuLeaf*) * clockNode->LeavesCount);
+
+	clockNode->Leaves[0] = &MenuDisplay_SetCurrentTimeLeaf; /* Clock -> Set current time */
+
+	clockNode->NodesCount = 0;
+	clockNode->Nodes = NULL;
+
 	/* Profile settings */
-	MenuNode* profileSettingsNode = &((MenuNode*)MenuDisplay_RootNode.Nodes)[0];
+	MenuNode* profileSettingsNode = &((MenuNode*)MenuDisplay_RootNode.Nodes)[1];
 	profileSettingsNode->Parent = &MenuDisplay_RootNode;
 	profileSettingsNode->NamePtr = MenuDisplay_ProfileSettingsNodeName;
 	profileSettingsNode->LeavesCount = 2;
 	profileSettingsNode->Leaves = malloc(sizeof(MenuLeaf*) * profileSettingsNode->LeavesCount);
-
 
 	profileSettingsNode->Leaves[0] = &MenuDisplay_ShowCurrentProfileLeaf; /* Profile settings -> Show current profile */
 	profileSettingsNode->Leaves[1] = &MenuDisplay_SelectProfileLeaf; /* Profile settings -> Select profile*/
@@ -32,7 +43,7 @@ void MenuDisplay_InitMenuDisplay(void)
 	profileSettingsNode->Nodes = NULL;
 
 	/* Edit current profile */
-	MenuNode* editCurrentProfileNode = &((MenuNode*)MenuDisplay_RootNode.Nodes)[1];
+	MenuNode* editCurrentProfileNode = &((MenuNode*)MenuDisplay_RootNode.Nodes)[2];
 	editCurrentProfileNode->Parent = &MenuDisplay_RootNode;
 	editCurrentProfileNode->NamePtr = MenuDisplay_EditCurrentProfileNodeName;
 	editCurrentProfileNode->LeavesCount = 0;
@@ -109,7 +120,7 @@ void MenuDisplay_InitMenuDisplay(void)
 	txPowerSettingsNode->Nodes = NULL;
 
 	/* Arming */
-	MenuNode* armingSettingsNode = &((MenuNode*)MenuDisplay_RootNode.Nodes)[2];
+	MenuNode* armingSettingsNode = &((MenuNode*)MenuDisplay_RootNode.Nodes)[3];
 	armingSettingsNode->Parent = &MenuDisplay_RootNode;
 	armingSettingsNode->NamePtr = MenuDisplay_ArmingNodeName;
 	armingSettingsNode->LeavesCount = 2;
@@ -1007,4 +1018,43 @@ char* MenuDisplay_FormatTxPower(int32_t TxPower)
 void MenuDisplay_ShowArmedWarning(void)
 {
 	InformationPopup_Show("Fox is armed!", "Settings are locked!", MenuDisplay);
+}
+
+
+void MenuDisplay_EnterCurrentTime(void)
+{
+	if (FoxState.GlobalState.IsArmed)
+	{
+		MenuDisplay_ShowArmedWarning();
+		return;
+	}
+
+	Time currentTimeAsTimeStruct;
+	currentTimeAsTimeStruct.Days = 0;
+	currentTimeAsTimeStruct.Hours = CurrentTime.Hours;
+	currentTimeAsTimeStruct.Minutes = CurrentTime.Minutes;
+	currentTimeAsTimeStruct.Seconds = CurrentTime.Seconds;
+
+	uint32_t secondsSinceMidnight = TimeToTimespan(currentTimeAsTimeStruct);
+
+	TimeInputDisplay_Show("Enter start time",
+		0,
+		YHL_TIME_DAY_IN_SECONDS - 1,
+		secondsSinceMidnight,
+		&MenuDisplay_EnterCurrentTimeEnterHandler,
+		MenuDisplay);
+}
+
+
+void MenuDisplay_EnterCurrentTimeEnterHandler(uint32_t secondsSinceMidnight)
+{
+	Time newTime = TimespanToTime(secondsSinceMidnight);
+
+	RTC_TimeTypeDef time;
+	time.Hours = newTime.Hours;
+	time.Minutes = newTime.Minutes;
+	time.Seconds = newTime.Seconds;
+	RTC_SetCurrentTime(time);
+
+	MenuDisplay_DrawMenuDisplay();
 }

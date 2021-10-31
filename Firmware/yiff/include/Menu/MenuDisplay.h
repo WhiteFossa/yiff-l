@@ -20,6 +20,7 @@
 #include <GlobalStateMachine.h>
 #include <main.h>
 #include <math.h>
+#include <Time.h>
 
 /**
  * Maximal length of item's text

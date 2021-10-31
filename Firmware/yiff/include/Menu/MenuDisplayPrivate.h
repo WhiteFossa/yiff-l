@@ -385,6 +385,25 @@ char* MenuDisplay_FormatTxPower(int32_t TxPower);
  */
 void MenuDisplay_ShowArmedWarning(void);
 
+/**
+ * Call this to enter current time
+ */
+void MenuDisplay_EnterCurrentTime(void);
+
+/**
+ * Call this when current time is entered
+ */
+void MenuDisplay_EnterCurrentTimeEnterHandler(uint32_t secondsSinceMidnight);
+
+/**
+ * Clock -> Set current time
+ */
+static const MenuLeaf MenuDisplay_SetCurrentTimeLeaf =
+{
+	.Name = "Set current time",
+	.LeftButtonText = "Set",
+	.LeftButtonAction = &MenuDisplay_EnterCurrentTime
+};
 
 /**
  * Profile settings -> Show current profile
@@ -540,6 +559,11 @@ static const MenuLeaf MenuDisplay_DisarmLeaf =
  * Root
  */
 static const char* MenuDisplay_RootNodeName = "";
+
+/**
+ * Clock
+ */
+static const char* MenuDisplay_ClockNodeName = "Clock";
 
 /**
  * Profile settings
