@@ -38,7 +38,7 @@ void MenuDisplay_InitMenuDisplay(void)
 	editCurrentProfileNode->LeavesCount = 0;
 	editCurrentProfileNode->Leaves = malloc(sizeof(MenuLeaf) * profileSettingsNode->LeavesCount);
 
-	editCurrentProfileNode->NodesCount = 4;
+	editCurrentProfileNode->NodesCount = 5;
 	editCurrentProfileNode->Nodes = malloc(sizeof(MenuNode) * editCurrentProfileNode->NodesCount);
 
 	/* Edit current profile -> Frequency */
@@ -95,6 +95,18 @@ void MenuDisplay_InitMenuDisplay(void)
 
 	runTimesSettingsNode->NodesCount = 0;
 	runTimesSettingsNode->Nodes = NULL;
+
+	/* Edit current profile -> TX power */
+	MenuNode* txPowerSettingsNode = &((MenuNode*)editCurrentProfileNode->Nodes)[4];
+	txPowerSettingsNode->Parent = editCurrentProfileNode;
+	txPowerSettingsNode->NamePtr = MenuDisplay_TxPowerNodeName;
+	txPowerSettingsNode->LeavesCount = 1;
+	txPowerSettingsNode->Leaves = malloc(sizeof(MenuLeaf*) * txPowerSettingsNode->LeavesCount);
+
+	txPowerSettingsNode->Leaves[0] = &MenuDisplay_TxPowerLeaf; /* Edit current profile -> TX power -> TX power */
+
+	txPowerSettingsNode->NodesCount = 0;
+	txPowerSettingsNode->Nodes = NULL;
 
 	/* Arming */
 	MenuNode* armingSettingsNode = &((MenuNode*)MenuDisplay_RootNode.Nodes)[2];
@@ -732,13 +744,13 @@ void MenuDisplay_EnterEndingToneDuration(void)
 	}
 
 	NumberInputDisplay_Show("Ending tone duration",
-					0,
-					YHL_MENU_MAX_ENDINGTONE_DURATION,
-					(int32_t)FoxState.EndingToneLength,
-					1,
-					&MenuDisplay_FormatEndingToneDuration,
-					&MenuDisplay_EnterEndingToneDurationOnEnterHandler,
-					MenuDisplay);
+		0,
+		YHL_MENU_MAX_ENDINGTONE_DURATION,
+		(int32_t)FoxState.EndingToneLength,
+		1,
+		&MenuDisplay_FormatEndingToneDuration,
+		&MenuDisplay_EnterEndingToneDurationOnEnterHandler,
+		MenuDisplay);
 }
 
 
@@ -879,4 +891,43 @@ void MenuDisplay_Disarm(void)
 	GSM_Disarm();
 
 	InformationPopup_Show("Disarmed!", "Fox disarmed.", MenuDisplay);
+}
+
+
+void MenuDisplay_EnterTxPower(void)
+{
+	if (FoxState.Frequency.Is144MHz)
+	{
+		InformationPopup_Show("Not available!", "Only for 3.5MHz range", MenuDisplay);
+		return;
+	}
+
+	NumberInputDisplay_Show("TX power",
+		YHL_MENU_MIN_TX_POWER,
+		YHL_MENU_MAX_TX_POWER,
+		(int32_t)floor(FoxState.Power * YHL_MENU_TX_POWER_MULTIPLIER + 0.5f),
+		YHL_MENU_TX_POWER_STEP,
+		&MenuDisplay_FormatTxPower,
+		&MenuDisplay_EnterTxPowerOnEnterHandler,
+		MenuDisplay);
+}
+
+
+void MenuDisplay_EnterTxPowerOnEnterHandler(int32_t power)
+{
+	float actualPower = power / (float)YHL_MENU_TX_POWER_MULTIPLIER;
+
+	FoxState_SetPower(actualPower);
+	PendingCommandsFlags.NeedToSetPower = true;
+
+	MenuDisplay_DrawMenuDisplay();
+}
+
+
+char* MenuDisplay_FormatTxPower(int32_t TxPower)
+{
+	char* buffer = malloc(8);
+	snprintf(buffer, 8, "%.1f W", TxPower / (float)YHL_MENU_TX_POWER_MULTIPLIER);
+
+	return buffer;
 }

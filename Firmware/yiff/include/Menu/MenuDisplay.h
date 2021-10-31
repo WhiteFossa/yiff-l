@@ -19,6 +19,7 @@
 #include <printf.h>
 #include <GlobalStateMachine.h>
 #include <main.h>
+#include <math.h>
 
 /**
  * Maximal length of item's text

@@ -44,6 +44,26 @@
 #define YHL_MENU_MAX_PAUSE_DURATION 3600U
 
 /**
+ * TX power multiplier - we multiply watts to this value to use it in the integer enter display
+ */
+#define YHL_MENU_TX_POWER_MULTIPLIER 10U
+
+/**
+ * TX power step
+ */
+#define YHL_MENU_TX_POWER_STEP ((int32_t)floor(0.1f * YHL_MENU_TX_POWER_MULTIPLIER + 0.5f))
+
+/**
+ * Minimal TX power (watts * YHL_MENU_TX_POWER_MULTIPLIER)
+ */
+#define YHL_MENU_MIN_TX_POWER (YHL_MIN_POWER_80M * YHL_MENU_TX_POWER_MULTIPLIER)
+
+/**
+ * Maximal TX power (watts * YHL_MENU_TX_POWER_MULTIPLIER)
+ */
+#define YHL_MENU_MAX_TX_POWER (YHL_MAX_POWER_80M * YHL_MENU_TX_POWER_MULTIPLIER)
+
+/**
  * What happened on menu item
  */
 typedef enum
@@ -345,6 +365,23 @@ void MenuDisplay_Arm(void);
 void MenuDisplay_Disarm(void);
 
 /**
+ * Call this to enter TX power
+ */
+void MenuDisplay_EnterTxPower(void);
+
+/**
+ * Call this when TX power is entered
+ */
+void MenuDisplay_EnterTxPowerOnEnterHandler(int32_t power);
+
+/**
+ * Used to format TX power in TX power input display.
+ * Do not forget to free result!
+ */
+char* MenuDisplay_FormatTxPower(int32_t TxPower);
+
+
+/**
  * Profile settings -> Show current profile
  */
 static const MenuLeaf MenuDisplay_ShowCurrentProfileLeaf =
@@ -465,6 +502,16 @@ static const MenuLeaf MenuDisplay_FinishTimeLeaf =
 };
 
 /**
+ * Edit current profile -> TX power -> TX power
+ */
+static const MenuLeaf MenuDisplay_TxPowerLeaf =
+{
+	.Name = "TX Power",
+	.LeftButtonText = "Set",
+	.LeftButtonAction = &MenuDisplay_EnterTxPower
+};
+
+/**
  * Arming -> Arm
  */
 static const MenuLeaf MenuDisplay_ArmLeaf =
@@ -518,6 +565,11 @@ static const char* MenuDisplay_CycleNodeName = "Cycle";
  * Edit current profile -> Run times
  */
 static const char* MenuDisplay_RunTimesNodeName = "Run times";
+
+/**
+ * Edit current profile -> TX power
+ */
+static const char* MenuDisplay_TxPowerNodeName = "TX power";
 
 /**
  * Arming
