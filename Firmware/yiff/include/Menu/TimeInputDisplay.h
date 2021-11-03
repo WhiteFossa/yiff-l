@@ -14,6 +14,7 @@
 #include <Buttons.h>
 #include <FoxStatus.h>
 #include <HAL.h>
+#include <SelfDiagnostics.h>
 
 /**
  * Call it to show time input display (times are in seconds)

@@ -51,6 +51,7 @@ extern PendingCommandsFlagsStruct PendingCommandsFlags;
 extern uint8_t SwitchToThisProfileId;
 extern char SetThisProfileName[YHL_PROFILE_NAME_MEMORY_SIZE];
 extern HardwareControlsEventsStruct HardwareControlsEvents;
+extern bool IsEEPROMHeadersInitialized;
 
 /**
  * Checks if fox name changed and if so, then saves it into EEPROM and bluetooth module

@@ -345,7 +345,7 @@ void HAL_SetupADCGeneric(void)
 
 	if (HAL_ADC_Init(&ADC_Handle) != HAL_OK)
 	{
-		L2HAL_Error(Generic);
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_ADCGenericSetupFailure);
 	}
 }
 
@@ -362,7 +362,7 @@ void HAL_SetupADCForUAntMeasurement(void)
 
 	if (HAL_ADC_ConfigChannel(&ADC_Handle, &adcChannelConfig) != HAL_OK)
 	{
-		L2HAL_Error(Generic);
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_ADCUantSetupFailure);
 	}
 
 	HAL_ADC_Start_IT(&ADC_Handle);
@@ -381,7 +381,7 @@ void HAL_SetupADCForUBattMeasurement(void)
 
 	if (HAL_ADC_ConfigChannel(&ADC_Handle, &adcChannelConfig) != HAL_OK)
 	{
-		L2HAL_Error(Generic);
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_ADCUbattSetupFailure);
 	}
 
 	HAL_ADC_Start_IT(&ADC_Handle);
@@ -400,7 +400,7 @@ void HAL_SetupADCForU80mMeasurement(void)
 
 	if (HAL_ADC_ConfigChannel(&ADC_Handle, &adcChannelConfig) != HAL_OK)
 	{
-		L2HAL_Error(Generic);
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_ADCU80mSetupFailure);
 	}
 
 	HAL_ADC_Start_IT(&ADC_Handle);
@@ -457,7 +457,7 @@ void HAL_AddNewADCMeasurement(uint16_t measurement)
 			break;
 
 		default:
-			L2HAL_Error(Generic);
+			SelfDiagnostics_HaltOnFailure(YhlFailureCause_UnknownADCChannelInHALAddNewADCMeasurement);
 			break;
 	}
 }
@@ -515,7 +515,7 @@ void HAL_ConnectToU80mRegulator(void)
 
 	if (!U80mRegulatorContext.IsFound)
 	{
-		L2HAL_Error(Generic);
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_U80mRegulatorNotFound);
 	}
 
 	HAL_SetU80mRegulatorCode(HAL_U80M_LOWEST_VOLTAGE_CODE); // Least possible voltage
@@ -600,7 +600,7 @@ void HAL_Enable2mToneGenerator(void)
 
 	if (HAL_TIM_OC_Init(&ToneTimerHandle) != HAL_OK)
 	{
-		L2HAL_Error(Generic);
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_FailedToInitToneGenerator);
 	}
 
 	/* Setting up timer output channel */
@@ -615,12 +615,12 @@ void HAL_Enable2mToneGenerator(void)
 
 	if (HAL_TIM_OC_ConfigChannel(&ToneTimerHandle, &channel, HAL_TONE_TIMER_CHANNEL) != HAL_OK)
 	{
-		L2HAL_Error(Generic);
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_FailedToConfigToneGeneratorChannel);
 	}
 
 	if (HAL_TIM_OC_Start(&ToneTimerHandle, HAL_TONE_TIMER_CHANNEL) != HAL_OK)
 	{
-		L2HAL_Error(Generic);
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_FailedToStartToneGeneratorTimer);
 	}
 }
 
@@ -633,7 +633,7 @@ void HAL_Disable2mToneGenerator(void)
 
 	if (HAL_TIM_OC_Stop(&ToneTimerHandle, HAL_TONE_TIMER_CHANNEL) != HAL_OK)
 	{
-		L2HAL_Error(Generic);
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_FailedToStopToneGeneratorTimer);
 	}
 
 	HAL_TIM_OC_DeInit(&ToneTimerHandle);
@@ -670,7 +670,7 @@ void HAL_SwitchAntennaMatchingChannel(YHL_HAL_AMChannelEnum channel, bool isOn)
 			break;
 
 		default:
-			L2HAL_Error(Generic);
+			SelfDiagnostics_HaltOnFailure(YhlFailureCause_WrongAntennaMatchingChannel);
 			break;
 	}
 
@@ -691,7 +691,7 @@ void HAL_SetAntennaMatchingValue(uint8_t value)
 {
 	if (value > HAL_AM_MAX_VALUE)
 	{
-		L2HAL_Error(Generic);
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_WrongAntennaMatchingValue);
 	}
 
 	/* Supressing carrier to decrease switching damage for relays */

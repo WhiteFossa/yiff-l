@@ -11,6 +11,7 @@
 #include <GraphicsBase.h>
 #include <FoxStatus.h>
 #include <HAL.h>
+#include <SelfDiagnostics.h>
 
 /**
  * Topmost pixel for antenna matching status string

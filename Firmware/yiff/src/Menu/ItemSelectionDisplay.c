@@ -18,7 +18,7 @@ void ItemSelectionDisplay_Show(char* title,
 {
 	if (NULL == onCloseHandler)
 	{
-		L2HAL_Error(Generic);
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_NoCloseHandlerInItemSelectionDisplay);
 	}
 
 	ItemSelectionDisplay_PreviousDisplay = previousDisplay;

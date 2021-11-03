@@ -39,7 +39,7 @@ void HL_SetupU80m(float targetVoltage)
 {
 	if (targetVoltage < YHL_HL_MIN_U80M || targetVoltage > YHL_HL_MAX_U80M)
 	{
-		L2HAL_Error(Generic);
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_WrongTargetU80m);
 	}
 
 	HL_U80mTarget = targetVoltage;
@@ -125,7 +125,7 @@ void HL_PrepareFoxFor80mCycle(void)
 {
 	if (FoxState.Frequency.Is144MHz)
 	{
-		L2HAL_Error(Generic);
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_AttemptToPrepareFoxFor80mWhile2m);
 	}
 
 	/* Disabling manipulator (just as precaution) */
@@ -161,7 +161,7 @@ void HL_PrepareFoxFor2mCycle(void)
 {
 	if (!FoxState.Frequency.Is144MHz)
 	{
-		L2HAL_Error(Generic);
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_AttemptToPrepareFoxFor2mWhile80m);
 	}
 
 	/* Disabling manipulator (just as precaution) */
@@ -190,7 +190,7 @@ void HL_PrepareFoxForCycle(void)
 {
 	if (HL_CheckIsFoxPrepared())
 	{
-		L2HAL_Error(Generic);
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_FoxAlreadyPreparedForCycleInHLPrepareFoxForCycle);
 	}
 
 	if (FoxState.Frequency.Is144MHz)
@@ -211,7 +211,7 @@ void HL_UnPrepareFoxFromCycle(void)
 {
 	if (!HL_CheckIsFoxPrepared())
 	{
-		L2HAL_Error(Generic);
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_FoxIsNotPreparedForCycleInHLUnPrepareFoxFromCycle);
 	}
 
 	if (FoxState.Frequency.Is144MHz)
@@ -235,12 +235,12 @@ void HL_Setup80mAntenna(void)
 {
 	if (FoxState.Frequency.Is144MHz)
 	{
-		L2HAL_Error(Generic);
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_AttemptToSetup80mAntennaWhile2m);
 	}
 
 	if (!HL_CheckIsFoxPrepared())
 	{
-		L2HAL_Error(Generic);
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_AttemptToSetup80mAntennaWhileFoxIsNotPrepared);
 	}
 
 	FoxState.ForceCarrierOn = true;
@@ -278,7 +278,7 @@ void HL_OnU80mLock(void)
 {
 	if (HL_IsU80mLocked)
 	{
-		L2HAL_Error(Generic);
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_U80mAlreadyLocked);
 	}
 
 	HL_IsU80mLocked = true;
@@ -288,13 +288,13 @@ void HL_PrepareAndMatch80m(void)
 {
 	if (FoxState.Frequency.Is144MHz)
 	{
-		L2HAL_Error(Generic);
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_2mOnHLPrepareAndMatch80m);
 	}
 
 	if (HL_CheckIsFoxPrepared())
 	{
 		/* Already prepared somehow, bug is somewhere */
-		L2HAL_Error(Generic);
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_FoxIsPreparedOnHLPrepareAndMatch80m);
 	}
 
 	HL_PrepareFoxForCycle();
@@ -318,7 +318,7 @@ void HL_RenameBluetoothDevice(char* newName)
 	HC06_Context = L2HAL_HC06_AttachToDevice(&UART_Handle);
 	if (!HC06_Context.IsFound)
 	{
-		L2HAL_Error(Generic);
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_FailedToReconnectToBluetoothAfterRename);
 	}
 
 	L2HAL_HC06_SetName(&HC06_Context, newName);

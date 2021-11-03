@@ -38,7 +38,7 @@ void CSM_Tick(void)
 
 	if (timeSinceCycleStart < 0)
 	{
-		L2HAL_Error(Generic);
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_NegativeTimeSinceCycleStart);
 	}
 
 	CycleStateEnum newState = CSM_GetStateByCycleTime((uint32_t)timeSinceCycleStart);
@@ -68,7 +68,7 @@ void CSM_Tick(void)
 				break;
 
 			default:
-				L2HAL_Error(Generic);
+				SelfDiagnostics_HaltOnFailure(YhlFailureCause_UnknownCycleStateInCSMTick);
 		}
 	}
 
@@ -190,7 +190,7 @@ void CSM_RecalculateStateChangeTime(uint16_t timeSinceCycleBegin)
 			break;
 
 		default:
-			L2HAL_Error(Generic);
+			SelfDiagnostics_HaltOnFailure(YhlFailureCause_UnknownCycleStateInCSMRecalculateStateChangeTime);
 	}
 
 	FoxState.CycleState.StateChangeTime = FoxState.CurrentTime + remainder;

@@ -11,12 +11,12 @@ void DrawMatchingDisplay(FoxStateStruct foxState)
 {
 	if (foxState.CurrentDisplay != AntennaMatchingDisplay)
 	{
-		L2HAL_Error(Generic);
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_DrawMatchingDisplayWhenNoMatchingDisplay);
 	}
 
 	if (!foxState.GlobalState.IsMatchingInProgress)
 	{
-		L2HAL_Error(Generic);
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_DrawMatchingDisplayWhenNoMatchingInProgress);
 	}
 
 	FMGL_API_SetActiveColor(&fmglContext, OnColor);

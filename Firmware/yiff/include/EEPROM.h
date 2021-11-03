@@ -16,6 +16,7 @@
 extern L2HAL_CRCContextStruct CRC_Context;
 extern FoxStateStruct FoxState;
 extern L2HAL_24x_ContextStruct EEPROMContext;
+extern bool IsEEPROMHeadersInitialized;
 
 #define YHL_EEPROM_DATA_VERSION 1U
 

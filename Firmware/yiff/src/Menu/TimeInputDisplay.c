@@ -17,7 +17,7 @@ void TimeInputDisplay_Show(char* title,
 {
 	if (NULL == onCloseHandler)
 	{
-		L2HAL_Error(Generic);
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_NoCloseHandlerInTimeInputDisplay);
 	}
 
 	TimeInputDisplay_OnCloseHandler = onCloseHandler;
@@ -119,7 +119,7 @@ char* TimeInputDisplay_CostructTimeFormatString(TimeInputDisplay_ActiveValueEnum
 			break;
 
 		default:
-			L2HAL_Error(Generic);
+			SelfDiagnostics_HaltOnFailure(YhlFailureCause_WrongActiveValueInTimeInputDisplayCostructTimeFormatString);
 	}
 
 	return buffer;
@@ -149,7 +149,7 @@ void TimeInputDisplay_EncoderClickHandler()
 		break;
 
 	default:
-		L2HAL_Error(Generic);
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_WrongActiveValueInTimeInputDisplayEncoderClickHandler);
 	}
 
 	TimeInputDisplay_Display();
@@ -196,7 +196,7 @@ void TimeInputDisplay_EncoderRotationHandler(int8_t direction)
 		break;
 
 	default:
-		L2HAL_Error(Generic);
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_WrongActiveValueInTimeInputDisplayEncoderRotationHandler);
 	}
 
 	int16_t currentValue = *currentValuePtr;

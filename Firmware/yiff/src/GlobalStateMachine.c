@@ -22,7 +22,7 @@ void GSM_Arm(void)
 {
 	if (FoxState.GlobalState.StartTime >= FoxState.GlobalState.EndTime)
 	{
-		L2HAL_Error(Generic);
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_StartTimeGreaterOrEqualFinishTimeInGSMArm);
 	}
 
 	/* Moving start and end times to today */
@@ -77,7 +77,7 @@ void GSM_Tick(void)
 			break;
 
 		default:
-			L2HAL_Error(Generic);
+			SelfDiagnostics_HaltOnFailure(YhlFailureCause_UnknownGlobalStateInGSMTick);
 			break;
 	}
 }

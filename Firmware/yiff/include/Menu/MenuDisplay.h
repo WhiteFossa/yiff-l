@@ -21,6 +21,7 @@
 #include <main.h>
 #include <math.h>
 #include <Time.h>
+#include <SelfDiagnostics.h>
 
 /**
  * Maximal length of item's text

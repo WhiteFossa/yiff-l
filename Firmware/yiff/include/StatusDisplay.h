@@ -15,6 +15,7 @@
 #include <Buttons.h>
 #include <printf.h>
 #include <math.h>
+#include <SelfDiagnostics.h>
 
 /**
  * Battery position and sizes

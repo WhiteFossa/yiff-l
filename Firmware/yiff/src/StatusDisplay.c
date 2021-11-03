@@ -190,7 +190,7 @@ void DrawFoxCode(FoxCodeEnum code, bool isFast, uint16_t availableWidth)
 			snprintf(codeTxt, codeTxtBufferSize, "S");
 		break;
 		default:
-			L2HAL_Error(Generic);
+			SelfDiagnostics_HaltOnFailure(YhlFailureCause_WrongFoxCodeInDrawFoxCode);
 		break;
 	}
 
@@ -329,7 +329,7 @@ void DrawFoxCycleState(CycleStateStruct cycleState, uint32_t currentTime, FoxCyc
 			snprintf(actionBuffer, actionBufferSize, "TX");
 		break;
 		default:
-			L2HAL_Error(Generic);
+			SelfDiagnostics_HaltOnFailure(YhlFailureCause_WrongCycleStateInDrawFoxCycleState);
 		break;
 	}
 
@@ -378,7 +378,7 @@ void DrawGlobalState(GlobalFoxStateStruct globalState, uint32_t currentTime)
 			snprintf(actionBuffer, actionBufferSize, "finish");
 		break;
 		default:
-			L2HAL_Error(Generic);
+			SelfDiagnostics_HaltOnFailure(YhlFailureCause_WrongGlobalFoxStateInDrawGlobalState);
 		break;
 	}
 

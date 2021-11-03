@@ -10,6 +10,7 @@
 
 #include <l2hal.h>
 #include <stdlib.h>
+#include <SelfDiagnostics.h>
 
 extern RTC_HandleTypeDef RtcHandle;
 extern uint8_t PreviousSecond;

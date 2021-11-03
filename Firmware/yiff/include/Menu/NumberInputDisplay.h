@@ -14,6 +14,7 @@
 #include <FoxStatus.h>
 #include <printf.h>
 #include <stdlib.h>
+#include <SelfDiagnostics.h>
 
 extern FoxStateStruct FoxState;
 

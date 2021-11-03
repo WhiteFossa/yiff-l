@@ -86,7 +86,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *UartHandle)
 			break;
 
 		default:
-			L2HAL_Error(Generic);
+			SelfDiagnostics_HaltOnFailure(YhlFailureCause_WrongPSMStateInHALUARTRxCpltCallback);
 			break;
 	}
 }
@@ -108,7 +108,7 @@ void UART_AbortListen(void)
 
 	if (HAL_UART_AbortReceive(&UART_Handle) != HAL_OK)
 	{
-		L2HAL_Error(Generic);
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_FailedToAbortUartListening);
 	}
 }
 
@@ -119,7 +119,7 @@ void UART_SendBlocking(uint8_t* message, uint8_t size)
 
 	if (HAL_UART_Transmit(&UART_Handle, tmpBuffer, size, YHL_UART_BLOCKING_TRANSFER_TIMEOUT) != HAL_OK)
 	{
-		L2HAL_Error(Generic);
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_FailedToTransmitOverUart);
 	}
 
 	free(tmpBuffer);
@@ -129,7 +129,7 @@ void UART_ReadBlocking(uint8_t* buffer, uint8_t size)
 {
 	if (HAL_UART_Receive(&UART_Handle, buffer, size, YHL_UART_BLOCKING_TRANSFER_TIMEOUT) != HAL_OK)
 	{
-		L2HAL_Error(Generic);
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_FailedToReceiveOverUart);
 	}
 }
 
@@ -152,7 +152,7 @@ void UART_SendSemiBlocking(uint8_t* message, uint8_t size)
 
 	if (HAL_UART_Transmit_IT(&UART_Handle, UART_TxBuffer, size) != HAL_OK)
 	{
-		L2HAL_Error(Generic);
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_FailedToTransmitOverUartIt);
 	}
 }
 
@@ -160,6 +160,6 @@ void UART_AskForNextByte(void)
 {
 	if(HAL_UART_Receive_IT(&UART_Handle, &UART_RxByteBuffer, 1) != HAL_OK)
 	{
-		L2HAL_Error(Generic);
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_FailedToReceiveOverUartIt);
 	}
 }

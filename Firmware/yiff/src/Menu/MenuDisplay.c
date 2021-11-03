@@ -209,7 +209,7 @@ void MenuDisplay_DrawMenuDisplay(void)
 {
 	if (FoxState.CurrentDisplay != MenuDisplay)
 	{
-		L2HAL_Error(Generic);
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_CurrentDisplayIsNotMenuDisplay);
 	}
 
 	FMGL_API_SetActiveColor(&fmglContext, OnColor);
@@ -297,7 +297,7 @@ void MenuDisplay_OnAction(MenuActionEnum action)
 	if (YHL_MENU_NOT_A_LEAF == leafIndex)
 	{
 		/* Not a node, not a leaf, definitely a bug */
-		L2HAL_Error(Generic);
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_NotANodeNotALeaf);
 	}
 
 	const MenuLeaf* leafPtr = MenuDisplay_CurrentNode.Leaves[leafIndex];
@@ -566,7 +566,7 @@ bool MenuDisplay_GetFrequencyRangeByIndex(uint8_t rangeIndex)
 		case 1:
 			return true;
 		default:
-			L2HAL_Error(Generic);
+			SelfDiagnostics_HaltOnFailure(YhlFailureCause_WrongIndexInMenuDisplayGetFrequencyRangeByIndex);
 			return false; /* Never will be reached, to suppress warning */
 	}
 }
@@ -715,7 +715,7 @@ bool MenuDisplay_IndexToFoxSpeed(uint8_t index)
 		case 1:
 			return true;
 		default:
-			L2HAL_Error(Generic);
+			SelfDiagnostics_HaltOnFailure(YhlFailureCause_WrongIndexInMenuDisplayIndexToFoxSpeed);
 			return false; /* Never will be reached */
 	}
 }
@@ -776,7 +776,7 @@ bool MenuDisplay_IndexToCycleType(uint8_t index)
 		case 1:
 			return false;
 		default:
-			L2HAL_Error(Generic);
+			SelfDiagnostics_HaltOnFailure(YhlFailureCause_WrongIndexInMenuDisplayIndexToCycleType);
 			return false; /* Never will be reached */
 	}
 }

@@ -22,7 +22,7 @@ void MorsePlayerPlay(MorseElementEnum* sequenceToPlay)
 	if (EoS == *MorseCurrentElement)
 	{
 		/* Sequence mustn't start with End of Sequence element */
-		L2HAL_Error(Generic);
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_SequenceStartsWithEoS);
 	}
 
 	MorsePlayerState = TakingNext;
@@ -78,7 +78,7 @@ void MorseTickMs(void)
 			break;
 
 		default:
-			L2HAL_Error(Generic);
+			SelfDiagnostics_HaltOnFailure(YhlFailureCause_WrongMorsePlayerStateInMorseTickMs);
 	}
 
 }
@@ -110,7 +110,7 @@ uint16_t MorseGetInterval(MorseElementEnum element)
 			return 0;
 
 		default:
-			L2HAL_Error(Generic);
+			SelfDiagnostics_HaltOnFailure(YhlFailureCause_WrongElementInMorseGetInterval);
 			return 0; /* Will never happen */
 	}
 }
@@ -141,7 +141,7 @@ MorseElementEnum* MorseGetFoxSequence(void)
 			return (MorseElementEnum*)Morse_Beacon;
 
 		default:
-			L2HAL_Error(Generic);
+			SelfDiagnostics_HaltOnFailure(YhlFailureCause_WrongFoxCodeInMorseGetFoxSequence);
 			return NULL; /* Will never happen */
 	}
 }

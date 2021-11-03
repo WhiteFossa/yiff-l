@@ -10,6 +10,7 @@
 
 #include <l2hal.h>
 #include <stdlib.h>
+#include <SelfDiagnostics.h>
 
 extern UART_HandleTypeDef UART_Handle;
 

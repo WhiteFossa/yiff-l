@@ -12,6 +12,7 @@
 #include <Buttons.h>
 #include <HAL.h>
 #include <FoxStatus.h>
+#include <SelfDiagnostics.h>
 
 extern FoxStateStruct FoxState;
 

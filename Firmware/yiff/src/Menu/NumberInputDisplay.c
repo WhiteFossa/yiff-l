@@ -19,12 +19,12 @@ void NumberInputDisplay_Show(char* title,
 {
 	if (NULL == formatter)
 	{
-		L2HAL_Error(Generic);
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_NoFomatterInNumberInputDisplay);
 	}
 
 	if (NULL == onCloseHandler)
 	{
-		L2HAL_Error(Generic);
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_NoCloseHandlerInNumberInputDisplay);
 	}
 
 	NumberInputDisplay_Formatter = formatter;

@@ -48,6 +48,9 @@
 
 int main(int argc, char* argv[])
 {
+	/* Headers aren't initialized yet, self-diagnostics unable to use EEPROM */
+	IsEEPROMHeadersInitialized = false;
+
 	/* Setting up hardware */
 	L2HAL_Init();
 	HL_Init();
@@ -73,8 +76,8 @@ int main(int argc, char* argv[])
 	EEPROMContext = L2HAL_24x_DetectEepromAtAddress(&I2C_Other, YHL_EEPROM_ADDRESS, true, YHL_EEPROM_PAGE_SIZE);
 	if (!EEPROMContext.IsFound)
 	{
-		/* Unable to find EEPROM */
-		L2HAL_Error(Generic);
+		/* Unable to find EEPROM. */
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_UnableToFindEEPROM);
 	}
 
 	// TODO: Uncomment me to force EEPROM format
@@ -94,6 +97,11 @@ int main(int argc, char* argv[])
 
 	/* Detecting display */
 	L2HAL_SSD1327_Context = L2HAL_SSD1327_DetectDisplay(&I2C_Display);
+	if (!L2HAL_SSD1327_Context.IsFound)
+	{
+		/* Display not found */
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_DisplayNotFound);
+	}
 	L2HAL_SSD1327_InitDisplay(&L2HAL_SSD1327_Context);
 
 	/* Colors */
@@ -186,7 +194,7 @@ int main(int argc, char* argv[])
 	HC06_Context = L2HAL_HC06_AttachToDevice(&UART_Handle);
 	if (!HC06_Context.IsFound)
 	{
-		L2HAL_Error(Generic);
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_BluetoothNotFound);
 	}
 
 	/**

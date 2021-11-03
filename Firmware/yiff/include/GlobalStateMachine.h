@@ -13,6 +13,7 @@
 #include <HardwareLogic.h>
 #include <CycleStateMachine.h>
 #include <main.h>
+#include <SelfDiagnostics.h>
 
 extern FoxStateStruct FoxState;
 

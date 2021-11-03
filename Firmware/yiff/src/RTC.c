@@ -22,7 +22,7 @@ void HAL_RTC_MspInit(RTC_HandleTypeDef *hrtc)
 	RCC_OscInitStruct.LSIState = RCC_LSI_OFF;
 	if(HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
 	{
-		L2HAL_Error(Generic);
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_FailedToStartLSE);
 	}
 
 	RCC_PeriphCLKInitTypeDef PeriphClkInitStruct;
@@ -30,7 +30,7 @@ void HAL_RTC_MspInit(RTC_HandleTypeDef *hrtc)
 	PeriphClkInitStruct.RTCClockSelection = RCC_RTCCLKSOURCE_LSE;
 	if(HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
 	{
-		L2HAL_Error(Generic);
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_FailedToSwitchToLSE);
 	}
 
 	/* Clocking in RTC */
@@ -48,7 +48,7 @@ void InitRTC(void)
 	RtcHandle.Init.AsynchPrediv = RTC_AUTO_1_SECOND;
 	if (HAL_RTC_Init(&RtcHandle) != HAL_OK)
 	{
-		L2HAL_Error(Generic);
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_FailedToInitRTC);
 	}
 
 	/* Resetting date/time */
@@ -84,7 +84,7 @@ void RTC_SetCurrentDate(RTC_DateTypeDef date)
 {
 	if (HAL_RTC_SetDate(&RtcHandle, &date, RTC_FORMAT_BIN) != HAL_OK)
 	{
-		L2HAL_Error(Generic);
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_FailedToSetRTCDate);
 	}
 
 	CurrentDate = date;
@@ -95,7 +95,7 @@ void RTC_SetCurrentTime(RTC_TimeTypeDef time)
 {
 	if (HAL_RTC_SetTime(&RtcHandle, &time, RTC_FORMAT_BIN) != HAL_OK)
 	{
-		L2HAL_Error(Generic);
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_FailedToSetRTCTime);
 	}
 
 	CurrentTime = time;
@@ -106,14 +106,14 @@ void RTC_Poll(void)
 {
 	if (HAL_RTC_GetTime(&RtcHandle, &CurrentTime, RTC_FORMAT_BIN) != HAL_OK)
 	{
-		L2HAL_Error(Generic);
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_FailedToGetRTCTime);
 	}
 
 	if (PreviousSecond != CurrentTime.Seconds)
 	{
 		if (HAL_RTC_GetDate(&RtcHandle, &CurrentDate, RTC_FORMAT_BIN) != HAL_OK)
 		{
-			L2HAL_Error(Generic);
+			SelfDiagnostics_HaltOnFailure(YhlFailureCause_FailedToGetRTCDate);
 		}
 
 		/* Calling listeners */
@@ -131,7 +131,7 @@ void RTC_AddOnNewSecondListener(void (*listener)(void))
 	if (255 == RtcOnNewSecondListenersCount)
 	{
 		/* No more, please */
-		L2HAL_Error(Generic);
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_TooMuchSecondChangeListeners);
 	}
 
 	RtcOnNewSecondListenersCount ++;
@@ -144,7 +144,7 @@ void RTC_AddOnDateOrTimeChangeListener(void (*listener)(void))
 {
 	if (255 == RtcDateAndTimeChangeListenersCount)
 	{
-		L2HAL_Error(Generic);
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_TooMuchDateOrTimeListeners);
 	}
 
 	RtcDateAndTimeChangeListenersCount ++;
@@ -179,7 +179,7 @@ uint8_t GetWeekdayFromDayNumber(uint8_t dayNumber)
 			return RTC_WEEKDAY_SUNDAY;
 
 		default:
-			L2HAL_Error(Generic);
+			SelfDiagnostics_HaltOnFailure(YhlFailureCause_WrongWeekDayInGetWeekdayFromDayNumber);
 
 			return 0; /* Never will be reached */
 	}

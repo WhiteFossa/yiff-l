@@ -102,7 +102,7 @@ void EEPROM_Init(void)
 			/**
 			 * EEPROM is faulty
 			 */
-			L2HAL_Error(Generic);
+			SelfDiagnostics_HaltOnFailure(YhlFailureCause_FaultyEEPROMInHeaders);
 		}
 	}
 
@@ -122,7 +122,7 @@ void EEPROM_Init(void)
 			if (!EEPROM_CheckProfile(&profile))
 			{
 				/* Faulty EEPROM */
-				L2HAL_Error(Generic);
+				SelfDiagnostics_HaltOnFailure(YhlFailureCause_FaultyEEPROMInProfiles);
 			}
 		}
 	}
@@ -150,6 +150,9 @@ bool EEPROM_InitHeaders(void)
 	{
 		return false;
 	}
+
+	/* Now we can write diagnostic codes into EEPROM */
+	IsEEPROMHeadersInitialized = true;
 
 	return true;
 }
@@ -250,7 +253,7 @@ void EEPROM_SwitchProfile(uint8_t profileId)
 
 	if (profileId >= EEPROM_Header.NumberOfProfiles)
 	{
-		L2HAL_Error(Generic);
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_WrongProfileIdInEEPROMSwitchProfile);
 	}
 
 	EEPROM_Header.ProfileInUse = profileId;
@@ -265,7 +268,7 @@ void EEPROM_AddProfile(void)
 {
 	if (EEPROM_Header.NumberOfProfiles == YHL_MAX_PROFILES_COUNT)
 	{
-		L2HAL_Error(Generic);
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_TooManyProfiles);
 	}
 
 	EEPROMProfileStruct newProfile = EEPROM_GenerateDefaultProfile();
@@ -281,7 +284,7 @@ EEPROMProfileStruct EEPROM_GetProfile(uint8_t profileId)
 {
 	if (profileId >= EEPROM_Header.NumberOfProfiles)
 	{
-		L2HAL_Error(Generic);
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_WrongProfileIdInEEPROMGetProfile);
 	}
 
 	EEPROMProfileStruct result;
@@ -295,7 +298,7 @@ void EEPROM_UpdateProfile(EEPROMProfileStruct* profile, uint8_t profileId)
 {
 	if (profileId >= EEPROM_Header.NumberOfProfiles)
 	{
-		L2HAL_Error(Generic);
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_WrongProfileIdInEEPROMUpdateProfile);
 	}
 
 	uint16_t profileAddress = EEPROM_Header.ProfilesAddresses[profileId];
