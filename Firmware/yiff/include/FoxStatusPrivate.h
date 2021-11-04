@@ -336,6 +336,11 @@ typedef struct
 	 * Data for matching display
 	 */
 	MatchingDisplayStruct MatchingDisplayData;
+
+	/**
+	 * True if EEPROM headers is initialized and self-diagnostics can write data to EEPROM
+	 */
+	bool IsEEPROMHeadersInitialized;
 }
 FoxStateStruct;
 

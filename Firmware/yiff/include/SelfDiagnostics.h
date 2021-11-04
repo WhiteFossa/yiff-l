@@ -9,6 +9,7 @@
 #define INCLUDE_SELFDIAGNOSTICS_H_
 
 #include <l2hal.h>
+#include <FoxStatus.h>
 
 /**
  * Possible failure causes
@@ -404,7 +405,7 @@ typedef enum
 YhlFailureCausesEnum;
 
 extern L2HAL_24x_ContextStruct EEPROMContext;
-extern bool IsEEPROMHeadersInitialized;
+extern FoxStateStruct FoxState;
 
 /**
  * Log failure cause into EEPROM, shutdown most of the hardware and halt.

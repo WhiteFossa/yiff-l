@@ -48,8 +48,8 @@
 
 int main(int argc, char* argv[])
 {
-	/* Headers aren't initialized yet, self-diagnostics unable to use EEPROM */
-	IsEEPROMHeadersInitialized = false;
+	/* Initializing variables */
+	FoxState_Init();
 
 	/* Setting up hardware */
 	L2HAL_Init();

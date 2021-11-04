@@ -15,7 +15,7 @@ void SelfDiagnostics_HaltOnFailure(YhlFailureCausesEnum failureCause)
 	HAL_EmergencyShutdown();
 
 	/* Logging error (if EEPROM is accessable) */
-	if (EEPROMContext.IsFound && IsEEPROMHeadersInitialized)
+	if (EEPROMContext.IsFound && FoxState.IsEEPROMHeadersInitialized)
 	{
 		EEPROM_Header.LastFailure = failureCause;
 		EEPROM_WriteHeader(&EEPROM_Header, EEPROM_ConstantHeader.HeaderAddress);

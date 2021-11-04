@@ -157,11 +157,6 @@ FoxButtonStruct RightButton;
  */
 HardwareControlsEventsStruct HardwareControlsEvents;
 
-/**
- * True if EEPROM headers is initialized and self-diagnostics can write data to EEPROM
- */
-bool IsEEPROMHeadersInitialized;
-
 
 /********************
 * Commands go below *

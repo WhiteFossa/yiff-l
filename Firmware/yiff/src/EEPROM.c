@@ -152,7 +152,7 @@ bool EEPROM_InitHeaders(void)
 	}
 
 	/* Now we can write diagnostic codes into EEPROM */
-	IsEEPROMHeadersInitialized = true;
+	FoxState.IsEEPROMHeadersInitialized = true;
 
 	return true;
 }
