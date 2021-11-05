@@ -209,6 +209,8 @@ void HAL_IntiHardware(void)
 	HAL_EncoderButtonNoiseSuppressionCounter = 0;
 	HAL_RightButtonNoiseSuppressionCounter = 0;
 
+	HAL_IsDisplayBusInitialized = false;
+
 	/**
 	 * Launching ADC conversions
 	 */
@@ -885,4 +887,65 @@ void HAL_EmergencyShutdown(void)
 	HAL_SwitchBluetoothPower(false); /* From 5V regulator */
 	HAL_ActivateFox(false); /* 5V regulator shutdown */
 	HAL_SwitchDisplayPower(false); /* 4V regulator shutdown */
+}
+
+void HAL_DeInitializeDisplayBus(void)
+{
+	if (!HAL_IsDisplayBusInitialized)
+	{
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_DisplayBusAlreadyDeinitialized);
+	}
+
+	I2C_Display.Instance = L2HAL_DISPLAY_BUS;
+	if(HAL_I2C_DeInit(&I2C_Display) != HAL_OK)
+	{
+		/* De-initialization Error */
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_FailedToDeInitializeDisplayBus);
+	}
+}
+
+bool HAL_GetDisplayBusInitializationStatus(void)
+{
+	return HAL_IsDisplayBusInitialized;
+}
+
+void HAL_SupressDisplayParasiticPower(void)
+{
+	GPIO_InitTypeDef GPIO_InitStruct;
+	GPIO_InitStruct.Pin = L2HAL_DISPLAY_BUS_SCL | L2HAL_DISPLAY_BUS_SDA;
+	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+	HAL_GPIO_Init(L2HAL_DISPLAY_BUS_PORT, &GPIO_InitStruct);
+
+	HAL_GPIO_WritePin(L2HAL_DISPLAY_BUS_PORT, L2HAL_DISPLAY_BUS_SCL, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(L2HAL_DISPLAY_BUS_PORT, L2HAL_DISPLAY_BUS_SDA, GPIO_PIN_RESET);
+}
+
+void HAL_InitializeDisplayBus(void)
+{
+	if (HAL_IsDisplayBusInitialized)
+	{
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_DisplayBusAlreadyInitialized);
+	}
+
+	HAL_GPIO_DeInit(L2HAL_DISPLAY_BUS_PORT, L2HAL_DISPLAY_BUS_SCL | L2HAL_DISPLAY_BUS_SDA);
+
+	L2HAL_DISPLAY_BUS_CLOCK_ENABLE();
+
+	I2C_Display.Instance = L2HAL_DISPLAY_BUS;
+	I2C_Display.Init.ClockSpeed = 400000; /* 400 KHz */
+	I2C_Display.Init.DutyCycle = I2C_DUTYCYCLE_2;
+	I2C_Display.Init.OwnAddress1 = 0x00;
+	I2C_Display.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+	I2C_Display.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+	I2C_Display.Init.OwnAddress2 = 0x00;
+	I2C_Display.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+	I2C_Display.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+
+	if(HAL_I2C_Init(&I2C_Display) != HAL_OK)
+	{
+		/* Initialization Error */
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_FailedToInitializeDisplayBus);
+	}
 }

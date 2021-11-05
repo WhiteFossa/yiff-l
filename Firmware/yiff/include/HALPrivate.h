@@ -66,6 +66,11 @@ uint16_t HAL_EncoderButtonNoiseSuppressionCounter;
 uint16_t HAL_RightButtonNoiseSuppressionCounter;
 
 /**
+ * True, if display bus initialized
+ */
+bool HAL_IsDisplayBusInitialized;
+
+/**
  * Callback, called when left button pressed
  */
 void (*HAL_LeftButtonCallback)(void);

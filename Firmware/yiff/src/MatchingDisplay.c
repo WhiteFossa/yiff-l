@@ -9,6 +9,11 @@
 
 void DrawMatchingDisplay(FoxStateStruct foxState)
 {
+	if (foxState.SupressDrawing)
+	{
+		return;
+	}
+
 	if (foxState.CurrentDisplay != AntennaMatchingDisplay)
 	{
 		SelfDiagnostics_HaltOnFailure(YhlFailureCause_DrawMatchingDisplayWhenNoMatchingDisplay);

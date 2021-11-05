@@ -16,6 +16,7 @@
 
 extern FoxStateStruct FoxState;
 extern L2HAL_HC06_ContextStruct HC06_Context;
+extern L2HAL_SSD1327_ContextStruct L2HAL_SSD1327_Context;
 
 /**
  * Minimal and maximal voltages of 3.5MHz output stage power sources
@@ -74,6 +75,21 @@ extern L2HAL_HC06_ContextStruct HC06_Context;
  * Bluetooth module will be ready after this time on powering up
  */
 #define YHL_HL_BLUETOOTH_BOOT_TIME 1000
+
+/**
+ * Time to wait after powering display down before attempt to turn it on
+ */
+#define YHL_HL_DISPLAY_POWERDOWN_TIME 1000
+
+/**
+ * Time to spin display power regulator up
+ */
+#define YHL_HL_DISPLAY_REGULATOR_SPINUP_TIME 1000
+
+/**
+ * Try to initialize display this times before reporting a failure
+ */
+#define YHL_HL_INITIALIZE_DISPLAY_ATTEMPS_COUNT 5
 
 /**
  * Initialize hardware logic
@@ -148,5 +164,10 @@ void HL_PrepareAndMatch80m(void);
  * Renames bluetooth device (will lead to bluetooth device power cycling)
  */
 void HL_RenameBluetoothDevice(char* newName);
+
+/**
+ * Initializes display and turns it on
+ */
+void HL_TurnDisplayOn(void);
 
 #endif /* INCLUDE_HARDWARELOGIC_H_ */

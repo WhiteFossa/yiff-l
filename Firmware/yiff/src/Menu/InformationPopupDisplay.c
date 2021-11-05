@@ -13,6 +13,11 @@ void InformationPopup_Show(char* title, char* message, FoxDisplayEnum previousDi
 	InformationPopup_PreviousDisplay = previousDisplay;
 	FoxState.CurrentDisplay = InformationPopupDisplay;
 
+	if (FoxState.SupressDrawing)
+	{
+		return;
+	}
+
 	FMGL_API_SetActiveColor(&fmglContext, OnColor);
 
 	FMGL_API_ClearScreen(&fmglContext);
@@ -65,6 +70,11 @@ void InformationPopup_Show(char* title, char* message, FoxDisplayEnum previousDi
 void InformationPopup_Close(void)
 {
 	FoxState.CurrentDisplay = InformationPopup_PreviousDisplay;
+
+	if (FoxState.SupressDrawing)
+	{
+		return;
+	}
 
 	FMGL_API_ClearScreen(&fmglContext);
 }

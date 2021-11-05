@@ -57,7 +57,6 @@ int main(int argc, char* argv[])
 
 	/* Hardware debug
 	 * TODO: Remove me */
-	HAL_SwitchDisplayPower(true);
 	HAL_ActivateFox(true);
 	HAL_SwitchBluetoothPower(true);
 
@@ -93,16 +92,8 @@ int main(int argc, char* argv[])
 	MorsePlayerInit();
 	L2HAL_SysTick_RegisterHandler(&MorseTickMs);
 
-	HAL_Delay(100);
-
 	/* Detecting display */
-	L2HAL_SSD1327_Context = L2HAL_SSD1327_DetectDisplay(&I2C_Display);
-	if (!L2HAL_SSD1327_Context.IsFound)
-	{
-		/* Display not found */
-		SelfDiagnostics_HaltOnFailure(YhlFailureCause_DisplayNotFound);
-	}
-	L2HAL_SSD1327_InitDisplay(&L2HAL_SSD1327_Context);
+	HL_TurnDisplayOn();
 
 	/* Colors */
 	OffColor.R = 0;

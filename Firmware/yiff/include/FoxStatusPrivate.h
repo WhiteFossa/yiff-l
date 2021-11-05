@@ -341,6 +341,11 @@ typedef struct
 	 * True if EEPROM headers is initialized and self-diagnostics can write data to EEPROM
 	 */
 	bool IsEEPROMHeadersInitialized;
+
+	/**
+	 * Disable all drawing operations if set to true. Set it to true when display is disabled.
+	 */
+	bool SupressDrawing;
 }
 FoxStateStruct;
 

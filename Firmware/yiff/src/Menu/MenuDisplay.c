@@ -197,6 +197,11 @@ void MenuDisplay_GoToParentNode(void)
 		FoxState.CurrentDisplay = StatusDisplay;
 		Main_SetDefaultButtonsActions();
 
+		if (FoxState.SupressDrawing)
+		{
+			return;
+		}
+
 		FMGL_API_ClearScreen(&fmglContext);
 		return;
 	}
@@ -210,6 +215,11 @@ void MenuDisplay_DrawMenuDisplay(void)
 	if (FoxState.CurrentDisplay != MenuDisplay)
 	{
 		SelfDiagnostics_HaltOnFailure(YhlFailureCause_CurrentDisplayIsNotMenuDisplay);
+	}
+
+	if (FoxState.SupressDrawing)
+	{
+		return;
 	}
 
 	FMGL_API_SetActiveColor(&fmglContext, OnColor);

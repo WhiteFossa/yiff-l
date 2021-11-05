@@ -47,25 +47,6 @@ void L2HAL_InitCustomHardware(void)
 
 void L2HAL_SetupI2C(void)
 {
-	/* I2C for display */
-	__HAL_RCC_I2C1_CLK_ENABLE();
-
-	I2C_Display.Instance = I2C1;
-	I2C_Display.Init.ClockSpeed = 400000; /* 400 KHz */
-	I2C_Display.Init.DutyCycle = I2C_DUTYCYCLE_2;
-	I2C_Display.Init.OwnAddress1 = 0x00;
-	I2C_Display.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
-	I2C_Display.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
-	I2C_Display.Init.OwnAddress2 = 0x00;
-	I2C_Display.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
-	I2C_Display.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
-
-	if(HAL_I2C_Init(&I2C_Display) != HAL_OK)
-	{
-		/* Initialization Error */
-		L2HAL_Error(Generic);
-	}
-
 	/* I2C for other devices */
 	__HAL_RCC_I2C2_CLK_ENABLE();
 
@@ -107,24 +88,25 @@ void L2HAL_SetupI2C(void)
 
 void HAL_I2C_MspInit(I2C_HandleTypeDef *hi2c)
 {
-	if (hi2c->Instance == I2C1)
+	if (hi2c->Instance == L2HAL_DISPLAY_BUS)
 	{
 		/**
+		 * I2C for display
 		 * Setting up port
 		 * I2C1 at PB6 (SCL) and PB7 (SDA)
 		 */
 
 		/* Clocking port */
-		__HAL_RCC_GPIOB_CLK_ENABLE();
+		L2HAL_DISPLAY_BUS_CLOCK_PORT();
 
 		GPIO_InitTypeDef GPIO_InitStruct;
 
-		GPIO_InitStruct.Pin = GPIO_PIN_6 | GPIO_PIN_7;
+		GPIO_InitStruct.Pin = L2HAL_DISPLAY_BUS_SCL | L2HAL_DISPLAY_BUS_SDA;
 		GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
 		GPIO_InitStruct.Pull = GPIO_PULLUP;
 		GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
 
-		HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+		HAL_GPIO_Init(L2HAL_DISPLAY_BUS_PORT, &GPIO_InitStruct);
 
 		/* Display driver uses I2C interrupts exchange */
 		HAL_NVIC_SetPriority(I2C1_ER_IRQn, I2C1_ER_IRQN_PRIORITY, I2C1_ER_IRQN_SUBPRIORITY);
@@ -135,6 +117,7 @@ void HAL_I2C_MspInit(I2C_HandleTypeDef *hi2c)
 	else if (hi2c->Instance == I2C2)
 	{
 		/**
+		 * I2C for other devices
 		 * Setting up port
 		 * I2C2 at PB10 (SCL) and PB11 (SDA)
 		 */
@@ -161,13 +144,13 @@ void HAL_I2C_MspInit(I2C_HandleTypeDef *hi2c)
 
 void HAL_I2C_MspDeInit(I2C_HandleTypeDef* hi2c)
 {
-	if (hi2c->Instance == I2C1)
+	if (hi2c->Instance == L2HAL_DISPLAY_BUS)
 	{
 		HAL_NVIC_DisableIRQ(I2C1_ER_IRQn);
 		HAL_NVIC_DisableIRQ(I2C1_EV_IRQn);
 
-		__HAL_RCC_I2C1_CLK_DISABLE();
-		HAL_GPIO_DeInit(GPIOB, GPIO_PIN_6 | GPIO_PIN_7);
+		L2HAL_DISPLAY_BUS_CLOCK_DISABLE();
+		HAL_GPIO_DeInit(L2HAL_DISPLAY_BUS_PORT, L2HAL_DISPLAY_BUS_SCL | L2HAL_DISPLAY_BUS_SDA);
 	}
 	else if (hi2c->Instance == I2C2)
 	{

@@ -89,6 +89,11 @@ void NumberInputDisplay_EncoderRotationHandler(int8_t direction)
 
 void NumberInputDisplay_Display(void)
 {
+	if (FoxState.SupressDrawing)
+	{
+		return;
+	}
+
 	FMGL_API_SetActiveColor(&fmglContext, OnColor);
 
 	FMGL_API_ClearScreen(&fmglContext);
@@ -146,6 +151,11 @@ void NumberInputDisplay_Display(void)
 void NumberInputDisplay_Close(void)
 {
 	FoxState.CurrentDisplay = NumberInputDisplay_PreviousDisplay;
+
+	if (FoxState.SupressDrawing)
+	{
+		return;
+	}
 
 	FMGL_API_ClearScreen(&fmglContext);
 }

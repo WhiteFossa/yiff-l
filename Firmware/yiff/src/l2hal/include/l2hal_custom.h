@@ -58,6 +58,41 @@ extern L2HAL_SSD1327_ContextStruct L2HAL_SSD1327_Context;
 extern SPI_HandleTypeDef SPIHandle;
 
 /**
+ * Display resides here
+ */
+#define L2HAL_DISPLAY_BUS I2C1
+
+/**
+ * Display bus port
+ */
+#define L2HAL_DISPLAY_BUS_PORT GPIOB
+
+/**
+ * Clock this port when initializing display bus
+ */
+#define L2HAL_DISPLAY_BUS_CLOCK_PORT __HAL_RCC_GPIOB_CLK_ENABLE
+
+/**
+ * Enable display bus clock
+ */
+#define L2HAL_DISPLAY_BUS_CLOCK_ENABLE __HAL_RCC_I2C1_CLK_ENABLE
+
+/**
+ * Disable display bus clock
+ */
+#define L2HAL_DISPLAY_BUS_CLOCK_DISABLE __HAL_RCC_I2C1_CLK_DISABLE
+
+/**
+ * Display bus SCL
+ */
+#define L2HAL_DISPLAY_BUS_SCL GPIO_PIN_6
+
+/**
+ * Display bus SDA
+ */
+#define L2HAL_DISPLAY_BUS_SDA GPIO_PIN_7
+
+/**
  * I2C1 interrupt priorities.
  */
 #define I2C1_ER_IRQN_PRIORITY 0

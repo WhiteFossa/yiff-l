@@ -453,4 +453,24 @@ void HAL_OnTick(void);
  */
 void HAL_EmergencyShutdown(void);
 
+/**
+ * De-initialize display bus
+ */
+void HAL_DeInitializeDisplayBus(void);
+
+/**
+ * True, if display bus is initialized
+ */
+bool HAL_GetDisplayBusInitializationStatus(void);
+
+/**
+ * Disconnects I2C bus from display pins and pulls those pins to the ground
+ */
+void HAL_SupressDisplayParasiticPower(void);
+
+/**
+ * Initialize display bus
+ */
+void HAL_InitializeDisplayBus(void);
+
 #endif /* INCLUDE_HAL_H_ */

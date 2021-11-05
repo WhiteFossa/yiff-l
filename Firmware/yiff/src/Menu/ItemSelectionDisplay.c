@@ -49,6 +49,11 @@ void ItemSelectionDisplay_Show(char* title,
 
 void ItemSelectionDisplay_Display(void)
 {
+	if (FoxState.SupressDrawing)
+	{
+		return;
+	}
+
 	FMGL_API_SetActiveColor(&fmglContext, OnColor);
 
 	FMGL_API_ClearScreen(&fmglContext);
@@ -229,6 +234,11 @@ void ItemSelectionDisplay_ScrollDownHandler(void)
 void ItemSelectionDisplay_Close(void)
 {
 	FoxState.CurrentDisplay = ItemSelectionDisplay_PreviousDisplay;
+
+	if (FoxState.SupressDrawing)
+	{
+		return;
+	}
 
 	FMGL_API_ClearScreen(&fmglContext);
 }

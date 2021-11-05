@@ -9,6 +9,11 @@
 
 void DrawStatusDisplay(FoxStateStruct foxState)
 {
+	if (FoxState.SupressDrawing)
+	{
+		return;
+	}
+
 	FMGL_API_SetActiveColor(&fmglContext, OnColor);
 
 	uint16_t rightmostPixel = (uint16_t)(FMGL_API_GetDisplayWidth(&fmglContext) - 1U);

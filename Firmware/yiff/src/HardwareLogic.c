@@ -325,3 +325,46 @@ void HL_RenameBluetoothDevice(char* newName)
 	L2HAL_HC06_SetPIN(&HC06_Context, YHL_HL_BLUETOOTH_PIN);
 }
 
+void HL_TurnDisplayOn(void)
+{
+	/* Detecting display (might require some attempts) */
+	int8_t attemptsCounter = YHL_HL_INITIALIZE_DISPLAY_ATTEMPS_COUNT;
+	while (attemptsCounter >= 0)
+	{
+		/* Powering off */
+		HAL_SwitchDisplayPower(false);
+
+		/* De-initializing I2C bus and pulling pins down to remove parasitic power */
+		if (HAL_GetDisplayBusInitializationStatus())
+		{
+			HAL_DeInitializeDisplayBus();
+		}
+		HAL_SupressDisplayParasiticPower();
+		HAL_Delay(YHL_HL_DISPLAY_POWERDOWN_TIME); /* Time to power down*/
+
+		/* Powering on */
+		HAL_SwitchDisplayPower(true);
+		HAL_Delay(YHL_HL_DISPLAY_REGULATOR_SPINUP_TIME); /* Time to spin regulator up */
+
+		HAL_InitializeDisplayBus();
+
+		L2HAL_SSD1327_Context = L2HAL_SSD1327_DetectDisplay(&I2C_Display);
+		if (L2HAL_SSD1327_Context.IsFound)
+		{
+			/* Found */
+			break;
+		}
+
+		attemptsCounter --;
+	}
+
+	if (!L2HAL_SSD1327_Context.IsFound)
+	{
+		/* Display not found */
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_DisplayNotFound);
+	}
+
+	L2HAL_SSD1327_InitDisplay(&L2HAL_SSD1327_Context);
+	FoxState.SupressDrawing = false;
+}
+

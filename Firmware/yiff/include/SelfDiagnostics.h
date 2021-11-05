@@ -399,7 +399,28 @@ typedef enum
 	/**
 	 * Wrong profile id in EEPROM_UpdateProfile()
 	 */
-	YhlFailureCause_WrongProfileIdInEEPROMUpdateProfile = 76
+	YhlFailureCause_WrongProfileIdInEEPROMUpdateProfile = 76,
+
+	/**
+	 * Failed to de-initialize display bus
+	 */
+	YhlFailureCause_FailedToDeInitializeDisplayBus = 77,
+
+	/**
+	 * Double call of HAL_DeInitializeDisplayBus()
+	 */
+	YhlFailureCause_DisplayBusAlreadyDeinitialized = 78,
+
+	/**
+	 * Double call of HAL_InitializeDisplayBus()
+	 */
+	YhlFailureCause_DisplayBusAlreadyInitialized = 79,
+
+	/**
+	 * Failed to initialize display bus
+	 */
+	YhlFailureCause_FailedToInitializeDisplayBus = 80
+
 
 }
 YhlFailureCausesEnum;

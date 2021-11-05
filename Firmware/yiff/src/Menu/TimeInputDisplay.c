@@ -44,6 +44,11 @@ void TimeInputDisplay_Show(char* title,
 
 void TimeInputDisplay_Display()
 {
+	if (FoxState.SupressDrawing)
+	{
+		return;
+	}
+
 	FMGL_API_SetActiveColor(&fmglContext, OnColor);
 
 	FMGL_API_ClearScreen(&fmglContext);
@@ -249,6 +254,11 @@ void TimeInputDisplay_EncoderRotationHandler(int8_t direction)
 void TimeInputDisplay_Close()
 {
 	FoxState.CurrentDisplay = TimeInputDisplay_PreviousDisplay;
+
+	if (FoxState.SupressDrawing)
+	{
+		return;
+	}
 
 	FMGL_API_ClearScreen(&fmglContext);
 }

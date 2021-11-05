@@ -11,6 +11,7 @@
 void FoxState_Init(void)
 {
 	FoxState.IsEEPROMHeadersInitialized = false; /* Headers aren't initialized yet, self-diagnostics unable to use EEPROM */
+	FoxState.SupressDrawing = true; /* Display is not initialized yet */
 	FoxState.ForceCarrierOff = false;
 	FoxState.ForceCarrierOn = false;
 
