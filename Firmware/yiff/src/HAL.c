@@ -902,6 +902,8 @@ void HAL_DeInitializeDisplayBus(void)
 		/* De-initialization Error */
 		SelfDiagnostics_HaltOnFailure(YhlFailureCause_FailedToDeInitializeDisplayBus);
 	}
+
+	HAL_IsDisplayBusInitialized = false;
 }
 
 bool HAL_GetDisplayBusInitializationStatus(void)
@@ -948,4 +950,6 @@ void HAL_InitializeDisplayBus(void)
 		/* Initialization Error */
 		SelfDiagnostics_HaltOnFailure(YhlFailureCause_FailedToInitializeDisplayBus);
 	}
+
+	HAL_IsDisplayBusInitialized = true;
 }

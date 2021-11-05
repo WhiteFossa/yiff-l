@@ -170,4 +170,9 @@ void HL_RenameBluetoothDevice(char* newName);
  */
 void HL_TurnDisplayOn(void);
 
+/**
+ * Power display down
+ */
+void HL_TurnDisplayOff(void);
+
 #endif /* INCLUDE_HARDWARELOGIC_H_ */

@@ -331,15 +331,16 @@ void HL_TurnDisplayOn(void)
 	int8_t attemptsCounter = YHL_HL_INITIALIZE_DISPLAY_ATTEMPS_COUNT;
 	while (attemptsCounter >= 0)
 	{
-		/* Powering off */
-		HAL_SwitchDisplayPower(false);
-
 		/* De-initializing I2C bus and pulling pins down to remove parasitic power */
 		if (HAL_GetDisplayBusInitializationStatus())
 		{
 			HAL_DeInitializeDisplayBus();
 		}
 		HAL_SupressDisplayParasiticPower();
+
+		/* Powering off */
+		HAL_SwitchDisplayPower(false);
+
 		HAL_Delay(YHL_HL_DISPLAY_POWERDOWN_TIME); /* Time to power down*/
 
 		/* Powering on */
@@ -368,3 +369,9 @@ void HL_TurnDisplayOn(void)
 	FoxState.SupressDrawing = false;
 }
 
+void HL_TurnDisplayOff(void)
+{
+	FoxState.SupressDrawing = true;
+
+	HAL_SwitchDisplayPower(false);
+}
