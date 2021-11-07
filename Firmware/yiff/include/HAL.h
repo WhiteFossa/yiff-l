@@ -488,4 +488,9 @@ void HAL_EnterEconomyMode(void);
  */
 void HAL_ExitEconomyMode(void);
 
+/**
+ * Disables ADC and it's clock
+ */
+void HAL_DisableADC(void);
+
 #endif /* INCLUDE_HAL_H_ */

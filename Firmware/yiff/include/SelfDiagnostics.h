@@ -455,6 +455,11 @@ typedef enum
 	 * Failed to switch to PLL when exiting economy mode
 	 */
 	YhlFailureCause_EconomyModeFailedToSwitchToPLL = 87,
+
+	/**
+	 * Failed to disable ADC
+	 */
+	YhlFailureCause_FailedToDisableADC = 88,
 }
 YhlFailureCausesEnum;
 

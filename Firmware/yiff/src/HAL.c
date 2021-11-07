@@ -963,6 +963,9 @@ void HAL_EnterEconomyMode(void)
 		SelfDiagnostics_HaltOnFailure(YhlFailureCause_AlreadyInEconomyMode);
 	}
 
+	/* Disabling ADC */
+	HAL_DisableADC();
+
 	/* Starting HSI */
 	RCC_OscInitTypeDef oscinitstruct = {0};
 	oscinitstruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
@@ -1007,6 +1010,9 @@ void HAL_ExitEconomyMode(void)
 		SelfDiagnostics_HaltOnFailure(YhlFailureCause_NotInEconomyMode);
 	}
 
+	/* Disabling ADC */
+	HAL_DisableADC();
+
 	/* Starting HSE and switching to PLL */
 	RCC_OscInitTypeDef oscinitstruct = {0};
 	oscinitstruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
@@ -1033,5 +1039,19 @@ void HAL_ExitEconomyMode(void)
 		SelfDiagnostics_HaltOnFailure(YhlFailureCause_EconomyModeFailedToSwitchToPLL);
 	}
 
+	/* Restoring ADC operations */
+	HAL_SetupADCGeneric();
+	HAL_SetupADCForUAntMeasurement();
+
 	HAL_IsInEconomyMode = false;
+}
+
+void HAL_DisableADC(void)
+{
+	ADC_Handle.Instance = ADC1;
+
+	if (HAL_ADC_DeInit(&ADC_Handle) != HAL_OK)
+	{
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_FailedToDisableADC);
+	}
 }

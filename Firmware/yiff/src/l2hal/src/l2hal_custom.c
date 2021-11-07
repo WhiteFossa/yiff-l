@@ -275,6 +275,8 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef *hadc)
 	HAL_GPIO_DeInit(GPIOA, GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2);
 
 	HAL_NVIC_DisableIRQ(ADC1_IRQn);
+
+	__HAL_RCC_ADC1_CLK_ENABLE();
 }
 
 void HAL_SPI_MspInit(SPI_HandleTypeDef *hspi)
