@@ -32,6 +32,7 @@
 #include <Menu/NumberInputDisplay.h>
 #include <Menu/TimeInputDisplay.h>
 #include <SelfDiagnostics.h>
+#include <Sleepmodes.h>
 
 /**
  * EEPROM-related stuff

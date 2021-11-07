@@ -17,6 +17,7 @@
 #include <UART.h>
 #include <GlobalStateMachine.h>
 #include <SelfDiagnostics.h>
+#include <Sleepmodes.h>
 
 extern L2HAL_CRCContextStruct CRC_Context;
 extern PendingCommandsFlagsStruct PendingCommandsFlags;

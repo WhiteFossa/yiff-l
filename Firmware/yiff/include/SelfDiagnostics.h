@@ -419,9 +419,42 @@ typedef enum
 	/**
 	 * Failed to initialize display bus
 	 */
-	YhlFailureCause_FailedToInitializeDisplayBus = 80
+	YhlFailureCause_FailedToInitializeDisplayBus = 80,
 
+	/**
+	 * Failed to enable HSI while entering economy mode
+	 */
+	YhlFailureCause_EconomyModeFailedToEnableHSI = 81,
 
+	/**
+	 * Failed to switch to HSI while entering economy mode
+	 */
+	YhlFailureCause_EconomyModeFailedToSwitchToHSI = 82,
+
+	/**
+	 * Failed to disable HSE and PLL while entering economy mode
+	 */
+	YhlFailureCause_EconomyModeFailedToDisableHSEAndPLL = 83,
+
+	/**
+	 * We are already in economy mode
+	 */
+	YhlFailureCause_AlreadyInEconomyMode = 84,
+
+	/**
+	 * We aren't in economy mode
+	 */
+	YhlFailureCause_NotInEconomyMode = 85,
+
+	/**
+	 * Failed to switch on HSE and PLL when exiting economy mode
+	 */
+	YhlFailureCause_EconomyModeFailedToSwitchOnHSEandPLL = 86,
+
+	/**
+	 * Failed to switch to PLL when exiting economy mode
+	 */
+	YhlFailureCause_EconomyModeFailedToSwitchToPLL = 87,
 }
 YhlFailureCausesEnum;
 

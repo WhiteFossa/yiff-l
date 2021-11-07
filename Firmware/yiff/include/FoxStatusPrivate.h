@@ -248,6 +248,23 @@ typedef struct
 MatchingDisplayStruct;
 
 /**
+ * Stuff, related to sleep modes
+ */
+typedef struct
+{
+	/**
+	 * Seconds before entering sleep
+	 */
+	int16_t SleepTimer;
+
+	/**
+	 * True if sleeping
+	 */
+	bool IsSleeping;
+}
+SleepmodesStruct;
+
+/**
  * Fox status
  */
 typedef struct
@@ -346,6 +363,11 @@ typedef struct
 	 * Disable all drawing operations if set to true. Set it to true when display is disabled.
 	 */
 	bool SupressDrawing;
+
+	/**
+	 * Stuff, related to sleepmodes
+	 */
+	SleepmodesStruct Sleepmodes;
 }
 FoxStateStruct;
 

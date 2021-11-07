@@ -182,11 +182,12 @@ int main(int argc, char* argv[])
 	/**
 	 * Setting up HC-06 Bluetooth module
 	 */
-	HC06_Context = L2HAL_HC06_AttachToDevice(&UART_Handle);
-	if (!HC06_Context.IsFound)
-	{
-		SelfDiagnostics_HaltOnFailure(YhlFailureCause_BluetoothNotFound);
-	}
+	HL_TurnBluetoothOn();
+
+	/**
+	 * Initializing sleepmode timers
+	 */
+	Sleepmodes_Init();
 
 	/**
 	 * Starting to listen for commands
@@ -500,6 +501,15 @@ void Main_CheckLeftButtonPressedEvent(void)
 
 void Main_OnLeftButtonPressed(void)
 {
+	bool isSleeping = FoxState.Sleepmodes.IsSleeping;
+	Sleepmodes_ResetSleepTimer();
+
+	if (isSleeping)
+	{
+		/* Fox awakened, but we do not want to process this event */
+		return;
+	}
+
 	if (StatusDisplay == FoxState.CurrentDisplay)
 	{
 		Main_EnterMenu();
@@ -539,7 +549,21 @@ void Main_CheckRightButtonPressedEvent(void)
 
 void Main_OnRightButtonPressed(void)
 {
-	if (MenuDisplay == FoxState.CurrentDisplay)
+	bool isSleeping = FoxState.Sleepmodes.IsSleeping;
+	Sleepmodes_ResetSleepTimer();
+
+	if (isSleeping)
+	{
+		/* Fox awakened, but we do not want to process this event */
+		return;
+	}
+
+	if (StatusDisplay == FoxState.CurrentDisplay)
+	{
+		/* Going to sleep */
+		Sleepmodes_EnterDeepsleep();
+	}
+	else if (MenuDisplay == FoxState.CurrentDisplay)
 	{
 		MenuDisplay_RightButtonHandler();
 	}
@@ -574,6 +598,15 @@ void Main_CheckEncoderButtonPressedEvent(void)
 
 void Main_OnEncoderButtonPressed(void)
 {
+	bool isSleeping = FoxState.Sleepmodes.IsSleeping;
+	Sleepmodes_ResetSleepTimer();
+
+	if (isSleeping)
+	{
+		/* Fox awakened, but we do not want to process this event */
+		return;
+	}
+
 	if (MenuDisplay == FoxState.CurrentDisplay)
 	{
 		MenuDisplay_EncoderClickHandler();
@@ -609,6 +642,15 @@ void Main_CheckEncoderRotationEvent(void)
 
 void Main_OnEncoderRotation(int8_t direction)
 {
+	bool isSleeping = FoxState.Sleepmodes.IsSleeping;
+	Sleepmodes_ResetSleepTimer();
+
+	if (isSleeping)
+	{
+		/* Fox awakened, but we do not want to process this event */
+		return;
+	}
+
 	if (MenuDisplay == FoxState.CurrentDisplay)
 	{
 		MenuDisplay_EncoderRotationHandler(direction);
@@ -636,7 +678,7 @@ void Main_EnterMenu(void)
 void Main_SetDefaultButtonsActions(void)
 {
 	snprintf(LeftButton.Text, YHL_MAX_BUTTON_TEXT_MEMORY_SIZE, "Menu");
-	snprintf(RightButton.Text, YHL_MAX_BUTTON_TEXT_MEMORY_SIZE, "Bt. off");
+	snprintf(RightButton.Text, YHL_MAX_BUTTON_TEXT_MEMORY_SIZE, "Sleep");
 }
 
 #pragma GCC diagnostic pop

@@ -211,6 +211,8 @@ void HAL_IntiHardware(void)
 
 	HAL_IsDisplayBusInitialized = false;
 
+	HAL_IsInEconomyMode = false;
+
 	/**
 	 * Launching ADC conversions
 	 */
@@ -952,4 +954,84 @@ void HAL_InitializeDisplayBus(void)
 	}
 
 	HAL_IsDisplayBusInitialized = true;
+}
+
+void HAL_EnterEconomyMode(void)
+{
+	if (HAL_IsInEconomyMode)
+	{
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_AlreadyInEconomyMode);
+	}
+
+	/* Starting HSI */
+	RCC_OscInitTypeDef oscinitstruct = {0};
+	oscinitstruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+	oscinitstruct.HSIState = RCC_HSI_ON;
+	if (HAL_RCC_OscConfig(&oscinitstruct)!= HAL_OK)
+	{
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_EconomyModeFailedToEnableHSI);
+	}
+
+	/* Select HSI as system clock source and configure the HCLK (AHB), PCLK1 (APB1), PCLK2 (APB2) clocks */
+	RCC_ClkInitTypeDef clkinitstruct = {0};
+	clkinitstruct.ClockType = (RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2);
+	clkinitstruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI; /* 8 MHz */
+	clkinitstruct.AHBCLKDivider = HAL_AHB_DIVIDER_FOR_ECONOMY_MODE;
+	clkinitstruct.APB1CLKDivider = RCC_HCLK_DIV1;
+	clkinitstruct.APB2CLKDivider = RCC_HCLK_DIV1;
+
+	if (HAL_RCC_ClockConfig(&clkinitstruct, FLASH_LATENCY_2)!= HAL_OK)
+	{
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_EconomyModeFailedToSwitchToHSI);
+	}
+
+	/* Disable PLL and HSE */
+	oscinitstruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+	oscinitstruct.HSEState = RCC_HSE_OFF;
+	oscinitstruct.HSEPredivValue = RCC_HSE_PREDIV_DIV1;
+	oscinitstruct.PLL.PLLState = RCC_PLL_OFF;
+	oscinitstruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+	oscinitstruct.PLL.PLLMUL = RCC_PLL_MUL9;
+	if (HAL_RCC_OscConfig(&oscinitstruct)!= HAL_OK)
+	{
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_EconomyModeFailedToDisableHSEAndPLL);
+	}
+
+	HAL_IsInEconomyMode = true;
+}
+
+void HAL_ExitEconomyMode(void)
+{
+	if (!HAL_IsInEconomyMode)
+	{
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_NotInEconomyMode);
+	}
+
+	/* Starting HSE and switching to PLL */
+	RCC_OscInitTypeDef oscinitstruct = {0};
+	oscinitstruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+	oscinitstruct.HSEState = RCC_HSE_ON;
+	oscinitstruct.HSEPredivValue = RCC_HSE_PREDIV_DIV1;
+	oscinitstruct.PLL.PLLState = RCC_PLL_ON;
+	oscinitstruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+	oscinitstruct.PLL.PLLMUL = RCC_PLL_MUL9;
+	if (HAL_RCC_OscConfig(&oscinitstruct)!= HAL_OK)
+	{
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_EconomyModeFailedToSwitchOnHSEandPLL);
+	}
+
+	/* Select PLL as system clock source and configure the HCLK (AHB), PCLK1 (APB1), PCLK2 (APB2) clocks */
+	RCC_ClkInitTypeDef clkinitstruct = {0};
+	clkinitstruct.ClockType = (RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2);
+	clkinitstruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK; /* 72 MHz */
+	clkinitstruct.AHBCLKDivider = RCC_SYSCLK_DIV1; /* AHB at 72 MHz*/
+	clkinitstruct.APB1CLKDivider = RCC_HCLK_DIV2; /* APB1 at 36 MHz*/
+	clkinitstruct.APB2CLKDivider = RCC_HCLK_DIV1; /* APB2 at 72 MHz */
+
+	if (HAL_RCC_ClockConfig(&clkinitstruct, FLASH_LATENCY_2)!= HAL_OK)
+	{
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_EconomyModeFailedToSwitchToPLL);
+	}
+
+	HAL_IsInEconomyMode = false;
 }
