@@ -135,6 +135,28 @@ typedef enum
 CycleStateEnum;
 
 /**
+ * Fox sleep modes
+ */
+typedef enum
+{
+	/**
+	 * Fox is awake, controls are on
+	 */
+	SleepmodeAwake,
+
+	/**
+	 * MCU clocked at high speed, controls are off
+	 */
+	SleepmodeSleep,
+
+	/**
+	 * Regulators disabled, MCU clocked at low speed, controls are off
+	 */
+	SleepmodeDeepSleep
+}
+FoxState_SleepModeEnum;
+
+/**
  * Fox frequency
  */
 typedef struct
@@ -253,14 +275,14 @@ MatchingDisplayStruct;
 typedef struct
 {
 	/**
-	 * Seconds before entering sleep
+	 * Seconds before entering deeper sleep mode
 	 */
 	int16_t SleepTimer;
 
 	/**
-	 * True if sleeping
+	 * Current sleep mode
 	 */
-	bool IsSleeping;
+	FoxState_SleepModeEnum Mode;
 }
 SleepmodesStruct;
 

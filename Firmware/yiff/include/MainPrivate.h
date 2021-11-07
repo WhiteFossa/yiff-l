@@ -156,5 +156,10 @@ void Main_OnEncoderRotation(int8_t direction);
  */
 void Main_EnterMenu(void);
 
+/**
+ * Call this from main cycle to prevent fox sleeping in specific modes
+ */
+void Main_ControlSleep(void);
+
 
 #endif /* INCLUDE_MAINPRIVATE_H_ */

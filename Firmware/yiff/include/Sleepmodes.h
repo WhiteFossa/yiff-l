@@ -12,9 +12,14 @@
 #include <RTC.h>
 
 /**
- * Enter sleep after this timeout
+ * Awake -> Sleep after this timeout
  */
 #define YHL_SLEEPMODES_SLEEP_TIMEOUT 60U
+
+/**
+ * Sleep -> Deep sleep after this timeout
+ */
+#define YHL_SLEEPMODES_DEEP_SLEEP_TIMEOUT 10U
 
 extern FoxStateStruct FoxState;
 
@@ -24,9 +29,15 @@ extern FoxStateStruct FoxState;
 void Sleepmodes_Init(void);
 
 /**
- * Reset sleep timer
+ * Call this to prevent ordinary sleep. If fox is sleeping or deep sleeping, it will be awaked
  */
-void Sleepmodes_ResetSleepTimer(void);
+void Sleepmodes_PreventSleep(void);
+
+/**
+ * Call this to prevent deep sleep. If fox awakened or sleeping it will do nothing, if it is deep sleeping, it will
+ * change fox state to ordinary sleep.
+ */
+void Sleepmodes_PreventDeepSleep(void);
 
 /**
  * Call this every new second
@@ -44,13 +55,23 @@ void Sleepmodes_DeactivateControls(void);
 void Sleepmodes_ActivateControls(void);
 
 /**
- * Enter deep sleep, when everything except MCU is powered down
+ * Enter sleep, display and bluetooth are disabled here
  */
-void Sleepmodes_EnterDeepsleep(void);
+void Sleepmodes_EnterSleep(void);
+
+/**
+ * Enter deep sleep, everything except MCU is powered down. Available only from sleep mode
+ */
+void Sleepmodes_EnterDeepSleep(void);
+
+/**
+ * Wakes fox up from sleep
+ */
+void Sleepmodes_WakeFromSleep(void);
 
 /**
  * Wakes fox up from deep sleep
  */
-void Sleepmodes_WakeFromDeepsleep(void);
+void Sleepmodes_WakeFromDeepSleep(void);
 
 #endif /* INCLUDE_SLEEPMODES_H_ */

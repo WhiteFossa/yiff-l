@@ -10,35 +10,84 @@
 
 void Sleepmodes_Init(void)
 {
-	FoxState.Sleepmodes.IsSleeping = false;
-
-	Sleepmodes_ResetSleepTimer();
+	/* Starting with awakened fox */
+	FoxState.Sleepmodes.Mode = SleepmodeAwake;
+	FoxState.Sleepmodes.SleepTimer = YHL_SLEEPMODES_SLEEP_TIMEOUT;
 
 	RTC_AddOnNewSecondListener(&Sleepmodes_OnNewSecond);
 }
 
 
-void Sleepmodes_ResetSleepTimer(void)
+void Sleepmodes_PreventSleep(void)
 {
-	FoxState.Sleepmodes.SleepTimer = YHL_SLEEPMODES_SLEEP_TIMEOUT;
-
-	if (FoxState.Sleepmodes.IsSleeping)
+	switch (FoxState.Sleepmodes.Mode)
 	{
-		Sleepmodes_WakeFromDeepsleep();
+		case SleepmodeAwake:
+			FoxState.Sleepmodes.SleepTimer = YHL_SLEEPMODES_SLEEP_TIMEOUT; /* Resetting the timer, preventing sleep */
+			break;
+
+		case SleepmodeSleep:
+			Sleepmodes_WakeFromSleep();
+			break;
+
+		case SleepmodeDeepSleep:
+			Sleepmodes_WakeFromDeepSleep();
+			Sleepmodes_WakeFromSleep();
+			break;
+
+		default:
+			SelfDiagnostics_HaltOnFailure(YhlFailureCause_WrongSleepmodeInSleepmodesPreventSleep);
+			break;
+	}
+}
+
+
+void Sleepmodes_PreventDeepSleep(void)
+{
+	switch (FoxState.Sleepmodes.Mode)
+	{
+		case SleepmodeAwake:
+			/* Do nothing, downcounting to sleep mode */
+			break;
+
+		case SleepmodeSleep:
+			FoxState.Sleepmodes.SleepTimer = YHL_SLEEPMODES_DEEP_SLEEP_TIMEOUT;
+			break;
+
+		case SleepmodeDeepSleep:
+			Sleepmodes_WakeFromDeepSleep();
+			break;
 	}
 }
 
 
 void Sleepmodes_OnNewSecond(void)
 {
-	/* Controls timer */
-	if (!FoxState.Sleepmodes.IsSleeping)
+	if (FoxState.Sleepmodes.SleepTimer > 0)
 	{
 		FoxState.Sleepmodes.SleepTimer --;
 
-		if (FoxState.Sleepmodes.SleepTimer == 0)
+		if (0 == FoxState.Sleepmodes.SleepTimer)
 		{
-			Sleepmodes_EnterDeepsleep();
+			/* Going deeper */
+			switch (FoxState.Sleepmodes.Mode)
+			{
+				case SleepmodeAwake:
+					Sleepmodes_EnterSleep();
+					break;
+
+				case SleepmodeSleep:
+					Sleepmodes_EnterDeepSleep();
+					break;
+
+				case SleepmodeDeepSleep:
+					SelfDiagnostics_HaltOnFailure(YhlFailureCause_CantGoDeeperInSleepmodesOnNewSecond);
+					break;
+
+				default:
+					SelfDiagnostics_HaltOnFailure(YhlFailureCause_WrongSleepmodeInSleepmodesOnNewSecond);
+					break;
+			}
 		}
 	}
 }
@@ -57,9 +106,27 @@ void Sleepmodes_ActivateControls(void)
 	HL_TurnDisplayOn();
 }
 
-void Sleepmodes_EnterDeepsleep(void)
+void Sleepmodes_EnterSleep(void)
 {
+	/* We can enter sleep only from awaken state */
+	if (FoxState.Sleepmodes.Mode != SleepmodeAwake)
+	{
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_AlreadySleeping);
+	}
+
 	Sleepmodes_DeactivateControls(); /* Some regulators are disabled here */
+
+	FoxState.Sleepmodes.SleepTimer = YHL_SLEEPMODES_DEEP_SLEEP_TIMEOUT;
+	FoxState.Sleepmodes.Mode = SleepmodeSleep;
+}
+
+void Sleepmodes_EnterDeepSleep(void)
+{
+	/* We can enter deep sleep only from ordinary sleep */
+	if (FoxState.Sleepmodes.Mode != SleepmodeSleep)
+	{
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_AlreadyDeepSleeping);
+	}
 
 	HAL_SwitchManipulator(false);
 	HAL_SetAntennaMatchingValue(0);
@@ -74,18 +141,36 @@ void Sleepmodes_EnterDeepsleep(void)
 	/* Entering economy mode */
 	HAL_EnterEconomyMode();
 
-	FoxState.Sleepmodes.IsSleeping = true;
+	FoxState.Sleepmodes.SleepTimer = 0; /* No deeper sleep is possible */
+	FoxState.Sleepmodes.Mode = SleepmodeDeepSleep;
 }
 
-void Sleepmodes_WakeFromDeepsleep(void)
+void Sleepmodes_WakeFromSleep(void)
 {
+	if (FoxState.Sleepmodes.Mode != SleepmodeSleep)
+	{
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_NotSleeping);
+	}
+
+	Sleepmodes_ActivateControls();
+
+	FoxState.Sleepmodes.SleepTimer = YHL_SLEEPMODES_SLEEP_TIMEOUT;
+	FoxState.Sleepmodes.Mode = SleepmodeAwake;
+}
+
+void Sleepmodes_WakeFromDeepSleep(void)
+{
+	if (FoxState.Sleepmodes.Mode != SleepmodeDeepSleep)
+	{
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_NotDeepSleeping);
+	}
+
 	/* Exiting economy mode */
 	HAL_ExitEconomyMode();
 
 	HAL_ActivateFox(true);
 	HAL_SwitchUBattCheck(true);
 
-	Sleepmodes_ActivateControls();
-
-	FoxState.Sleepmodes.IsSleeping = false;
+	FoxState.Sleepmodes.SleepTimer = YHL_SLEEPMODES_DEEP_SLEEP_TIMEOUT;
+	FoxState.Sleepmodes.Mode = SleepmodeSleep;
 }

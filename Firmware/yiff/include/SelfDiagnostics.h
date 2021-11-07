@@ -460,6 +460,43 @@ typedef enum
 	 * Failed to disable ADC
 	 */
 	YhlFailureCause_FailedToDisableADC = 88,
+
+	/**
+	 * Attempt to go to sleep while already sleeping
+	 */
+	YhlFailureCause_AlreadySleeping = 89,
+
+	/**
+	 * Attempt to wake while not sleeping
+	 */
+	YhlFailureCause_NotSleeping = 90,
+
+	/**
+	 * Already deep sleeping
+	 */
+	YhlFailureCause_AlreadyDeepSleeping = 91,
+
+	/**
+	 * Not deep sleeping
+	 */
+	YhlFailureCause_NotDeepSleeping = 92,
+
+	/**
+	 * We can't go deeper then deep sleep in Sleepmodes_OnNewSecond()
+	 */
+	YhlFailureCause_CantGoDeeperInSleepmodesOnNewSecond = 93,
+
+	/**
+	 * Wrong sleepmode in Sleepmodes_OnNewSecond()
+	 */
+	YhlFailureCause_WrongSleepmodeInSleepmodesOnNewSecond = 94,
+
+	/**
+	 * Wrong sleepmode in Sleepmodes_PreventSleep()
+	 */
+	YhlFailureCause_WrongSleepmodeInSleepmodesPreventSleep = 95,
+
+
 }
 YhlFailureCausesEnum;
 

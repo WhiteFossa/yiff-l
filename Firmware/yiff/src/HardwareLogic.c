@@ -252,6 +252,9 @@ void HL_Setup80mAntenna(void)
 
 	for (uint8_t amValue = 0; amValue <= HAL_AM_MAX_VALUE; amValue ++)
 	{
+		/* Preventing sleep to completely show matching display */
+		Sleepmodes_PreventSleep();
+
 		FoxState.MatchingDisplayData.MatchingStep = amValue;
 		DrawMatchingDisplay(FoxState);
 
