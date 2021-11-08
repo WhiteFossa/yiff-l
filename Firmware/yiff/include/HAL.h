@@ -225,7 +225,7 @@ extern FoxStateStruct FoxState;
 /**
  * AHB divider for economy mode
  */
-#define HAL_AHB_DIVIDER_FOR_ECONOMY_MODE RCC_SYSCLK_DIV8
+#define HAL_AHB_DIVIDER_FOR_ECONOMY_MODE RCC_SYSCLK_DIV16
 
 /**
  * Bluetooth uses this USART
