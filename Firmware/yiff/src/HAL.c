@@ -191,9 +191,7 @@ void HAL_IntiHardware(void)
 	HAL_NVIC_SetPriority(HAL_ENCODER_BUTTON_EXTI_LINE, 0, 0);
 	HAL_NVIC_EnableIRQ(HAL_ENCODER_BUTTON_EXTI_LINE);
 
-	/**
-	 * Variables initial state
-	 */
+	/* Variables initial state */
 	HAL_BatteryLevelADC = 0;
 	HAL_ADCAccumulator = 0;
 	HAL_ADCAveragesCounter = 0;
@@ -213,21 +211,18 @@ void HAL_IntiHardware(void)
 
 	HAL_IsInEconomyMode = false;
 
-	/**
-	 * Launching ADC conversions
-	 */
+	/* Launching ADC conversions */
 	HAL_SetupADCGeneric();
 	HAL_SetupADCForUAntMeasurement();
 
-	/**
-	 * Setting up 3.5MHz output stage power source
-	 */
+	/* Setting up 3.5MHz output stage power source */
 	HAL_ConnectToU80mRegulator();
 
-	/**
-	 * Connecting to frequency synthesizer
-	 */
+	/* Connecting to frequency synthesizer */
 	HAL_ConnectToSynthesizer();
+
+	/* Enabling UART for bluetooth */
+	HAL_EnableUART();
 }
 
 void HAL_SwitchManipulator(bool isTxOn)
@@ -963,6 +958,9 @@ void HAL_EnterEconomyMode(void)
 		SelfDiagnostics_HaltOnFailure(YhlFailureCause_AlreadyInEconomyMode);
 	}
 
+	/* Disabling UART */
+	HAL_DisableUART();
+
 	/* Disabling ADC */
 	HAL_DisableADC();
 
@@ -1010,9 +1008,6 @@ void HAL_ExitEconomyMode(void)
 		SelfDiagnostics_HaltOnFailure(YhlFailureCause_NotInEconomyMode);
 	}
 
-	/* Disabling ADC */
-	HAL_DisableADC();
-
 	/* Starting HSE and switching to PLL */
 	RCC_OscInitTypeDef oscinitstruct = {0};
 	oscinitstruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
@@ -1043,6 +1038,9 @@ void HAL_ExitEconomyMode(void)
 	HAL_SetupADCGeneric();
 	HAL_SetupADCForUAntMeasurement();
 
+	/* Reactivating UART */
+	HAL_EnableUART();
+
 	HAL_IsInEconomyMode = false;
 }
 
@@ -1053,5 +1051,36 @@ void HAL_DisableADC(void)
 	if (HAL_ADC_DeInit(&ADC_Handle) != HAL_OK)
 	{
 		SelfDiagnostics_HaltOnFailure(YhlFailureCause_FailedToDisableADC);
+	}
+}
+
+void HAL_EnableUART(void)
+{
+	/* UART (for bluetooth) */
+	UART_Handle.Instance = HAL_BLUETOOTH_UART;
+	UART_Handle.Init.BaudRate = HAL_BLUETOOTH_UART_BAUDRATE;
+	UART_Handle.Init.WordLength = UART_WORDLENGTH_8B;
+	UART_Handle.Init.StopBits = UART_STOPBITS_1;
+	UART_Handle.Init.Parity = UART_PARITY_NONE;
+	UART_Handle.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+	UART_Handle.Init.Mode = UART_MODE_TX_RX;
+
+	if(HAL_UART_DeInit(&UART_Handle) != HAL_OK)
+	{
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_FailedToDeinitializeBluetoothUARTInHALEnableUART);
+	}
+
+	if(HAL_UART_Init(&UART_Handle) != HAL_OK)
+	{
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_FailedToInitializeBluetoothUART);
+	}
+}
+
+void HAL_DisableUART(void)
+{
+	UART_Handle.Instance = HAL_BLUETOOTH_UART;
+	if(HAL_UART_DeInit(&UART_Handle) != HAL_OK)
+	{
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_FailedToDeinitializeBluetoothUARTInHALDisableUART);
 	}
 }

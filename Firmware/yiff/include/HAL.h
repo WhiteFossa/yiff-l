@@ -227,6 +227,16 @@ extern FoxStateStruct FoxState;
  */
 #define HAL_AHB_DIVIDER_FOR_ECONOMY_MODE RCC_SYSCLK_DIV8
 
+/**
+ * Bluetooth uses this USART
+ */
+#define HAL_BLUETOOTH_UART USART1
+
+/**
+ * Bluetooth UART baudrate
+ */
+#define HAL_BLUETOOTH_UART_BAUDRATE 115200
+
 
 extern ADC_HandleTypeDef ADC_Handle;
 extern L2HAL_AD5245_ContextStruct U80mRegulatorContext;
@@ -492,5 +502,15 @@ void HAL_ExitEconomyMode(void);
  * Disables ADC and it's clock
  */
 void HAL_DisableADC(void);
+
+/**
+ * Enables UART
+ */
+void HAL_EnableUART(void);
+
+/**
+ * Disables UART
+ */
+void HAL_DisableUART(void);
 
 #endif /* INCLUDE_HAL_H_ */

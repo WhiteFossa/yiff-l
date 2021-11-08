@@ -496,6 +496,22 @@ typedef enum
 	 */
 	YhlFailureCause_WrongSleepmodeInSleepmodesPreventSleep = 95,
 
+	/**
+	 * Failed to initialize bluetooth's UART
+	 */
+	YhlFailureCause_FailedToInitializeBluetoothUART = 96,
+
+	/**
+	 * Failed to deinitialize bluetooth's UART in HAL_EnableUART()
+	 */
+	YhlFailureCause_FailedToDeinitializeBluetoothUARTInHALEnableUART = 97,
+
+	/**
+	 * Failed to deinitialize bluetooth's UART in HAL_DisableUART()
+	 */
+	YhlFailureCause_FailedToDeinitializeBluetoothUARTInHALDisableUART = 98,
+
+
 
 }
 YhlFailureCausesEnum;
