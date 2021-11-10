@@ -131,7 +131,9 @@ typedef enum
 
 	GetU80mVolts = 0x1F,
 
-	GetLastFailureCode = 0x20
+	GetLastFailureCode = 0x20,
+
+	NoOperation = 0x21
 }
 CommandToFoxEnum;
 
@@ -142,7 +144,9 @@ typedef enum
 {
 	FoxArmed = 0x01,
 
-	AntennaMatchingMeasurement = 0x02
+	AntennaMatchingMeasurement = 0x02,
+
+	EnteringSleepmode = 0x03
 }
 EventsFromFoxEnum;
 
@@ -343,6 +347,11 @@ void OnGetU80mVolts(uint8_t payloadSize, uint8_t* payload);
 void OnGetLastFailureCode(uint8_t payloadSize, uint8_t* payload);
 
 /**
+ * Called when "No operation" command comes
+ */
+void OnNoOperation(uint8_t payloadSize, uint8_t* payload);
+
+/**
  * Emits "FoxArmed" event
  */
 void EmitFoxArmedEvent(void);
@@ -351,6 +360,11 @@ void EmitFoxArmedEvent(void);
  * Emits "Antenna matching measurement" event
  */
 void EmitAntennaMatchingMeasurementEvent(uint8_t matchingPosition, float uAnt);
+
+/**
+ * Emits "Entering sleepmode" event
+ */
+void EmitEnteringSleepmodeEvent(void);
 
 /**
  * Returns 0x00 if false, 0x01 if true

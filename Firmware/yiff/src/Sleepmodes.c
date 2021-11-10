@@ -72,11 +72,12 @@ void Sleepmodes_OnNewSecond(void)
 			/* Going deeper */
 			switch (FoxState.Sleepmodes.Mode)
 			{
-				case SleepmodeAwake:
+				case SleepmodeAwake: /* Awake -> Sleep */
+					EmitEnteringSleepmodeEvent();
 					Sleepmodes_EnterSleep();
 					break;
 
-				case SleepmodeSleep:
+				case SleepmodeSleep: /* Sleep -> Deep sleep */
 					Sleepmodes_EnterDeepSleep();
 					break;
 

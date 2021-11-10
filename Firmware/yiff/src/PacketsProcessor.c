@@ -223,6 +223,11 @@ void OnNewCommandToFox(uint8_t payloadSize, uint8_t* payload)
 			/* Get last failure code */
 			OnGetLastFailureCode(payloadSize, payload);
 			break;
+
+		case NoOperation:
+			/* No operation (to keep fox awake) */
+			OnNoOperation(payloadSize, payload);
+			break;
 	}
 
 	free(payload);
@@ -1049,6 +1054,16 @@ void OnGetLastFailureCode(uint8_t payloadSize, uint8_t* payload)
 	SendResponse(GetLastFailureCode, 4, (uint8_t*)&response);
 }
 
+void OnNoOperation(uint8_t payloadSize, uint8_t* payload)
+{
+	if (payloadSize != 1)
+	{
+		return;
+	}
+
+	SendResponse(NoOperation, 0, NULL);
+}
+
 void EmitFoxArmedEvent(void)
 {
 	SendEvent(FoxArmed, 0, NULL);
@@ -1062,6 +1077,11 @@ void EmitAntennaMatchingMeasurementEvent(uint8_t matchingPosition, float uAnt)
 	memcpy(&payload[1], &uAnt, 4);
 
 	SendEvent(AntennaMatchingMeasurement, 5, payload);
+}
+
+void EmitEnteringSleepmodeEvent(void)
+{
+	SendEvent(EnteringSleepmode, 0, NULL);
 }
 
 uint8_t FromBool(bool data)
