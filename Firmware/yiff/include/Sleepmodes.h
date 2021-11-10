@@ -11,6 +11,7 @@
 #include <FoxStatus.h>
 #include <RTC.h>
 #include <PacketsProcessor.h>
+#include <UART.h>
 
 /**
  * Awake -> Sleep after this timeout

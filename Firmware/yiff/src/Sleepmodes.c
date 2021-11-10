@@ -105,6 +105,9 @@ void Sleepmodes_ActivateControls(void)
 {
 	HL_TurnBluetoothOn();
 	HL_TurnDisplayOn();
+
+	/* We need to restart UART listening after low-level UART commands in Bluetooth initialization code */
+	UART_StartListen(&OnNewRawPacket);
 }
 
 void Sleepmodes_EnterSleep(void)
