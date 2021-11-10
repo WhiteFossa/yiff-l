@@ -23,6 +23,11 @@
  */
 #define YHL_SLEEPMODES_DEEP_SLEEP_TIMEOUT 10U
 
+/**
+ * Wait this amount of milliseconds after sending "Entering to sleep" event before powering bluetooth module off
+ */
+#define YHL_SLEEPMODES_TIME_TO_SEND_ENTERING_SLEEP_EVENT 100U
+
 extern FoxStateStruct FoxState;
 
 /**

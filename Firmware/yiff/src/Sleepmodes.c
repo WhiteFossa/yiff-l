@@ -73,7 +73,6 @@ void Sleepmodes_OnNewSecond(void)
 			switch (FoxState.Sleepmodes.Mode)
 			{
 				case SleepmodeAwake: /* Awake -> Sleep */
-					EmitEnteringSleepmodeEvent();
 					Sleepmodes_EnterSleep();
 					break;
 
@@ -117,6 +116,10 @@ void Sleepmodes_EnterSleep(void)
 	{
 		SelfDiagnostics_HaltOnFailure(YhlFailureCause_AlreadySleeping);
 	}
+
+	EmitEnteringSleepmodeEvent();
+
+	HAL_Delay(YHL_SLEEPMODES_TIME_TO_SEND_ENTERING_SLEEP_EVENT); /* Time to transmit the event over Bluetooth */
 
 	Sleepmodes_DeactivateControls(); /* Some regulators are disabled here */
 
