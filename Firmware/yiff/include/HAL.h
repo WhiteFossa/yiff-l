@@ -129,19 +129,19 @@ extern FoxStateStruct FoxState;
 #define HAL_SYNTHESIZER_FSYNC_PIN GPIO_PIN_8
 
 
-/*
+/**
  * Timer clock is 12MHz
- **/
+ */
 #define HAL_TONE_TIMER_PRESCALER (uint32_t)((SystemCoreClock / 12000000) - 1);
 
-/*
+/**
  * Period is 6KHz, so compares happens at 2KHz frequency, which leads to 1KHz tone (because of TIM_OCMODE_TOGGLE)
- **/
+ */
 #define HAL_TONE_TIMER_PERIOD 6000 - 1;
 
-/*
+/**
  * Timer itself
- **/
+ */
 #define HAL_TONE_TIMER TIM3
 
 /**
@@ -221,6 +221,21 @@ extern FoxStateStruct FoxState;
  * How much time to sample encoder data in ISR to suppress transient effects
  */
 #define HAL_ENCODER_SAMPLES_COUNT 128
+
+/**
+ * AHB divider for economy mode
+ */
+#define HAL_AHB_DIVIDER_FOR_ECONOMY_MODE RCC_SYSCLK_DIV16
+
+/**
+ * Bluetooth uses this USART
+ */
+#define HAL_BLUETOOTH_UART USART1
+
+/**
+ * Bluetooth UART baudrate
+ */
+#define HAL_BLUETOOTH_UART_BAUDRATE 115200
 
 
 extern ADC_HandleTypeDef ADC_Handle;
@@ -472,5 +487,30 @@ void HAL_SupressDisplayParasiticPower(void);
  * Initialize display bus
  */
 void HAL_InitializeDisplayBus(void);
+
+/**
+ * Downclocks MCU (core and buses)
+ */
+void HAL_EnterEconomyMode(void);
+
+/**
+ * Restores normal functioning after economy mode
+ */
+void HAL_ExitEconomyMode(void);
+
+/**
+ * Disables ADC and it's clock
+ */
+void HAL_DisableADC(void);
+
+/**
+ * Enables UART
+ */
+void HAL_EnableUART(void);
+
+/**
+ * Disables UART
+ */
+void HAL_DisableUART(void);
 
 #endif /* INCLUDE_HAL_H_ */

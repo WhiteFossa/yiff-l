@@ -252,6 +252,9 @@ void HL_Setup80mAntenna(void)
 
 	for (uint8_t amValue = 0; amValue <= HAL_AM_MAX_VALUE; amValue ++)
 	{
+		/* Preventing sleep to completely show matching display */
+		Sleepmodes_PreventSleep();
+
 		FoxState.MatchingDisplayData.MatchingStep = amValue;
 		DrawMatchingDisplay(FoxState);
 
@@ -374,4 +377,22 @@ void HL_TurnDisplayOff(void)
 	FoxState.SupressDrawing = true;
 
 	HAL_SwitchDisplayPower(false);
+}
+
+void HL_TurnBluetoothOn(void)
+{
+	HAL_SwitchBluetoothPower(true);
+
+	HAL_Delay(YHL_HL_BLUETOOTH_REGULATOR_SPINUP_TIME);
+
+	HC06_Context = L2HAL_HC06_AttachToDevice(&UART_Handle);
+	if (!HC06_Context.IsFound)
+	{
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_BluetoothNotFound);
+	}
+}
+
+void HL_TurnBluetoothOff(void)
+{
+	HAL_SwitchBluetoothPower(false);
 }

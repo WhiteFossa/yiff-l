@@ -419,7 +419,98 @@ typedef enum
 	/**
 	 * Failed to initialize display bus
 	 */
-	YhlFailureCause_FailedToInitializeDisplayBus = 80
+	YhlFailureCause_FailedToInitializeDisplayBus = 80,
+
+	/**
+	 * Failed to enable HSI while entering economy mode
+	 */
+	YhlFailureCause_EconomyModeFailedToEnableHSI = 81,
+
+	/**
+	 * Failed to switch to HSI while entering economy mode
+	 */
+	YhlFailureCause_EconomyModeFailedToSwitchToHSI = 82,
+
+	/**
+	 * Failed to disable HSE and PLL while entering economy mode
+	 */
+	YhlFailureCause_EconomyModeFailedToDisableHSEAndPLL = 83,
+
+	/**
+	 * We are already in economy mode
+	 */
+	YhlFailureCause_AlreadyInEconomyMode = 84,
+
+	/**
+	 * We aren't in economy mode
+	 */
+	YhlFailureCause_NotInEconomyMode = 85,
+
+	/**
+	 * Failed to switch on HSE and PLL when exiting economy mode
+	 */
+	YhlFailureCause_EconomyModeFailedToSwitchOnHSEandPLL = 86,
+
+	/**
+	 * Failed to switch to PLL when exiting economy mode
+	 */
+	YhlFailureCause_EconomyModeFailedToSwitchToPLL = 87,
+
+	/**
+	 * Failed to disable ADC
+	 */
+	YhlFailureCause_FailedToDisableADC = 88,
+
+	/**
+	 * Attempt to go to sleep while already sleeping
+	 */
+	YhlFailureCause_AlreadySleeping = 89,
+
+	/**
+	 * Attempt to wake while not sleeping
+	 */
+	YhlFailureCause_NotSleeping = 90,
+
+	/**
+	 * Already deep sleeping
+	 */
+	YhlFailureCause_AlreadyDeepSleeping = 91,
+
+	/**
+	 * Not deep sleeping
+	 */
+	YhlFailureCause_NotDeepSleeping = 92,
+
+	/**
+	 * We can't go deeper then deep sleep in Sleepmodes_OnNewSecond()
+	 */
+	YhlFailureCause_CantGoDeeperInSleepmodesOnNewSecond = 93,
+
+	/**
+	 * Wrong sleepmode in Sleepmodes_OnNewSecond()
+	 */
+	YhlFailureCause_WrongSleepmodeInSleepmodesOnNewSecond = 94,
+
+	/**
+	 * Wrong sleepmode in Sleepmodes_PreventSleep()
+	 */
+	YhlFailureCause_WrongSleepmodeInSleepmodesPreventSleep = 95,
+
+	/**
+	 * Failed to initialize bluetooth's UART
+	 */
+	YhlFailureCause_FailedToInitializeBluetoothUART = 96,
+
+	/**
+	 * Failed to deinitialize bluetooth's UART in HAL_EnableUART()
+	 */
+	YhlFailureCause_FailedToDeinitializeBluetoothUARTInHALEnableUART = 97,
+
+	/**
+	 * Failed to deinitialize bluetooth's UART in HAL_DisableUART()
+	 */
+	YhlFailureCause_FailedToDeinitializeBluetoothUARTInHALDisableUART = 98,
+
 
 
 }

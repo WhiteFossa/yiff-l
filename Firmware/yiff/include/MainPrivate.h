@@ -32,6 +32,7 @@
 #include <Menu/NumberInputDisplay.h>
 #include <Menu/TimeInputDisplay.h>
 #include <SelfDiagnostics.h>
+#include <Sleepmodes.h>
 
 /**
  * EEPROM-related stuff
@@ -154,6 +155,11 @@ void Main_OnEncoderRotation(int8_t direction);
  * Call this to enter menu mode
  */
 void Main_EnterMenu(void);
+
+/**
+ * Call this from main cycle to prevent fox sleeping in specific modes
+ */
+void Main_ControlSleep(void);
 
 
 #endif /* INCLUDE_MAINPRIVATE_H_ */

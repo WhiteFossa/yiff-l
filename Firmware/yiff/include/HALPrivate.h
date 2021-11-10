@@ -90,6 +90,10 @@ void (*HAL_EncoderButtonCallback)(void);
  */
 void (*HAL_EncoderRotationCallback)(int8_t direction);
 
+/**
+ * True if we are in economy mode
+ */
+bool HAL_IsInEconomyMode;
 
 /**
  * Call from ADC interrupt handler to add measurement

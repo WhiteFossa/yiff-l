@@ -135,6 +135,28 @@ typedef enum
 CycleStateEnum;
 
 /**
+ * Fox sleep modes
+ */
+typedef enum
+{
+	/**
+	 * Fox is awake, controls are on
+	 */
+	SleepmodeAwake,
+
+	/**
+	 * MCU clocked at high speed, controls are off
+	 */
+	SleepmodeSleep,
+
+	/**
+	 * Regulators disabled, MCU clocked at low speed, controls are off
+	 */
+	SleepmodeDeepSleep
+}
+FoxState_SleepModeEnum;
+
+/**
  * Fox frequency
  */
 typedef struct
@@ -248,6 +270,23 @@ typedef struct
 MatchingDisplayStruct;
 
 /**
+ * Stuff, related to sleep modes
+ */
+typedef struct
+{
+	/**
+	 * Seconds before entering deeper sleep mode
+	 */
+	int16_t SleepTimer;
+
+	/**
+	 * Current sleep mode
+	 */
+	FoxState_SleepModeEnum Mode;
+}
+SleepmodesStruct;
+
+/**
  * Fox status
  */
 typedef struct
@@ -346,6 +385,11 @@ typedef struct
 	 * Disable all drawing operations if set to true. Set it to true when display is disabled.
 	 */
 	bool SupressDrawing;
+
+	/**
+	 * Stuff, related to sleepmodes
+	 */
+	SleepmodesStruct Sleepmodes;
 }
 FoxStateStruct;
 

@@ -13,10 +13,12 @@
 #include <MatchingDisplay.h>
 #include <PacketsProcessor.h>
 #include <SelfDiagnostics.h>
+#include <Sleepmodes.h>
 
 extern FoxStateStruct FoxState;
 extern L2HAL_HC06_ContextStruct HC06_Context;
 extern L2HAL_SSD1327_ContextStruct L2HAL_SSD1327_Context;
+extern L2HAL_HC06_ContextStruct HC06_Context;
 
 /**
  * Minimal and maximal voltages of 3.5MHz output stage power sources
@@ -90,6 +92,11 @@ extern L2HAL_SSD1327_ContextStruct L2HAL_SSD1327_Context;
  * Try to initialize display this times before reporting a failure
  */
 #define YHL_HL_INITIALIZE_DISPLAY_ATTEMPS_COUNT 5
+
+/**
+ * Time to spin bluettoth power regulator up
+ */
+#define YHL_HL_BLUETOOTH_REGULATOR_SPINUP_TIME 1000
 
 /**
  * Initialize hardware logic
@@ -166,13 +173,23 @@ void HL_PrepareAndMatch80m(void);
 void HL_RenameBluetoothDevice(char* newName);
 
 /**
- * Initializes display and turns it on
+ * Turns display on and initializes it
  */
 void HL_TurnDisplayOn(void);
 
 /**
- * Power display down
+ * Powers display down
  */
 void HL_TurnDisplayOff(void);
+
+/**
+ * Turns bluetooth on and initializes it
+ */
+void HL_TurnBluetoothOn(void);
+
+/**
+ * Powers bluetooth down
+ */
+void HL_TurnBluetoothOff(void);
 
 #endif /* INCLUDE_HARDWARELOGIC_H_ */

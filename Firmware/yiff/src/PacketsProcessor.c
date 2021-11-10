@@ -34,6 +34,9 @@ void OnNewRawPacket(uint8_t size, uint8_t* packet)
 
 void OnNewPacket(uint8_t payloadSize, uint8_t* payload)
 {
+	/* We have a packet with correct payload, preventing fox from sleeping */
+	Sleepmodes_PreventSleep();
+
 	if (YHL_PACKET_PROCESSOR_COMMAND_TO_FOX == payload[0])
 	{
 		if (payloadSize >= YHL_PACKET_PROCESSOR_MIN_COMMAND_TO_FOX_PAYLOAD_LENGTH)

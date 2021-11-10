@@ -191,9 +191,7 @@ void HAL_IntiHardware(void)
 	HAL_NVIC_SetPriority(HAL_ENCODER_BUTTON_EXTI_LINE, 0, 0);
 	HAL_NVIC_EnableIRQ(HAL_ENCODER_BUTTON_EXTI_LINE);
 
-	/**
-	 * Variables initial state
-	 */
+	/* Variables initial state */
 	HAL_BatteryLevelADC = 0;
 	HAL_ADCAccumulator = 0;
 	HAL_ADCAveragesCounter = 0;
@@ -211,21 +209,20 @@ void HAL_IntiHardware(void)
 
 	HAL_IsDisplayBusInitialized = false;
 
-	/**
-	 * Launching ADC conversions
-	 */
+	HAL_IsInEconomyMode = false;
+
+	/* Launching ADC conversions */
 	HAL_SetupADCGeneric();
 	HAL_SetupADCForUAntMeasurement();
 
-	/**
-	 * Setting up 3.5MHz output stage power source
-	 */
+	/* Setting up 3.5MHz output stage power source */
 	HAL_ConnectToU80mRegulator();
 
-	/**
-	 * Connecting to frequency synthesizer
-	 */
+	/* Connecting to frequency synthesizer */
 	HAL_ConnectToSynthesizer();
+
+	/* Enabling UART for bluetooth */
+	HAL_EnableUART();
 }
 
 void HAL_SwitchManipulator(bool isTxOn)
@@ -952,4 +949,138 @@ void HAL_InitializeDisplayBus(void)
 	}
 
 	HAL_IsDisplayBusInitialized = true;
+}
+
+void HAL_EnterEconomyMode(void)
+{
+	if (HAL_IsInEconomyMode)
+	{
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_AlreadyInEconomyMode);
+	}
+
+	/* Disabling UART */
+	HAL_DisableUART();
+
+	/* Disabling ADC */
+	HAL_DisableADC();
+
+	/* Starting HSI */
+	RCC_OscInitTypeDef oscinitstruct = {0};
+	oscinitstruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+	oscinitstruct.HSIState = RCC_HSI_ON;
+	if (HAL_RCC_OscConfig(&oscinitstruct)!= HAL_OK)
+	{
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_EconomyModeFailedToEnableHSI);
+	}
+
+	/* Select HSI as system clock source and configure the HCLK (AHB), PCLK1 (APB1), PCLK2 (APB2) clocks */
+	RCC_ClkInitTypeDef clkinitstruct = {0};
+	clkinitstruct.ClockType = (RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2);
+	clkinitstruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI; /* 8 MHz */
+	clkinitstruct.AHBCLKDivider = HAL_AHB_DIVIDER_FOR_ECONOMY_MODE;
+	clkinitstruct.APB1CLKDivider = RCC_HCLK_DIV1;
+	clkinitstruct.APB2CLKDivider = RCC_HCLK_DIV1;
+
+	if (HAL_RCC_ClockConfig(&clkinitstruct, FLASH_LATENCY_2)!= HAL_OK)
+	{
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_EconomyModeFailedToSwitchToHSI);
+	}
+
+	/* Disable PLL and HSE */
+	oscinitstruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+	oscinitstruct.HSEState = RCC_HSE_OFF;
+	oscinitstruct.HSEPredivValue = RCC_HSE_PREDIV_DIV1;
+	oscinitstruct.PLL.PLLState = RCC_PLL_OFF;
+	oscinitstruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+	oscinitstruct.PLL.PLLMUL = RCC_PLL_MUL9;
+	if (HAL_RCC_OscConfig(&oscinitstruct)!= HAL_OK)
+	{
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_EconomyModeFailedToDisableHSEAndPLL);
+	}
+
+	HAL_IsInEconomyMode = true;
+}
+
+void HAL_ExitEconomyMode(void)
+{
+	if (!HAL_IsInEconomyMode)
+	{
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_NotInEconomyMode);
+	}
+
+	/* Starting HSE and switching to PLL */
+	RCC_OscInitTypeDef oscinitstruct = {0};
+	oscinitstruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+	oscinitstruct.HSEState = RCC_HSE_ON;
+	oscinitstruct.HSEPredivValue = RCC_HSE_PREDIV_DIV1;
+	oscinitstruct.PLL.PLLState = RCC_PLL_ON;
+	oscinitstruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+	oscinitstruct.PLL.PLLMUL = RCC_PLL_MUL9;
+	if (HAL_RCC_OscConfig(&oscinitstruct)!= HAL_OK)
+	{
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_EconomyModeFailedToSwitchOnHSEandPLL);
+	}
+
+	/* Select PLL as system clock source and configure the HCLK (AHB), PCLK1 (APB1), PCLK2 (APB2) clocks */
+	RCC_ClkInitTypeDef clkinitstruct = {0};
+	clkinitstruct.ClockType = (RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2);
+	clkinitstruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK; /* 72 MHz */
+	clkinitstruct.AHBCLKDivider = RCC_SYSCLK_DIV1; /* AHB at 72 MHz*/
+	clkinitstruct.APB1CLKDivider = RCC_HCLK_DIV2; /* APB1 at 36 MHz*/
+	clkinitstruct.APB2CLKDivider = RCC_HCLK_DIV1; /* APB2 at 72 MHz */
+
+	if (HAL_RCC_ClockConfig(&clkinitstruct, FLASH_LATENCY_2)!= HAL_OK)
+	{
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_EconomyModeFailedToSwitchToPLL);
+	}
+
+	/* Restoring ADC operations */
+	HAL_SetupADCGeneric();
+	HAL_SetupADCForUAntMeasurement();
+
+	/* Reactivating UART */
+	HAL_EnableUART();
+
+	HAL_IsInEconomyMode = false;
+}
+
+void HAL_DisableADC(void)
+{
+	ADC_Handle.Instance = ADC1;
+
+	if (HAL_ADC_DeInit(&ADC_Handle) != HAL_OK)
+	{
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_FailedToDisableADC);
+	}
+}
+
+void HAL_EnableUART(void)
+{
+	/* UART (for bluetooth) */
+	UART_Handle.Instance = HAL_BLUETOOTH_UART;
+	UART_Handle.Init.BaudRate = HAL_BLUETOOTH_UART_BAUDRATE;
+	UART_Handle.Init.WordLength = UART_WORDLENGTH_8B;
+	UART_Handle.Init.StopBits = UART_STOPBITS_1;
+	UART_Handle.Init.Parity = UART_PARITY_NONE;
+	UART_Handle.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+	UART_Handle.Init.Mode = UART_MODE_TX_RX;
+
+	if(HAL_UART_DeInit(&UART_Handle) != HAL_OK)
+	{
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_FailedToDeinitializeBluetoothUARTInHALEnableUART);
+	}
+
+	if(HAL_UART_Init(&UART_Handle) != HAL_OK)
+	{
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_FailedToInitializeBluetoothUART);
+	}
+}
+
+void HAL_DisableUART(void)
+{
+	UART_Handle.Instance = HAL_BLUETOOTH_UART;
+	if(HAL_UART_DeInit(&UART_Handle) != HAL_OK)
+	{
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_FailedToDeinitializeBluetoothUARTInHALDisableUART);
+	}
 }

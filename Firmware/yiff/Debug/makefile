@@ -81,7 +81,10 @@ Yiff-HL.siz \
 
 
 # All Target
-all: Yiff-HL.elf secondary-outputs
+all: main-build
+
+# Main-build Target
+main-build: Yiff-HL.elf secondary-outputs
 
 # Tool invocations
 Yiff-HL.elf: $(OBJS) $(USER_OBJS) makefile objects.mk $(OPTIONAL_TOOL_DEPS)
@@ -110,6 +113,6 @@ clean:
 
 secondary-outputs: $(SECONDARY_FLASH) $(SECONDARY_SIZE)
 
-.PHONY: all clean dependents
+.PHONY: all clean dependents main-build
 
 -include ../makefile.targets

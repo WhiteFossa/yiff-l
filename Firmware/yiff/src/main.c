@@ -182,11 +182,12 @@ int main(int argc, char* argv[])
 	/**
 	 * Setting up HC-06 Bluetooth module
 	 */
-	HC06_Context = L2HAL_HC06_AttachToDevice(&UART_Handle);
-	if (!HC06_Context.IsFound)
-	{
-		SelfDiagnostics_HaltOnFailure(YhlFailureCause_BluetoothNotFound);
-	}
+	HL_TurnBluetoothOn();
+
+	/**
+	 * Initializing sleepmode timers
+	 */
+	Sleepmodes_Init();
 
 	/**
 	 * Starting to listen for commands
@@ -215,6 +216,9 @@ int main(int argc, char* argv[])
 
 	while(true)
 	{
+		/* Preventing sleep if fox is transmitting and so on */
+		Main_ControlSleep();
+
 		Main_MeasureBatteryLevel();
 
 		/* Processing possible updates from smartphone */
@@ -430,6 +434,9 @@ void Main_ProcessFoxArming(void)
 
 void Main_PrepareAndMatchAntenna(void)
 {
+	/* Waking fox fully to show matching display */
+	Sleepmodes_PreventSleep();
+
 	if (FoxState.Frequency.Is144MHz)
 	{
 		HL_PrepareFoxForCycle();
@@ -500,6 +507,15 @@ void Main_CheckLeftButtonPressedEvent(void)
 
 void Main_OnLeftButtonPressed(void)
 {
+	FoxState_SleepModeEnum oldSleepmode = FoxState.Sleepmodes.Mode;
+	Sleepmodes_PreventSleep();
+
+	if (oldSleepmode != SleepmodeAwake)
+	{
+		/* Fox used to sleep, we don't want to process this event */
+		return;
+	}
+
 	if (StatusDisplay == FoxState.CurrentDisplay)
 	{
 		Main_EnterMenu();
@@ -539,7 +555,21 @@ void Main_CheckRightButtonPressedEvent(void)
 
 void Main_OnRightButtonPressed(void)
 {
-	if (MenuDisplay == FoxState.CurrentDisplay)
+	FoxState_SleepModeEnum oldSleepmode = FoxState.Sleepmodes.Mode;
+	Sleepmodes_PreventSleep();
+
+	if (oldSleepmode != SleepmodeAwake)
+	{
+		/* Fox used to sleep, we don't want to process this event */
+		return;
+	}
+
+	if (StatusDisplay == FoxState.CurrentDisplay)
+	{
+		/* Going to sleep */
+		Sleepmodes_EnterSleep();
+	}
+	else if (MenuDisplay == FoxState.CurrentDisplay)
 	{
 		MenuDisplay_RightButtonHandler();
 	}
@@ -574,6 +604,15 @@ void Main_CheckEncoderButtonPressedEvent(void)
 
 void Main_OnEncoderButtonPressed(void)
 {
+	FoxState_SleepModeEnum oldSleepmode = FoxState.Sleepmodes.Mode;
+	Sleepmodes_PreventSleep();
+
+	if (oldSleepmode != SleepmodeAwake)
+	{
+		/* Fox used to sleep, we don't want to process this event */
+		return;
+	}
+
 	if (MenuDisplay == FoxState.CurrentDisplay)
 	{
 		MenuDisplay_EncoderClickHandler();
@@ -609,6 +648,15 @@ void Main_CheckEncoderRotationEvent(void)
 
 void Main_OnEncoderRotation(int8_t direction)
 {
+	FoxState_SleepModeEnum oldSleepmode = FoxState.Sleepmodes.Mode;
+	Sleepmodes_PreventSleep();
+
+	if (oldSleepmode != SleepmodeAwake)
+	{
+		/* Fox used to sleep, we don't want to process this event */
+		return;
+	}
+
 	if (MenuDisplay == FoxState.CurrentDisplay)
 	{
 		MenuDisplay_EncoderRotationHandler(direction);
@@ -636,7 +684,25 @@ void Main_EnterMenu(void)
 void Main_SetDefaultButtonsActions(void)
 {
 	snprintf(LeftButton.Text, YHL_MAX_BUTTON_TEXT_MEMORY_SIZE, "Menu");
-	snprintf(RightButton.Text, YHL_MAX_BUTTON_TEXT_MEMORY_SIZE, "Bt. off");
+	snprintf(RightButton.Text, YHL_MAX_BUTTON_TEXT_MEMORY_SIZE, "Sleep");
+}
+
+void Main_ControlSleep(void)
+{
+	if (FoxState.GlobalState.CurrentState == GfsPreparation)
+	{
+		/* During preparation we can't sleep at all to be able to show matching display */
+		Sleepmodes_PreventSleep();
+	}
+	else if (
+			FoxState.GlobalState.CurrentState == GfsReady
+			||
+			FoxState.GlobalState.CurrentState == GfsBeforeFinish
+			)
+	{
+		/* When fox is in cycle we can't sleep deeply */
+		Sleepmodes_PreventDeepSleep();
+	}
 }
 
 #pragma GCC diagnostic pop
