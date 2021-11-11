@@ -7,6 +7,8 @@
     {
         FoxIsArmed = 0x01,
 
-        AntennaMatchingMeasurement = 0x02
+        AntennaMatchingMeasurement = 0x02,
+
+        EnteringSleepmode = 0x03
     }
 }

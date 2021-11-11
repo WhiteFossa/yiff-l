@@ -37,7 +37,6 @@ C:\Non work\yiff-l\Software\yiff-hl\yiff-hl\yiff-hl.Android\obj\Debug\110\lp\87\
 C:\Non work\yiff-l\Software\yiff-hl\yiff-hl\yiff-hl.Android\obj\Debug\110\R.txt
 C:\Non work\yiff-l\Software\yiff-hl\yiff-hl\yiff-hl.Android\obj\Debug\110\R.cs.flag
 C:\Non work\yiff-l\Software\yiff-hl\yiff-hl\yiff-hl.Android\obj\Debug\110\yiff-hl.Android.csproj.CoreCompileInputs.cache
-C:\Non work\yiff-l\Software\yiff-hl\yiff-hl\yiff-hl.Android\obj\Debug\110\yiff-hl.Android.csproj.CopyComplete
 C:\Non work\yiff-l\Software\yiff-hl\yiff-hl\yiff-hl.Android\obj\Debug\110\yiff-hl.Android.dll
 C:\Non work\yiff-l\Software\yiff-hl\yiff-hl\yiff-hl.Android\obj\Debug\110\yiff-hl.Android.pdb
 C:\Non work\yiff-l\Software\yiff-hl\yiff-hl\yiff-hl.Android\obj\Debug\110\android\bin\com.companyname.yiff_hl.apk
@@ -616,3 +615,4 @@ C:\Non work\yiff-l\Software\yiff-hl\yiff-hl\yiff-hl.Android\obj\Debug\110\stamp\
 C:\Non work\yiff-l\Software\yiff-hl\yiff-hl\yiff-hl.Android\obj\Debug\110\stamp\_GenerateJavaStubs.stamp
 C:\Non work\yiff-l\Software\yiff-hl\yiff-hl\yiff-hl.Android\obj\Debug\110\stamp\_GeneratePackageManagerJava.stamp
 C:\Non work\yiff-l\Software\yiff-hl\yiff-hl\yiff-hl.Android\obj\Debug\110\stamp\_ResolveLibraryProjectImports.stamp
+C:\Non work\yiff-l\Software\yiff-hl\yiff-hl\yiff-hl.Android\obj\Debug\110\yiff-hl.Android.csproj.CopyComplete

@@ -17,7 +17,7 @@ namespace yiff_hl.Business.Implementations.Commands
         public GetLastFailureCodeCommand(IPacketsProcessor packetsProcessor)
         {
             this.packetsProcessor = packetsProcessor ?? throw new ArgumentNullException(nameof(packetsProcessor));
-            packetsProcessor.SetOnGetLastFailureCode(OnGetLastFailureCodeResponse);
+            packetsProcessor.SetOnGetLastFailureCodeResponse(OnGetLastFailureCodeResponse);
         }
 
         public void SetResponseDelegate(OnGetLastFailureCodeResponseDelegate onGetLastFailureCodeResponse)

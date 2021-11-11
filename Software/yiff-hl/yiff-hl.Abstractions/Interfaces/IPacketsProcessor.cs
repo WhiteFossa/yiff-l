@@ -14,6 +14,7 @@ namespace yiff_hl.Abstractions.Interfaces
 
     public delegate void OnFoxArmedEventDelegate(IFoxArmedEvent foxArmedEvent);
     public delegate void OnAntennaMatchingMeasurementEventDelegate(IAntennaMatchingMeasurementEvent antennaMatchingMeasurementEvent);
+    public delegate void OnEnteringSleepmodeEventDelegate(IEnteringSleepmodeEvent enteringSleepmodeEvent);
 
     #endregion
 
@@ -68,7 +69,8 @@ namespace yiff_hl.Abstractions.Interfaces
         void SetOnGetU80mADCResponse(OnResponseDelegate onGetU80mADCResponse);
         void SetOnGetUBattVoltsResponse(OnResponseDelegate onGetUBattVoltsResponse);
         void SetOnGetU80mVoltsResponse(OnResponseDelegate onGetU80mVoltsResponse);
-        void SetOnGetLastFailureCode(OnResponseDelegate onGetLastFailureCodeResponse);
+        void SetOnGetLastFailureCodeResponse(OnResponseDelegate onGetLastFailureCodeResponse);
+        void SetOnNoOperationResponse(OnResponseDelegate onNoOperationResponse);
 
 
         #endregion
@@ -77,6 +79,7 @@ namespace yiff_hl.Abstractions.Interfaces
 
         void RegisterOnFoxArmedEventHandler(OnFoxArmedEventDelegate onFoxArmedEvent);
         void RegisterOnAntennaMatchingMeasurementEventHandler(OnAntennaMatchingMeasurementEventDelegate onAntennaMatchingMeasurementEvent);
+        void RegisterOnEnteringSleepmodeEventHandler(OnEnteringSleepmodeEventDelegate onEnteringSleepmodeEvent);
 
         #endregion
 

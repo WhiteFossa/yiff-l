@@ -2,7 +2,7 @@
 
 namespace yiff_hl.Business.Implementations.Events
 {
-    public class FoxArmedEvent : IFoxArmedEvent
+    public class EnteringSleepmodeEvent : IEnteringSleepmodeEvent
     {
     }
 }

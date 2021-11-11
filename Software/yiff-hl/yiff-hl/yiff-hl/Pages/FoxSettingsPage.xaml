@@ -484,6 +484,11 @@
                 </Frame>
 
                 <Button
+                    Text="Prevent sleep"
+                    Clicked="OnPreventSleepClicked"
+                    />
+                
+                <Button
                     Text="Disconnect"
                     Clicked="OnDisconnectClicked"
                     />

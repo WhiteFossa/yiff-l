@@ -53,6 +53,7 @@ namespace yiff_hl.Business.Implementations
         private OnResponseDelegate onGetUBattVoltsResponse;
         private OnResponseDelegate onGetU80mVoltsResponse;
         private OnResponseDelegate onGetLastFailureCodeResponse;
+        private OnResponseDelegate onNoOperationResponse;
 
         #endregion
 
@@ -60,6 +61,7 @@ namespace yiff_hl.Business.Implementations
 
         private OnFoxArmedEventDelegate onFoxArmedEvent;
         private OnAntennaMatchingMeasurementEventDelegate onAntennaMatchingMeasurementEvent;
+        private OnEnteringSleepmodeEventDelegate onEnteringSleepmodeEvent;
 
         #endregion
 
@@ -447,6 +449,13 @@ namespace yiff_hl.Business.Implementations
 
                     break;
 
+                // No operation
+                case CommandType.NoOperation:
+                    CheckOnResponseDelegate(onNoOperationResponse);
+
+                    onNoOperationResponse(responsePayload);
+                    break;
+
                 default:
                     return; // We've got some junk
             }
@@ -481,6 +490,11 @@ namespace yiff_hl.Business.Implementations
                     OnAntennaMatchingMeasurementEvent(eventPayload);
                     break;
 
+                // Entering sleepmode
+                case EventType.EnteringSleepmode:
+                    OnEnteringSleepmodeEvent(eventPayload);
+                    break;
+
                 // We've got some junk
                 default:
                     return;
@@ -507,6 +521,13 @@ namespace yiff_hl.Business.Implementations
             var antennaVoltage = BitConverter.ToSingle(payload.ToArray(), 1);
 
             onAntennaMatchingMeasurementEvent(new AntennaMatchingMeasurementEvent(matchingPosition, antennaVoltage));
+        }
+
+        private void OnEnteringSleepmodeEvent(IReadOnlyCollection<byte> payload)
+        {
+            _ = onEnteringSleepmodeEvent ?? throw new InvalidOperationException("Handler for Entring Sleepmode event isn't registered");
+
+            onEnteringSleepmodeEvent(new EnteringSleepmodeEvent());
         }
 
         public void SendCommand(CommandType command, IReadOnlyCollection<byte> commandPayload)
@@ -679,7 +700,7 @@ namespace yiff_hl.Business.Implementations
             this.onGetU80mVoltsResponse = onGetU80mVoltsResponse ?? throw new ArgumentNullException(nameof(onGetU80mVoltsResponse));
         }
 
-        public void SetOnGetLastFailureCode(OnResponseDelegate onGetLastFailureCodeResponse)
+        public void SetOnGetLastFailureCodeResponse(OnResponseDelegate onGetLastFailureCodeResponse)
         {
             this.onGetLastFailureCodeResponse = onGetLastFailureCodeResponse ?? throw new ArgumentNullException(nameof(onGetLastFailureCodeResponse));
         }
@@ -692,6 +713,16 @@ namespace yiff_hl.Business.Implementations
         public void RegisterOnAntennaMatchingMeasurementEventHandler(OnAntennaMatchingMeasurementEventDelegate onAntennaMatchingMeasurementEvent)
         {
             this.onAntennaMatchingMeasurementEvent = onAntennaMatchingMeasurementEvent ?? throw new ArgumentNullException(nameof(onAntennaMatchingMeasurementEvent));
+        }
+
+        public void RegisterOnEnteringSleepmodeEventHandler(OnEnteringSleepmodeEventDelegate onEnteringSleepmodeEvent)
+        {
+            this.onEnteringSleepmodeEvent = onEnteringSleepmodeEvent ?? throw new ArgumentNullException(nameof(onEnteringSleepmodeEvent));
+        }
+
+        public void SetOnNoOperationResponse(OnResponseDelegate onNoOperationResponse)
+        {
+            this.onNoOperationResponse = onNoOperationResponse ?? throw new ArgumentNullException(nameof(onNoOperationResponse));
         }
     }
 }

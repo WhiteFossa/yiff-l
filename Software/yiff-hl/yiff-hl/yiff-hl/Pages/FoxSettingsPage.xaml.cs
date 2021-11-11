@@ -50,6 +50,7 @@ namespace yiff_hl.Pages
             // Registering events handlers
             packetsProcessor.RegisterOnFoxArmedEventHandler(OnFoxIsArmed);
             packetsProcessor.RegisterOnAntennaMatchingMeasurementEventHandler(OnAntennaMatchingMeasurement);
+            packetsProcessor.RegisterOnEnteringSleepmodeEventHandler(OnEnteringSleepmode);
 
         }
 
@@ -947,6 +948,30 @@ namespace yiff_hl.Pages
 
         #endregion
 
+        #region Prevent sleep
+
+        private void OnPreventSleepClicked(object sender, EventArgs e)
+        {
+            PreventSleep();
+        }
+
+        private void PreventSleep()
+        {
+            var command = new NoOperationCommand(packetsProcessor);
+            command.SetResponseDelegate(OnPreventSleepResponse);
+            command.SendNoOperationCommand();
+        }
+
+        private void OnPreventSleepResponse()
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                DisplayAlert("Sleep prevented", "Sleep is prevented for 1 minute", "OK");
+            });
+        }
+
+        #endregion
+
         #region On Fox Is Armed event
 
         private void OnFoxIsArmed(IFoxArmedEvent foxArmedEvent)
@@ -967,6 +992,18 @@ namespace yiff_hl.Pages
             {
                 edMatchingPosition.Text = $"{ antennaMatchingMeasurementEvent.GetMatchingPosition() }";
                 edMatchingVoltage.Text = $"{ antennaMatchingMeasurementEvent.GetAntennaVoltage() }";
+            });
+        }
+
+        #endregion
+
+        #region On Entering Sleepmode event
+
+        private void OnEnteringSleepmode(IEnteringSleepmodeEvent sleepmodeEvent)
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                DisplayAlert("Sleepmode", "Fox is went to sleepmode", "OK");
             });
         }
 
