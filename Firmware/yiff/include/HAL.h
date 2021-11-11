@@ -18,6 +18,16 @@
 extern EEPROMHeaderStruct EEPROM_Header;
 extern FoxStateStruct FoxState;
 
+/*******************
+ * Debugging stuff *
+ *******************/
+
+/**
+ * If defined, then antenna matching will be disabled, and SWD will be kept enabled.
+ * Otherwise SWD connection will be dropped when antenna matching starts
+ */
+#define HAL_DISABLE_ANTENNA_MATCHING
+
 /***************
  * PORT B pins *
  ***************/

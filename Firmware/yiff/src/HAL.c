@@ -715,16 +715,20 @@ void HAL_SetAntennaMatchingValue(uint8_t value)
 
 void HAL_SwitchAntennaMatching(bool isOn)
 {
+#ifdef HAL_DISABLE_ANTENNA_MATCHING
+	return;
+#else
 	if (isOn)
 	{
 		/* Disabling SWD, because we use SWD pins for antenna matching */
-		//__HAL_AFIO_REMAP_SWJ_DISABLE();
+		__HAL_AFIO_REMAP_SWJ_DISABLE();
 	}
 	else
 	{
 		/* Re-enabling SWD */
-		//__HAL_AFIO_REMAP_SWJ_NOJTAG();
+		__HAL_AFIO_REMAP_SWJ_NOJTAG();
 	}
+#endif
 }
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
