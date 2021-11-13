@@ -123,54 +123,54 @@ void L2HAL_SetupI2C(void);
 /**
  * I2C init.
  */
-void HAL_I2C_MspInit(I2C_HandleTypeDef *hi2c);
+volatile void HAL_I2C_MspInit(I2C_HandleTypeDef *hi2c);
 
 /**
  * I2C shutdown.
  */
-void HAL_I2C_MspDeInit(I2C_HandleTypeDef* hi2c);
+volatile void HAL_I2C_MspDeInit(I2C_HandleTypeDef* hi2c);
 
 /**
  * I2C interrput handlers.
  */
-void I2C1_EV_IRQHandler(void);
-void I2C1_ER_IRQHandler(void);
-void HAL_I2C_MemTxCpltCallback(I2C_HandleTypeDef *hi2c);
+volatile void I2C1_EV_IRQHandler(void);
+volatile void I2C1_ER_IRQHandler(void);
+volatile void HAL_I2C_MemTxCpltCallback(I2C_HandleTypeDef *hi2c);
 
-void I2C2_EV_IRQHandler(void);
-void I2C2_ER_IRQHandler(void);
+volatile void I2C2_EV_IRQHandler(void);
+volatile void I2C2_ER_IRQHandler(void);
 
 /**
  * CRC calculator init and de-init
  */
-void HAL_CRC_MspInit(CRC_HandleTypeDef *hcrc);
-void HAL_CRC_MspDeInit(CRC_HandleTypeDef *hcrc);
+volatile void HAL_CRC_MspInit(CRC_HandleTypeDef *hcrc);
+volatile void HAL_CRC_MspDeInit(CRC_HandleTypeDef *hcrc);
 
 /**
  * UART-related stuff
  */
-void HAL_UART_MspInit(UART_HandleTypeDef *huart);
-void HAL_UART_MspDeInit(UART_HandleTypeDef *huart);
-void USART1_IRQHandler(void);
+volatile void HAL_UART_MspInit(UART_HandleTypeDef *huart);
+volatile void HAL_UART_MspDeInit(UART_HandleTypeDef *huart);
+volatile void USART1_IRQHandler(void);
 
 /**
  * ADC-related stuff
  */
-void HAL_ADC_MspInit(ADC_HandleTypeDef *hadc);
-void HAL_ADC_MspDeInit(ADC_HandleTypeDef *hadc);
+volatile void HAL_ADC_MspInit(ADC_HandleTypeDef *hadc);
+volatile void HAL_ADC_MspDeInit(ADC_HandleTypeDef *hadc);
 
 /**
  * SPI-related stuff
  */
-void HAL_SPI_MspInit(SPI_HandleTypeDef *hspi);
-void HAL_SPI_MspDeInit(SPI_HandleTypeDef *hspi);
+volatile void HAL_SPI_MspInit(SPI_HandleTypeDef *hspi);
+volatile void HAL_SPI_MspDeInit(SPI_HandleTypeDef *hspi);
 void L2HAL_SetupSPI(void);
 
 /**
  * Timer 3 (144MHz modulation generator) related stuff
  */
-void HAL_TIM_OC_MspInit(TIM_HandleTypeDef* htim);
-void HAL_TIM_OC_MspDeInit(TIM_HandleTypeDef* htim);
+volatile void HAL_TIM_OC_MspInit(TIM_HandleTypeDef* htim);
+volatile void HAL_TIM_OC_MspDeInit(TIM_HandleTypeDef* htim);
 
 
 #endif /* L2HAL_INCLUDE_L2HAL_CUSTOM_H_ */

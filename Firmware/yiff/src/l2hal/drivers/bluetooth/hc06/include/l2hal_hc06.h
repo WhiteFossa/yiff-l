@@ -23,7 +23,7 @@
 /**
  * Maximal length of bluetooth name
  */
-#define L2HAL_HC06_MAX_NAME_LENGTH 16
+#define L2HAL_HC06_MAX_NAME_LENGTH 32
 
 /**
  * Maximal memory size for bluetooth name

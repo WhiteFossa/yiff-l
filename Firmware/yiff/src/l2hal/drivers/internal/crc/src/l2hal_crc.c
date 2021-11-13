@@ -8,7 +8,7 @@
 
 L2HAL_CRCContextStruct L2HAL_CRC_Init(void)
 {
-	L2HAL_CRCContextStruct context;
+	L2HAL_CRCContextStruct context = { 0 };
 	context.Handle.Instance = CRC;
 
 	if (HAL_CRC_Init(&context.Handle) != HAL_OK)
