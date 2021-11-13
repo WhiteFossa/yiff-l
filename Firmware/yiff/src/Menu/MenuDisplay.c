@@ -1047,7 +1047,7 @@ void MenuDisplay_EnterCurrentTime(void)
 
 	uint32_t secondsSinceMidnight = TimeToTimespan(currentTimeAsTimeStruct);
 
-	TimeInputDisplay_Show("Enter start time",
+	TimeInputDisplay_Show("Enter current time",
 		0,
 		YHL_TIME_DAY_IN_SECONDS - 1,
 		secondsSinceMidnight,
