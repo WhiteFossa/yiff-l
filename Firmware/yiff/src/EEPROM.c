@@ -7,6 +7,7 @@
 
 #include <EEPROM.h>
 #include <GlobalStateMachine.h>
+#include <HardwareLogic.h>
 
 void EEPROM_Format(void)
 {
@@ -47,6 +48,9 @@ void EEPROM_Format(void)
 
 	defaultHeader.CRCSum = 0;
 	EEPROM_WriteHeader(&defaultHeader, constantHeader.HeaderAddress);
+
+	/* Renaming bluetooth device because name was changed */
+	HL_RenameBluetoothDevice(defaultHeader.Name);
 }
 
 void EEPROM_WriteConstantHeader(EEPROMConstantHeaderStruct* constantHeader)
