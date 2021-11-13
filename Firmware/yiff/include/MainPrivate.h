@@ -162,5 +162,10 @@ void Main_EnterMenu(void);
  */
 void Main_ControlSleep(void);
 
+/**
+ * Initialize display and show splash screen
+ */
+void Main_InitDisplayAndShowBootScreen(void);
+
 
 #endif /* INCLUDE_MAINPRIVATE_H_ */

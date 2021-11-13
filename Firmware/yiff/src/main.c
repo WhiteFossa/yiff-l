@@ -55,14 +55,18 @@ int main(int argc, char* argv[])
 	L2HAL_Init();
 	HL_Init();
 
-	/* Hardware debug
-	 * TODO: Remove me */
+	/* Initial powering on */
 	HAL_ActivateFox(true);
 	HAL_SwitchBluetoothPower(true);
-
 	HAL_SwitchUBattCheck(true);
 
 	HAL_Delay(1000); /* To give regulators time to spin up */
+
+	/* Detecting display */
+	HL_TurnDisplayOn();
+
+	/* Connecting to display and showing boot screen */
+	Main_InitDisplayAndShowBootScreen();
 
 	/* HAL need SysTick calls */
 	L2HAL_SysTick_RegisterHandler(&HAL_OnTick);
@@ -94,58 +98,6 @@ int main(int argc, char* argv[])
 	/* Registering morse player in SysTick handler */
 	MorsePlayerInit();
 	L2HAL_SysTick_RegisterHandler(&MorseTickMs);
-
-	/* Detecting display */
-	HL_TurnDisplayOn();
-
-	/* Colors */
-	OffColor.R = 0;
-	OffColor.G = 0;
-	OffColor.B = 0;
-
-	OnColor.R = 255;
-	OnColor.G = 255;
-	OnColor.B = 255;
-
-	/* Attaching FMGL to display */
-	fmglContext = FMGL_API_AttachToDriver(&L2HAL_SSD1327_Context, &L2HAL_SSD1327_GetWidth, &L2HAL_SSD1327_GetHeight, &L2HAL_SSD1327_SetActiveColor,
-			&L2HAL_SSD1327_DrawPixel, &L2HAL_SSD1327_GetPixel, &L2HAL_SSD1327_PushFramebuffer, OffColor);
-
-	/* Initializing font */
-	FMGL_API_Font font= FMGL_FontTerminusRegular12Init();
-
-	FMGL_API_XBMTransparencyMode transparencyMode = FMGL_XBMTransparencyModeTransparentInactive;
-
-	/* Common font settings */
-	commonFont.Font = &font;
-	commonFont.Scale = 1;
-	commonFont.CharactersSpacing = 0;
-	commonFont.LinesSpacing = 0;
-	commonFont.BackgroundColor = &OffColor;
-	commonFont.FontColor = &OnColor;
-	commonFont.Transparency = &transparencyMode;
-
-	/* Inverted common font */
-	invertedCommonFont.Font = &font;
-	invertedCommonFont.Scale = 1;
-	invertedCommonFont.CharactersSpacing = 0;
-	invertedCommonFont.LinesSpacing = 0;
-	invertedCommonFont.BackgroundColor = &OnColor;
-	invertedCommonFont.FontColor = &OffColor;
-	invertedCommonFont.Transparency = &transparencyMode;
-
-	/* Frequency font settings */
-	frequencyFont.Font = &font;
-	frequencyFont.Scale = 2;
-	frequencyFont.CharactersSpacing = 0;
-	frequencyFont.LinesSpacing = 0;
-	frequencyFont.BackgroundColor = &OffColor;
-	frequencyFont.FontColor = &OnColor;
-	frequencyFont.Transparency = &transparencyMode;
-
-	/* Clearing display */
-	FMGL_API_ClearScreen(&fmglContext);
-	FMGL_API_PushFramebuffer(&fmglContext);
 
 	/* Initial fox state*/
 	FoxState.BatteryLevel = 1.0f;
@@ -212,6 +164,10 @@ int main(int argc, char* argv[])
 
 	/* Preparing menus */
 	MenuDisplay_InitMenuDisplay();
+
+	/* Clearing display after boot screen */
+	FMGL_API_ClearScreen(&fmglContext);
+	FMGL_API_PushFramebuffer(&fmglContext);
 
 	/* Debugging stuff begin */
 
@@ -706,6 +662,62 @@ void Main_ControlSleep(void)
 		/* When fox is in cycle we can't sleep deeply */
 		Sleepmodes_PreventDeepSleep();
 	}
+}
+
+void Main_InitDisplayAndShowBootScreen(void)
+{
+	/* Colors */
+	OffColor.R = 0;
+	OffColor.G = 0;
+	OffColor.B = 0;
+
+	OnColor.R = 255;
+	OnColor.G = 255;
+	OnColor.B = 255;
+
+	/* Attaching FMGL to display */
+	fmglContext = FMGL_API_AttachToDriver(&L2HAL_SSD1327_Context, &L2HAL_SSD1327_GetWidth, &L2HAL_SSD1327_GetHeight, &L2HAL_SSD1327_SetActiveColor,
+			&L2HAL_SSD1327_DrawPixel, &L2HAL_SSD1327_GetPixel, &L2HAL_SSD1327_PushFramebuffer, OffColor);
+
+	/* Initializing font */
+	FMGL_FontTerminusRegular12 = FMGL_FontTerminusRegular12Init();
+
+	FMGL_API_XBMTransparencyMode transparencyMode = FMGL_XBMTransparencyModeTransparentInactive;
+
+	/* Common font settings */
+	commonFont.Font = &FMGL_FontTerminusRegular12;
+	commonFont.Scale = 1;
+	commonFont.CharactersSpacing = 0;
+	commonFont.LinesSpacing = 0;
+	commonFont.BackgroundColor = &OffColor;
+	commonFont.FontColor = &OnColor;
+	commonFont.Transparency = &transparencyMode;
+
+	/* Inverted common font */
+	invertedCommonFont.Font = &FMGL_FontTerminusRegular12;
+	invertedCommonFont.Scale = 1;
+	invertedCommonFont.CharactersSpacing = 0;
+	invertedCommonFont.LinesSpacing = 0;
+	invertedCommonFont.BackgroundColor = &OnColor;
+	invertedCommonFont.FontColor = &OffColor;
+	invertedCommonFont.Transparency = &transparencyMode;
+
+	/* Frequency font settings */
+	frequencyFont.Font = &FMGL_FontTerminusRegular12;
+	frequencyFont.Scale = 2;
+	frequencyFont.CharactersSpacing = 0;
+	frequencyFont.LinesSpacing = 0;
+	frequencyFont.BackgroundColor = &OffColor;
+	frequencyFont.FontColor = &OnColor;
+	frequencyFont.Transparency = &transparencyMode;
+
+	/* Clearing display */
+	FMGL_API_ClearScreen(&fmglContext);
+	FMGL_API_PushFramebuffer(&fmglContext);
+
+	/* Splash screen */
+	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, 0, 0, NULL, NULL, false, "Booting up...");
+	FMGL_API_PushFramebuffer(&fmglContext);
 }
 
 #pragma GCC diagnostic pop
