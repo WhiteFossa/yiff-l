@@ -74,11 +74,6 @@ extern L2HAL_HC06_ContextStruct HC06_Context;
 #define YHL_HL_BLUETOOTH_PIN "0000"
 
 /**
- * Bluetooth module will be ready after this time on powering up
- */
-#define YHL_HL_BLUETOOTH_BOOT_TIME 1000
-
-/**
  * Time to wait after powering display down before attempt to turn it on
  */
 #define YHL_HL_DISPLAY_POWERDOWN_TIME 1000

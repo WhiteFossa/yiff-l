@@ -315,7 +315,7 @@ void HL_RenameBluetoothDevice(char* newName)
 	HAL_SwitchBluetoothPower(false);
 	HAL_Delay(YHL_HL_BLUETOOTH_POWERCYCLE_LENGTH);
 	HAL_SwitchBluetoothPower(true);
-	HAL_Delay(YHL_HL_BLUETOOTH_BOOT_TIME);
+	HAL_Delay(YHL_HL_BLUETOOTH_REGULATOR_SPINUP_TIME);
 
 	/* Reconnecting to bluetooth module */
 	HC06_Context = L2HAL_HC06_AttachToDevice(&UART_Handle);
