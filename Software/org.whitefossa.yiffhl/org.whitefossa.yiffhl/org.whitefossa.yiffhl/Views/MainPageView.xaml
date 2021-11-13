@@ -52,6 +52,7 @@
                             Text="Connect"
                             Grid.Row="1"
                             Grid.Column="1"
+                            Command="{Binding ConnectButtonClickedCommand}"
                             IsEnabled="{Binding IsBtnConnectEnabled}" />
                     </Grid>
                     

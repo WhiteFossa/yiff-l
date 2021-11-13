@@ -1,5 +1,8 @@
 ﻿using org.whitefossa.yiffhl.Abstractions.DTOs;
+using org.whitefossa.yiffhl.Models;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -7,6 +10,11 @@ namespace org.whitefossa.yiffhl.ViewModels
 {
     internal class MainPageViewModel : BindableObject
     {
+        /// <summary>
+        /// Main model
+        /// </summary>
+        private MainModel _mainModel;
+
         /// <summary>
         /// List of foxes, paired to a phone
         /// </summary>
@@ -57,10 +65,19 @@ namespace org.whitefossa.yiffhl.ViewModels
             }
         }
 
+        /// <summary>
+        /// Command, executed on Connect button press
+        /// </summary>
+        public ICommand ConnectButtonClickedCommand { get; }
+
         public MainPageViewModel()
         {
+            // Model initialization
+            _mainModel = new MainModel();
+
             // Binding commands to handlers
-            SelectedFoxChangedCommand = new Command<PairedFoxDTO>(OnSelectedFoxChanged);
+            SelectedFoxChangedCommand = new Command<PairedFoxDTO>(async (f) => await OnSelectedFoxChangedAsync(f));
+            ConnectButtonClickedCommand = new Command(async () => await OnConnectButtonCLickedAsync());
 
             // Initial state
             IsBtnConnectEnabled = false;
@@ -68,13 +85,20 @@ namespace org.whitefossa.yiffhl.ViewModels
             _pairedFoxes.Add(new PairedFoxDTO("Yiffy foxy", "11:22:33:44:55"));
             _pairedFoxes.Add(new PairedFoxDTO("Yerfy foxy", "11:22:33:44:55"));
             _pairedFoxes.Add(new PairedFoxDTO("Yuffy foxy", "11:22:33:44:55"));
-
-            //_selectedFox = _pairedFoxes.First();
         }
 
-        public void OnSelectedFoxChanged(PairedFoxDTO selectedFox)
+        public Task OnSelectedFoxChangedAsync(PairedFoxDTO selectedFox)
         {
             IsBtnConnectEnabled = selectedFox != null;
+
+            return Task.CompletedTask;
+        }
+
+        public Task OnConnectButtonCLickedAsync()
+        {
+            Debug.WriteLine("Connect");
+
+            return Task.CompletedTask;
         }
     }
 }
