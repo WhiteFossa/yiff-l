@@ -14,6 +14,7 @@
 #include <HardwareLogic.h>
 #include <math.h>
 #include <SelfDiagnostics.h>
+#include <Random.h>
 
 extern EEPROMHeaderStruct EEPROM_Header;
 extern FoxStateStruct FoxState;
@@ -326,6 +327,11 @@ void HAL_Activate2M(bool isActivate);
  * So do not turn it on for long when device in sleep mode.
  */
 void HAL_SwitchUBattCheck(bool isOn);
+
+/**
+ * Returns if battery level check circuit enabled
+ */
+bool HAL_GetUBattCheck(void);
 
 /**
  * Generic part of ADC setup

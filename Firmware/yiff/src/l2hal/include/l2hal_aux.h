@@ -48,13 +48,6 @@
 #include <string.h>
 
 /**
- * Boolean type and values.
- */
-#define bool uint8_t
-#define true 0xFF
-#define false 0x00
-
-/**
  * Macroses for minimal and maximal values.
  */
 #define MIN(x, y) (((x) < (y)) ? (x) : (y))

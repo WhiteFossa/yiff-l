@@ -18,7 +18,12 @@ void EEPROM_Format(void)
 
 	/* Writing main header */
 	EEPROMHeaderStruct defaultHeader;
-	snprintf(defaultHeader.Name, YHL_PROFILE_NAME_MEMORY_SIZE, YHL_DEFAULT_FOX_NAME);
+
+	/* Fox name */
+	/* Random digits to add to fox name */
+	uint32_t foxNamePostfix = Rand_GetRandom() % YHL_DEFAULT_FOX_NAME_POSTFIX_MODULUS;
+	snprintf(defaultHeader.Name, YHL_PROFILE_NAME_MEMORY_SIZE, YHL_DEFAULT_FOX_NAME, foxNamePostfix);
+
 	defaultHeader.NumberOfProfiles = 1;
 
 	/* Zero in profile address means "not allocated" */

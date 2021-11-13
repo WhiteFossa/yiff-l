@@ -33,6 +33,7 @@
 #include <Menu/TimeInputDisplay.h>
 #include <SelfDiagnostics.h>
 #include <Sleepmodes.h>
+#include <Random.h>
 
 /**
  * EEPROM-related stuff

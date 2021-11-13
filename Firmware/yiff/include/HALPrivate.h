@@ -96,6 +96,11 @@ void (*HAL_EncoderRotationCallback)(int8_t direction);
 bool HAL_IsInEconomyMode;
 
 /**
+ * True if UBatt measurement circuit is on
+ */
+bool HAL_IsUBattCheckOn;
+
+/**
  * Call from ADC interrupt handler to add measurement
  */
 void HAL_AddNewADCMeasurement(uint16_t measurement);

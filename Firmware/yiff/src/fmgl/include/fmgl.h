@@ -73,6 +73,7 @@
 
 #include <stdint.h>
 #include <string.h>
+#include <stdbool.h>
 #include <l2hal_aux.h>
 #include <l2hal_errors.h>
 

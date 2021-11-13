@@ -77,6 +77,7 @@
 #ifndef L2HAL_DRIVERS_INPUT_BUTTONS_INCLUDE_L2HAL_BUTTONS_H_
 #define L2HAL_DRIVERS_INPUT_BUTTONS_INCLUDE_L2HAL_BUTTONS_H_
 
+#include <stdbool.h>
 #include <l2hal_mcu.h>
 #include <l2hal_aux.h>
 #include <l2hal_errors.h>

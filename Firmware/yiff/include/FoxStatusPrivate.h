@@ -8,6 +8,7 @@
 #ifndef INCLUDE_FOXSTATUSPRIVATE_H_
 #define INCLUDE_FOXSTATUSPRIVATE_H_
 
+#include <stdbool.h>
 #include <stdint.h>
 #include <l2hal_aux.h>
 

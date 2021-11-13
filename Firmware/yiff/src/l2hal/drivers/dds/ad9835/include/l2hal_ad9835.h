@@ -78,6 +78,7 @@
 #ifndef L2HAL_DRIVERS_DDS_AD9835_INCLUDE_L2HAL_AD9835_H_
 #define L2HAL_DRIVERS_DDS_AD9835_INCLUDE_L2HAL_AD9835_H_
 
+#include <stdbool.h>
 #include <l2hal_aux.h>
 #include <l2hal_ad9835_private.h>
 

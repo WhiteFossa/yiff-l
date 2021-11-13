@@ -79,8 +79,11 @@ int main(int argc, char* argv[])
 		SelfDiagnostics_HaltOnFailure(YhlFailureCause_UnableToFindEEPROM);
 	}
 
+	/* Gethering initial enthropy for random generator */
+	Rand_GatherEnthropy();
+
 	// TODO: Uncomment me to force EEPROM format
-	//EEPROM_Format();
+	/* EEPROM_Format(); */
 
 	/* Initializing EEPROM data */
 	EEPROM_Init();

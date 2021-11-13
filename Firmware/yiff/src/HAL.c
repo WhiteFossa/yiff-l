@@ -211,6 +211,8 @@ void HAL_IntiHardware(void)
 
 	HAL_IsInEconomyMode = false;
 
+	HAL_IsUBattCheckOn = false;
+
 	/* Launching ADC conversions */
 	HAL_SetupADCGeneric();
 	HAL_SetupADCForUAntMeasurement();
@@ -329,6 +331,13 @@ void HAL_SwitchUBattCheck(bool isOn)
 	{
 		HAL_GPIO_WritePin(HAL_ENABLE_UBATT_CHECK_PORT, HAL_ENABLE_UBATT_CHECK_PIN, GPIO_PIN_RESET);
 	}
+
+	HAL_IsUBattCheckOn = isOn;
+}
+
+bool HAL_GetUBattCheck(void)
+{
+	return HAL_IsUBattCheckOn;
 }
 
 void HAL_SetupADCGeneric(void)
@@ -420,6 +429,13 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* AdcHandle)
 
 void HAL_AddNewADCMeasurement(uint16_t measurement)
 {
+	/* Feeding random generator with enthropy from battery */
+	if (HAL_IsUBattCheckOn && (YHL_HAL_UBatt == HAL_CurrentADCChannel))
+	{
+		uint32_t enthropy = HAL_GetTick() + measurement;
+		Rand_SetSeed(enthropy);
+	}
+
 	if (HAL_ADCAveragesCounter < HAL_ADC_AVERAGING)
 	{
 		HAL_ADCAccumulator += measurement;

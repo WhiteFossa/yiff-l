@@ -84,6 +84,7 @@
 #define L2HAL_DRIVERS_EEPROM_24X_INCLUDE_L2HAL_24X_H_
 
 #include <stdint.h>
+#include <stdbool.h>
 #include <stm32f1xx_hal.h>
 #include <l2hal_aux.h>
 #include <l2hal_errors.h>

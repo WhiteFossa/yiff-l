@@ -8,6 +8,7 @@
 #ifndef L2HAL_DRIVERS_BLUETOOTH_HC06_INCLUDE_L2HAL_HC06_H_
 #define L2HAL_DRIVERS_BLUETOOTH_HC06_INCLUDE_L2HAL_HC06_H_
 
+#include <stdbool.h>
 #include <stdint.h>
 #include <string.h>
 #include <stm32f1xx_hal.h>

@@ -12,12 +12,18 @@
 #include <FoxStatus.h>
 #include <l2hal.h>
 #include <SelfDiagnostics.h>
+#include <Random.h>
 
 extern L2HAL_CRCContextStruct CRC_Context;
 extern FoxStateStruct FoxState;
 extern L2HAL_24x_ContextStruct EEPROMContext;
 
 #define YHL_EEPROM_DATA_VERSION 1U
+
+/**
+ * Postfix = HAL_GetTick() % REMAINDER
+ */
+#define YHL_EEPROM_FOX_NAME_POSTFIX_REMAINDER 10000
 
 /**
  * How much profiles can we have
@@ -35,9 +41,14 @@ extern L2HAL_24x_ContextStruct EEPROMContext;
 #define YHL_DEFAULT_PROFILE_NAME "New profile"
 
 /**
+ * Fox name postfix modulus. 10000 mean postfixes from 0000 to 9999
+ */
+#define YHL_DEFAULT_FOX_NAME_POSTFIX_MODULUS 10000U
+
+/**
  * Fox will have this name after EEPROM formatting
  */
-#define YHL_DEFAULT_FOX_NAME "Yiffy foxy"
+#define YHL_DEFAULT_FOX_NAME "Yiffy foxy #%04d"
 
 /**
  * Default factors for UBatt(ADC)->Volts conversion
