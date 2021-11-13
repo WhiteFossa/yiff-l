@@ -10,6 +10,12 @@
 
 void FoxState_Init(void)
 {
+	FoxState.BatteryLevel = 1.0f;
+	FoxState.CurrentTime = YHL_TIME_DAY_ZERO_TIMESTAMP;
+	FoxState.IsTXOn = false;
+	FoxState.GlobalState.IsArmed = false;
+	FoxState.GlobalState.CurrentState = GfsStandby;
+	FoxState.CycleState.CycleState = CsPause;
 	FoxState.IsEEPROMHeadersInitialized = false; /* Headers aren't initialized yet, self-diagnostics unable to use EEPROM */
 	FoxState.SupressDrawing = true; /* Display is not initialized yet */
 	FoxState.ForceCarrierOff = false;

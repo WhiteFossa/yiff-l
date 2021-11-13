@@ -99,16 +99,6 @@ int main(int argc, char* argv[])
 	MorsePlayerInit();
 	L2HAL_SysTick_RegisterHandler(&MorseTickMs);
 
-	/* Initial fox state*/
-	FoxState.BatteryLevel = 1.0f;
-
-	FoxState.CurrentTime = YHL_TIME_DAY_ZERO_TIMESTAMP;
-
-	FoxState.IsTXOn = false;
-	FoxState.GlobalState.IsArmed = false;
-	FoxState.GlobalState.CurrentState = GfsStandby;
-	FoxState.CycleState.CycleState = CsPause;
-
 	LeftButton.IsPressed = false;
 	RightButton.IsPressed = false;
 	Main_SetDefaultButtonsActions();
