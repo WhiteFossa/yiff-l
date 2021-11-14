@@ -1,10 +1,7 @@
 ﻿using org.whitefossa.yiffhl.Abstractions.DTOs;
 using org.whitefossa.yiffhl.Abstractions.Interfaces;
 using org.whitefossa.yiffhl.Models;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace org.whitefossa.yiffhl.Business.Implementations

@@ -3,6 +3,7 @@ using org.whitefossa.yiffhl.Abstractions.Interfaces;
 using org.whitefossa.yiffhl.Models;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -12,6 +13,7 @@ namespace org.whitefossa.yiffhl.ViewModels
     internal class MainPageViewModel : BindableObject
     {
         private IFoxConnector _foxConnector;
+        private IPairedFoxesEnumerator _pairedFoxesEnumerator;
 
         /// <summary>
         /// Main model
@@ -25,7 +27,10 @@ namespace org.whitefossa.yiffhl.ViewModels
 
         public ObservableCollection<PairedFoxDTO> PairedFoxes
         {
-            get => _pairedFoxes;
+            get
+            {
+                return new ObservableCollection<PairedFoxDTO>(_pairedFoxesEnumerator.EnumerateAsync().Result);
+            }
             set
             {
                 _pairedFoxes = value;
@@ -73,9 +78,15 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         public ICommand ConnectButtonClickedCommand { get; }
 
+        /// <summary>
+        /// Command, executed on Refresh Foxes List button press
+        /// </summary>
+        public ICommand RefreshFoxesListClickedCommand { get; }
+
         public MainPageViewModel()
         {
             _foxConnector = App.Container.Resolve<IFoxConnector>();
+            _pairedFoxesEnumerator = App.Container.Resolve<IPairedFoxesEnumerator>();
 
             // Model initialization
             _mainModel = new MainModel();
@@ -83,25 +94,27 @@ namespace org.whitefossa.yiffhl.ViewModels
             // Binding commands to handlers
             SelectedFoxChangedCommand = new Command<PairedFoxDTO>(async (f) => await OnSelectedFoxChangedAsync(f));
             ConnectButtonClickedCommand = new Command(async () => await OnConnectButtonCLickedAsync());
+            RefreshFoxesListClickedCommand = new Command(async () => await OnRefreshFoxesListClickedAsync());
 
             // Initial state
             IsBtnConnectEnabled = false;
 
-            _pairedFoxes.Add(new PairedFoxDTO("Yiffy foxy", "11:22:33:44:55"));
-            _pairedFoxes.Add(new PairedFoxDTO("Yerfy foxy", "11:22:33:44:55"));
-            _pairedFoxes.Add(new PairedFoxDTO("Yuffy foxy", "11:22:33:44:55"));
+            //_pairedFoxes = _pairedFoxesEnumerator.EnumerateAsync();
         }
 
-        public Task OnSelectedFoxChangedAsync(PairedFoxDTO selectedFox)
+        public async Task OnSelectedFoxChangedAsync(PairedFoxDTO selectedFox)
         {
             IsBtnConnectEnabled = selectedFox != null;
-
-            return Task.CompletedTask;
         }
 
         public Task OnConnectButtonCLickedAsync()
         {
             return _foxConnector.ConnectAsync(_mainModel, SelectedFox);
+        }
+
+        public async Task OnRefreshFoxesListClickedAsync()
+        {
+            PairedFoxes = new ObservableCollection<PairedFoxDTO>(await _pairedFoxesEnumerator.EnumerateAsync());
         }
     }
 }

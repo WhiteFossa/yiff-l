@@ -7,6 +7,7 @@ using Android.OS;
 using Nancy.TinyIoc;
 using org.whitefossa.yiffhl.Abstractions.Interfaces;
 using org.whitefossa.yiffhl.Business.Implementations;
+using org.whitefossa.yiffhl.Droid.Business.Implementations;
 
 namespace org.whitefossa.yiffhl.Droid
 {
@@ -17,7 +18,8 @@ namespace org.whitefossa.yiffhl.Droid
         {
             // Registering IoC stuff
             App.Container = new TinyIoCContainer();
-            App.Container.Register<IFoxConnector, FoxConnector>();
+            App.Container.Register<IFoxConnector, FoxConnector>().AsSingleton();
+            App.Container.Register<IPairedFoxesEnumerator, PairedFoxesEnumerator>().AsSingleton();
 
             base.OnCreate(savedInstanceState);
 
