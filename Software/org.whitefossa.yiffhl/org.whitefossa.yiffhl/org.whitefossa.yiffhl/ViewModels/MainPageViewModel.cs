@@ -16,6 +16,7 @@ namespace org.whitefossa.yiffhl.ViewModels
         private IFoxConnector _foxConnector;
         private IPairedFoxesEnumerator _pairedFoxesEnumerator;
         private IUserNotifier _userNotifier;
+        private IBluetoothCommunicator _bluetoothCommunicator;
 
         /// <summary>
         /// Main model
@@ -119,9 +120,22 @@ namespace org.whitefossa.yiffhl.ViewModels
             _foxConnector = App.Container.Resolve<IFoxConnector>();
             _pairedFoxesEnumerator = App.Container.Resolve<IPairedFoxesEnumerator>();
             _userNotifier = App.Container.Resolve<IUserNotifier>();
+            _bluetoothCommunicator = App.Container.Resolve<IBluetoothCommunicator>();
 
             // Model initialization
             _mainModel = new MainModel();
+
+            // Setting up BT communicator delegates
+            _mainModel.OnBTCommunicatorNewByteRead += OnNewByteRead;
+            _mainModel.OnBTCommunicatorConnect += OnConnect;
+            _mainModel.OnBTCommunicatorDisconnect += OnDisconnect;
+
+            _bluetoothCommunicator.SetupDelegates
+             (
+                _mainModel.OnBTCommunicatorConnect,
+                _mainModel.OnBTCommunicatorDisconnect,
+                _mainModel.OnBTCommunicatorNewByteRead
+             );
 
             // Binding commands to handlers
             SelectedFoxChangedCommand = new Command<PairedFoxDTO>(async (f) => await OnSelectedFoxChangedAsync(f));
@@ -148,6 +162,9 @@ namespace org.whitefossa.yiffhl.ViewModels
             OnPropertyChanged(nameof(IsFoxSelectorEnabled));
             OnPropertyChanged(nameof(IsBtnConnectEnabled));
             OnPropertyChanged(nameof(IsBtnDisconnectEnabled));
+
+            // Trying to connect
+            await _bluetoothCommunicator.ConnectAsync(SelectedFox);
         }
 
         public async Task OnRefreshFoxesListClickedAsync()
@@ -165,6 +182,9 @@ namespace org.whitefossa.yiffhl.ViewModels
             OnPropertyChanged(nameof(IsFoxSelectorEnabled));
             OnPropertyChanged(nameof(IsBtnConnectEnabled));
             OnPropertyChanged(nameof(IsBtnDisconnectEnabled));
+
+            // Trying to disconnect
+            _bluetoothCommunicator.Disconnect();
         }
 
         private bool CalculateBtnConnectEnabledState()
@@ -188,6 +208,21 @@ namespace org.whitefossa.yiffhl.ViewModels
                 return new ObservableCollection<PairedFoxDTO>();
             }
             
+        }
+
+        private void OnNewByteRead(byte data)
+        {
+            Debug.WriteLine($"Byte: {data}");
+        }
+
+        private void OnConnect()
+        {
+            Debug.WriteLine("Connected");
+        }
+
+        private void OnDisconnect()
+        {
+            Debug.WriteLine("Disconnected");
         }
     }
 }

@@ -8,6 +8,7 @@ using Nancy.TinyIoc;
 using org.whitefossa.yiffhl.Abstractions.Interfaces;
 using org.whitefossa.yiffhl.Business.Implementations;
 using org.whitefossa.yiffhl.Droid.Business.Implementations;
+using Acr.UserDialogs;
 
 namespace org.whitefossa.yiffhl.Droid
 {
@@ -21,12 +22,15 @@ namespace org.whitefossa.yiffhl.Droid
             App.Container.Register<IFoxConnector, FoxConnector>().AsSingleton();
             App.Container.Register<IPairedFoxesEnumerator, PairedFoxesEnumerator>().AsSingleton();
             App.Container.Register<IUserNotifier, UserNotifier>().AsSingleton();
+            App.Container.Register<IBluetoothCommunicator, BluetoothCommunicator>().AsSingleton();
 
             base.OnCreate(savedInstanceState);
 
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             LoadApplication(new App());
+
+            UserDialogs.Init(this);
         }
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {
