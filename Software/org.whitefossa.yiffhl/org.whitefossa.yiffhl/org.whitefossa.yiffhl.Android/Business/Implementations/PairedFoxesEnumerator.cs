@@ -1,6 +1,9 @@
-﻿using org.whitefossa.yiffhl.Abstractions.DTOs;
+﻿using Android.Bluetooth;
+using org.whitefossa.yiffhl.Abstractions.DTOs;
 using org.whitefossa.yiffhl.Abstractions.Interfaces;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace org.whitefossa.yiffhl.Droid.Business.Implementations
@@ -14,9 +17,23 @@ namespace org.whitefossa.yiffhl.Droid.Business.Implementations
         {
             var result = new List<PairedFoxDTO>();
 
-            result.Add(new PairedFoxDTO("Yiffy foxy", "11:22:33:44:55"));
-            result.Add(new PairedFoxDTO("Yerfy foxy", "22:22:33:44:55"));
-            result.Add(new PairedFoxDTO("Yuffy foxy", "33:22:33:44:55"));
+            var adapter = BluetoothAdapter.DefaultAdapter;
+            if (adapter == null)
+            {
+                throw new InvalidOperationException("No bluetooth adapters found!");
+            }
+
+            if (!adapter.IsEnabled)
+            {
+                throw new InvalidOperationException("Bluetooth is disabled!");
+            }
+
+            result.AddRange
+            (
+                adapter
+                .BondedDevices
+                .Select(d => new PairedFoxDTO(d.Name, d.Address))
+            );
 
             return result;
         }

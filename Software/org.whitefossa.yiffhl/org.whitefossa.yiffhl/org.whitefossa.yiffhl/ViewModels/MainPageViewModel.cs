@@ -1,6 +1,7 @@
 ﻿using org.whitefossa.yiffhl.Abstractions.DTOs;
 using org.whitefossa.yiffhl.Abstractions.Interfaces;
 using org.whitefossa.yiffhl.Models;
+using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
@@ -14,6 +15,7 @@ namespace org.whitefossa.yiffhl.ViewModels
     {
         private IFoxConnector _foxConnector;
         private IPairedFoxesEnumerator _pairedFoxesEnumerator;
+        private IUserNotifier _userNotifier;
 
         /// <summary>
         /// Main model
@@ -29,7 +31,7 @@ namespace org.whitefossa.yiffhl.ViewModels
         {
             get
             {
-                return new ObservableCollection<PairedFoxDTO>(_pairedFoxesEnumerator.EnumerateAsync().Result);
+                return EnumerateFoxesAsync().Result;
             }
             set
             {
@@ -116,6 +118,7 @@ namespace org.whitefossa.yiffhl.ViewModels
         {
             _foxConnector = App.Container.Resolve<IFoxConnector>();
             _pairedFoxesEnumerator = App.Container.Resolve<IPairedFoxesEnumerator>();
+            _userNotifier = App.Container.Resolve<IUserNotifier>();
 
             // Model initialization
             _mainModel = new MainModel();
@@ -149,7 +152,7 @@ namespace org.whitefossa.yiffhl.ViewModels
 
         public async Task OnRefreshFoxesListClickedAsync()
         {
-            PairedFoxes = new ObservableCollection<PairedFoxDTO>(await _pairedFoxesEnumerator.EnumerateAsync());
+            PairedFoxes = await EnumerateFoxesAsync();
         }
 
         public async Task OnDisconnectButtonClickedAsync()
@@ -167,6 +170,24 @@ namespace org.whitefossa.yiffhl.ViewModels
         private bool CalculateBtnConnectEnabledState()
         {
             return SelectedFox != null && !_mainModel.IsConnected;
+        }
+
+        private async Task<ObservableCollection<PairedFoxDTO>> EnumerateFoxesAsync()
+        {
+            try
+            {
+                return new ObservableCollection<PairedFoxDTO>(await _pairedFoxesEnumerator.EnumerateAsync());
+            }
+            catch (InvalidOperationException ex)
+            {
+                Device.BeginInvokeOnMainThread(async () =>
+                {
+                    await _userNotifier.ShowErrorMessageAsync("Bluetooth error:", ex.Message);
+                });
+
+                return new ObservableCollection<PairedFoxDTO>();
+            }
+            
         }
     }
 }

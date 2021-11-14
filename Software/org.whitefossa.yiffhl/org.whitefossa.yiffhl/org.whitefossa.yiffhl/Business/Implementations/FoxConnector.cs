@@ -29,6 +29,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _ = model ?? throw new ArgumentException(nameof(model));
 
             // Put actual disconnection code here
+            Debug.WriteLine("Disconnecting");
 
             model.IsConnected = false;
             model.ConnectedFox = null;

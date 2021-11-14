@@ -20,6 +20,7 @@ namespace org.whitefossa.yiffhl.Droid
             App.Container = new TinyIoCContainer();
             App.Container.Register<IFoxConnector, FoxConnector>().AsSingleton();
             App.Container.Register<IPairedFoxesEnumerator, PairedFoxesEnumerator>().AsSingleton();
+            App.Container.Register<IUserNotifier, UserNotifier>().AsSingleton();
 
             base.OnCreate(savedInstanceState);
 
