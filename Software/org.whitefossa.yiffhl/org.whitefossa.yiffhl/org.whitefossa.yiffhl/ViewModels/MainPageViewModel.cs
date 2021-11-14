@@ -1,4 +1,5 @@
 ﻿using org.whitefossa.yiffhl.Abstractions.DTOs;
+using org.whitefossa.yiffhl.Abstractions.Interfaces;
 using org.whitefossa.yiffhl.Models;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -10,6 +11,8 @@ namespace org.whitefossa.yiffhl.ViewModels
 {
     internal class MainPageViewModel : BindableObject
     {
+        private IFoxConnector _foxConnector;
+
         /// <summary>
         /// Main model
         /// </summary>
@@ -72,6 +75,8 @@ namespace org.whitefossa.yiffhl.ViewModels
 
         public MainPageViewModel()
         {
+            _foxConnector = App.Container.Resolve<IFoxConnector>();
+
             // Model initialization
             _mainModel = new MainModel();
 
@@ -96,9 +101,7 @@ namespace org.whitefossa.yiffhl.ViewModels
 
         public Task OnConnectButtonCLickedAsync()
         {
-            Debug.WriteLine("Connect");
-
-            return Task.CompletedTask;
+            return _foxConnector.ConnectAsync(_mainModel, SelectedFox);
         }
     }
 }

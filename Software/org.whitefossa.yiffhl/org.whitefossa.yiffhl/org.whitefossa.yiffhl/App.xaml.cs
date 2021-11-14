@@ -1,12 +1,13 @@
-﻿using org.whitefossa.yiffhl.Views;
-using System;
+﻿using Nancy.TinyIoc;
+using org.whitefossa.yiffhl.Views;
 using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
 
 namespace org.whitefossa.yiffhl
 {
     public partial class App : Application
     {
+        public static TinyIoCContainer Container;
+
         public App()
         {
             InitializeComponent();

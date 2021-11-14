@@ -5,7 +5,7 @@ namespace org.whitefossa.yiffhl.Models
     /// <summary>
     /// Main model
     /// </summary>
-    internal class MainModel
+    public class MainModel
     {
         /// <summary>
         /// Are we connected to a fox?
