@@ -5,6 +5,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -62,16 +63,16 @@ namespace org.whitefossa.yiffhl.ViewModels
         public ICommand SelectedFoxChangedCommand { get; }
 
         /// <summary>
-        /// True if Connect button is enabled
+        /// True if connect-related controls are enabled
         /// </summary>
-        private bool _isBtnConnectEnabled;
+        private bool _isConnectRelatedControlsEnabled;
 
-        public bool IsBtnConnectEnabled
+        public bool IsConnectRelatedControlsEnabled
         {
-            get => _isBtnConnectEnabled;
+            get => _isConnectRelatedControlsEnabled;
             set
             {
-                _isBtnConnectEnabled = value;
+                _isConnectRelatedControlsEnabled = value;
                 OnPropertyChanged();
             }
         }
@@ -87,27 +88,18 @@ namespace org.whitefossa.yiffhl.ViewModels
         public ICommand RefreshFoxesListClickedCommand { get; }
 
         /// <summary>
-        /// Is Refresh Foxes List button enabled
-        /// </summary>
-        public bool IsRefreshFoxesListButtonEnabled
-        {
-            get => !_mainModel.IsConnected;
-        }
-
-        /// <summary>
-        /// Is Select Fox picker enabled
-        /// </summary>
-        public bool IsFoxSelectorEnabled
-        {
-            get => !_mainModel.IsConnected;
-        }
-
-        /// <summary>
         /// Is Disconnect button enabled
         /// </summary>
+        private bool _isBtnDisconnectEnabled;
+
         public bool IsBtnDisconnectEnabled
         {
-            get => _mainModel.IsConnected;
+            get => _isBtnDisconnectEnabled;
+            set
+            {
+                _isBtnDisconnectEnabled = value;
+                OnPropertyChanged();
+            }
         }
 
         /// <summary>
@@ -144,27 +136,20 @@ namespace org.whitefossa.yiffhl.ViewModels
             DisconnectButtonClickedCommand = new Command(async () => await OnDisconnectButtonClickedAsync());
 
             // Initial state
-            IsBtnConnectEnabled = false;
+            IsConnectRelatedControlsEnabled = true;
+            IsBtnDisconnectEnabled = false;
         }
 
         public async Task OnSelectedFoxChangedAsync(PairedFoxDTO selectedFox)
         {
-            IsBtnConnectEnabled = selectedFox != null && !_mainModel.IsConnected;
+            IsConnectRelatedControlsEnabled = selectedFox != null && !_mainModel.IsConnected;
         }
 
         public async Task OnConnectButtonCLickedAsync()
         {
-            await _foxConnector.ConnectAsync(_mainModel, SelectedFox);
+            IsConnectRelatedControlsEnabled = false;
 
-            IsBtnConnectEnabled = CalculateBtnConnectEnabledState();
-
-            OnPropertyChanged(nameof(IsRefreshFoxesListButtonEnabled));
-            OnPropertyChanged(nameof(IsFoxSelectorEnabled));
-            OnPropertyChanged(nameof(IsBtnConnectEnabled));
-            OnPropertyChanged(nameof(IsBtnDisconnectEnabled));
-
-            // Trying to connect
-            await _bluetoothCommunicator.ConnectAsync(SelectedFox);
+            await _foxConnector.ConnectAsync(SelectedFox);
         }
 
         public async Task OnRefreshFoxesListClickedAsync()
@@ -174,17 +159,9 @@ namespace org.whitefossa.yiffhl.ViewModels
 
         public async Task OnDisconnectButtonClickedAsync()
         {
-            await _foxConnector.DisconnectAsync(_mainModel);
+            IsBtnDisconnectEnabled = false;
 
-            IsBtnConnectEnabled = CalculateBtnConnectEnabledState();
-
-            OnPropertyChanged(nameof(IsRefreshFoxesListButtonEnabled));
-            OnPropertyChanged(nameof(IsFoxSelectorEnabled));
-            OnPropertyChanged(nameof(IsBtnConnectEnabled));
-            OnPropertyChanged(nameof(IsBtnDisconnectEnabled));
-
-            // Trying to disconnect
-            _bluetoothCommunicator.Disconnect();
+            await _foxConnector.DisconnectAsync();
         }
 
         private bool CalculateBtnConnectEnabledState()
@@ -215,14 +192,20 @@ namespace org.whitefossa.yiffhl.ViewModels
             Debug.WriteLine($"Byte: {data}");
         }
 
-        private void OnConnect()
+        private void OnConnect(PairedFoxDTO connectedFox)
         {
-            Debug.WriteLine("Connected");
+            _mainModel.ConnectedFox = connectedFox;
+            _mainModel.IsConnected = true;
+
+            IsBtnDisconnectEnabled = true;
         }
 
         private void OnDisconnect()
         {
-            Debug.WriteLine("Disconnected");
+            _mainModel.IsConnected = false;
+            _mainModel.ConnectedFox = null;
+
+            IsConnectRelatedControlsEnabled = true;
         }
     }
 }

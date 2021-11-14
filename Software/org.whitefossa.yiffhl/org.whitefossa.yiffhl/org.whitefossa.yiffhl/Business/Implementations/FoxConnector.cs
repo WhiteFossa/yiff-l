@@ -3,6 +3,7 @@ using org.whitefossa.yiffhl.Abstractions.Interfaces;
 using org.whitefossa.yiffhl.Models;
 using System;
 using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace org.whitefossa.yiffhl.Business.Implementations
@@ -12,27 +13,44 @@ namespace org.whitefossa.yiffhl.Business.Implementations
     /// </summary>
     public class FoxConnector : IFoxConnector
     {
-        public async Task ConnectAsync(MainModel model, PairedFoxDTO foxToConnect)
+        private IBluetoothCommunicator _bluetoothCommunicator;
+
+        public FoxConnector
+        (
+            IBluetoothCommunicator bluetoothCommunicator
+        )
         {
-            _ = model ?? throw new ArgumentNullException(nameof(model));
-            _ = foxToConnect ?? throw new ArgumentNullException(nameof(foxToConnect));
-
-            // TODO: Put actual connecting code here
-            Debug.WriteLine($"Connecting to fox: {foxToConnect.DisplayName}");
-
-            model.ConnectedFox = foxToConnect;
-            model.IsConnected = true;
+            _bluetoothCommunicator = bluetoothCommunicator;
         }
 
-        public async Task DisconnectAsync(MainModel model)
+        public async Task ConnectAsync(PairedFoxDTO foxToConnect)
         {
-            _ = model ?? throw new ArgumentException(nameof(model));
+            _ = foxToConnect ?? throw new ArgumentNullException(nameof(foxToConnect));
 
-            // Put actual disconnection code here
-            Debug.WriteLine("Disconnecting");
+            var connectThread = new Thread(async () => await ConnectThreadRunAsync(foxToConnect));
+            connectThread.Start();
+        }
 
-            model.IsConnected = false;
-            model.ConnectedFox = null;
+        public async Task DisconnectAsync()
+        {
+            var disconnectThread = new Thread(() => DisconnectThreadRun());
+            disconnectThread.Start();
+        }
+
+        /// <summary>
+        /// Entry point of connection thread
+        /// </summary>
+        private async Task ConnectThreadRunAsync(PairedFoxDTO foxToConnect)
+        {
+            await _bluetoothCommunicator.ConnectAsync(foxToConnect);
+        }
+
+        /// <summary>
+        /// Entry point of disconnection thread
+        /// </summary>
+        private void DisconnectThreadRun()
+        {
+            _bluetoothCommunicator.Disconnect();
         }
     }
 }

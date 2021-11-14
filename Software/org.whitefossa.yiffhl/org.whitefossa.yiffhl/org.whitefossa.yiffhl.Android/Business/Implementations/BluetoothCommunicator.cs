@@ -93,7 +93,7 @@ namespace org.whitefossa.yiffhl.Droid.Business.Implementations
                 _readerThread = new Thread(new ThreadStart(ReaderThreadRun));
                 _readerThread.Start();
 
-                _onBTCommunicatorConnect();
+                _onBTCommunicatorConnect(fox);
             }
             catch(Exception)
             {

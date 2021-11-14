@@ -12,7 +12,7 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
     /// <summary>
     /// Delegate, called when communicator successfully connects to fox
     /// </summary>
-    public delegate void OnBTCommunicatorConnectDelegate();
+    public delegate void OnBTCommunicatorConnectDelegate(PairedFoxDTO connectedFox);
 
     /// <summary>
     /// Delegate, called when connection to fox is lost

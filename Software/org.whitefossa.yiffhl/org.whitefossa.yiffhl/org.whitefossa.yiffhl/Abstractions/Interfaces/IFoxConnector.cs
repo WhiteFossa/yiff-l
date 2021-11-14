@@ -12,11 +12,11 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
         /// <summary>
         /// Connect to fox
         /// </summary>
-        Task ConnectAsync(MainModel model, PairedFoxDTO foxToConnect);
+        Task ConnectAsync(PairedFoxDTO foxToConnect);
 
         /// <summary>
         /// Disconnect from a fox
         /// </summary>
-        Task DisconnectAsync(MainModel model);
+        Task DisconnectAsync();
     }
 }

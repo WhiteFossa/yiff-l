@@ -47,7 +47,7 @@
                             ItemDisplayBinding="{Binding DisplayName}"
                             SelectedItem="{Binding SelectedFox}"
                             SelectedIndexChanged="pkFox_SelectedIndexChanged"
-                            IsEnabled="{Binding IsFoxSelectorEnabled}">
+                            IsEnabled="{Binding IsConnectRelatedControlsEnabled}">
                         </Picker>
 
                         <Button
@@ -58,7 +58,7 @@
                             HeightRequest="40"
                             WidthRequest="40"
                             Command="{Binding RefreshFoxesListClickedCommand}"
-                            IsEnabled="{Binding IsRefreshFoxesListButtonEnabled}" />
+                            IsEnabled="{Binding IsConnectRelatedControlsEnabled}" />
 
                         <Button
                             x:Name="btnConnect"
@@ -66,7 +66,7 @@
                             Grid.Row="1"
                             Grid.Column="2"
                             Command="{Binding ConnectButtonClickedCommand}"
-                            IsEnabled="{Binding IsBtnConnectEnabled}" />
+                            IsEnabled="{Binding IsConnectRelatedControlsEnabled}" />
 
                         <Button
                             x:Name="btnDisconnect"
