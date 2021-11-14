@@ -83,6 +83,35 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         public ICommand RefreshFoxesListClickedCommand { get; }
 
+        /// <summary>
+        /// Is Refresh Foxes List button enabled
+        /// </summary>
+        public bool IsRefreshFoxesListButtonEnabled
+        {
+            get => !_mainModel.IsConnected;
+        }
+
+        /// <summary>
+        /// Is Select Fox picker enabled
+        /// </summary>
+        public bool IsFoxSelectorEnabled
+        {
+            get => !_mainModel.IsConnected;
+        }
+
+        /// <summary>
+        /// Is Disconnect button enabled
+        /// </summary>
+        public bool IsBtnDisconnectEnabled
+        {
+            get => _mainModel.IsConnected;
+        }
+
+        /// <summary>
+        /// Command, executed on Disconnect button press
+        /// </summary>
+        public ICommand DisconnectButtonClickedCommand { get; }
+
         public MainPageViewModel()
         {
             _foxConnector = App.Container.Resolve<IFoxConnector>();
@@ -95,26 +124,49 @@ namespace org.whitefossa.yiffhl.ViewModels
             SelectedFoxChangedCommand = new Command<PairedFoxDTO>(async (f) => await OnSelectedFoxChangedAsync(f));
             ConnectButtonClickedCommand = new Command(async () => await OnConnectButtonCLickedAsync());
             RefreshFoxesListClickedCommand = new Command(async () => await OnRefreshFoxesListClickedAsync());
+            DisconnectButtonClickedCommand = new Command(async () => await OnDisconnectButtonClickedAsync());
 
             // Initial state
             IsBtnConnectEnabled = false;
-
-            //_pairedFoxes = _pairedFoxesEnumerator.EnumerateAsync();
         }
 
         public async Task OnSelectedFoxChangedAsync(PairedFoxDTO selectedFox)
         {
-            IsBtnConnectEnabled = selectedFox != null;
+            IsBtnConnectEnabled = selectedFox != null && !_mainModel.IsConnected;
         }
 
-        public Task OnConnectButtonCLickedAsync()
+        public async Task OnConnectButtonCLickedAsync()
         {
-            return _foxConnector.ConnectAsync(_mainModel, SelectedFox);
+            await _foxConnector.ConnectAsync(_mainModel, SelectedFox);
+
+            IsBtnConnectEnabled = CalculateBtnConnectEnabledState();
+
+            OnPropertyChanged(nameof(IsRefreshFoxesListButtonEnabled));
+            OnPropertyChanged(nameof(IsFoxSelectorEnabled));
+            OnPropertyChanged(nameof(IsBtnConnectEnabled));
+            OnPropertyChanged(nameof(IsBtnDisconnectEnabled));
         }
 
         public async Task OnRefreshFoxesListClickedAsync()
         {
             PairedFoxes = new ObservableCollection<PairedFoxDTO>(await _pairedFoxesEnumerator.EnumerateAsync());
+        }
+
+        public async Task OnDisconnectButtonClickedAsync()
+        {
+            await _foxConnector.DisconnectAsync(_mainModel);
+
+            IsBtnConnectEnabled = CalculateBtnConnectEnabledState();
+
+            OnPropertyChanged(nameof(IsRefreshFoxesListButtonEnabled));
+            OnPropertyChanged(nameof(IsFoxSelectorEnabled));
+            OnPropertyChanged(nameof(IsBtnConnectEnabled));
+            OnPropertyChanged(nameof(IsBtnDisconnectEnabled));
+        }
+
+        private bool CalculateBtnConnectEnabledState()
+        {
+            return SelectedFox != null && !_mainModel.IsConnected;
         }
     }
 }
