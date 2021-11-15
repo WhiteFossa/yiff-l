@@ -17,7 +17,6 @@ namespace org.whitefossa.yiffhl.ViewModels
         private IFoxConnector _foxConnector;
         private IPairedFoxesEnumerator _pairedFoxesEnumerator;
         private IUserNotifier _userNotifier;
-        private IBluetoothCommunicator _bluetoothCommunicator;
 
         /// <summary>
         /// Main model
@@ -112,22 +111,23 @@ namespace org.whitefossa.yiffhl.ViewModels
             _foxConnector = App.Container.Resolve<IFoxConnector>();
             _pairedFoxesEnumerator = App.Container.Resolve<IPairedFoxesEnumerator>();
             _userNotifier = App.Container.Resolve<IUserNotifier>();
-            _bluetoothCommunicator = App.Container.Resolve<IBluetoothCommunicator>();
 
             // Model initialization
             _mainModel = new MainModel();
 
-            // Setting up BT communicator delegates
-            _mainModel.OnBTCommunicatorNewByteRead += OnNewByteRead;
-            _mainModel.OnBTCommunicatorConnect += OnConnect;
-            _mainModel.OnBTCommunicatorDisconnect += OnDisconnect;
+            // Setting up fox connector delegates
+            _mainModel.OnFoxConnectorNewByteRead += OnNewByteRead;
+            _mainModel.OnFoxConnectorConnected += OnConnected;
+            _mainModel.OnFoxConnectorDisconnected += OnDisconnected;
+            _mainModel.OnFoxConnectorFailedToConnect += OnFailedToConnect;
 
-            _bluetoothCommunicator.SetupDelegates
-             (
-                _mainModel.OnBTCommunicatorConnect,
-                _mainModel.OnBTCommunicatorDisconnect,
-                _mainModel.OnBTCommunicatorNewByteRead
-             );
+            _foxConnector.SetupDelegates
+            (
+                _mainModel.OnFoxConnectorNewByteRead,
+                _mainModel.OnFoxConnectorConnected,
+                _mainModel.OnFoxConnectorDisconnected,
+                _mainModel.OnFoxConnectorFailedToConnect
+            );
 
             // Binding commands to handlers
             SelectedFoxChangedCommand = new Command<PairedFoxDTO>(async (f) => await OnSelectedFoxChangedAsync(f));
@@ -192,7 +192,7 @@ namespace org.whitefossa.yiffhl.ViewModels
             Debug.WriteLine($"Byte: {data}");
         }
 
-        private void OnConnect(PairedFoxDTO connectedFox)
+        private void OnConnected(PairedFoxDTO connectedFox)
         {
             _mainModel.ConnectedFox = connectedFox;
             _mainModel.IsConnected = true;
@@ -200,11 +200,16 @@ namespace org.whitefossa.yiffhl.ViewModels
             IsBtnDisconnectEnabled = true;
         }
 
-        private void OnDisconnect()
+        private void OnDisconnected()
         {
             _mainModel.IsConnected = false;
             _mainModel.ConnectedFox = null;
 
+            IsConnectRelatedControlsEnabled = true;
+        }
+
+        private void OnFailedToConnect(Exception exception)
+        {
             IsConnectRelatedControlsEnabled = true;
         }
     }

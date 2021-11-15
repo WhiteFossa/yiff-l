@@ -21,17 +21,22 @@ namespace org.whitefossa.yiffhl.Models
         /// <summary>
         /// Delegate, called on each new byte from a fox
         /// </summary>
-        public OnBTCommunicatorNewByteReadDelegate OnBTCommunicatorNewByteRead { get; set; }
+        public OnFoxConnectorNewByteReadDelegate OnFoxConnectorNewByteRead { get; set; }
 
         /// <summary>
         /// Delegate, called when connection to a fox is estabilished
         /// </summary>
-        public OnBTCommunicatorConnectDelegate OnBTCommunicatorConnect { get; set; }
+        public OnFoxConnectorConnectedDelegate OnFoxConnectorConnected { get; set; }
 
         /// <summary>
         /// Delegate, called when connection to a fox is dropped
         /// </summary>
-        public OnBtCommunicatorDisconnectDelegate OnBTCommunicatorDisconnect { get; set; }
+        public OnFoxConnectorDisconnectedDelegate OnFoxConnectorDisconnected { get; set; }
+
+        /// <summary>
+        /// Delegate, called when connection to a fox is failed
+        /// </summary>
+        public OnFoxConnectorFailedToConnectDelegate OnFoxConnectorFailedToConnect { get; set; }
 
         public MainModel()
         {
@@ -39,9 +44,10 @@ namespace org.whitefossa.yiffhl.Models
             IsConnected = false;
             ConnectedFox = null;
 
-            OnBTCommunicatorNewByteRead = null;
-            OnBTCommunicatorConnect = null;
-            OnBTCommunicatorDisconnect = null;
+            OnFoxConnectorNewByteRead = null;
+            OnFoxConnectorConnected = null;
+            OnFoxConnectorDisconnected = null;
+            OnFoxConnectorFailedToConnect = null;
         }
     }
 }
