@@ -672,7 +672,7 @@ void Main_InitDisplayAndShowBootScreen(void)
 	/* Initializing font */
 	FMGL_FontTerminusRegular12 = FMGL_FontTerminusRegular12Init();
 
-	FMGL_API_XBMTransparencyMode transparencyMode = FMGL_XBMTransparencyModeTransparentInactive;
+	transparencyMode = FMGL_XBMTransparencyModeTransparentInactive;
 
 	/* Common font settings */
 	commonFont.Font = &FMGL_FontTerminusRegular12;

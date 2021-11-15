@@ -136,6 +136,11 @@ FMGL_API_ColorStruct OffColor;
  */
 FMGL_API_ColorStruct OnColor;
 
+/**
+ * Transparency mode (for fonts)
+ */
+FMGL_API_XBMTransparencyMode transparencyMode;
+
 
 /***********************
 * Fox stuff goes below *
