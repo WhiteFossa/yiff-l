@@ -23,7 +23,7 @@ void EEPROM_Format(void)
 	/* Fox name */
 	/* Random digits to add to fox name */
 	uint32_t foxNamePostfix = Rand_GetRandom() % YHL_DEFAULT_FOX_NAME_POSTFIX_MODULUS;
-	snprintf(defaultHeader.Name, YHL_PROFILE_NAME_MEMORY_SIZE, YHL_DEFAULT_FOX_NAME, foxNamePostfix);
+	snprintf(defaultHeader.Name, YHL_PROFILE_NAME_MEMORY_SIZE, YHL_DEFAULT_FOX_NAME_TEMPLATE, foxNamePostfix);
 
 	defaultHeader.NumberOfProfiles = 1;
 

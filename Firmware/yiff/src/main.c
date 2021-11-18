@@ -119,29 +119,19 @@ int main(int argc, char* argv[])
 	/* Adding handlers to correct fox state after date/time change */
 	RTC_AddOnDateOrTimeChangeListener(&FoxState_CorrectDateTime);
 
-	/**
-	 * Setting up UART
-	 */
+	/* Setting up UART */
 	UART_Init();
 
-	/**
-	 * Setting up HC-06 Bluetooth module
-	 */
+	/* Setting up HC-06 Bluetooth module */
 	HL_TurnBluetoothOn();
 
-	/**
-	 * Initializing sleepmode timers
-	 */
+	/* Initializing sleepmode timers */
 	Sleepmodes_Init();
 
-	/**
-	 * Starting to listen for commands
-	 */
+	/* Starting to listen for commands */
 	UART_StartListen(&OnNewRawPacket);
 
-	/**
-	 * Initializing hardware controls
-	 */
+	/* Initializing hardware controls */
 	HardwareControlsEvents.IsLeftButtonPressed = false;
 	HardwareControlsEvents.IsRightButtonPressed = false;
 	HardwareControlsEvents.IsEncoderButtonPressed = false;

@@ -312,17 +312,9 @@ void HL_PrepareAndMatch80m(void)
 
 void HL_RenameBluetoothDevice(char* newName)
 {
-	HAL_SwitchBluetoothPower(false);
-	HAL_Delay(YHL_HL_BLUETOOTH_POWERCYCLE_LENGTH);
-	HAL_SwitchBluetoothPower(true);
-	HAL_Delay(YHL_HL_BLUETOOTH_REGULATOR_SPINUP_TIME);
-
-	/* Reconnecting to bluetooth module */
-	HC06_Context = L2HAL_HC06_AttachToDevice(&UART_Handle);
-	if (!HC06_Context.IsFound)
-	{
-		SelfDiagnostics_HaltOnFailure(YhlFailureCause_FailedToReconnectToBluetoothAfterRename);
-	}
+	/* Dropping existing connection */
+	HL_TurnBluetoothOff();
+	HL_TurnBluetoothOn();
 
 	L2HAL_HC06_SetName(&HC06_Context, newName);
 	L2HAL_HC06_SetPIN(&HC06_Context, YHL_HL_BLUETOOTH_PIN);

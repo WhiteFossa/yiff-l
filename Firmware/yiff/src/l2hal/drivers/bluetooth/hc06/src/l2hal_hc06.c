@@ -57,6 +57,7 @@ L2HAL_HC06_ContextStruct L2HAL_HC06_AttachToDevice(UART_HandleTypeDef* uart)
 
 void L2HAL_HC06_SetName(L2HAL_HC06_ContextStruct* context, const char* name)
 {
+
 	if (strlen(name) > L2HAL_HC06_MAX_NAME_LENGTH)
 	{
 		L2HAL_Error(Generic);
@@ -73,7 +74,7 @@ void L2HAL_HC06_SetName(L2HAL_HC06_ContextStruct* context, const char* name)
 		}
 		else if (0x20 == processedName[i]) /* Space */
 		{
-			processedName[i] = 0x5f;
+			processedName[i] = 0x5f; /* Underscore */
 		}
 	}
 

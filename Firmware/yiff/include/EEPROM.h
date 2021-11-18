@@ -47,9 +47,9 @@ extern L2HAL_24x_ContextStruct EEPROMContext;
 #define YHL_DEFAULT_FOX_NAME_POSTFIX_MODULUS 10000U
 
 /**
- * Fox will have this name after EEPROM formatting
+ * Default fox name template
  */
-#define YHL_DEFAULT_FOX_NAME "Yiffy foxy #%04d"
+#define YHL_DEFAULT_FOX_NAME_TEMPLATE "YiffyFoxy%04d"
 
 /**
  * Default factors for UBatt(ADC)->Volts conversion
