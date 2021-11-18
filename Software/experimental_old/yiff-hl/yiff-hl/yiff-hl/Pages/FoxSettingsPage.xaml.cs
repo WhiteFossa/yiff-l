@@ -972,6 +972,40 @@ namespace yiff_hl.Pages
 
         #endregion
 
+        #region Get identification data
+
+        private void OnGetIdentificationDataClicked(object sender, EventArgs e)
+        {
+            GetIdentificationData();
+        }
+
+        private void GetIdentificationData()
+        {
+            var command = new GetIdentificationDataCommand(packetsProcessor);
+            command.SetResponseDelegate(OnGetIdentificationDataResponse);
+            command.SendGetIdentificationDataCommand();
+        }
+
+        private void OnGetIdentificationDataResponse(
+            bool isFox,
+            uint protocolVersion,
+            uint hardwareRevision,
+            uint softwareVersion,
+            uint serialNumber)
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                DisplayAlert("Identification", $@"If fox: { isFox }
+Protocol version: { protocolVersion }
+Hardware revision: { hardwareRevision }
+Software version: { softwareVersion }
+Serial number: { serialNumber }", "OK");
+            });
+        }
+
+        #endregion
+
+
         #region On Fox Is Armed event
 
         private void OnFoxIsArmed(IFoxArmedEvent foxArmedEvent)

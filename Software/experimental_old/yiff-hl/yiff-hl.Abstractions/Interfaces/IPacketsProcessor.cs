@@ -71,6 +71,7 @@ namespace yiff_hl.Abstractions.Interfaces
         void SetOnGetU80mVoltsResponse(OnResponseDelegate onGetU80mVoltsResponse);
         void SetOnGetLastFailureCodeResponse(OnResponseDelegate onGetLastFailureCodeResponse);
         void SetOnNoOperationResponse(OnResponseDelegate onNoOperationResponse);
+        void SetOnGetIdentificationDataResponse(OnResponseDelegate onGetIdentificationDataResponse);
 
 
         #endregion

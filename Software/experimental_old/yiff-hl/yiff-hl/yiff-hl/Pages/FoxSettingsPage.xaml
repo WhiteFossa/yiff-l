@@ -480,6 +480,11 @@
                             Clicked="OnGetLastFailureCodeClicked"
                             />
 
+                        <Button
+                            Text="Get identification data"
+                            Clicked="OnGetIdentificationDataClicked"
+                            />
+
                     </StackLayout>
                 </Frame>
 

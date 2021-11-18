@@ -71,6 +71,8 @@
 
         GetLastFailureCode = 0x20,
 
-        NoOperation = 0x21
+        NoOperation = 0x21,
+
+        GetIdentificationData = 0x22
     }
 }

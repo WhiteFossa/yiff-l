@@ -54,6 +54,7 @@ namespace yiff_hl.Business.Implementations
         private OnResponseDelegate onGetU80mVoltsResponse;
         private OnResponseDelegate onGetLastFailureCodeResponse;
         private OnResponseDelegate onNoOperationResponse;
+        private OnResponseDelegate onGetIdentificationDataResponse;
 
         #endregion
 
@@ -446,7 +447,6 @@ namespace yiff_hl.Business.Implementations
                     CheckOnResponseDelegate(onGetLastFailureCodeResponse);
 
                     onGetLastFailureCodeResponse(responsePayload);
-
                     break;
 
                 // No operation
@@ -454,6 +454,13 @@ namespace yiff_hl.Business.Implementations
                     CheckOnResponseDelegate(onNoOperationResponse);
 
                     onNoOperationResponse(responsePayload);
+                    break;
+
+                // Get identification data
+                case CommandType.GetIdentificationData:
+                    CheckOnResponseDelegate(onGetIdentificationDataResponse);
+
+                    onGetIdentificationDataResponse(responsePayload);
                     break;
 
                 default:
@@ -723,6 +730,11 @@ namespace yiff_hl.Business.Implementations
         public void SetOnNoOperationResponse(OnResponseDelegate onNoOperationResponse)
         {
             this.onNoOperationResponse = onNoOperationResponse ?? throw new ArgumentNullException(nameof(onNoOperationResponse));
+        }
+
+        public void SetOnGetIdentificationDataResponse(OnResponseDelegate onGetIdentificationDataResponse)
+        {
+            this.onGetIdentificationDataResponse = onGetIdentificationDataResponse ?? throw new ArgumentNullException(nameof(onGetIdentificationDataResponse));
         }
     }
 }
