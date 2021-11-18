@@ -46,6 +46,11 @@ void EEPROM_Format(void)
 	/* No failure after format */
 	defaultHeader.LastFailure = YhlFailureCause_OK;
 
+	/* Fox version information */
+	defaultHeader.HardwareRevision = YHL_VER_HARDWARE_REVISION;
+	defaultHeader.SoftwareVersion = YHL_VER_SOFTWARE_VERSION;
+	defaultHeader.SerialNumber = YHL_VER_DEFAULT_SERIAL_NUMBER;
+
 	defaultHeader.CRCSum = 0;
 	EEPROM_WriteHeader(&defaultHeader, constantHeader.HeaderAddress);
 
@@ -162,6 +167,12 @@ bool EEPROM_InitHeaders(void)
 
 	/* Now we can write diagnostic codes into EEPROM */
 	FoxState.IsEEPROMHeadersInitialized = true;
+
+	/* Checking did we have a firmware update */
+	if (EEPROM_Header.SoftwareVersion != YHL_VER_SOFTWARE_VERSION)
+	{
+		EEPROM_OnSoftwareUpdate();
+	}
 
 	return true;
 }
@@ -333,4 +344,11 @@ bool EEPROM_IsProfileIdValid(uint8_t profileId)
 void EEPROM_UpdateCurrentProfile()
 {
 	EEPROM_UpdateProfile(&EEPROM_CurrentProfile, EEPROM_Header.ProfileInUse);
+}
+
+void EEPROM_OnSoftwareUpdate(void)
+{
+	/* Finally updating firmware version in EEPROM */
+	EEPROM_Header.SoftwareVersion = YHL_VER_SOFTWARE_VERSION;
+	EEPROM_WriteHeader(&EEPROM_Header, EEPROM_ConstantHeader.HeaderAddress);
 }

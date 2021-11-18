@@ -13,6 +13,7 @@
 #include <l2hal.h>
 #include <SelfDiagnostics.h>
 #include <Random.h>
+#include <Version.h>
 
 extern L2HAL_CRCContextStruct CRC_Context;
 extern FoxStateStruct FoxState;
@@ -136,6 +137,21 @@ typedef struct
 	 * Code of last failure
 	 */
 	YhlFailureCausesEnum LastFailure;
+
+	/**
+	 * Fox hardware revision
+	 */
+	uint16_t HardwareRevision;
+
+	/**
+	 * Fox software version
+	 */
+	uint16_t SoftwareVersion;
+
+	/**
+	 * Device serial number
+	 */
+	uint32_t SerialNumber;
 
 	/**
 	 * CRC
@@ -310,5 +326,10 @@ bool EEPROM_IsProfileIdValid(uint8_t profileId);
  * Save current profile to EEPROM
  */
 void EEPROM_UpdateCurrentProfile(void);
+
+/**
+ * Called when firmware version is changed
+ */
+void EEPROM_OnSoftwareUpdate(void);
 
 #endif /* INCLUDE_EEPROM_H_ */

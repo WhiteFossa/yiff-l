@@ -18,6 +18,7 @@
 #include <GlobalStateMachine.h>
 #include <SelfDiagnostics.h>
 #include <Sleepmodes.h>
+#include <Version.h>
 
 extern L2HAL_CRCContextStruct CRC_Context;
 extern PendingCommandsFlagsStruct PendingCommandsFlags;
@@ -133,7 +134,9 @@ typedef enum
 
 	GetLastFailureCode = 0x20,
 
-	NoOperation = 0x21
+	NoOperation = 0x21,
+
+	GetIdentificationData = 0x22
 }
 CommandToFoxEnum;
 
@@ -350,6 +353,11 @@ void OnGetLastFailureCode(uint8_t payloadSize, uint8_t* payload);
  * Called when "No operation" command comes
  */
 void OnNoOperation(uint8_t payloadSize, uint8_t* payload);
+
+/**
+ * Called when "Get identification data"
+ */
+void OnGetIdentificationData(uint8_t payloadSize, uint8_t* payload);
 
 /**
  * Emits "FoxArmed" event

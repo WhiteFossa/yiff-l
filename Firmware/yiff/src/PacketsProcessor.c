@@ -228,6 +228,11 @@ void OnNewCommandToFox(uint8_t payloadSize, uint8_t* payload)
 			/* No operation (to keep fox awake) */
 			OnNoOperation(payloadSize, payload);
 			break;
+
+		case GetIdentificationData:
+			/* Get identification data */
+			OnGetIdentificationData(payloadSize, payload);
+			break;
 	}
 
 	free(payload);
@@ -1062,6 +1067,38 @@ void OnNoOperation(uint8_t payloadSize, uint8_t* payload)
 	}
 
 	SendResponse(NoOperation, 0, NULL);
+}
+
+void OnGetIdentificationData(uint8_t payloadSize, uint8_t* payload)
+{
+	if (payloadSize != 1)
+	{
+		return;
+	}
+
+	uint8_t response[14];
+
+	/* Signature */
+	uint32_t tmp32 = YHL_VER_FOX_SIGNATURE;
+	memcpy(&response[0], &tmp32, 4);
+
+	/* Protocol version */
+	uint16_t tmp16 = YHL_VER_PROTOCOL_VERSION;
+	memcpy(&response[4], &tmp16, 2);
+
+	/* Hardware revision */
+	tmp16 = EEPROM_Header.HardwareRevision;
+	memcpy(&response[6], &tmp16, 2);
+
+	/* Software version */
+	tmp16 = EEPROM_Header.SoftwareVersion;
+	memcpy(&response[8], &tmp16, 2);
+
+	/* Serial number */
+	tmp32 = EEPROM_Header.SerialNumber;
+	memcpy(&response[10], &tmp32, 4);
+
+	SendResponse(GetIdentificationData, 14, response);
 }
 
 void EmitFoxArmedEvent(void)
