@@ -27,7 +27,7 @@ extern FoxStateStruct FoxState;
  * If defined, then antenna matching will be disabled, and SWD will be kept enabled.
  * Otherwise SWD connection will be dropped when antenna matching starts
  */
-/* #define HAL_DISABLE_ANTENNA_MATCHING */
+#define HAL_DISABLE_ANTENNA_MATCHING
 
 /***************
  * PORT B pins *
@@ -173,6 +173,10 @@ extern FoxStateStruct FoxState;
 
 /**
  * Maximal value for 3.5MHz antenna matching
+ *
+ * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ * !! UPDATE YHL_MATCHING_LEVELS_COUNT AFTER CHANGING THIS !!
+ * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
  */
 #define HAL_AM_MAX_VALUE 63
 

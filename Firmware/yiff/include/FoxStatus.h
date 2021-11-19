@@ -49,8 +49,6 @@ extern RTC_DateTypeDef CurrentDate;
 #define YHL_MIN_POWER_80M 2.0f
 #define YHL_MAX_POWER_80M 5.0f
 
-#define YHL_MATCHING_LEVELS_DATA_SIZE (HAL_AM_MAX_VALUE + 1) * sizeof(float)
-
 
 /**
  * Call this before any operations with fox state

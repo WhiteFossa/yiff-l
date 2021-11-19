@@ -15,6 +15,11 @@
 #define YHL_FOX_NAME_BUFFER_LENGTH 33
 
 /**
+ * Set to HAL_AM_MAX_VALUE + 1
+ */
+#define YHL_MATCHING_LEVELS_COUNT 64
+
+/**
  * Global fox state
  */
 typedef enum
@@ -263,10 +268,9 @@ typedef struct
 	uint8_t MatchingStep;
 
 	/**
-	 * Matching levels. Allocated only when matching in progress,
-	 * contains HAL_AM_MAX_VALUE + 1 elements.
+	 * Matching levels
 	 */
-	float* MatchingLevels;
+	float MatchingLevels[YHL_MATCHING_LEVELS_COUNT];
 }
 MatchingDisplayStruct;
 

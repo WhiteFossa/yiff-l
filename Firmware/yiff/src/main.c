@@ -382,8 +382,7 @@ void Main_PrepareAndMatchAntenna(void)
 		return; /* No need to match antenna at 144MHz*/
 	}
 
-	FoxState.MatchingDisplayData.MatchingLevels = malloc(YHL_MATCHING_LEVELS_DATA_SIZE);
-	memset(FoxState.MatchingDisplayData.MatchingLevels, 0x00, YHL_MATCHING_LEVELS_DATA_SIZE);
+	memset(FoxState.MatchingDisplayData.MatchingLevels, 0x00, YHL_MATCHING_LEVELS_COUNT * sizeof(float));
 	FoxState.MatchingDisplayData.MatchingStep = 0;
 	FoxState.GlobalState.IsMatchingInProgress = true;
 	FoxState.CurrentDisplay = AntennaMatchingDisplay;
@@ -393,7 +392,6 @@ void Main_PrepareAndMatchAntenna(void)
 	FoxState.CurrentDisplay = StatusDisplay;
 	Main_SetDefaultButtonsActions();
 	FoxState.GlobalState.IsMatchingInProgress = false;
-	free(FoxState.MatchingDisplayData.MatchingLevels);
 
 	FMGL_API_ClearScreen(&fmglContext);
 
