@@ -511,7 +511,15 @@ typedef enum
 	 */
 	YhlFailureCause_FailedToDeinitializeBluetoothUARTInHALDisableUART = 98,
 
+	/**
+	 * Pointer to a begin time is null in FoxState_NormalizeBeginAndEndTimes()
+	 */
+	YhlFailureCause_BeginTimPrtIsNullInFoxStateNormalizeBeginAndEndTimes = 99,
 
+	/**
+	 * Pointer to a end time is null in FoxState_NormalizeBeginAndEndTimes()
+	 */
+	YhlFailureCause_EndTimPrtIsNullInFoxStateNormalizeBeginAndEndTimes = 100,
 
 }
 YhlFailureCausesEnum;

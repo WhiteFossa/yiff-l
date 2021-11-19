@@ -13,6 +13,7 @@
 #include <FoxStatusPrivate.h>
 #include <Time.h>
 #include <Commands.h>
+#include <SelfDiagnostics.h>
 
 extern PendingCommandsFlagsStruct PendingCommandsFlags;
 extern RTC_TimeTypeDef CurrentTime;
@@ -89,6 +90,11 @@ bool FoxState_IsEndingtoneDurationValid(uint8_t endingtoneDuration);
  * Tries to set ending tone duration. If duration valid, sets it and returns true, otherwise false
  */
 bool FoxState_SetEndingtoneDuration(uint8_t endingtoneDuration);
+
+/**
+ * Normalizes begin and end times. Call it on values, entered by user before validation
+ */
+void FoxState_NormalizeBeginAndEndTimes(uint32_t* beginTimePtr, uint32_t* endTimePtr);
 
 /**
  * Returns true if transmission begin and end times are valid

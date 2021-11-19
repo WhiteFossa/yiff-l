@@ -131,6 +131,25 @@ bool FoxState_SetEndingtoneDuration(uint8_t endingtoneDuration)
 	return true;
 }
 
+void FoxState_NormalizeBeginAndEndTimes(uint32_t* beginTimePtr, uint32_t* endTimePtr)
+{
+	if (NULL == beginTimePtr)
+	{
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_BeginTimPrtIsNullInFoxStateNormalizeBeginAndEndTimes);
+	}
+
+	if (NULL == endTimePtr)
+	{
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_EndTimPrtIsNullInFoxStateNormalizeBeginAndEndTimes);
+	}
+
+	/* Normalizing for cases like start: 20:00, finish: 10:00 of the next day */
+	if (*endTimePtr <= *beginTimePtr)
+	{
+		*endTimePtr += YHL_TIME_DAY_IN_SECONDS;
+	}
+}
+
 bool FoxState_IsBeginAndEndTimesValid(uint32_t beginTime, uint32_t endTime)
 {
 	if (endTime <= beginTime)
@@ -143,6 +162,8 @@ bool FoxState_IsBeginAndEndTimesValid(uint32_t beginTime, uint32_t endTime)
 
 bool FoxState_SetBeginAndEndTimes(uint32_t beginTime, uint32_t endTime)
 {
+	FoxState_NormalizeBeginAndEndTimes(&beginTime, &endTime);
+
 	if (!FoxState_IsBeginAndEndTimesValid(beginTime, endTime))
 	{
 		return false;

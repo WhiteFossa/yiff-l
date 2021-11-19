@@ -924,7 +924,9 @@ void MenuDisplay_EnterStartTime(void)
 
 void MenuDisplay_EnterStartTimeEnterHandler(uint32_t secondsSinceMidnight)
 {
-	FoxState_SetBeginAndEndTimes(GetMidnightTimestamp(FoxState.CurrentTime) + secondsSinceMidnight, FoxState.GlobalState.EndTime);
+	uint32_t todayMidnight = GetMidnightTimestamp(FoxState.CurrentTime);
+
+	FoxState_SetBeginAndEndTimes(todayMidnight + secondsSinceMidnight, todayMidnight + TimestampToSecondsSinceMidnight(FoxState.GlobalState.EndTime));
 	PendingCommandsFlags.NeedToSetBeginAndEndTimes = true;
 
 	MenuDisplay_DrawMenuDisplay();
@@ -950,7 +952,9 @@ void MenuDisplay_EnterFinishTime(void)
 
 void MenuDisplay_EnterFinishTimeEnterHandler(uint32_t secondsSinceMidnight)
 {
-	FoxState_SetBeginAndEndTimes(FoxState.GlobalState.StartTime, GetMidnightTimestamp(FoxState.CurrentTime) + secondsSinceMidnight);
+	uint32_t todayMidnight = GetMidnightTimestamp(FoxState.CurrentTime);
+
+	FoxState_SetBeginAndEndTimes(todayMidnight + TimestampToSecondsSinceMidnight(FoxState.GlobalState.StartTime), todayMidnight + secondsSinceMidnight);
 	PendingCommandsFlags.NeedToSetBeginAndEndTimes = true;
 
 	MenuDisplay_DrawMenuDisplay();

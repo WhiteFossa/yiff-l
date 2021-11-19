@@ -913,6 +913,7 @@ void OnSetBeginAndEndTimes(uint8_t payloadSize, uint8_t* payload)
 	uint32_t startTime = todayMidnight + beginTimeInSecondsSinceMidnight;
 	uint32_t endTime = todayMidnight + endTimeInSecondsSinceMidnight;
 
+	FoxState_NormalizeBeginAndEndTimes(&startTime, &endTime);
 	if (!FoxState_IsBeginAndEndTimesValid(startTime, endTime))
 	{
 		isValid = false;
