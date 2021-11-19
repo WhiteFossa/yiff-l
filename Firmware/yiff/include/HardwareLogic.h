@@ -115,6 +115,12 @@ void HL_SetupU80m(float targetVoltage);
 void HL_SetU80mLockCallback(void (*callback)(void));
 
 /**
+ * Terminates 3.5MHz output stage voltage control loop and setting
+ * a voltage to a lowest possible level
+ */
+void HL_DeSetupU80m(void);
+
+/**
  * Prepares for for 80m cycle
  */
 void HL_PrepareFoxFor80mCycle(void);

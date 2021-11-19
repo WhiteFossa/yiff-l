@@ -52,6 +52,14 @@ void HL_SetupU80m(float targetVoltage)
 	HL_IsU80mLocked = false;
 }
 
+void HL_DeSetupU80m(void)
+{
+	HL_IsU80mFeedbackActive = false;
+	HL_IsU80mLocked = false;
+
+	HAL_SetU80mRegulatorCode(HAL_U80M_LOWEST_VOLTAGE_CODE);
+}
+
 void HL_U80mMeasurementCallback(void)
 {
 	if (!HL_IsU80mFeedbackActive)
@@ -153,7 +161,7 @@ void HL_UnPrepareFoxFrom80mCycle(void)
 
 	HAL_PutSynthesizerToSleep();
 
-	HL_IsU80mLocked = false;
+	HL_DeSetupU80m();
 	HAL_Activate80M(false);
 }
 
