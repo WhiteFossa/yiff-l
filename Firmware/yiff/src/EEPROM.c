@@ -29,8 +29,8 @@ void EEPROM_Format(void)
 
 	/* Zero in profile address means "not allocated" */
 	memset(defaultHeader.ProfilesAddresses, 0x00, YHL_MAX_PROFILES_COUNT * 2); /* *2 because each address is 2 bytes wide */
-	defaultHeader.ProfilesAddresses[0] = (uint16_t)(constantHeader.HeaderAddress + sizeof(EEPROMHeaderStruct)); /* First profile goes after header */
 	defaultHeader.ProfileInUse = 0;
+	defaultHeader.ProfilesAddresses[defaultHeader.ProfileInUse] = (uint16_t)(constantHeader.HeaderAddress + sizeof(EEPROMHeaderStruct)); /* First profile goes after header */
 
 	/* Factors for ADC measurements */
 	defaultHeader.UBattADCA = YHL_DEFAULT_ADC_UBATT_A;
@@ -53,6 +53,10 @@ void EEPROM_Format(void)
 
 	defaultHeader.CRCSum = 0;
 	EEPROM_WriteHeader(&defaultHeader, constantHeader.HeaderAddress);
+
+	/* Regenerating default profile */
+	EEPROMProfileStruct profile = EEPROM_GenerateDefaultProfile();
+	EEPROM_WriteProfile(&profile, defaultHeader.ProfilesAddresses[defaultHeader.ProfileInUse]);
 
 	/* Renaming bluetooth device because name was changed */
 	HL_RenameBluetoothDevice(defaultHeader.Name);
@@ -227,13 +231,13 @@ EEPROMProfileStruct EEPROM_GenerateDefaultProfile(void)
 	time.Hours = 10;
 	time.Minutes = 0;
 	time.Seconds = 0;
-	result.StartTime = TimeToTimestamp(time);
+	result.StartTimespan = TimeToTimespan(time);
 
 	time.Days = 0;
 	time.Hours = 13;
 	time.Minutes = 0;
 	time.Seconds = 0;
-	result.EndTime = TimeToTimestamp(time);
+	result.EndTimespan = TimeToTimespan(time);
 
 	result.CRCSum = 0;
 
@@ -255,8 +259,8 @@ void EEPROM_LoadProfileIntoFoxState(FoxStateStruct* foxState, EEPROMProfileStruc
 
 	foxState->Power = profile->Power;
 
-	foxState->GlobalState.StartTime = profile->StartTime;
-	foxState->GlobalState.EndTime = profile->EndTime;
+	foxState->GlobalState.StartTimespan = profile->StartTimespan;
+	foxState->GlobalState.EndTimespan = profile->EndTimespan;
 }
 
 void EEPROM_UpdateHeader(void)

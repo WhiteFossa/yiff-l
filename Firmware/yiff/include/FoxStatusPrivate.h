@@ -212,14 +212,26 @@ typedef struct
 	bool IsArmed;
 
 	/**
-	 * When fox will turn on.
+	 * Timespan, representing fox start time. This field is displayed on the
+	 * fox screen / phone
 	 */
-	uint32_t StartTime;
+	uint32_t StartTimespan;
 
 	/**
-	 * When fox will turn off.
+	 * Timespan, representing fox finish time. This field is displayed on the
+	 * fox screen / phone
 	 */
-	uint32_t EndTime;
+	uint32_t EndTimespan;
+
+	/**
+	 * When fox will turn on (date and time).
+	 */
+	uint32_t StartDateTime;
+
+	/**
+	 * When fox will turn off (date and time).
+	 */
+	uint32_t EndDateTime;
 
 	/**
 	 * Current global fox state.

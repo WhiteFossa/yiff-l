@@ -319,8 +319,8 @@ void Main_ProcessSetBeginAndEndTimes(void)
 {
 	if (PendingCommandsFlags.NeedToSetBeginAndEndTimes)
 	{
-		EEPROM_CurrentProfile.StartTime = FoxState.GlobalState.StartTime;
-		EEPROM_CurrentProfile.EndTime = FoxState.GlobalState.EndTime;
+		EEPROM_CurrentProfile.StartTimespan = FoxState.GlobalState.StartTimespan;
+		EEPROM_CurrentProfile.EndTimespan = FoxState.GlobalState.EndTimespan;
 		PendingCommandsFlags.NeedToFlushCurrentProfileToEEPROM = true;
 
 		uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;

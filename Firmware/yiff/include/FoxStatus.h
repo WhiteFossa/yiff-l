@@ -91,20 +91,16 @@ bool FoxState_IsEndingtoneDurationValid(uint8_t endingtoneDuration);
  */
 bool FoxState_SetEndingtoneDuration(uint8_t endingtoneDuration);
 
-/**
- * Normalizes begin and end times. Call it on values, entered by user before validation
- */
-void FoxState_NormalizeBeginAndEndTimes(uint32_t* beginTimePtr, uint32_t* endTimePtr);
 
 /**
- * Returns true if transmission begin and end times are valid
+ * Returns true if transmission begin and end timespans are valid
  */
-bool FoxState_IsBeginAndEndTimesValid(uint32_t beginTime, uint32_t endTime);
+bool FoxState_IsBeginAndEndTimespansValid(uint32_t beginTimespan, uint32_t endTimespan);
 
 /**
- * Tries to send transmission begin/end times, if they are valid sets it and returns true, otherwise false
+ * Tries to send transmission begin/end timespans
  */
-bool FoxState_SetBeginAndEndTimes(uint32_t beginTime, uint32_t endTime);
+void FoxState_SetBeginAndEndTimespans(uint32_t beginTimespan, uint32_t endTimespan);
 
 /**
  * Checks if requested power is valid for current fox mode. If valid returns true
