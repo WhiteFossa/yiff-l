@@ -201,14 +201,14 @@ typedef struct
 	float Power;
 
 	/**
-	 * Fox will start at given time if armed.
+	 * Fox start timespan
 	 */
-	uint32_t StartTime;
+	uint32_t StartTimespan;
 
 	/**
-	 * Fox will turn off at given time if armed.
+	 * Fox end timespan
 	 */
-	uint32_t EndTime;
+	uint32_t EndTimespan;
 
 	/**
 	 * CRC

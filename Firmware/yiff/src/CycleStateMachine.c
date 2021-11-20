@@ -78,12 +78,12 @@ void CSM_Tick(void)
 
 int16_t CSM_GetCycleTime(void)
 {
-	if (FoxState.CurrentTime < FoxState.GlobalState.StartTime)
+	if (FoxState.CurrentTime < FoxState.GlobalState.StartDateTime)
 	{
 		return -1; /* Fox not in cycle */
 	}
 
-	uint32_t secondsSinceFoxStart = FoxState.CurrentTime - FoxState.GlobalState.StartTime;
+	uint32_t secondsSinceFoxStart = FoxState.CurrentTime - FoxState.GlobalState.StartDateTime;
 
 	uint32_t cycleLength = FoxState.Cycle.TxTime + FoxState.Cycle.PauseTime;
 

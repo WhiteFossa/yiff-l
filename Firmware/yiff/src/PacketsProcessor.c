@@ -819,12 +819,8 @@ void OnGetBeginAndEndTimes(uint8_t payloadSize, uint8_t* payload)
 	}
 
 	uint8_t response[8];
-
-	uint32_t startTimeSinceMidnight = TimestampToSecondsSinceMidnight(FoxState.GlobalState.StartTime);
-	memcpy(&response[0], &startTimeSinceMidnight, 4);
-
-	uint32_t endTimeSinceMidnight = TimestampToSecondsSinceMidnight(FoxState.GlobalState.EndTime);
-	memcpy(&response[4], &endTimeSinceMidnight, 4);
+	memcpy(&response[0], &FoxState.GlobalState.StartTimespan, 4);
+	memcpy(&response[4], &FoxState.GlobalState.EndTimespan, 4);
 
 	SendResponse(GetBeginAndEndTimes, 8, response);
 }
@@ -901,20 +897,13 @@ void OnSetBeginAndEndTimes(uint8_t payloadSize, uint8_t* payload)
 		goto OnSetBeginAndEndTimes_Validate;
 	}
 
-	uint32_t beginTimeInSecondsSinceMidnight;
-	memcpy(&beginTimeInSecondsSinceMidnight, &payload[1], 4);
+	uint32_t startTimespan;
+	memcpy(&startTimespan, &payload[1], 4);
 
-	uint32_t endTimeInSecondsSinceMidnight;
-	memcpy(&endTimeInSecondsSinceMidnight, &payload[5], 4);
+	uint32_t endTimespan;
+	memcpy(&endTimespan, &payload[5], 4);
 
-	/* Seconds since midnight to time of current day */
-	uint32_t todayMidnight = GetMidnightTimestamp(FoxState.CurrentTime);
-
-	uint32_t startTime = todayMidnight + beginTimeInSecondsSinceMidnight;
-	uint32_t endTime = todayMidnight + endTimeInSecondsSinceMidnight;
-
-	FoxState_NormalizeBeginAndEndTimes(&startTime, &endTime);
-	if (!FoxState_IsBeginAndEndTimesValid(startTime, endTime))
+	if (!FoxState_IsBeginAndEndTimespansValid(startTimespan, endTimespan))
 	{
 		isValid = false;
 		goto OnSetBeginAndEndTimes_Validate;
@@ -930,7 +919,7 @@ OnSetBeginAndEndTimes_Validate:
 
 	GSM_Disarm();
 
-	FoxState_SetBeginAndEndTimes(startTime, endTime);
+	FoxState_SetBeginAndEndTimespans(startTimespan, endTimespan);
 
 	PendingCommandsFlags.NeedToSetBeginAndEndTimes = true;
 }

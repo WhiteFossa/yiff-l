@@ -20,7 +20,7 @@ void GSM_Disarm(void)
 
 void GSM_Arm(void)
 {
-	if (FoxState.GlobalState.StartTime >= FoxState.GlobalState.EndTime)
+	if (FoxState.GlobalState.StartDateTime >= FoxState.GlobalState.EndDateTime)
 	{
 		SelfDiagnostics_HaltOnFailure(YhlFailureCause_StartTimeGreaterOrEqualFinishTimeInGSMArm);
 	}
@@ -28,14 +28,14 @@ void GSM_Arm(void)
 	/* Moving start and end times to today */
 	Time currentTime = TimestampToTime(FoxState.CurrentTime);
 
-	Time startTime = TimestampToTime(FoxState.GlobalState.StartTime);
-	Time endTime = TimestampToTime(FoxState.GlobalState.EndTime);
+	Time startTime = TimestampToTime(FoxState.GlobalState.StartDateTime);
+	Time endTime = TimestampToTime(FoxState.GlobalState.EndDateTime);
 
 	startTime.Days = currentTime.Days;
 	endTime.Days = currentTime.Days;
 
-	FoxState.GlobalState.StartTime = TimeToTimestamp(startTime);
-	FoxState.GlobalState.EndTime = TimeToTimestamp(endTime);
+	FoxState.GlobalState.StartDateTime = TimeToTimestamp(startTime);
+	FoxState.GlobalState.EndDateTime = TimeToTimestamp(endTime);
 
 	FoxState.GlobalState.IsArmed = true;
 	GSM_MoveToBeforeStart();
@@ -84,7 +84,7 @@ void GSM_Tick(void)
 
 void GSM_MoveToBeforeStart(void)
 {
-	FoxState.GlobalState.StateChangeTime = FoxState.GlobalState.StartTime;
+	FoxState.GlobalState.StateChangeTime = FoxState.GlobalState.StartDateTime;
 	FoxState.GlobalState.CurrentState = GfsBeforeStart;
 
 	CSM_Stop();
@@ -105,7 +105,7 @@ void GSM_StartFox(void)
 {
 	/* Starting */
 	FoxState.GlobalState.CurrentState = GfsBeforeFinish;
-	FoxState.GlobalState.StateChangeTime = FoxState.GlobalState.EndTime;
+	FoxState.GlobalState.StateChangeTime = FoxState.GlobalState.EndDateTime;
 
 	/* Starting cycle */
 	CSM_Start();
@@ -122,7 +122,7 @@ void GSM_StopFox(void)
 
 GlobalFoxStateEnum GSM_GetExpectedState(void)
 {
-	uint32_t preparationStartTime = FoxState.GlobalState.StartTime - YHL_HL_FOX_PREPARATION_AND_MATCHING_TIME;
+	uint32_t preparationStartTime = FoxState.GlobalState.StartDateTime - YHL_HL_FOX_PREPARATION_AND_MATCHING_TIME;
 
 	if (FoxState.CurrentTime < preparationStartTime)
 	{
@@ -130,12 +130,12 @@ GlobalFoxStateEnum GSM_GetExpectedState(void)
 		return GfsBeforeStart;
 	}
 
-	if ((FoxState.CurrentTime >= preparationStartTime) && (FoxState.CurrentTime < FoxState.GlobalState.StartTime))
+	if ((FoxState.CurrentTime >= preparationStartTime) && (FoxState.CurrentTime < FoxState.GlobalState.StartDateTime))
 	{
 		return GfsPreparation;
 	}
 
-	if (FoxState.CurrentTime < FoxState.GlobalState.EndTime)
+	if (FoxState.CurrentTime < FoxState.GlobalState.EndDateTime)
 	{
 		/* Start time <= Current time < End time */
 		return GfsBeforeFinish;
