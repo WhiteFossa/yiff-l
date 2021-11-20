@@ -68,6 +68,21 @@ namespace org.whitefossa.yiffhl.ViewModels
         public ICommand SelectedFoxChangedCommand { get; }
 
         /// <summary>
+        /// True if connect button enabled
+        /// </summary>
+        private bool _isConnectButtonEnabled;
+
+        public bool IsConnectButtonEnabled
+        {
+            get => _isConnectButtonEnabled;
+            set
+            {
+                _isConnectButtonEnabled = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
         /// True if connect-related controls are enabled
         /// </summary>
         private bool _isConnectRelatedControlsEnabled;
@@ -195,23 +210,27 @@ namespace org.whitefossa.yiffhl.ViewModels
             _mainModel.GetIdentificationDataCommand.SetResponseDelegate(async (isFox, pVer, hwRev, fwVer, sn)
                 => await OnGetIdentificationDataResponseAsync(isFox, pVer, hwRev, fwVer, sn));
 
+            _mainModel.GetFoxNameCommand.SetResponseDelegate(async (name) => await OnGetFoxNameResponseAsync(name));
+
+            _mainModel.SetFoxDateAndTimeCommand.SetResponseDelegate(async(isSuccessfull) => await OnSetFoxDateAndTimeResponseAsync(isSuccessfull));
+
             // Initial state
+            IsConnectButtonEnabled = false;
             IsConnectRelatedControlsEnabled = true;
             IsBtnDisconnectEnabled = false;
 
-            _mainModel.FoxName = "N/A";
-            _mainModel.IdentificationData.HardwareRevision = 0;
-            _mainModel.IdentificationData.FirmwareVersion = 0;
-            _mainModel.IdentificationData.SerialNumber = 0;
+            ResetFoxRelatedData();
         }
 
         public async Task OnSelectedFoxChangedAsync(PairedFoxDTO selectedFox)
         {
             IsConnectRelatedControlsEnabled = selectedFox != null && !_mainModel.IsConnected;
+            IsConnectButtonEnabled = IsConnectRelatedControlsEnabled;
         }
 
         public async Task OnConnectButtonCLickedAsync()
         {
+            IsConnectButtonEnabled = false;
             IsConnectRelatedControlsEnabled = false;
 
             await _foxConnector.ConnectAsync(SelectedFox);
@@ -273,11 +292,15 @@ namespace org.whitefossa.yiffhl.ViewModels
             _mainModel.IsConnected = false;
             _mainModel.ConnectedFox = null;
 
+            ResetFoxRelatedData();
+
+            IsConnectButtonEnabled = true;
             IsConnectRelatedControlsEnabled = true;
         }
 
         private void OnFailedToConnect(Exception exception)
         {
+            IsConnectButtonEnabled = true;
             IsConnectRelatedControlsEnabled = true;
         }
 
@@ -298,6 +321,7 @@ namespace org.whitefossa.yiffhl.ViewModels
                 await OnDisconnectButtonClickedAsync();
 
                 await _userNotifier.ShowErrorMessageAsync("Error:", "You've tried to connect to not a fox!");
+                return;
             }
 
             if (protocolVersion != SupportedProtocolVersion)
@@ -306,11 +330,49 @@ namespace org.whitefossa.yiffhl.ViewModels
 
                 await _userNotifier.ShowErrorMessageAsync("Error:",
                     $"Unsupported fox protocol version. Got { protocolVersion } while expecting { SupportedProtocolVersion }");
+
+                return;
             }
 
             FoxHardwareRevision = hardwareRevision;
             FoxFirmwareVersion = firmwareVersion;
             FoxSerialNumber = serialNumber;
+
+            // Setting fox time
+            _mainModel.SetFoxDateAndTimeCommand.SendSetDateAndTimeCommand(DateTime.Now);
+        }
+
+        /// <summary>
+        /// Called when fox name is received
+        /// </summary>
+        private async Task OnGetFoxNameResponseAsync(string name)
+        {
+            FoxName = name;
+        }
+
+        /// <summary>
+        /// Resets fox-related data (empties fox name, sets hardware version to zero and so on)
+        /// </summary>
+        private void ResetFoxRelatedData()
+        {
+            FoxName = "N/A";
+            FoxHardwareRevision = 0;
+            FoxFirmwareVersion = 0;
+            FoxSerialNumber = 0;
+        }
+
+        private async Task OnSetFoxDateAndTimeResponseAsync(bool isSuccessfull)
+        {
+            if (!isSuccessfull)
+            {
+                await OnDisconnectButtonClickedAsync();
+
+                await _userNotifier.ShowErrorMessageAsync("Error:", "Failed to set fox date and time!");
+                return;
+            }
+
+            // Requesting fox name
+            _mainModel.GetFoxNameCommand.SendGetFoxNameCommand();
         }
     }
 }

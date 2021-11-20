@@ -23,7 +23,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations.Commands
         private const UInt32 FoxSignature = 0xF055AF06;
 
         private readonly IPacketsProcessor _packetsProcessor;
-        private OnGetIdentificationDataDelegate onGetIdentificationDataResponse;
+        private OnGetIdentificationDataDelegate _onGetIdentificationDataResponse;
 
         public GetIdentificationDataCommand()
         {
@@ -33,7 +33,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations.Commands
 
         public void SetResponseDelegate(OnGetIdentificationDataDelegate onGetIdentificationDataResponse)
         {
-            this.onGetIdentificationDataResponse = onGetIdentificationDataResponse;
+            this._onGetIdentificationDataResponse = onGetIdentificationDataResponse;
         }
 
         public void SendGetIdentificationDataCommand()
@@ -43,14 +43,14 @@ namespace org.whitefossa.yiffhl.Business.Implementations.Commands
 
         private void OnGetIdentificationDataResponse(IReadOnlyCollection<byte> payload)
         {
-            if (onGetIdentificationDataResponse == null)
+            if (_onGetIdentificationDataResponse == null)
             {
                 return;
             }
 
             if (payload.Count != 14)
             {
-                onGetIdentificationDataResponse(false, 0, 0, 0, 0);
+                _onGetIdentificationDataResponse(false, 0, 0, 0, 0);
                 return;
             }
 
@@ -63,7 +63,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations.Commands
 
             if (signature != FoxSignature)
             {
-                onGetIdentificationDataResponse(false, 0, 0, 0, 0);
+                _onGetIdentificationDataResponse(false, 0, 0, 0, 0);
                 return;
             }
 
@@ -96,7 +96,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations.Commands
 
             var serialNumber = BitConverter.ToUInt32(serialNumberBytes, 0);
 
-            onGetIdentificationDataResponse(true, protocolVersion, hardwareRevision, softwareVersion, serialNumber);
+            _onGetIdentificationDataResponse(true, protocolVersion, hardwareRevision, softwareVersion, serialNumber);
         }
     }
 }
