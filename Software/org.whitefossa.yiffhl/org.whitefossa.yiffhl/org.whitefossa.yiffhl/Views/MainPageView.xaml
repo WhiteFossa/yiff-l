@@ -82,6 +82,58 @@
                 </StackLayout>
             </Frame>
 
+            <!-- Fox identification -->
+            <Frame
+                CornerRadius="10"
+                HasShadow="True"
+                Margin="5"
+                Padding="10">
+
+                <StackLayout>
+
+                    <Label
+                        Text="Fox information"
+                        HorizontalOptions="Center" />
+
+                    <StackLayout
+                        Orientation="Horizontal">
+                        <Label
+                            Text="Name:" />
+                        <Label 
+                            x:Name="lbFoxName"
+                            Text="{Binding FoxName}"/>
+                    </StackLayout>
+
+                    <StackLayout
+                        Orientation="Horizontal">
+                        <Label
+                            Text="Hardware revision:" />
+                        <Label 
+                            x:Name="lbFoxHardwareRevision"
+                            Text="{Binding FoxHardwareRevision}"/>
+                    </StackLayout>
+
+                    <StackLayout
+                        Orientation="Horizontal">
+                        <Label
+                            Text="Firmware verison:" />
+                        <Label 
+                            x:Name="lbFoxFirmwareVersion"
+                            Text="{Binding FoxFirmwareVersion}"/>
+                    </StackLayout>
+
+                    <StackLayout
+                        Orientation="Horizontal">
+                        <Label
+                            Text="Serial number:" />
+                        <Label 
+                            x:Name="lbFoxSerialNumber"
+                            Text="{Binding FoxSerialNumber}"/>
+                    </StackLayout>
+
+                </StackLayout>
+            </Frame>
+
             <!-- End of fox selection -->
         </StackLayout>
     </ContentPage.Content>

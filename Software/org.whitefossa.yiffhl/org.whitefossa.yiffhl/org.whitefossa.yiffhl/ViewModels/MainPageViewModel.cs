@@ -14,14 +14,20 @@ namespace org.whitefossa.yiffhl.ViewModels
 {
     internal class MainPageViewModel : BindableObject
     {
+        /// <summary>
+        /// We support this version of fox protocol
+        /// </summary>
+        private const UInt16 SupportedProtocolVersion = 1;
+
         private IFoxConnector _foxConnector;
         private IPairedFoxesEnumerator _pairedFoxesEnumerator;
         private IUserNotifier _userNotifier;
+        private IPacketsProcessor _packetsProcessor;
 
         /// <summary>
         /// Main model
         /// </summary>
-        private MainModel _mainModel;
+        private MainModel _mainModel = new MainModel();
 
         /// <summary>
         /// List of foxes, paired to a phone
@@ -106,14 +112,64 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         public ICommand DisconnectButtonClickedCommand { get; }
 
+        /// <summary>
+        /// Fox name
+        /// </summary>
+        public string FoxName
+        {
+            get => _mainModel.FoxName;
+            set
+            {
+                _mainModel.FoxName = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Fox hardware revision
+        /// </summary>
+        public UInt16 FoxHardwareRevision
+        {
+            get => _mainModel.IdentificationData.HardwareRevision;
+            set
+            {
+                _mainModel.IdentificationData.HardwareRevision = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Fox firmware version
+        /// </summary>
+        public UInt16 FoxFirmwareVersion
+        {
+            get => _mainModel.IdentificationData.FirmwareVersion;
+            set
+            {
+                _mainModel.IdentificationData.FirmwareVersion = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Fox serial number
+        /// </summary>
+        public UInt32 FoxSerialNumber
+        {
+            get => _mainModel.IdentificationData.SerialNumber;
+            set
+            {
+                _mainModel.IdentificationData.SerialNumber = value;
+                OnPropertyChanged();
+            }
+        }
+
         public MainPageViewModel()
         {
             _foxConnector = App.Container.Resolve<IFoxConnector>();
             _pairedFoxesEnumerator = App.Container.Resolve<IPairedFoxesEnumerator>();
             _userNotifier = App.Container.Resolve<IUserNotifier>();
-
-            // Model initialization
-            _mainModel = new MainModel();
+            _packetsProcessor = App.Container.Resolve<IPacketsProcessor>();
 
             // Setting up fox connector delegates
             _mainModel.OnFoxConnectorNewByteRead += OnNewByteRead;
@@ -135,9 +191,18 @@ namespace org.whitefossa.yiffhl.ViewModels
             RefreshFoxesListClickedCommand = new Command(async () => await OnRefreshFoxesListClickedAsync());
             DisconnectButtonClickedCommand = new Command(async () => await OnDisconnectButtonClickedAsync());
 
+            // Setting up fox commands
+            _mainModel.GetIdentificationDataCommand.SetResponseDelegate(async (isFox, pVer, hwRev, fwVer, sn)
+                => await OnGetIdentificationDataResponseAsync(isFox, pVer, hwRev, fwVer, sn));
+
             // Initial state
             IsConnectRelatedControlsEnabled = true;
             IsBtnDisconnectEnabled = false;
+
+            _mainModel.FoxName = "N/A";
+            _mainModel.IdentificationData.HardwareRevision = 0;
+            _mainModel.IdentificationData.FirmwareVersion = 0;
+            _mainModel.IdentificationData.SerialNumber = 0;
         }
 
         public async Task OnSelectedFoxChangedAsync(PairedFoxDTO selectedFox)
@@ -184,12 +249,12 @@ namespace org.whitefossa.yiffhl.ViewModels
 
                 return new ObservableCollection<PairedFoxDTO>();
             }
-            
+
         }
 
         private void OnNewByteRead(byte data)
         {
-            Debug.WriteLine($"Byte: {data}");
+            _packetsProcessor.NewByteReceived(data);
         }
 
         private void OnConnected(PairedFoxDTO connectedFox)
@@ -198,6 +263,9 @@ namespace org.whitefossa.yiffhl.ViewModels
             _mainModel.IsConnected = true;
 
             IsBtnDisconnectEnabled = true;
+
+            // Requesting fox identification
+            _mainModel.GetIdentificationDataCommand.SendGetIdentificationDataCommand();
         }
 
         private void OnDisconnected()
@@ -211,6 +279,38 @@ namespace org.whitefossa.yiffhl.ViewModels
         private void OnFailedToConnect(Exception exception)
         {
             IsConnectRelatedControlsEnabled = true;
+        }
+
+        /// <summary>
+        /// Called when fox identification is received
+        /// </summary>
+        private async Task OnGetIdentificationDataResponseAsync
+        (
+            bool isFox,
+            UInt16 protocolVersion,
+            UInt16 hardwareRevision,
+            UInt16 firmwareVersion,
+            UInt32 serialNumber
+        )
+        {
+            if (!isFox)
+            {
+                await OnDisconnectButtonClickedAsync();
+
+                await _userNotifier.ShowErrorMessageAsync("Error:", "You've tried to connect to not a fox!");
+            }
+
+            if (protocolVersion != SupportedProtocolVersion)
+            {
+                await OnDisconnectButtonClickedAsync();
+
+                await _userNotifier.ShowErrorMessageAsync("Error:",
+                    $"Unsupported fox protocol version. Got { protocolVersion } while expecting { SupportedProtocolVersion }");
+            }
+
+            FoxHardwareRevision = hardwareRevision;
+            FoxFirmwareVersion = firmwareVersion;
+            FoxSerialNumber = serialNumber;
         }
     }
 }

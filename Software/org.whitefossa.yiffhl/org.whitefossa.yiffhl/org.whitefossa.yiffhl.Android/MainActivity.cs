@@ -23,6 +23,7 @@ namespace org.whitefossa.yiffhl.Droid
             App.Container.Register<IPairedFoxesEnumerator, PairedFoxesEnumerator>().AsSingleton();
             App.Container.Register<IUserNotifier, UserNotifier>().AsSingleton();
             App.Container.Register<IBluetoothCommunicator, BluetoothCommunicator>().AsSingleton();
+            App.Container.Register<IPacketsProcessor, PacketsProcessor>().AsSingleton();
 
             base.OnCreate(savedInstanceState);
 

@@ -1,18 +1,19 @@
-﻿using System;
+﻿using org.whitefossa.yiffhl.Abstractions.Enums;
+using org.whitefossa.yiffhl.Abstractions.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using yiff_hl.Abstractions.Enums;
-using yiff_hl.Abstractions.Interfaces;
 
-namespace yiff_hl.Business.Implementations.Commands
+namespace org.whitefossa.yiffhl.Business.Implementations.Commands
 {
-    public delegate void OnGetIdentificationDataDelegate(
+    public delegate void OnGetIdentificationDataDelegate
+    (
         bool isFox,
-        uint protocolVersion,
-        uint hardwareRevision,
-        uint softwareVersion,
-        uint serialNumber);
+        UInt16 protocolVersion,
+        UInt16 hardwareRevision,
+        UInt16 softwareVersion,
+        UInt32 serialNumber
+     );
 
     public class GetIdentificationDataCommand
     {
@@ -21,13 +22,13 @@ namespace yiff_hl.Business.Implementations.Commands
         /// </summary>
         private const UInt32 FoxSignature = 0xF055AF06;
 
-        private readonly IPacketsProcessor packetsProcessor;
+        private readonly IPacketsProcessor _packetsProcessor;
         private OnGetIdentificationDataDelegate onGetIdentificationDataResponse;
 
-        public GetIdentificationDataCommand(IPacketsProcessor packetsProcessor)
+        public GetIdentificationDataCommand()
         {
-            this.packetsProcessor = packetsProcessor ?? throw new ArgumentNullException(nameof(packetsProcessor));
-            this.packetsProcessor.SetOnGetIdentificationDataResponse(OnGetIdentificationDataResponse);
+            _packetsProcessor = App.Container.Resolve<IPacketsProcessor>();
+            _packetsProcessor.SetOnGetIdentificationDataResponse(OnGetIdentificationDataResponse);
         }
 
         public void SetResponseDelegate(OnGetIdentificationDataDelegate onGetIdentificationDataResponse)
@@ -37,7 +38,7 @@ namespace yiff_hl.Business.Implementations.Commands
 
         public void SendGetIdentificationDataCommand()
         {
-            packetsProcessor.SendCommand(CommandType.GetIdentificationData, new List<byte>());
+            _packetsProcessor.SendCommand(CommandType.GetIdentificationData, new List<byte>());
         }
 
         private void OnGetIdentificationDataResponse(IReadOnlyCollection<byte> payload)
@@ -97,6 +98,5 @@ namespace yiff_hl.Business.Implementations.Commands
 
             onGetIdentificationDataResponse(true, protocolVersion, hardwareRevision, softwareVersion, serialNumber);
         }
-
     }
 }

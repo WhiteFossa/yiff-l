@@ -1,17 +1,10 @@
-﻿using Android.App;
-using Android.Bluetooth;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
+﻿using Android.Bluetooth;
 using Java.Util;
 using org.whitefossa.yiffhl.Abstractions.DTOs;
 using org.whitefossa.yiffhl.Abstractions.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -118,7 +111,12 @@ namespace org.whitefossa.yiffhl.Droid.Business.Implementations
 
         public void SendMessage(IReadOnlyCollection<byte> message)
         {
-            throw new NotImplementedException();
+            if (!_socket.IsConnected)
+            {
+                throw new InvalidOperationException("Not connected to a fox!");
+            }
+
+            _socket.OutputStream.Write(message.ToArray(), 0, message.Count);
         }
 
         public void SetupDelegates(OnBTCommunicatorConnectDelegate onConnect, OnBtCommunicatorDisconnectDelegate onDisconnect, OnBTCommunicatorNewByteReadDelegate onNewByteRead)

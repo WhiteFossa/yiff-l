@@ -32,11 +32,6 @@ namespace yiff_hl.Business.Implementations.Commands
 
         public void SendSetBeginAndEndTimesCommand(DateTime beginTime, DateTime endTime)
         {
-            if (endTime <= beginTime)
-            {
-                throw new ArgumentException("End time must be more than begin time", nameof(endTime));
-            }
-
             var payload = new List<byte>();
 
             // 2th - 5th (from 0th) bytes - begin time

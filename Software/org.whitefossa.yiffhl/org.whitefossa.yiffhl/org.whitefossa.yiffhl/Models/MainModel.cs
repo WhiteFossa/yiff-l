@@ -1,5 +1,6 @@
 ﻿using org.whitefossa.yiffhl.Abstractions.DTOs;
 using org.whitefossa.yiffhl.Abstractions.Interfaces;
+using org.whitefossa.yiffhl.Business.Implementations.Commands;
 
 namespace org.whitefossa.yiffhl.Models
 {
@@ -37,6 +38,22 @@ namespace org.whitefossa.yiffhl.Models
         /// Delegate, called when connection to a fox is failed
         /// </summary>
         public OnFoxConnectorFailedToConnectDelegate OnFoxConnectorFailedToConnect { get; set; }
+
+        /// <summary>
+        /// Fox namme
+        /// </summary>
+        public string FoxName { get; set; }
+
+        /// <summary>
+        /// Fox identification data
+        /// </summary>
+        public FoxIdentificationData IdentificationData { get; set; } = new FoxIdentificationData();
+
+        #region Commands
+
+        public GetIdentificationDataCommand  GetIdentificationDataCommand = new GetIdentificationDataCommand();
+
+        #endregion
 
         public MainModel()
         {
