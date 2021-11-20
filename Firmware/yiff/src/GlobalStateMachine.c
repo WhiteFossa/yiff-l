@@ -20,22 +20,22 @@ void GSM_Disarm(void)
 
 void GSM_Arm(void)
 {
+	/* Applying start and end timestamps to a current midnight */
+	uint32_t currentMidnight = GetMidnightTimestamp(FoxState.CurrentTime);
+
+	FoxState.GlobalState.StartDateTime = currentMidnight + FoxState.GlobalState.StartTimespan;
+	FoxState.GlobalState.EndDateTime = currentMidnight + FoxState.GlobalState.EndTimespan;
+
+	/* If EndDateTime <= StartDateTime, then moving EndDateTime to next day */
+	if (FoxState.GlobalState.EndDateTime <= FoxState.GlobalState.StartDateTime)
+	{
+		FoxState.GlobalState.EndDateTime += YHL_TIME_DAY_IN_SECONDS;
+	}
+
 	if (FoxState.GlobalState.StartDateTime >= FoxState.GlobalState.EndDateTime)
 	{
 		SelfDiagnostics_HaltOnFailure(YhlFailureCause_StartTimeGreaterOrEqualFinishTimeInGSMArm);
 	}
-
-	/* Moving start and end times to today */
-	Time currentTime = TimestampToTime(FoxState.CurrentTime);
-
-	Time startTime = TimestampToTime(FoxState.GlobalState.StartDateTime);
-	Time endTime = TimestampToTime(FoxState.GlobalState.EndDateTime);
-
-	startTime.Days = currentTime.Days;
-	endTime.Days = currentTime.Days;
-
-	FoxState.GlobalState.StartDateTime = TimeToTimestamp(startTime);
-	FoxState.GlobalState.EndDateTime = TimeToTimestamp(endTime);
 
 	FoxState.GlobalState.IsArmed = true;
 	GSM_MoveToBeforeStart();
