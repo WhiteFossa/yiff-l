@@ -41,6 +41,11 @@
 #define YHL_EEPROM_ADDRESS 0xA0
 #define YHL_EEPROM_PAGE_SIZE 8
 
+/**
+ * Pause to let response to be transmitted before terminating bluetooth connection
+ */
+#define YHL_PAUSE_BEFORE_RENAMING_BLUETOOTH 100U
+
 extern I2C_HandleTypeDef I2C_Display;
 extern I2C_HandleTypeDef I2C_Other;
 extern L2HAL_SSD1327_ContextStruct L2HAL_SSD1327_Context;

@@ -196,10 +196,13 @@ void Main_ProcessFoxNameChange(void)
 		strncpy(EEPROM_Header.Name, FoxState.Name, YHL_FOX_NAME_BUFFER_LENGTH);
 		EEPROM_UpdateHeader();
 
-		HL_RenameBluetoothDevice(FoxState.Name);
-
 		uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
 		SendResponse(SetName, 1, &response);
+
+		/* Pause to let response to be transmitted before terminating bluetooth connection */
+		HAL_Delay(YHL_PAUSE_BEFORE_RENAMING_BLUETOOTH);
+
+		HL_RenameBluetoothDevice(FoxState.Name);
 
 		PendingCommandsFlags.FoxStateNameChanged = false;
 	}
