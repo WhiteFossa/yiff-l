@@ -322,10 +322,14 @@ void HL_RenameBluetoothDevice(char* newName)
 {
 	/* Dropping existing connection */
 	HL_TurnBluetoothOff();
+	HAL_Delay(YHL_HL_BLUETOOTH_RENAME_POWERDOWN_TIME);
 	HL_TurnBluetoothOn();
 
 	L2HAL_HC06_SetName(&HC06_Context, newName);
 	L2HAL_HC06_SetPIN(&HC06_Context, YHL_HL_BLUETOOTH_PIN);
+
+	/* We need to restart UART listening after low-level UART commands in Bluetooth initialization code */
+	UART_StartListen(&OnNewRawPacket);
 }
 
 void HL_TurnDisplayOn(void)
