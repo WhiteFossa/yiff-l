@@ -179,6 +179,19 @@ namespace org.whitefossa.yiffhl.ViewModels
             }
         }
 
+        /// <summary>
+        /// Is fox connected
+        /// </summary>
+        public bool IsFoxConnected
+        {
+            get => _mainModel.IsConnected;
+            set
+            {
+                _mainModel.IsConnected = value;
+                OnPropertyChanged();
+            }
+        }
+
         public MainPageViewModel()
         {
             _foxConnector = App.Container.Resolve<IFoxConnector>();
@@ -224,7 +237,7 @@ namespace org.whitefossa.yiffhl.ViewModels
 
         public async Task OnSelectedFoxChangedAsync(PairedFoxDTO selectedFox)
         {
-            IsConnectRelatedControlsEnabled = selectedFox != null && !_mainModel.IsConnected;
+            IsConnectRelatedControlsEnabled = selectedFox != null && !IsFoxConnected;
             IsConnectButtonEnabled = IsConnectRelatedControlsEnabled;
         }
 
@@ -246,11 +259,6 @@ namespace org.whitefossa.yiffhl.ViewModels
             IsBtnDisconnectEnabled = false;
 
             await _foxConnector.DisconnectAsync();
-        }
-
-        private bool CalculateBtnConnectEnabledState()
-        {
-            return SelectedFox != null && !_mainModel.IsConnected;
         }
 
         private async Task<ObservableCollection<PairedFoxDTO>> EnumerateFoxesAsync()
@@ -279,7 +287,7 @@ namespace org.whitefossa.yiffhl.ViewModels
         private void OnConnected(PairedFoxDTO connectedFox)
         {
             _mainModel.ConnectedFox = connectedFox;
-            _mainModel.IsConnected = true;
+            IsFoxConnected = true;
 
             IsBtnDisconnectEnabled = true;
 
@@ -289,7 +297,7 @@ namespace org.whitefossa.yiffhl.ViewModels
 
         private void OnDisconnected()
         {
-            _mainModel.IsConnected = false;
+            IsFoxConnected = false;
             _mainModel.ConnectedFox = null;
 
             ResetFoxRelatedData();

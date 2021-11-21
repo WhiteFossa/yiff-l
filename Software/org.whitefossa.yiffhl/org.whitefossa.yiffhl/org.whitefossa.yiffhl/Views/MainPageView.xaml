@@ -39,7 +39,6 @@
                             Grid.ColumnSpan="3"/>
 
                         <Picker
-                            x:Name="pkFox"
                             Title="Select a fox to connect"
                             Grid.Row="1"
                             Grid.Column="0"
@@ -61,7 +60,6 @@
                             IsEnabled="{Binding IsConnectRelatedControlsEnabled}" />
 
                         <Button
-                            x:Name="btnConnect"
                             Text="Connect"
                             Grid.Row="1"
                             Grid.Column="2"
@@ -69,7 +67,6 @@
                             IsEnabled="{Binding IsConnectButtonEnabled}" />
 
                         <Button
-                            x:Name="btnDisconnect"
                             Text="Disconnect"
                             HorizontalOptions="CenterAndExpand"
                             Grid.Row="2"
@@ -81,6 +78,7 @@
                     
                 </StackLayout>
             </Frame>
+            <!-- End of fox selection -->
 
             <!-- Fox identification -->
             <Frame
@@ -90,51 +88,72 @@
                 Padding="10">
 
                 <StackLayout>
-
                     <Label
                         Text="Fox information"
                         HorizontalOptions="Center" />
 
-                    <StackLayout
-                        Orientation="Horizontal">
-                        <Label
-                            Text="Name:" />
-                        <Label 
-                            x:Name="lbFoxName"
-                            Text="{Binding FoxName}"/>
-                    </StackLayout>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
 
-                    <StackLayout
-                        Orientation="Horizontal">
-                        <Label
-                            Text="Hardware revision:" />
-                        <Label 
-                            x:Name="lbFoxHardwareRevision"
-                            Text="{Binding FoxHardwareRevision}"/>
-                    </StackLayout>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
 
-                    <StackLayout
-                        Orientation="Horizontal">
-                        <Label
-                            Text="Firmware verison:" />
-                        <Label 
-                            x:Name="lbFoxFirmwareVersion"
-                            Text="{Binding FoxFirmwareVersion}"/>
-                    </StackLayout>
+                        <StackLayout
+                            Grid.Row="0"
+                            Grid.Column="0">
+                            <StackLayout
+                            Orientation="Horizontal">
+                                <Label
+                                    Text="Name:" />
+                                <Label 
+                                    Text="{Binding FoxName}"/>
+                            </StackLayout>
 
-                    <StackLayout
-                        Orientation="Horizontal">
-                        <Label
-                            Text="Serial number:" />
-                        <Label 
-                            x:Name="lbFoxSerialNumber"
-                            Text="{Binding FoxSerialNumber}"/>
-                    </StackLayout>
+                            <StackLayout
+                            Orientation="Horizontal">
+                                <Label
+                                Text="Hardware revision:" />
+                                <Label
+                                    Text="{Binding FoxHardwareRevision}"/>
+                            </StackLayout>
 
+                            <StackLayout
+                            Orientation="Horizontal">
+                                <Label
+                                Text="Firmware verison:" />
+                                <Label
+                                    Text="{Binding FoxFirmwareVersion}"/>
+                            </StackLayout>
+
+                            <StackLayout
+                            Orientation="Horizontal">
+                                <Label
+                                Text="Serial number:" />
+                                <Label
+                                    Text="{Binding FoxSerialNumber}"/>
+                            </StackLayout>
+                        </StackLayout>
+                        
+                        <StackLayout
+                            Grid.Row="0"
+                            Grid.Column="1">
+                            <Button
+                                Text="Rename fox"
+                                IsEnabled="{Binding IsFoxConnected}" />
+
+                            <Button
+                                Text="Check for updates"
+                                IsEnabled="{Binding IsFoxConnected}"/>
+                        </StackLayout>
+                    </Grid>
                 </StackLayout>
             </Frame>
 
-            <!-- End of fox selection -->
+            
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
