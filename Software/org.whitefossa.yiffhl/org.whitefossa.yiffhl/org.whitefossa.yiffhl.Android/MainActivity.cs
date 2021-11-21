@@ -1,14 +1,13 @@
-﻿using System;
-
+﻿
+using Acr.UserDialogs;
 using Android.App;
 using Android.Content.PM;
-using Android.Runtime;
 using Android.OS;
+using Android.Runtime;
 using Nancy.TinyIoc;
 using org.whitefossa.yiffhl.Abstractions.Interfaces;
 using org.whitefossa.yiffhl.Business.Implementations;
 using org.whitefossa.yiffhl.Droid.Business.Implementations;
-using Acr.UserDialogs;
 
 namespace org.whitefossa.yiffhl.Droid
 {
@@ -24,6 +23,7 @@ namespace org.whitefossa.yiffhl.Droid
             App.Container.Register<IUserNotifier, UserNotifier>().AsSingleton();
             App.Container.Register<IBluetoothCommunicator, BluetoothCommunicator>().AsSingleton();
             App.Container.Register<IPacketsProcessor, PacketsProcessor>().AsSingleton();
+            App.Container.Register<IUserRequestor, UserRequestor>().AsSingleton();
 
             base.OnCreate(savedInstanceState);
 

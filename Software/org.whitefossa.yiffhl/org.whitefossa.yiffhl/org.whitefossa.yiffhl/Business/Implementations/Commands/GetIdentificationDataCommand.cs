@@ -33,7 +33,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations.Commands
 
         public void SetResponseDelegate(OnGetIdentificationDataDelegate onGetIdentificationDataResponse)
         {
-            this._onGetIdentificationDataResponse = onGetIdentificationDataResponse;
+            _onGetIdentificationDataResponse = onGetIdentificationDataResponse;
         }
 
         public void SendGetIdentificationDataCommand()

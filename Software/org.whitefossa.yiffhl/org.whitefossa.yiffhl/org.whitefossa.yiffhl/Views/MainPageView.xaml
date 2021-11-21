@@ -46,7 +46,7 @@
                             ItemDisplayBinding="{Binding DisplayName}"
                             SelectedItem="{Binding SelectedFox}"
                             SelectedIndexChanged="pkFox_SelectedIndexChanged"
-                            IsEnabled="{Binding IsConnectRelatedControlsEnabled}">
+                            IsEnabled="{Binding IsFoxPickerEnabled}">
                         </Picker>
 
                         <Button
@@ -143,6 +143,7 @@
                             Grid.Column="1">
                             <Button
                                 Text="Rename fox"
+                                Command="{Binding RenameFoxClickedCommand}"
                                 IsEnabled="{Binding IsFoxConnected}" />
 
                             <Button

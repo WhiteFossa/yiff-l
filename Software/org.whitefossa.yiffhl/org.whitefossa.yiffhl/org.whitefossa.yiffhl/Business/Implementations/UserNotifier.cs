@@ -10,5 +10,10 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         {
             await UserDialogs.Instance.AlertAsync(message, title, "OK");
         }
+
+        public async Task<bool> ShowYesNoRequestAsync(string title, string message)
+        {
+            return await UserDialogs.Instance.ConfirmAsync(message, title, "Yes", "No");
+        }
     }
 }

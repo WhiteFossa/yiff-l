@@ -1,12 +1,12 @@
-﻿using System;
+﻿using org.whitefossa.yiffhl.Abstractions.Enums;
+using org.whitefossa.yiffhl.Abstractions.Interfaces;
+using org.whitefossa.yiffhl.Business.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using yiff_hl.Abstractions.Enums;
-using yiff_hl.Abstractions.Interfaces;
-using yiff_hl.Business.Implementations.Commands.Helpers;
 
-namespace yiff_hl.Business.Implementations.Commands
+namespace org.whitefossa.yiffhl.Business.Implementations.Commands
 {
     public delegate void OnSetFoxNameResponseDelegate(bool isSuccessfull);
 
@@ -15,23 +15,18 @@ namespace yiff_hl.Business.Implementations.Commands
         private const int MinNameLength = 1;
         private const int MaxNameLength = 16;
 
-        private readonly IPacketsProcessor packetsProcessor;
-        private OnSetFoxNameResponseDelegate onSetFoxNameResponse;
+        private readonly IPacketsProcessor _packetsProcessor;
+        private OnSetFoxNameResponseDelegate _onSetFoxNameResponse;
 
-        private SetFoxNameCommand()
+        public SetFoxNameCommand()
         {
-
-        }
-
-        public SetFoxNameCommand(IPacketsProcessor packetsProcessor)
-        {
-            this.packetsProcessor = packetsProcessor ?? throw new ArgumentNullException(nameof(packetsProcessor));
-            packetsProcessor.SetOnSetFoxNameResponse(OnSetFoxNameResponse);
+            _packetsProcessor = App.Container.Resolve<IPacketsProcessor>();
+            _packetsProcessor.SetOnSetFoxNameResponse(OnSetFoxNameResponse);
         }
 
         public void SetResponseDelegate(OnSetFoxNameResponseDelegate onSetFoxNameResponse)
         {
-            this.onSetFoxNameResponse = onSetFoxNameResponse;
+            _onSetFoxNameResponse = onSetFoxNameResponse;
         }
 
         public void SendSetFoxNameCommand(string name)
@@ -50,12 +45,12 @@ namespace yiff_hl.Business.Implementations.Commands
             var nameBytes = Encoding.ASCII.GetBytes(name);
             payload.AddRange(nameBytes);
 
-            packetsProcessor.SendCommand(CommandType.SetFoxName, payload);
+            _packetsProcessor.SendCommand(CommandType.SetFoxName, payload);
         }
 
         private void OnSetFoxNameResponse(IReadOnlyCollection<byte> payload)
         {
-            if (onSetFoxNameResponse == null)
+            if (_onSetFoxNameResponse == null)
             {
                 return;
             }
@@ -65,7 +60,7 @@ namespace yiff_hl.Business.Implementations.Commands
                 return;
             }
 
-            onSetFoxNameResponse(CommandsHelper.IsSuccessful(payload.ElementAt(0)));
+            _onSetFoxNameResponse(CommandsHelper.IsSuccessful(payload.ElementAt(0)));
         }
     }
 }

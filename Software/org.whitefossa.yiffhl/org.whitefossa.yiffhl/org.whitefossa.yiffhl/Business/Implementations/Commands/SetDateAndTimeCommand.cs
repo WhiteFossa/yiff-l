@@ -65,7 +65,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations.Commands
 
         public void SetResponseDelegate(OnSetDateAndTimeResponseDelegate onSetDateAndTimeResponse)
         {
-            this._onSetDateAndTimeResponse = onSetDateAndTimeResponse;
+            _onSetDateAndTimeResponse = onSetDateAndTimeResponse;
         }
 
         private byte GetDayOfWeek(DayOfWeek dow)

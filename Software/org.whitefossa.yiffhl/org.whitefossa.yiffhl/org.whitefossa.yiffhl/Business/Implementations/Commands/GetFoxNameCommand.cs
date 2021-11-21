@@ -24,7 +24,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations.Commands
 
         public void SetResponseDelegate(OnGetFoxNameResponseDelegate onGetFoxNameResponse)
         {
-            this._onGetFoxNameResponse = onGetFoxNameResponse;
+            _onGetFoxNameResponse = onGetFoxNameResponse;
         }
 
         public void SendGetFoxNameCommand()

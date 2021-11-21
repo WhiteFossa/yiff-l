@@ -23,6 +23,7 @@ namespace org.whitefossa.yiffhl.ViewModels
         private IPairedFoxesEnumerator _pairedFoxesEnumerator;
         private IUserNotifier _userNotifier;
         private IPacketsProcessor _packetsProcessor;
+        private IUserRequestor _userRequestor;
 
         /// <summary>
         /// Main model
@@ -192,12 +193,33 @@ namespace org.whitefossa.yiffhl.ViewModels
             }
         }
 
+        /// <summary>
+        /// Command, called when user tries to rename a fox
+        /// </summary>
+        public ICommand RenameFoxClickedCommand { get; }
+
+        /// <summary>
+        /// True if fox picker need to be enabled
+        /// </summary>
+        private bool _isFoxPickerEnabled;
+
+        public bool IsFoxPickerEnabled
+        {
+            get => _isFoxPickerEnabled;
+            set
+            {
+                _isFoxPickerEnabled = value;
+                OnPropertyChanged();
+            }
+        }
+
         public MainPageViewModel()
         {
             _foxConnector = App.Container.Resolve<IFoxConnector>();
             _pairedFoxesEnumerator = App.Container.Resolve<IPairedFoxesEnumerator>();
             _userNotifier = App.Container.Resolve<IUserNotifier>();
             _packetsProcessor = App.Container.Resolve<IPacketsProcessor>();
+            _userRequestor = App.Container.Resolve<IUserRequestor>();
 
             // Setting up fox connector delegates
             _mainModel.OnFoxConnectorNewByteRead += OnNewByteRead;
@@ -218,6 +240,7 @@ namespace org.whitefossa.yiffhl.ViewModels
             ConnectButtonClickedCommand = new Command(async () => await OnConnectButtonCLickedAsync());
             RefreshFoxesListClickedCommand = new Command(async () => await OnRefreshFoxesListClickedAsync());
             DisconnectButtonClickedCommand = new Command(async () => await OnDisconnectButtonClickedAsync());
+            RenameFoxClickedCommand = new Command(async() => await OnRenameFoxClickedCommandAsync());
 
             // Setting up fox commands
             _mainModel.GetIdentificationDataCommand.SetResponseDelegate(async (isFox, pVer, hwRev, fwVer, sn)
@@ -227,8 +250,11 @@ namespace org.whitefossa.yiffhl.ViewModels
 
             _mainModel.SetFoxDateAndTimeCommand.SetResponseDelegate(async(isSuccessfull) => await OnSetFoxDateAndTimeResponseAsync(isSuccessfull));
 
+            _mainModel.SetFoxNameCommand.SetResponseDelegate(async (isSuccessfull) => await OnSetFoxNameResponse(isSuccessfull));
+
             // Initial state
             IsConnectButtonEnabled = false;
+            IsFoxPickerEnabled = true;
             IsConnectRelatedControlsEnabled = true;
             IsBtnDisconnectEnabled = false;
 
@@ -244,6 +270,7 @@ namespace org.whitefossa.yiffhl.ViewModels
         public async Task OnConnectButtonCLickedAsync()
         {
             IsConnectButtonEnabled = false;
+            IsFoxPickerEnabled = false;
             IsConnectRelatedControlsEnabled = false;
 
             await _foxConnector.ConnectAsync(SelectedFox);
@@ -303,12 +330,14 @@ namespace org.whitefossa.yiffhl.ViewModels
             ResetFoxRelatedData();
 
             IsConnectButtonEnabled = true;
+            IsFoxPickerEnabled = true;
             IsConnectRelatedControlsEnabled = true;
         }
 
         private void OnFailedToConnect(Exception exception)
         {
             IsConnectButtonEnabled = true;
+            IsFoxPickerEnabled = true;
             IsConnectRelatedControlsEnabled = true;
         }
 
@@ -381,6 +410,41 @@ namespace org.whitefossa.yiffhl.ViewModels
 
             // Requesting fox name
             _mainModel.GetFoxNameCommand.SendGetFoxNameCommand();
+        }
+
+        private async Task OnRenameFoxClickedCommandAsync()
+        {
+            var isConfirmed = await _userNotifier.ShowYesNoRequestAsync("Confirmation",
+                @"Please take into account, that after fox rename the Bluetooth connection will be lost.
+You will have to un-pair old device and pair with a fox under a new name in a phone settings, then reconnect to it.
+Do you want to continue?");
+
+            if (!isConfirmed)
+            {
+                return;
+            }
+
+            var newNameData = await _userRequestor.EnterStringAsync("Fox name", "Enter new fox name", FoxName, 16);
+            if (!newNameData.Item1)
+            {
+                return;
+            }
+
+            _mainModel.SetFoxNameCommand.SendSetFoxNameCommand(newNameData.Item2);
+        }
+
+        private async Task OnSetFoxNameResponse(bool isSuccessfull)
+        {
+            if (!isSuccessfull)
+            {
+                await _userNotifier.ShowErrorMessageAsync("Error", "Failed to change fox name!");
+            }
+            else
+            {
+                await _userNotifier.ShowErrorMessageAsync("Success", "Fox name is changed successfully.");
+            }
+
+            await OnDisconnectButtonClickedAsync();
         }
     }
 }

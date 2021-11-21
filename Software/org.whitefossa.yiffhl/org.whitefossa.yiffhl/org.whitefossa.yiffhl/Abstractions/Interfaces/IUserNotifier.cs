@@ -11,5 +11,10 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
         /// Show error message to an user
         /// </summary>
         Task ShowErrorMessageAsync(string title, string message);
+
+        /// <summary>
+        /// Show a message with Yes and No buttons. Returns true if user chooses Yes
+        /// </summary>
+        Task<bool> ShowYesNoRequestAsync(string title, string message);
     }
 }
