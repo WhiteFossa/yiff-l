@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Acr.UserDialogs;
+using System;
 using System.Threading.Tasks;
 
 namespace org.whitefossa.yiffhl.Abstractions.Interfaces
@@ -14,6 +15,13 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
         /// Returns true and string if user entered a string, returns false and meaningless value if not
         /// </summary>
         /// <returns></returns>
-        Task<(bool, string)> EnterStringAsync(string title, string message, string initialValue, int maxLength);
+        Task<(bool, string)> EnterStringAsync
+        (
+            string title,
+            string message,
+            string initialValue,
+            int maxLength,
+            Action<PromptTextChangedArgs> onTextChanged
+        );
     }
 }

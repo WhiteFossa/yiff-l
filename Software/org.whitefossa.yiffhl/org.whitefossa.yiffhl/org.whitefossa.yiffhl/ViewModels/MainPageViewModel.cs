@@ -1,5 +1,7 @@
-﻿using org.whitefossa.yiffhl.Abstractions.DTOs;
+﻿using Acr.UserDialogs;
+using org.whitefossa.yiffhl.Abstractions.DTOs;
 using org.whitefossa.yiffhl.Abstractions.Interfaces;
+using org.whitefossa.yiffhl.Business.Implementations.Commands;
 using org.whitefossa.yiffhl.Models;
 using System;
 using System.Collections.ObjectModel;
@@ -424,7 +426,32 @@ Do you want to continue?");
                 return;
             }
 
-            var newNameData = await _userRequestor.EnterStringAsync("Fox name", "Enter new fox name", FoxName, 16);
+            var newNameData = await _userRequestor.EnterStringAsync
+            (
+                "Fox name",
+                "Enter new fox name",
+                FoxName,
+                SetFoxNameCommand.MaxNameLength,
+                (args) =>
+                {
+                    args.IsValid = true;
+
+                    // Minimal length
+                    if (args.Value.Length < SetFoxNameCommand.MinNameLength)
+                    {
+                        args.IsValid = false;
+                        return;
+                    }
+
+                    // Only digits and numbers
+                    if (!args.Value.All(char.IsLetterOrDigit))
+                    {
+                        args.IsValid = false;
+                        return;
+                    }
+                }
+            );
+
             if (!newNameData.Item1)
             {
                 return;
@@ -435,16 +462,17 @@ Do you want to continue?");
 
         private async Task OnSetFoxNameResponse(bool isSuccessfull)
         {
+            await OnDisconnectButtonClickedAsync();
+
             if (!isSuccessfull)
             {
                 await _userNotifier.ShowErrorMessageAsync("Error", "Failed to change fox name!");
-            }
-            else
-            {
-                await _userNotifier.ShowErrorMessageAsync("Success", "Fox name is changed successfully.");
+                return;
             }
 
-            await OnDisconnectButtonClickedAsync();
+            // Un-pairing bluetooth device
+
+            await _userNotifier.ShowErrorMessageAsync("Success", "Fox name is changed successfully.");
         }
     }
 }

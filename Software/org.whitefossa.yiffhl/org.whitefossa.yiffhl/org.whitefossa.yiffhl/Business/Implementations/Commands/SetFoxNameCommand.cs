@@ -12,8 +12,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations.Commands
 
     public class SetFoxNameCommand
     {
-        private const int MinNameLength = 1;
-        private const int MaxNameLength = 16;
+        public const int MinNameLength = 1;
+        public const int MaxNameLength = 16;
 
         private readonly IPacketsProcessor _packetsProcessor;
         private OnSetFoxNameResponseDelegate _onSetFoxNameResponse;
