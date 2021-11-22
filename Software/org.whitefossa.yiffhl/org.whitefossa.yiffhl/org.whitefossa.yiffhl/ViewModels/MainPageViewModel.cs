@@ -1,13 +1,11 @@
-﻿using Acr.UserDialogs;
-using org.whitefossa.yiffhl.Abstractions.DTOs;
+﻿using org.whitefossa.yiffhl.Abstractions.DTOs;
 using org.whitefossa.yiffhl.Abstractions.Interfaces;
 using org.whitefossa.yiffhl.Business.Implementations.Commands;
 using org.whitefossa.yiffhl.Models;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -42,7 +40,7 @@ namespace org.whitefossa.yiffhl.ViewModels
         {
             get
             {
-                return EnumerateFoxesAsync().Result;
+                return _pairedFoxes;
             }
             set
             {
@@ -216,6 +214,29 @@ namespace org.whitefossa.yiffhl.ViewModels
             }
         }
 
+        /// <summary>
+        /// List of profiles in fox
+        /// </summary>
+        private ObservableCollection<Profile> _profiles = new ObservableCollection<Profile>();
+
+        public ObservableCollection<Profile> Profiles
+        {
+            get
+            {
+                return _profiles;
+            }
+            set
+            {
+                _profiles = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Command, called when Refresh Profiles List button is clicked
+        /// </summary>
+        public ICommand RefreshProfilesListClickedCommand { get; }
+
         public MainPageViewModel()
         {
             _foxConnector = App.Container.Resolve<IFoxConnector>();
@@ -244,7 +265,8 @@ namespace org.whitefossa.yiffhl.ViewModels
             ConnectButtonClickedCommand = new Command(async () => await OnConnectButtonCLickedAsync());
             RefreshFoxesListClickedCommand = new Command(async () => await OnRefreshFoxesListClickedAsync());
             DisconnectButtonClickedCommand = new Command(async () => await OnDisconnectButtonClickedAsync());
-            RenameFoxClickedCommand = new Command(async() => await OnRenameFoxClickedCommandAsync());
+            RenameFoxClickedCommand = new Command(async () => await OnRenameFoxClickedAsync());
+            RefreshProfilesListClickedCommand = new Command(async () => await OnRefreshProfilesListClickedAsync());
 
             // Setting up fox commands
             _mainModel.GetIdentificationDataCommand.SetResponseDelegate(async (isFox, pVer, hwRev, fwVer, sn)
@@ -263,6 +285,9 @@ namespace org.whitefossa.yiffhl.ViewModels
             IsBtnDisconnectEnabled = false;
 
             ResetFoxRelatedData();
+
+            // Requesting foxes list
+            Task.WaitAll(OnRefreshFoxesListClickedAsync());
         }
 
         public async Task OnSelectedFoxChangedAsync(PairedFoxDTO selectedFox)
@@ -307,7 +332,6 @@ namespace org.whitefossa.yiffhl.ViewModels
 
                 return new ObservableCollection<PairedFoxDTO>();
             }
-
         }
 
         private void OnNewByteRead(byte data)
@@ -389,6 +413,8 @@ namespace org.whitefossa.yiffhl.ViewModels
         private async Task OnGetFoxNameResponseAsync(string name)
         {
             FoxName = name;
+
+            await EnumerateProfilesAsync();
         }
 
         /// <summary>
@@ -416,7 +442,7 @@ namespace org.whitefossa.yiffhl.ViewModels
             _mainModel.GetFoxNameCommand.SendGetFoxNameCommand();
         }
 
-        private async Task OnRenameFoxClickedCommandAsync()
+        private async Task OnRenameFoxClickedAsync()
         {
             var isConfirmed = await _userNotifier.ShowYesNoRequestAsync("Confirmation",
                 @"Please take into account, that after fox rename the Bluetooth connection will be lost.
@@ -480,6 +506,22 @@ Do you want to continue?");
             await OnRefreshFoxesListClickedAsync();
 
             await _userNotifier.ShowErrorMessageAsync("Success", "Fox name is changed successfully.");
+        }
+
+        private async Task EnumerateProfilesAsync()
+        {
+            var test = new List<Profile>()
+            {
+                new Profile() { Id = 0, Name = "Yiffy profile" },
+                new Profile() { Id = 1, Name = "Yerfy profile" },
+            };
+
+            Profiles = new ObservableCollection<Profile>(test);
+        }
+
+        private async Task OnRefreshProfilesListClickedAsync()
+        {
+            await EnumerateProfilesAsync();
         }
     }
 }

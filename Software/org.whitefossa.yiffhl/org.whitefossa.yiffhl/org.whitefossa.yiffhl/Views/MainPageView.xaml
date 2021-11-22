@@ -50,7 +50,6 @@
                         </Picker>
 
                         <Button
-                            x:Name="btnRefreshFoxesList"
                             Text="R"
                             Grid.Row="1"
                             Grid.Column="1"
@@ -153,7 +152,63 @@
                     </Grid>
                 </StackLayout>
             </Frame>
+            <!-- End of fox identification -->
 
+            <!-- Profiles -->
+            <Frame
+                CornerRadius="10"
+                HasShadow="True"
+                Margin="5"
+                Padding="5">
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <Label
+                        Text="Profiles"
+                        HorizontalOptions="Center"
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="3"
+                        />
+
+                    <Picker
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Title="Select a profile"
+                        ItemsSource="{Binding Profiles}"
+                        ItemDisplayBinding="{Binding Name}"
+                        IsEnabled="{Binding IsFoxConnected}">
+                    </Picker>
+
+                    <Button
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        HeightRequest="40"
+                        WidthRequest="40"
+                        Text="R"
+                        Command="{Binding RefreshProfilesListClickedCommand}"
+                        IsEnabled="{Binding IsFoxConnected}" />
+
+                    <Button
+                        Grid.Row="1"
+                        Grid.Column="2"
+                        Text="Add"
+                        IsEnabled="{Binding IsFoxConnected}" /> <!-- TODO: Add it's own variable to control button activity -->
+                    
+                </Grid>
+            </Frame>
+            <!-- End of profiles -->
+            
             
         </StackLayout>
     </ContentPage.Content>
