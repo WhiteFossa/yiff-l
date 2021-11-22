@@ -70,6 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Business\Implementations\BluetoothCommunicator.cs" />
+    <Compile Include="Business\Implementations\BluetoothManager.cs" />
     <Compile Include="Business\Implementations\PairedFoxesEnumerator.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Resources\Resource.designer.cs" />

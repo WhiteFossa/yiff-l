@@ -26,6 +26,7 @@ namespace org.whitefossa.yiffhl.ViewModels
         private IUserNotifier _userNotifier;
         private IPacketsProcessor _packetsProcessor;
         private IUserRequestor _userRequestor;
+        private IBluetoothManager _bluetoothManager;
 
         /// <summary>
         /// Main model
@@ -222,6 +223,7 @@ namespace org.whitefossa.yiffhl.ViewModels
             _userNotifier = App.Container.Resolve<IUserNotifier>();
             _packetsProcessor = App.Container.Resolve<IPacketsProcessor>();
             _userRequestor = App.Container.Resolve<IUserRequestor>();
+            _bluetoothManager = App.Container.Resolve<IBluetoothManager>();
 
             // Setting up fox connector delegates
             _mainModel.OnFoxConnectorNewByteRead += OnNewByteRead;
@@ -462,6 +464,8 @@ Do you want to continue?");
 
         private async Task OnSetFoxNameResponse(bool isSuccessfull)
         {
+            var fox = _mainModel.ConnectedFox;
+
             await OnDisconnectButtonClickedAsync();
 
             if (!isSuccessfull)
@@ -471,6 +475,9 @@ Do you want to continue?");
             }
 
             // Un-pairing bluetooth device
+            _bluetoothManager.UnPair(fox.MAC);
+
+            await OnRefreshFoxesListClickedAsync();
 
             await _userNotifier.ShowErrorMessageAsync("Success", "Fox name is changed successfully.");
         }

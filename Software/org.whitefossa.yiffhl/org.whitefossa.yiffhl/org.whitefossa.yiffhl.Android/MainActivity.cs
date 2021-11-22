@@ -24,6 +24,7 @@ namespace org.whitefossa.yiffhl.Droid
             App.Container.Register<IBluetoothCommunicator, BluetoothCommunicator>().AsSingleton();
             App.Container.Register<IPacketsProcessor, PacketsProcessor>().AsSingleton();
             App.Container.Register<IUserRequestor, UserRequestor>().AsSingleton();
+            App.Container.Register<IBluetoothManager, BluetoothManager>().AsSingleton();
 
             base.OnCreate(savedInstanceState);
 
