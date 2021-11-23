@@ -165,6 +165,7 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
                     <Grid.ColumnDefinitions>
@@ -203,8 +204,13 @@
                         Grid.Row="1"
                         Grid.Column="2"
                         Text="Add"
-                        IsEnabled="{Binding IsFoxConnected}" /> <!-- TODO: Add it's own variable to control button activity -->
-                    
+                        IsEnabled="{Binding IsAddProfileButtonEnabled}" />
+
+                    <Label
+                        Text="{Binding ProfilesCountText}"
+                        Grid.Row="2"
+                        Grid.Column="0"
+                        HorizontalOptions="CenterAndExpand" />
                 </Grid>
             </Frame>
             <!-- End of profiles -->

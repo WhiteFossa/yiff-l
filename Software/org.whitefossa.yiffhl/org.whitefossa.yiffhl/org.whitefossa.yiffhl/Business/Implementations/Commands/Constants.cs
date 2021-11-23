@@ -9,6 +9,11 @@
         /// Profile maximal and minimal IDs
         /// </summary>
         public const int MinProfileId = 0;
-        public const int MaxProfileId = 255;
+        public const int MaxProfileId = 127;
+        
+        /// <summary>
+        /// Maximal profiles count
+        /// </summary>
+        public const int MaxProfilesCount = MaxProfileId + 1;
     }
 }

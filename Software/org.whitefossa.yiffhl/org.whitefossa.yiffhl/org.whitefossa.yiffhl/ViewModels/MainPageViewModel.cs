@@ -222,14 +222,13 @@ namespace org.whitefossa.yiffhl.ViewModels
 
         public ObservableCollection<Profile> Profiles
         {
-            get
-            {
-                return _profiles;
-            }
+            get => _profiles;
             set
             {
                 _profiles = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(ProfilesCountText));
+                IsAddProfileButtonEnabled = CanWeAddProfiles;
             }
         }
 
@@ -237,6 +236,44 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// Command, called when Refresh Profiles List button is clicked
         /// </summary>
         public ICommand RefreshProfilesListClickedCommand { get; }
+
+        /// <summary>
+        /// Can we add profiles
+        /// </summary>
+        public bool CanWeAddProfiles
+        {
+            get => Profiles.Count < Constants.MaxProfilesCount;
+        }
+
+        /// <summary>
+        /// Profiles count
+        /// </summary>
+        public string ProfilesCountText
+        {
+            get
+            {
+                var countAsText = _mainModel.IsConnected ? $"{ Profiles.Count }" : "N/A";
+
+                var maxProfilesWarning = CanWeAddProfiles ? String.Empty : ". No space left!";
+
+                return $"Profiles count: { countAsText } {maxProfilesWarning}";
+            }
+        }
+
+        /// <summary>
+        /// Is add profile button enabled
+        /// </summary>
+        private bool _isAddProfileButtonEnabled;
+
+        public bool IsAddProfileButtonEnabled
+        {
+            get => _isAddProfileButtonEnabled;
+            set
+            {
+                _isAddProfileButtonEnabled = value;
+                OnPropertyChanged();
+            }
+        }
 
         public MainPageViewModel()
         {
@@ -285,6 +322,7 @@ namespace org.whitefossa.yiffhl.ViewModels
             IsFoxPickerEnabled = true;
             IsConnectRelatedControlsEnabled = true;
             IsBtnDisconnectEnabled = false;
+            IsAddProfileButtonEnabled = false;
 
             ResetFoxRelatedData();
 
@@ -362,6 +400,7 @@ namespace org.whitefossa.yiffhl.ViewModels
             IsConnectButtonEnabled = true;
             IsFoxPickerEnabled = true;
             IsConnectRelatedControlsEnabled = true;
+            IsAddProfileButtonEnabled = false;
         }
 
         private void OnFailedToConnect(Exception exception)
@@ -369,6 +408,7 @@ namespace org.whitefossa.yiffhl.ViewModels
             IsConnectButtonEnabled = true;
             IsFoxPickerEnabled = true;
             IsConnectRelatedControlsEnabled = true;
+            IsAddProfileButtonEnabled = false;
         }
 
         /// <summary>
