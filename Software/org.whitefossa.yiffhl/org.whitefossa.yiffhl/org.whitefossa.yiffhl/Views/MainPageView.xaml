@@ -204,6 +204,7 @@
                         Grid.Row="1"
                         Grid.Column="2"
                         Text="Add"
+                        Command="{Binding AddProfileClickedCommand}"
                         IsEnabled="{Binding IsAddProfileButtonEnabled}" />
 
                     <Label

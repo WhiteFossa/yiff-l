@@ -26,6 +26,7 @@ namespace org.whitefossa.yiffhl.ViewModels
         private IUserRequestor _userRequestor;
         private IBluetoothManager _bluetoothManager;
         private IFoxProfilesEnumerator _foxProfilesEnumerator;
+        private IFoxProfileAdder _foxProfileAdder;
 
         /// <summary>
         /// Main model
@@ -275,6 +276,11 @@ namespace org.whitefossa.yiffhl.ViewModels
             }
         }
 
+        /// <summary>
+        /// Command, called when user clicks Add Profile button
+        /// </summary>
+        public ICommand AddProfileClickedCommand { get; }
+
         public MainPageViewModel()
         {
             _foxConnector = App.Container.Resolve<IFoxConnector>();
@@ -284,6 +290,7 @@ namespace org.whitefossa.yiffhl.ViewModels
             _userRequestor = App.Container.Resolve<IUserRequestor>();
             _bluetoothManager = App.Container.Resolve<IBluetoothManager>();
             _foxProfilesEnumerator = App.Container.Resolve<IFoxProfilesEnumerator>();
+            _foxProfileAdder = App.Container.Resolve<IFoxProfileAdder>();
 
             // Setting up fox connector delegates
             _mainModel.OnFoxConnectorNewByteRead += OnNewByteRead;
@@ -306,6 +313,7 @@ namespace org.whitefossa.yiffhl.ViewModels
             DisconnectButtonClickedCommand = new Command(async () => await OnDisconnectButtonClickedAsync());
             RenameFoxClickedCommand = new Command(async () => await OnRenameFoxClickedAsync());
             RefreshProfilesListClickedCommand = new Command(async () => await OnRefreshProfilesListClickedAsync());
+            AddProfileClickedCommand = new Command(async () => await OnAddProfileClickedAsync());
 
             // Setting up fox commands
             _mainModel.GetIdentificationDataCommand.SetResponseDelegate(async (isFox, pVer, hwRev, fwVer, sn)
@@ -514,7 +522,7 @@ Do you want to continue?");
                     }
 
                     // Only digits and numbers
-                    if (!args.Value.All(char.IsLetterOrDigit))
+                    if (!args.Value.All(char.IsWhiteSpace))
                     {
                         args.IsValid = false;
                         return;
@@ -563,6 +571,47 @@ Do you want to continue?");
         private async Task OnRefreshProfilesListClickedAsync()
         {
             await EnumerateProfilesAsync();
+        }
+
+        private async Task OnAddProfileClickedAsync()
+        {
+            var profileNameData = await _userRequestor.EnterStringAsync
+            (
+                "New profile",
+                "Enter new profile name",
+                $"New profile { Profiles.Count + 1 }",
+                SetProfileNameCommand.MaxNameLength,
+                (args) =>
+                {
+                    args.IsValid = true;
+
+                    // Minimal length
+                    if (args.Value.Length < SetProfileNameCommand.MinNameLength)
+                    {
+                        args.IsValid = false;
+                        return;
+                    }
+
+                    // Only digits and numbers
+                    if (!args.Value.All(c => (char.IsWhiteSpace(c) || char.IsLetterOrDigit(c))))
+                    {
+                        args.IsValid = false;
+                        return;
+                    }
+                }
+            );
+
+            if (!profileNameData.Item1)
+            {
+                return;
+            }
+
+            await _foxProfileAdder.AddProfileAsync(_mainModel, profileNameData.Item2, OnFoxProfileAdded);
+        }
+
+        private void OnFoxProfileAdded()
+        {
+            Task.WaitAll(EnumerateProfilesAsync());
         }
     }
 }

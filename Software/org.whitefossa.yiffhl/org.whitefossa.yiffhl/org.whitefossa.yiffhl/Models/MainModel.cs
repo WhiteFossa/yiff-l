@@ -57,6 +57,9 @@ namespace org.whitefossa.yiffhl.Models
         public readonly SetFoxNameCommand SetFoxNameCommand = new SetFoxNameCommand();
         public readonly GetProfilesCountCommand GetFoxProfilesCount = new GetProfilesCountCommand();
         public readonly GetProfileNameCommand GetFoxProfileName = new GetProfileNameCommand();
+        public readonly AddNewProfileCommand AddNewFoxProfile = new AddNewProfileCommand();
+        public readonly SetProfileNameCommand SetFoxProfileName = new SetProfileNameCommand();
+        public readonly SwitchToProfileCommand SwitchFoxProfile = new SwitchToProfileCommand();
 
         #endregion
 

@@ -26,6 +26,7 @@ namespace org.whitefossa.yiffhl.Droid
             App.Container.Register<IUserRequestor, UserRequestor>().AsSingleton();
             App.Container.Register<IBluetoothManager, BluetoothManager>().AsSingleton();
             App.Container.Register<IFoxProfilesEnumerator, FoxProfilesEnumerator>().AsSingleton();
+            App.Container.Register<IFoxProfileAdder, FoxProfileAdder>().AsSingleton();
 
             base.OnCreate(savedInstanceState);
 
