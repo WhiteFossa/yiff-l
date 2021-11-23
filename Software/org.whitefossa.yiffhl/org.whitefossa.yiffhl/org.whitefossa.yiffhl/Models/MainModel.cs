@@ -55,6 +55,8 @@ namespace org.whitefossa.yiffhl.Models
         public readonly GetFoxNameCommand GetFoxNameCommand = new GetFoxNameCommand();
         public readonly SetDateAndTimeCommand SetFoxDateAndTimeCommand = new SetDateAndTimeCommand();
         public readonly SetFoxNameCommand SetFoxNameCommand = new SetFoxNameCommand();
+        public readonly GetProfilesCountCommand GetFoxProfilesCount = new GetProfilesCountCommand();
+        public readonly GetProfileNameCommand GetFoxProfileName = new GetProfileNameCommand();
 
         #endregion
 

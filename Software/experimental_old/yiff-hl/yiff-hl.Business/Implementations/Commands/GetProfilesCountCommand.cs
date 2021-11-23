@@ -49,6 +49,5 @@ namespace yiff_hl.Business.Implementations.Commands
             var count = payload.ElementAt(0);
             onGetProfilesCountResponse(count);
         }
-
     }
 }

@@ -25,6 +25,7 @@ namespace org.whitefossa.yiffhl.ViewModels
         private IPacketsProcessor _packetsProcessor;
         private IUserRequestor _userRequestor;
         private IBluetoothManager _bluetoothManager;
+        private IFoxProfilesEnumerator _foxProfilesEnumerator;
 
         /// <summary>
         /// Main model
@@ -245,6 +246,7 @@ namespace org.whitefossa.yiffhl.ViewModels
             _packetsProcessor = App.Container.Resolve<IPacketsProcessor>();
             _userRequestor = App.Container.Resolve<IUserRequestor>();
             _bluetoothManager = App.Container.Resolve<IBluetoothManager>();
+            _foxProfilesEnumerator = App.Container.Resolve<IFoxProfilesEnumerator>();
 
             // Setting up fox connector delegates
             _mainModel.OnFoxConnectorNewByteRead += OnNewByteRead;
@@ -510,13 +512,12 @@ Do you want to continue?");
 
         private async Task EnumerateProfilesAsync()
         {
-            var test = new List<Profile>()
-            {
-                new Profile() { Id = 0, Name = "Yiffy profile" },
-                new Profile() { Id = 1, Name = "Yerfy profile" },
-            };
+            await _foxProfilesEnumerator.EnumerateProfilesAsync(_mainModel, OnFoxProfilesEnumerated);
+        }
 
-            Profiles = new ObservableCollection<Profile>(test);
+        private void OnFoxProfilesEnumerated(IReadOnlyCollection<Profile> profiles)
+        {
+            Profiles = new ObservableCollection<Profile>(profiles);
         }
 
         private async Task OnRefreshProfilesListClickedAsync()
