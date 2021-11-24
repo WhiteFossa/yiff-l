@@ -10,8 +10,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private readonly IAddNewProfileCommand _addNewProfileCommand;
         private readonly IGetProfilesCountCommand _getProfilesCountCommand;
         private readonly ISetProfileNameCommand _setProfileNameCommand;
-        private readonly IFoxProfileSwitcher _foxProfileSwitcher;
         private readonly IGetCurrentProfileIdCommand _getCurrentProfileIdCommand;
+        private readonly ISwitchToProfileCommand _switchToProfileCommand;
 
         private OnProfileAddedDelegate _onProfileAdded;
 
@@ -19,17 +19,23 @@ namespace org.whitefossa.yiffhl.Business.Implementations
 
         private OnGetCurrentProfileIdDelegate _onGetCurrentProfileId;
 
+        private OnProfileSwitchedDelegate _onProfileSwitched;
+
+        private int _newProfileId;
+
+        private OnProfileRenamedDelegate _onProfileRenamed;
+
         public FoxProfilesManager(IAddNewProfileCommand addNewProfileCommand,
             IGetProfilesCountCommand getProfilesCountCommand,
             ISetProfileNameCommand setProfileNameCommand,
-            IFoxProfileSwitcher foxProfileSwitcher,
-            IGetCurrentProfileIdCommand getCurrentProfileIdCommand)
+            IGetCurrentProfileIdCommand getCurrentProfileIdCommand,
+            ISwitchToProfileCommand switchToProfileCommand)
         {
             _addNewProfileCommand = addNewProfileCommand;
             _getProfilesCountCommand = getProfilesCountCommand;
             _setProfileNameCommand = setProfileNameCommand;
-            _foxProfileSwitcher = foxProfileSwitcher;
             _getCurrentProfileIdCommand = getCurrentProfileIdCommand;
+            _switchToProfileCommand = switchToProfileCommand;
         }
 
         public async Task AddProfileAsync(string newProfileName, OnProfileAddedDelegate onProfileAdded)
@@ -43,11 +49,11 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _newProfileName = newProfileName;
 
             // Adding a new profile
-            _addNewProfileCommand.SetResponseDelegate(OnAddNewProfileResponse);
+            _addNewProfileCommand.SetResponseDelegate(OnAddNewProfileResponse_AddPathway);
             _addNewProfileCommand.SendAddNewProfileCommand();
         }
 
-        private void OnAddNewProfileResponse(bool isSuccessful)
+        private void OnAddNewProfileResponse_AddPathway(bool isSuccessful)
         {
             if (!isSuccessful)
             {
@@ -55,32 +61,26 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             }
 
             // Getting profiles count, count - 1 will be the new profile ID
-            _getProfilesCountCommand.SetResponseDelegate(OnGetProfilesCountResponse);
+            _getProfilesCountCommand.SetResponseDelegate(OnGetProfilesCountResponse_AddPathway);
             _getProfilesCountCommand.SendGetProfilesCountCommand();
         }
 
-        private void OnGetProfilesCountResponse(int count)
+        private async void OnGetProfilesCountResponse_AddPathway(int count)
         {
             var newProfileId = count - 1;
 
             // Switching to a new profile
-            _foxProfileSwitcher.SwitchProfileAsync(newProfileId, OnSwitchToProfile);
+            await SwitchProfileAsync(newProfileId, async () => await OnSwitchToProfile_AddPathwayAsync());
         }
 
-        private void OnSwitchToProfile()
+        private async Task OnSwitchToProfile_AddPathwayAsync()
         {
             // Setting profile name
-            _setProfileNameCommand.SetResponseDelegate(OnSetProfileNameResponse);
-            _setProfileNameCommand.SendSetProfileNameCommand(_newProfileName);
+            await RenameCurrentProfileAsync(_newProfileName, OnSetProfileNameResponse_AddPathway);
         }
 
-        private void OnSetProfileNameResponse(bool isSuccessfull)
+        private void OnSetProfileNameResponse_AddPathway()
         {
-            if (!isSuccessfull)
-            {
-                throw new InvalidOperationException("Failed to rename a new profile!");
-            }
-
             _onProfileAdded();
         }
 
@@ -95,6 +95,55 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private void OnGetCurrentProfileIdResponse(int profileId)
         {
             _onGetCurrentProfileId(profileId);
+        }
+
+        public async Task SwitchProfileAsync(int profileId, OnProfileSwitchedDelegate onProfileSwitched)
+        {
+            _onProfileSwitched = onProfileSwitched ?? throw new ArgumentNullException(nameof(onProfileSwitched));
+            _newProfileId = profileId;
+            
+            await GetCurrentProfileId(OnGetCurrentProfileId_SwitchPathway);
+        }
+
+        private void OnGetCurrentProfileId_SwitchPathway(int profileId)
+        {
+            if (_newProfileId == profileId)
+            {
+                // New profile == current profile
+                _onProfileSwitched();
+                return;
+            }
+
+            _switchToProfileCommand.SetResponseDelegate(OnSwitchToProfileResponse_SwitchPathway);
+            _switchToProfileCommand.SendSwitchToProfileCommand(_newProfileId);
+        }
+
+        private void OnSwitchToProfileResponse_SwitchPathway(bool isSuccessfull)
+        {
+            if (!isSuccessfull)
+            {
+                throw new InvalidOperationException("Failed to switch to a new profile!");
+            }
+
+            _onProfileSwitched();
+        }
+
+        public async Task RenameCurrentProfileAsync(string newName, OnProfileRenamedDelegate onProfileRenamed)
+        {
+            _onProfileRenamed = onProfileRenamed ?? throw new ArgumentNullException(nameof(onProfileRenamed));
+
+            _setProfileNameCommand.SetResponseDelegate(OnProfileRenamedResponse_RenamePathway);
+            _setProfileNameCommand.SendSetProfileNameCommand(newName);
+        }
+
+        private void OnProfileRenamedResponse_RenamePathway(bool isSuccessfull)
+        {
+            if (!isSuccessfull)
+            {
+                throw new InvalidOperationException("Failed to rename profile!");
+            }
+
+            _onProfileRenamed();
         }
     }
 }

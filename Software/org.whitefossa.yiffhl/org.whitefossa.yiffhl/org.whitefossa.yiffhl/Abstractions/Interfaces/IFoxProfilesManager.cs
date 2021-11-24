@@ -6,6 +6,10 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
 
     public delegate void OnGetCurrentProfileIdDelegate(int profileId);
 
+    public delegate void OnProfileSwitchedDelegate();
+
+    public delegate void OnProfileRenamedDelegate();
+
     /// <summary>
     /// Interface to work with fox profiles (except enumeration)
     /// </summary>
@@ -18,5 +22,9 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
         Task AddProfileAsync(string newProfileName, OnProfileAddedDelegate onProfileAdded);
 
         Task GetCurrentProfileId(OnGetCurrentProfileIdDelegate onGetCurrentProfileId);
+
+        Task SwitchProfileAsync(int profileId, OnProfileSwitchedDelegate onProfileSwitched);
+
+        Task RenameCurrentProfileAsync(string newName, OnProfileRenamedDelegate onProfileRenamed);
     }
 }

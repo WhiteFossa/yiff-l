@@ -29,7 +29,6 @@ namespace org.whitefossa.yiffhl.Droid
             App.Container.Register<IBluetoothManager, BluetoothManager>().AsSingleton();
             App.Container.Register<IFoxProfilesEnumerator, FoxProfilesEnumerator>().AsSingleton();
             App.Container.Register<IFoxProfilesManager, FoxProfilesManager>().AsSingleton();
-            App.Container.Register<IFoxProfileSwitcher, FoxProfileSwitcher>().AsSingleton();
             App.Container.Register<IFoxIdentificationManager, FoxIdentificationManager>().AsSingleton();
             App.Container.Register<IFoxNameManager, FoxNameManager>().AsSingleton();
             App.Container.Register<IFoxClockManager, FoxClockManager>().AsSingleton();

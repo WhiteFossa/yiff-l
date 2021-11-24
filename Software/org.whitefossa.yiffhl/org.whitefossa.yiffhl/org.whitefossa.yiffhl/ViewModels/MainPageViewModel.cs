@@ -28,7 +28,6 @@ namespace org.whitefossa.yiffhl.ViewModels
         private readonly IBluetoothManager _bluetoothManager;
         private readonly IFoxProfilesEnumerator _foxProfilesEnumerator;
         private readonly IFoxProfilesManager _foxProfilesManager;
-        private readonly IFoxProfileSwitcher _foxProfileSwitcher;
         private readonly IFoxIdentificationManager _foxIdentificationManager;
         private readonly IFoxNameManager _foxNameManager;
         private readonly IFoxClockManager _foxClockManager;
@@ -319,7 +318,6 @@ namespace org.whitefossa.yiffhl.ViewModels
             _bluetoothManager = App.Container.Resolve<IBluetoothManager>();
             _foxProfilesEnumerator = App.Container.Resolve<IFoxProfilesEnumerator>();
             _foxProfilesManager = App.Container.Resolve<IFoxProfilesManager>();
-            _foxProfileSwitcher = App.Container.Resolve<IFoxProfileSwitcher>();
             _foxIdentificationManager = App.Container.Resolve<IFoxIdentificationManager>();
             _foxNameManager = App.Container.Resolve<IFoxNameManager>();
             _foxClockManager = App.Container.Resolve<IFoxClockManager>();
@@ -592,7 +590,7 @@ Do you want to continue?");
         {
             Profiles = new ObservableCollection<Profile>(profiles);
 
-            await DetectActiveProfileAsync();
+            DetectActiveProfile();
         }
 
         private async Task OnRefreshProfilesListClickedAsync()
@@ -651,15 +649,15 @@ Do you want to continue?");
             _mainModel.SelectedProfile = selectedProfile;
 
             // Switching profile in the fox
-            await _foxProfileSwitcher.SwitchProfileAsync(selectedProfile.Id, OnSelectedProfileChangedAsync);
+            await _foxProfilesManager.SwitchProfileAsync(selectedProfile.Id, OnSelectedProfileChanged);
         }
 
-        private async void OnSelectedProfileChangedAsync()
+        private void OnSelectedProfileChanged()
         {
-            await DetectActiveProfileAsync();
+            DetectActiveProfile();
         }
 
-        private async Task OnGetCurrentProfileIdResponseAsync(int profileId)
+        private void OnGetCurrentProfileIdResponse(int profileId)
         {
             SelectedProfile = Profiles
                 .FirstOrDefault(p => p.Id == profileId);
@@ -668,11 +666,48 @@ Do you want to continue?");
         private async Task OnRenameProfileClickedAsync()
         {
             // We are always renaming current profile, so there is no need to switch profile
+            var profileNameData = await _userRequestor.EnterStringAsync
+            (
+                "Rename profile",
+                $"Current name: { SelectedProfile.Name }",
+                SelectedProfile.Name,
+                SetProfileNameCommand.MaxNameLength,
+                (args) =>
+                {
+                    args.IsValid = true;
+
+                    // Minimal length
+                    if (args.Value.Length < SetProfileNameCommand.MinNameLength)
+                    {
+                        args.IsValid = false;
+                        return;
+                    }
+
+                    // Only digits and numbers
+                    if (!args.Value.All(c => (char.IsWhiteSpace(c) || char.IsLetterOrDigit(c))))
+                    {
+                        args.IsValid = false;
+                        return;
+                    }
+                }
+            );
+
+            if (!profileNameData.Item1)
+            {
+                return;
+            }
+
+            await _foxProfilesManager.RenameCurrentProfileAsync(profileNameData.Item2, async() => await OnProfileRenamedAsync());
         }
 
-        private async Task DetectActiveProfileAsync()
+        private void DetectActiveProfile()
         {
-            await _foxProfilesManager.GetCurrentProfileId(async (profileId) => await OnGetCurrentProfileIdResponseAsync(profileId));
+            _foxProfilesManager.GetCurrentProfileId(OnGetCurrentProfileIdResponse);
+        }
+
+        private async Task OnProfileRenamedAsync()
+        {
+            await EnumerateProfilesAsync();
         }
     }
 }

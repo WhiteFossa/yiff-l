@@ -220,6 +220,7 @@
                         Grid.Column="1"
                         Grid.ColumnSpan="2"
                         Text="Rename"
+                        Command="{Binding RenameProfileClickedCommand}"
                         IsEnabled="{Binding IsFoxConnected}" />
                 </Grid>
             </Frame>
