@@ -2,7 +2,6 @@
 using org.whitefossa.yiffhl.Abstractions.DTOs;
 using org.whitefossa.yiffhl.Abstractions.Interfaces;
 using org.whitefossa.yiffhl.Abstractions.Interfaces.Commands;
-using org.whitefossa.yiffhl.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -14,7 +13,6 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private IGetProfilesCountCommand _getProfilesCountCommand;
         private IGetProfileNameCommand _getProfileNameCommand;
 
-        private MainModel _mainModel;
         private OnFoxProfilesEnumeratedDelegate _onFoxProfilesEnumerated;
 
         private int _profilesCount;
@@ -29,9 +27,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _getProfileNameCommand = getProfileNameCommand;
         }
 
-        public async Task EnumerateProfilesAsync(MainModel mainModel, OnFoxProfilesEnumeratedDelegate onProfilesEnumerated)
+        public async Task EnumerateProfilesAsync(OnFoxProfilesEnumeratedDelegate onProfilesEnumerated)
         {
-            _mainModel = mainModel ?? throw new ArgumentNullException(nameof(mainModel));
             _onFoxProfilesEnumerated = onProfilesEnumerated ?? throw new ArgumentNullException(nameof(onProfilesEnumerated));
 
             _getProfilesCountCommand.SetResponseDelegate(OnGetProfilesCountResponse);

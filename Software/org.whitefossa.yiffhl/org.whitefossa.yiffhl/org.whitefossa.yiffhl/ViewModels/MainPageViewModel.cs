@@ -569,7 +569,7 @@ Do you want to continue?");
 
         private async Task EnumerateProfilesAsync()
         {
-            await _foxProfilesEnumerator.EnumerateProfilesAsync(_mainModel, OnFoxProfilesEnumerated);
+            await _foxProfilesEnumerator.EnumerateProfilesAsync(OnFoxProfilesEnumerated);
         }
 
         private void OnFoxProfilesEnumerated(IReadOnlyCollection<Profile> profiles)
@@ -615,7 +615,7 @@ Do you want to continue?");
                 return;
             }
 
-            await _foxProfileAdder.AddProfileAsync(_mainModel, profileNameData.Item2, OnFoxProfileAdded);
+            await _foxProfileAdder.AddProfileAsync(profileNameData.Item2, OnFoxProfileAdded);
         }
 
         private void OnFoxProfileAdded()

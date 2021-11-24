@@ -1,5 +1,4 @@
 ﻿using org.whitefossa.yiffhl.Abstractions.DTOs;
-using org.whitefossa.yiffhl.Models;
 using System;
 using System.Threading.Tasks;
 

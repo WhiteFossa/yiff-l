@@ -13,7 +13,6 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private readonly ISetProfileNameCommand _setProfileNameCommand;
         private readonly ISwitchToProfileCommand _switchToProfileCommand;
 
-        private MainModel _mainModel;
         private OnFoxProfileAddedDelegate _onFoxProfileAdded;
 
         private string _newProfileName;
@@ -29,9 +28,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _switchToProfileCommand = switchToProfileCommand;
         }
 
-        public async Task AddProfileAsync(MainModel mainModel, string newProfileName, OnFoxProfileAddedDelegate onFoxProfileAdded)
+        public async Task AddProfileAsync(string newProfileName, OnFoxProfileAddedDelegate onFoxProfileAdded)
         {
-            _mainModel = mainModel ?? throw new ArgumentNullException(nameof(mainModel));
             _onFoxProfileAdded = onFoxProfileAdded ?? throw new ArgumentException(nameof(onFoxProfileAdded));
 
             if (string.IsNullOrWhiteSpace(newProfileName))

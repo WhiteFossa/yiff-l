@@ -1,5 +1,4 @@
-﻿using org.whitefossa.yiffhl.Models;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace org.whitefossa.yiffhl.Abstractions.Interfaces
 {
@@ -14,6 +13,6 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
         /// Add profile to a fox and rename it to given name.
         /// WARNING: Current profile will be switched to newly added
         /// </summary>
-        Task AddProfileAsync(MainModel mainModel, string newProfileName, OnFoxProfileAddedDelegate onFoxProfileAdded);
+        Task AddProfileAsync(string newProfileName, OnFoxProfileAddedDelegate onFoxProfileAdded);
     }
 }
