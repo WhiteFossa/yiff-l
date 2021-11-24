@@ -1,18 +1,33 @@
 ﻿using org.whitefossa.yiffhl.Abstractions.Interfaces;
+using org.whitefossa.yiffhl.Abstractions.Interfaces.Commands;
 using org.whitefossa.yiffhl.Models;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace org.whitefossa.yiffhl.Business.Implementations
 {
     public class FoxProfileAdder : IFoxProfileAdder
     {
+        private readonly IAddNewProfileCommand _addNewProfileCommand;
+        private readonly IGetProfilesCountCommand _getProfilesCountCommand;
+        private readonly ISetProfileNameCommand _setProfileNameCommand;
+        private readonly ISwitchToProfileCommand _switchToProfileCommand;
+
         private MainModel _mainModel;
         private OnFoxProfileAddedDelegate _onFoxProfileAdded;
 
         private string _newProfileName;
+
+        public FoxProfileAdder(IAddNewProfileCommand addNewProfileCommand,
+            IGetProfilesCountCommand getProfilesCountCommand,
+            ISetProfileNameCommand setProfileNameCommand,
+            ISwitchToProfileCommand switchToProfileCommand)
+        {
+            _addNewProfileCommand = addNewProfileCommand;
+            _getProfilesCountCommand = getProfilesCountCommand;
+            _setProfileNameCommand = setProfileNameCommand;
+            _switchToProfileCommand = switchToProfileCommand;
+        }
 
         public async Task AddProfileAsync(MainModel mainModel, string newProfileName, OnFoxProfileAddedDelegate onFoxProfileAdded)
         {
@@ -26,8 +41,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _newProfileName = newProfileName;
 
             // Adding a new profile
-            _mainModel.AddNewFoxProfile.SetResponseDelegate(OnAddNewProfileResponse);
-            _mainModel.AddNewFoxProfile.SendAddNewProfileCommand();
+            _addNewProfileCommand.SetResponseDelegate(OnAddNewProfileResponse);
+            _addNewProfileCommand.SendAddNewProfileCommand();
         }
 
         private void OnAddNewProfileResponse(bool isSuccessful)
@@ -38,8 +53,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             }
 
             // Getting profiles count, count - 1 will be the new profile ID
-            _mainModel.GetFoxProfilesCount.SetResponseDelegate(OnGetProfilesCountResponse);
-            _mainModel.GetFoxProfilesCount.SendGetProfilesCountCommand();
+            _getProfilesCountCommand.SetResponseDelegate(OnGetProfilesCountResponse);
+            _getProfilesCountCommand.SendGetProfilesCountCommand();
         }
 
         private void OnGetProfilesCountResponse(int count)
@@ -47,8 +62,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             var newProfileId = count - 1;
 
             // Switching to a new profile
-            _mainModel.SwitchFoxProfile.SetResponseDelegate(OnSwitchToProfileResponse);
-            _mainModel.SwitchFoxProfile.SendSwitchToProfileCommand(newProfileId);
+            _switchToProfileCommand.SetResponseDelegate(OnSwitchToProfileResponse);
+            _switchToProfileCommand.SendSwitchToProfileCommand(newProfileId);
         }
 
         private void OnSwitchToProfileResponse(bool isSuccessfull)
@@ -59,8 +74,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             }
 
             // Setting profile name
-            _mainModel.SetFoxProfileName.SetResponseDelegate(OnSetProfileNameResponse);
-            _mainModel.SetFoxProfileName.SendSetProfileNameCommand(_newProfileName);
+            _setProfileNameCommand.SetResponseDelegate(OnSetProfileNameResponse);
+            _setProfileNameCommand.SendSetProfileNameCommand(_newProfileName);
         }
 
         private void OnSetProfileNameResponse(bool isSuccessfull)

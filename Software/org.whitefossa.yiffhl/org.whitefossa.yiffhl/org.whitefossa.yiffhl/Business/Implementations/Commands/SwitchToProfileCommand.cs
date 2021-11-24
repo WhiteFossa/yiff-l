@@ -1,5 +1,6 @@
 ﻿using org.whitefossa.yiffhl.Abstractions.Enums;
 using org.whitefossa.yiffhl.Abstractions.Interfaces;
+using org.whitefossa.yiffhl.Abstractions.Interfaces.Commands;
 using org.whitefossa.yiffhl.Business.Helpers;
 using System;
 using System.Collections.Generic;
@@ -7,9 +8,7 @@ using System.Linq;
 
 namespace org.whitefossa.yiffhl.Business.Implementations.Commands
 {
-    public delegate void OnSwitchToProfileResponseDelegate(bool isSuccessfull);
-
-    public class SwitchToProfileCommand
+    public class SwitchToProfileCommand : ISwitchToProfileCommand
     {
         private readonly IPacketsProcessor _packetsProcessor;
         private OnSwitchToProfileResponseDelegate _onSwitchToProfileResponse;

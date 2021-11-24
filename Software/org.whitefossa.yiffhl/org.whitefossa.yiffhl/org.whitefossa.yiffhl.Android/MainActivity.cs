@@ -6,7 +6,9 @@ using Android.OS;
 using Android.Runtime;
 using Nancy.TinyIoc;
 using org.whitefossa.yiffhl.Abstractions.Interfaces;
+using org.whitefossa.yiffhl.Abstractions.Interfaces.Commands;
 using org.whitefossa.yiffhl.Business.Implementations;
+using org.whitefossa.yiffhl.Business.Implementations.Commands;
 using org.whitefossa.yiffhl.Droid.Business.Implementations;
 
 namespace org.whitefossa.yiffhl.Droid
@@ -27,6 +29,20 @@ namespace org.whitefossa.yiffhl.Droid
             App.Container.Register<IBluetoothManager, BluetoothManager>().AsSingleton();
             App.Container.Register<IFoxProfilesEnumerator, FoxProfilesEnumerator>().AsSingleton();
             App.Container.Register<IFoxProfileAdder, FoxProfileAdder>().AsSingleton();
+
+            #region Commands
+
+            App.Container.Register<IAddNewProfileCommand, AddNewProfileCommand>().AsSingleton();
+            App.Container.Register<IGetIdentificationDataCommand, GetIdentificationDataCommand>().AsSingleton();
+            App.Container.Register<IGetFoxNameCommand, GetFoxNameCommand>().AsSingleton();
+            App.Container.Register<ISetDateAndTimeCommand, SetDateAndTimeCommand>().AsSingleton();
+            App.Container.Register<ISetFoxNameCommand, SetFoxNameCommand>().AsSingleton();
+            App.Container.Register<IGetProfilesCountCommand, GetProfilesCountCommand>().AsSingleton();
+            App.Container.Register<IGetProfileNameCommand, GetProfileNameCommand>().AsSingleton();
+            App.Container.Register<ISetProfileNameCommand, SetProfileNameCommand>().AsSingleton();
+            App.Container.Register<ISwitchToProfileCommand, SwitchToProfileCommand>().AsSingleton();
+
+            #endregion
 
             base.OnCreate(savedInstanceState);
 

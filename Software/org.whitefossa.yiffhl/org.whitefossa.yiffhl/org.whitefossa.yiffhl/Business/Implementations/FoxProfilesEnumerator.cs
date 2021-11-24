@@ -1,16 +1,19 @@
 ﻿using Acr.UserDialogs;
 using org.whitefossa.yiffhl.Abstractions.DTOs;
 using org.whitefossa.yiffhl.Abstractions.Interfaces;
+using org.whitefossa.yiffhl.Abstractions.Interfaces.Commands;
 using org.whitefossa.yiffhl.Models;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace org.whitefossa.yiffhl.Business.Implementations
 {
     public class FoxProfilesEnumerator : IFoxProfilesEnumerator
     {
+        private IGetProfilesCountCommand _getProfilesCountCommand;
+        private IGetProfileNameCommand _getProfileNameCommand;
+
         private MainModel _mainModel;
         private OnFoxProfilesEnumeratedDelegate _onFoxProfilesEnumerated;
 
@@ -19,18 +22,25 @@ namespace org.whitefossa.yiffhl.Business.Implementations
 
         private IProgressDialog _progressDialog;
 
+        public FoxProfilesEnumerator(IGetProfilesCountCommand getProfilesCountCommand,
+            IGetProfileNameCommand getProfileNameCommand)
+        {
+            _getProfilesCountCommand = getProfilesCountCommand;
+            _getProfileNameCommand = getProfileNameCommand;
+        }
+
         public async Task EnumerateProfilesAsync(MainModel mainModel, OnFoxProfilesEnumeratedDelegate onProfilesEnumerated)
         {
             _mainModel = mainModel ?? throw new ArgumentNullException(nameof(mainModel));
             _onFoxProfilesEnumerated = onProfilesEnumerated ?? throw new ArgumentNullException(nameof(onProfilesEnumerated));
 
-            _mainModel.GetFoxProfilesCount.SetResponseDelegate(OnGetProfilesCountResponse);
-            _mainModel.GetFoxProfileName.SetResponseDelegate(OnNewProfileRead);
+            _getProfilesCountCommand.SetResponseDelegate(OnGetProfilesCountResponse);
+            _getProfileNameCommand.SetResponseDelegate(OnNewProfileRead);
 
             _enumeratedProfiles.Clear();
 
             // How many profiles do we have?
-            _mainModel.GetFoxProfilesCount.SendGetProfilesCountCommand();
+            _getProfilesCountCommand.SendGetProfilesCountCommand();
         }
 
         private void OnGetProfilesCountResponse(int count)
@@ -39,7 +49,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
 
             // Starting enumeration
             _progressDialog = UserDialogs.Instance.Progress("Enumerating profiles...", null, null, true, MaskType.Clear);
-            _mainModel.GetFoxProfileName.SendGetProfileNameCommand(0);
+            _getProfileNameCommand.SendGetProfileNameCommand(0);
         }
 
         void OnNewProfileRead(bool isSuccessful, int profileId, string name)
@@ -57,7 +67,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             if (nextProfileId < _profilesCount)
             {
                 // Continuing enumeration
-                _mainModel.GetFoxProfileName.SendGetProfileNameCommand(nextProfileId);
+                _getProfileNameCommand.SendGetProfileNameCommand(nextProfileId);
                 return;
             }
 

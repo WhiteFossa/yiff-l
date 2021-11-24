@@ -1,13 +1,12 @@
 ﻿using org.whitefossa.yiffhl.Abstractions.Enums;
 using org.whitefossa.yiffhl.Abstractions.Interfaces;
+using org.whitefossa.yiffhl.Abstractions.Interfaces.Commands;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace org.whitefossa.yiffhl.Business.Implementations.Commands
 {
-    public delegate void OnGetProfilesCountResponseDelegate(int count);
-
-    public class GetProfilesCountCommand
+    public class GetProfilesCountCommand : IGetProfilesCountCommand
     {
         private readonly IPacketsProcessor _packetsProcessor;
         private OnGetProfilesCountResponseDelegate _onGetProfilesCountResponse;

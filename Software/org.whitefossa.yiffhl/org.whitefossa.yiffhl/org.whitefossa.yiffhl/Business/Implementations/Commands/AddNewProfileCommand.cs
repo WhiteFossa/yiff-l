@@ -1,14 +1,13 @@
 ﻿using org.whitefossa.yiffhl.Abstractions.Enums;
 using org.whitefossa.yiffhl.Abstractions.Interfaces;
+using org.whitefossa.yiffhl.Abstractions.Interfaces.Commands;
 using org.whitefossa.yiffhl.Business.Helpers;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace org.whitefossa.yiffhl.Business.Implementations.Commands
 {
-    public delegate void OnAddNewProfileResponseDelegate(bool isSuccessful);
-
-    public class AddNewProfileCommand
+    public class AddNewProfileCommand : IAddNewProfileCommand
     {
         private readonly IPacketsProcessor _packetsProcessor;
         private OnAddNewProfileResponseDelegate _onAddNewProfileResponse;

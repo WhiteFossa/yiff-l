@@ -1,5 +1,6 @@
 ﻿using org.whitefossa.yiffhl.Abstractions.DTOs;
 using org.whitefossa.yiffhl.Abstractions.Interfaces;
+using org.whitefossa.yiffhl.Abstractions.Interfaces.Commands;
 using org.whitefossa.yiffhl.Business.Implementations.Commands;
 using org.whitefossa.yiffhl.Models;
 using System;
@@ -27,6 +28,10 @@ namespace org.whitefossa.yiffhl.ViewModels
         private IBluetoothManager _bluetoothManager;
         private IFoxProfilesEnumerator _foxProfilesEnumerator;
         private IFoxProfileAdder _foxProfileAdder;
+        private IGetIdentificationDataCommand _getIdentificationDataCommand;
+        private IGetFoxNameCommand _getFoxNameCommand;
+        private ISetDateAndTimeCommand _setDateAndTimeCommand;
+        private ISetFoxNameCommand _setFoxNameCommand;
 
         /// <summary>
         /// Main model
@@ -291,6 +296,10 @@ namespace org.whitefossa.yiffhl.ViewModels
             _bluetoothManager = App.Container.Resolve<IBluetoothManager>();
             _foxProfilesEnumerator = App.Container.Resolve<IFoxProfilesEnumerator>();
             _foxProfileAdder = App.Container.Resolve<IFoxProfileAdder>();
+            _getIdentificationDataCommand = App.Container.Resolve<IGetIdentificationDataCommand>();
+            _getFoxNameCommand = App.Container.Resolve<IGetFoxNameCommand>();
+            _setDateAndTimeCommand = App.Container.Resolve<ISetDateAndTimeCommand>();
+            _setFoxNameCommand = App.Container.Resolve<ISetFoxNameCommand>();
 
             // Setting up fox connector delegates
             _mainModel.OnFoxConnectorNewByteRead += OnNewByteRead;
@@ -316,14 +325,14 @@ namespace org.whitefossa.yiffhl.ViewModels
             AddProfileClickedCommand = new Command(async () => await OnAddProfileClickedAsync());
 
             // Setting up fox commands
-            _mainModel.GetIdentificationDataCommand.SetResponseDelegate(async (isFox, pVer, hwRev, fwVer, sn)
+            _getIdentificationDataCommand.SetResponseDelegate(async (isFox, pVer, hwRev, fwVer, sn)
                 => await OnGetIdentificationDataResponseAsync(isFox, pVer, hwRev, fwVer, sn));
 
-            _mainModel.GetFoxNameCommand.SetResponseDelegate(async (name) => await OnGetFoxNameResponseAsync(name));
+            _getFoxNameCommand.SetResponseDelegate(async (name) => await OnGetFoxNameResponseAsync(name));
 
-            _mainModel.SetFoxDateAndTimeCommand.SetResponseDelegate(async(isSuccessfull) => await OnSetFoxDateAndTimeResponseAsync(isSuccessfull));
+            _setDateAndTimeCommand.SetResponseDelegate(async(isSuccessfull) => await OnSetFoxDateAndTimeResponseAsync(isSuccessfull));
 
-            _mainModel.SetFoxNameCommand.SetResponseDelegate(async (isSuccessfull) => await OnSetFoxNameResponse(isSuccessfull));
+            _setFoxNameCommand.SetResponseDelegate(async (isSuccessfull) => await OnSetFoxNameResponse(isSuccessfull));
 
             // Initial state
             IsConnectButtonEnabled = false;
@@ -395,7 +404,7 @@ namespace org.whitefossa.yiffhl.ViewModels
             IsBtnDisconnectEnabled = true;
 
             // Requesting fox identification
-            _mainModel.GetIdentificationDataCommand.SendGetIdentificationDataCommand();
+            _getIdentificationDataCommand.SendGetIdentificationDataCommand();
         }
 
         private void OnDisconnected()
@@ -454,7 +463,7 @@ namespace org.whitefossa.yiffhl.ViewModels
             FoxSerialNumber = serialNumber;
 
             // Setting fox time
-            _mainModel.SetFoxDateAndTimeCommand.SendSetDateAndTimeCommand(DateTime.Now);
+            _setDateAndTimeCommand.SendSetDateAndTimeCommand(DateTime.Now);
         }
 
         /// <summary>
@@ -489,7 +498,7 @@ namespace org.whitefossa.yiffhl.ViewModels
             }
 
             // Requesting fox name
-            _mainModel.GetFoxNameCommand.SendGetFoxNameCommand();
+            _getFoxNameCommand.SendGetFoxNameCommand();
         }
 
         private async Task OnRenameFoxClickedAsync()
@@ -522,7 +531,7 @@ Do you want to continue?");
                     }
 
                     // Only digits and numbers
-                    if (!args.Value.All(char.IsWhiteSpace))
+                    if (!args.Value.All(char.IsLetterOrDigit))
                     {
                         args.IsValid = false;
                         return;
@@ -535,7 +544,7 @@ Do you want to continue?");
                 return;
             }
 
-            _mainModel.SetFoxNameCommand.SendSetFoxNameCommand(newNameData.Item2);
+            _setFoxNameCommand.SendSetFoxNameCommand(newNameData.Item2);
         }
 
         private async Task OnSetFoxNameResponse(bool isSuccessfull)

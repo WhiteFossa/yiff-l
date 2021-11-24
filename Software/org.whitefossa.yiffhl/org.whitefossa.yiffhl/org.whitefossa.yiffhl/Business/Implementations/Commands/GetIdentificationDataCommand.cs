@@ -1,21 +1,13 @@
 ﻿using org.whitefossa.yiffhl.Abstractions.Enums;
 using org.whitefossa.yiffhl.Abstractions.Interfaces;
+using org.whitefossa.yiffhl.Abstractions.Interfaces.Commands;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace org.whitefossa.yiffhl.Business.Implementations.Commands
 {
-    public delegate void OnGetIdentificationDataDelegate
-    (
-        bool isFox,
-        UInt16 protocolVersion,
-        UInt16 hardwareRevision,
-        UInt16 softwareVersion,
-        UInt32 serialNumber
-     );
-
-    public class GetIdentificationDataCommand
+    public class GetIdentificationDataCommand : IGetIdentificationDataCommand
     {
         /// <summary>
         /// Signature reported by fox

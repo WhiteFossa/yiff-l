@@ -49,20 +49,6 @@ namespace org.whitefossa.yiffhl.Models
         /// </summary>
         public FoxIdentificationData IdentificationData { get; set; } = new FoxIdentificationData();
 
-        #region Commands
-
-        public readonly GetIdentificationDataCommand  GetIdentificationDataCommand = new GetIdentificationDataCommand();
-        public readonly GetFoxNameCommand GetFoxNameCommand = new GetFoxNameCommand();
-        public readonly SetDateAndTimeCommand SetFoxDateAndTimeCommand = new SetDateAndTimeCommand();
-        public readonly SetFoxNameCommand SetFoxNameCommand = new SetFoxNameCommand();
-        public readonly GetProfilesCountCommand GetFoxProfilesCount = new GetProfilesCountCommand();
-        public readonly GetProfileNameCommand GetFoxProfileName = new GetProfileNameCommand();
-        public readonly AddNewProfileCommand AddNewFoxProfile = new AddNewProfileCommand();
-        public readonly SetProfileNameCommand SetFoxProfileName = new SetProfileNameCommand();
-        public readonly SwitchToProfileCommand SwitchFoxProfile = new SwitchToProfileCommand();
-
-        #endregion
-
         public MainModel()
         {
             // Initial state

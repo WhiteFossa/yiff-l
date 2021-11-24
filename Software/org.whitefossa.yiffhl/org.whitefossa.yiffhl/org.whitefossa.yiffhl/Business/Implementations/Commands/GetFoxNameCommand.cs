@@ -1,14 +1,13 @@
 ﻿using org.whitefossa.yiffhl.Abstractions.Enums;
 using org.whitefossa.yiffhl.Abstractions.Interfaces;
+using org.whitefossa.yiffhl.Abstractions.Interfaces.Commands;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 namespace org.whitefossa.yiffhl.Business.Implementations.Commands
 {
-    public delegate void OnGetFoxNameResponseDelegate(string name);
-
-    public class GetFoxNameCommand
+    public class GetFoxNameCommand : IGetFoxNameCommand
     {
         private const int MinNameLength = 1;
         private const int MaxNameLength = 32;

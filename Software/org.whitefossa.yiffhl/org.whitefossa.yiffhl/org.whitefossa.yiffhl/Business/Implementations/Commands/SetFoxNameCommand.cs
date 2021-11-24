@@ -1,5 +1,6 @@
 ﻿using org.whitefossa.yiffhl.Abstractions.Enums;
 using org.whitefossa.yiffhl.Abstractions.Interfaces;
+using org.whitefossa.yiffhl.Abstractions.Interfaces.Commands;
 using org.whitefossa.yiffhl.Business.Helpers;
 using System;
 using System.Collections.Generic;
@@ -8,9 +9,7 @@ using System.Text;
 
 namespace org.whitefossa.yiffhl.Business.Implementations.Commands
 {
-    public delegate void OnSetFoxNameResponseDelegate(bool isSuccessfull);
-
-    public class SetFoxNameCommand
+    public class SetFoxNameCommand : ISetFoxNameCommand
     {
         public const int MinNameLength = 1;
         public const int MaxNameLength = 16;
