@@ -29,6 +29,7 @@ namespace org.whitefossa.yiffhl.Droid
             App.Container.Register<IBluetoothManager, BluetoothManager>().AsSingleton();
             App.Container.Register<IFoxProfilesEnumerator, FoxProfilesEnumerator>().AsSingleton();
             App.Container.Register<IFoxProfileAdder, FoxProfileAdder>().AsSingleton();
+            App.Container.Register<IFoxProfileSwitcher, FoxProfileSwitcher>().AsSingleton();
 
             #region Commands
 
@@ -41,6 +42,7 @@ namespace org.whitefossa.yiffhl.Droid
             App.Container.Register<IGetProfileNameCommand, GetProfileNameCommand>().AsSingleton();
             App.Container.Register<ISetProfileNameCommand, SetProfileNameCommand>().AsSingleton();
             App.Container.Register<ISwitchToProfileCommand, SwitchToProfileCommand>().AsSingleton();
+            App.Container.Register<IGetCurrentProfileIdCommand, GetCurrentProfileIdCommand>().AsSingleton();
 
             #endregion
 

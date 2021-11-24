@@ -26,5 +26,12 @@ namespace org.whitefossa.yiffhl.Views
 
             ViewModel.SelectedFoxChangedCommand.Execute(selectedFox);
         }
+
+        private void pkProfile_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var selectedProfile = (sender as Picker).SelectedItem;
+
+            ViewModel.SelectedProfileChangedCommand.Execute(selectedProfile);
+        }
     }
 }

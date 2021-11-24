@@ -188,7 +188,9 @@
                         Title="Select a profile"
                         ItemsSource="{Binding Profiles}"
                         ItemDisplayBinding="{Binding Name}"
-                        IsEnabled="{Binding IsFoxConnected}">
+                        IsEnabled="{Binding IsFoxConnected}"
+                        SelectedItem="{Binding SelectedProfile}"
+                        SelectedIndexChanged="pkProfile_SelectedIndexChanged">
                     </Picker>
 
                     <Button
@@ -212,6 +214,13 @@
                         Grid.Row="2"
                         Grid.Column="0"
                         HorizontalOptions="CenterAndExpand" />
+
+                    <Button
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        Grid.ColumnSpan="2"
+                        Text="Rename"
+                        IsEnabled="{Binding IsFoxConnected}" />
                 </Grid>
             </Frame>
             <!-- End of profiles -->

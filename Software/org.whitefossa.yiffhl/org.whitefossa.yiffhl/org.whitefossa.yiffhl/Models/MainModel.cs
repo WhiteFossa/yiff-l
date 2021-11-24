@@ -49,6 +49,11 @@ namespace org.whitefossa.yiffhl.Models
         /// </summary>
         public FoxIdentificationData IdentificationData { get; set; } = new FoxIdentificationData();
 
+        /// <summary>
+        /// Current fox profile
+        /// </summary>
+        public Profile SelectedProfile { get; set; }
+
         public MainModel()
         {
             // Initial state

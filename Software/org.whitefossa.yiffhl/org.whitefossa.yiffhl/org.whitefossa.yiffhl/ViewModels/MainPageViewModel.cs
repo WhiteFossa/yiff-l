@@ -32,6 +32,8 @@ namespace org.whitefossa.yiffhl.ViewModels
         private IGetFoxNameCommand _getFoxNameCommand;
         private ISetDateAndTimeCommand _setDateAndTimeCommand;
         private ISetFoxNameCommand _setFoxNameCommand;
+        private IGetCurrentProfileIdCommand _getCurrentProfileIdCommand;
+        private IFoxProfileSwitcher _foxProfileSwitcher;
 
         /// <summary>
         /// Main model
@@ -286,6 +288,29 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         public ICommand AddProfileClickedCommand { get; }
 
+        /// <summary>
+        /// Selected profile
+        /// </summary>
+        public Profile SelectedProfile
+        {
+            get => _mainModel.SelectedProfile;
+            set
+            {
+                _mainModel.SelectedProfile = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Command, executed on selected profile change
+        /// </summary>
+        public ICommand SelectedProfileChangedCommand { get; }
+
+        /// <summary>
+        /// Command, executed when Rename Profile button is clicked
+        /// </summary>
+        public ICommand RenameProfileClickedCommand { get; }
+
         public MainPageViewModel()
         {
             _foxConnector = App.Container.Resolve<IFoxConnector>();
@@ -300,6 +325,8 @@ namespace org.whitefossa.yiffhl.ViewModels
             _getFoxNameCommand = App.Container.Resolve<IGetFoxNameCommand>();
             _setDateAndTimeCommand = App.Container.Resolve<ISetDateAndTimeCommand>();
             _setFoxNameCommand = App.Container.Resolve<ISetFoxNameCommand>();
+            _getCurrentProfileIdCommand = App.Container.Resolve<IGetCurrentProfileIdCommand>();
+            _foxProfileSwitcher = App.Container.Resolve<IFoxProfileSwitcher>();
 
             // Setting up fox connector delegates
             _mainModel.OnFoxConnectorNewByteRead += OnNewByteRead;
@@ -323,16 +350,8 @@ namespace org.whitefossa.yiffhl.ViewModels
             RenameFoxClickedCommand = new Command(async () => await OnRenameFoxClickedAsync());
             RefreshProfilesListClickedCommand = new Command(async () => await OnRefreshProfilesListClickedAsync());
             AddProfileClickedCommand = new Command(async () => await OnAddProfileClickedAsync());
-
-            // Setting up fox commands
-            _getIdentificationDataCommand.SetResponseDelegate(async (isFox, pVer, hwRev, fwVer, sn)
-                => await OnGetIdentificationDataResponseAsync(isFox, pVer, hwRev, fwVer, sn));
-
-            _getFoxNameCommand.SetResponseDelegate(async (name) => await OnGetFoxNameResponseAsync(name));
-
-            _setDateAndTimeCommand.SetResponseDelegate(async(isSuccessfull) => await OnSetFoxDateAndTimeResponseAsync(isSuccessfull));
-
-            _setFoxNameCommand.SetResponseDelegate(async (isSuccessfull) => await OnSetFoxNameResponse(isSuccessfull));
+            SelectedProfileChangedCommand = new Command<Profile>(async (p) => await OnChangeSelectedProfileAsync(p));
+            RenameFoxClickedCommand = new Command(async () => await OnRenameProfileClickedAsync());
 
             // Initial state
             IsConnectButtonEnabled = false;
@@ -404,6 +423,8 @@ namespace org.whitefossa.yiffhl.ViewModels
             IsBtnDisconnectEnabled = true;
 
             // Requesting fox identification
+            _getIdentificationDataCommand.SetResponseDelegate(async (isFox, pVer, hwRev, fwVer, sn)
+                => await OnGetIdentificationDataResponseAsync(isFox, pVer, hwRev, fwVer, sn));
             _getIdentificationDataCommand.SendGetIdentificationDataCommand();
         }
 
@@ -463,6 +484,7 @@ namespace org.whitefossa.yiffhl.ViewModels
             FoxSerialNumber = serialNumber;
 
             // Setting fox time
+            _setDateAndTimeCommand.SetResponseDelegate(async (isSuccessfull) => await OnSetFoxDateAndTimeResponseAsync(isSuccessfull));
             _setDateAndTimeCommand.SendSetDateAndTimeCommand(DateTime.Now);
         }
 
@@ -498,6 +520,7 @@ namespace org.whitefossa.yiffhl.ViewModels
             }
 
             // Requesting fox name
+            _getFoxNameCommand.SetResponseDelegate(async (name) => await OnGetFoxNameResponseAsync(name));
             _getFoxNameCommand.SendGetFoxNameCommand();
         }
 
@@ -544,10 +567,11 @@ Do you want to continue?");
                 return;
             }
 
+            _setFoxNameCommand.SetResponseDelegate(async (isSuccessfull) => await OnSetFoxNameResponseAsync(isSuccessfull));
             _setFoxNameCommand.SendSetFoxNameCommand(newNameData.Item2);
         }
 
-        private async Task OnSetFoxNameResponse(bool isSuccessfull)
+        private async Task OnSetFoxNameResponseAsync(bool isSuccessfull)
         {
             var fox = _mainModel.ConnectedFox;
 
@@ -575,6 +599,8 @@ Do you want to continue?");
         private void OnFoxProfilesEnumerated(IReadOnlyCollection<Profile> profiles)
         {
             Profiles = new ObservableCollection<Profile>(profiles);
+
+            DetectActiveProfile();
         }
 
         private async Task OnRefreshProfilesListClickedAsync()
@@ -621,6 +647,41 @@ Do you want to continue?");
         private void OnFoxProfileAdded()
         {
             Task.WaitAll(EnumerateProfilesAsync());
+        }
+
+        public async Task OnChangeSelectedProfileAsync(Profile selectedProfile)
+        {
+            if (selectedProfile == null)
+            {
+                return;
+            }
+
+            _mainModel.SelectedProfile = selectedProfile;
+
+            // Switching profile in the fox
+            await _foxProfileSwitcher.SwitchProfileAsync(selectedProfile.Id, OnSelectedProfileChanged);
+        }
+
+        private void OnSelectedProfileChanged()
+        {
+            DetectActiveProfile();
+        }
+
+        private async Task OnGetCurrentProfileIdResponseAsync(int profileId)
+        {
+            SelectedProfile = Profiles
+                .FirstOrDefault(p => p.Id == profileId);
+        }
+
+        private async Task OnRenameProfileClickedAsync()
+        {
+            // We are always renaming current profile, so there is no need to switch profile
+        }
+
+        private void DetectActiveProfile()
+        {
+            _getCurrentProfileIdCommand.SetResponseDelegate(async (profileId) => await OnGetCurrentProfileIdResponseAsync(profileId));
+            _getCurrentProfileIdCommand.SendGetCurrentProfileIdCommand();
         }
     }
 }

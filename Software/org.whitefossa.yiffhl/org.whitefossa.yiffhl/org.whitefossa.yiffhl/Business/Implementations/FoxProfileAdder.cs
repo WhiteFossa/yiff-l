@@ -1,6 +1,5 @@
 ﻿using org.whitefossa.yiffhl.Abstractions.Interfaces;
 using org.whitefossa.yiffhl.Abstractions.Interfaces.Commands;
-using org.whitefossa.yiffhl.Models;
 using System;
 using System.Threading.Tasks;
 
@@ -11,7 +10,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private readonly IAddNewProfileCommand _addNewProfileCommand;
         private readonly IGetProfilesCountCommand _getProfilesCountCommand;
         private readonly ISetProfileNameCommand _setProfileNameCommand;
-        private readonly ISwitchToProfileCommand _switchToProfileCommand;
+        private readonly IFoxProfileSwitcher _foxProfileSwitcher;
 
         private OnFoxProfileAddedDelegate _onFoxProfileAdded;
 
@@ -20,12 +19,12 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         public FoxProfileAdder(IAddNewProfileCommand addNewProfileCommand,
             IGetProfilesCountCommand getProfilesCountCommand,
             ISetProfileNameCommand setProfileNameCommand,
-            ISwitchToProfileCommand switchToProfileCommand)
+            IFoxProfileSwitcher foxProfileSwitcher)
         {
             _addNewProfileCommand = addNewProfileCommand;
             _getProfilesCountCommand = getProfilesCountCommand;
             _setProfileNameCommand = setProfileNameCommand;
-            _switchToProfileCommand = switchToProfileCommand;
+            _foxProfileSwitcher = foxProfileSwitcher;
         }
 
         public async Task AddProfileAsync(string newProfileName, OnFoxProfileAddedDelegate onFoxProfileAdded)
@@ -60,17 +59,11 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             var newProfileId = count - 1;
 
             // Switching to a new profile
-            _switchToProfileCommand.SetResponseDelegate(OnSwitchToProfileResponse);
-            _switchToProfileCommand.SendSwitchToProfileCommand(newProfileId);
+            _foxProfileSwitcher.SwitchProfileAsync(newProfileId, OnSwitchToProfile);
         }
 
-        private void OnSwitchToProfileResponse(bool isSuccessfull)
+        private void OnSwitchToProfile()
         {
-            if (!isSuccessfull)
-            {
-                throw new InvalidOperationException("Failed to switch to a new profile!");
-            }
-
             // Setting profile name
             _setProfileNameCommand.SetResponseDelegate(OnSetProfileNameResponse);
             _setProfileNameCommand.SendSetProfileNameCommand(_newProfileName);
