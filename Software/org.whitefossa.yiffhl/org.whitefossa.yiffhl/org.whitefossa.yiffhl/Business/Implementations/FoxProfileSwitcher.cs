@@ -7,8 +7,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations
 {
     public class FoxProfileSwitcher : IFoxProfileSwitcher
     {
-        private ISwitchToProfileCommand _switchToProfileCommand;
-        private IGetCurrentProfileIdCommand _getCurrentProfileIdCommand;
+        private readonly ISwitchToProfileCommand _switchToProfileCommand;
+        private readonly IGetCurrentProfileIdCommand _getCurrentProfileIdCommand;
 
         private OnProfileSwitchedDelegate _onProfileSwitchedDelegate;
 

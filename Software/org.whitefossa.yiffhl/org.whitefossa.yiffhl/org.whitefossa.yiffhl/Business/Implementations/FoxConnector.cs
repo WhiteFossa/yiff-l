@@ -19,8 +19,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         /// </summary>
         private const int ConnectionAttemptsCount = 5;
 
-        private IBluetoothCommunicator _bluetoothCommunicator;
-        private IUserNotifier _userNotifier;
+        private readonly IBluetoothCommunicator _bluetoothCommunicator;
+        private readonly IUserNotifier _userNotifier;
 
         private OnFoxConnectorNewByteReadDelegate _onNewByteRead;
         private OnFoxConnectorConnectedDelegate _onConnected;

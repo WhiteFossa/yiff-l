@@ -10,8 +10,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations
 {
     public class FoxProfilesEnumerator : IFoxProfilesEnumerator
     {
-        private IGetProfilesCountCommand _getProfilesCountCommand;
-        private IGetProfileNameCommand _getProfileNameCommand;
+        private readonly IGetProfilesCountCommand _getProfilesCountCommand;
+        private readonly IGetProfileNameCommand _getProfileNameCommand;
 
         private OnFoxProfilesEnumeratedDelegate _onFoxProfilesEnumerated;
 

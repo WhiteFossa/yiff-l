@@ -27,12 +27,11 @@ namespace org.whitefossa.yiffhl.ViewModels
         private readonly IUserRequestor _userRequestor;
         private readonly IBluetoothManager _bluetoothManager;
         private readonly IFoxProfilesEnumerator _foxProfilesEnumerator;
-        private readonly IFoxProfileAdder _foxProfileAdder;
-        private readonly ISetDateAndTimeCommand _setDateAndTimeCommand;
-        private readonly IGetCurrentProfileIdCommand _getCurrentProfileIdCommand;
+        private readonly IFoxProfilesManager _foxProfilesManager;
         private readonly IFoxProfileSwitcher _foxProfileSwitcher;
         private readonly IFoxIdentificationManager _foxIdentificationManager;
         private readonly IFoxNameManager _foxNameManager;
+        private readonly IFoxClockManager _foxClockManager;
 
         /// <summary>
         /// Main model
@@ -319,12 +318,11 @@ namespace org.whitefossa.yiffhl.ViewModels
             _userRequestor = App.Container.Resolve<IUserRequestor>();
             _bluetoothManager = App.Container.Resolve<IBluetoothManager>();
             _foxProfilesEnumerator = App.Container.Resolve<IFoxProfilesEnumerator>();
-            _foxProfileAdder = App.Container.Resolve<IFoxProfileAdder>();
-            _setDateAndTimeCommand = App.Container.Resolve<ISetDateAndTimeCommand>();
-            _getCurrentProfileIdCommand = App.Container.Resolve<IGetCurrentProfileIdCommand>();
+            _foxProfilesManager = App.Container.Resolve<IFoxProfilesManager>();
             _foxProfileSwitcher = App.Container.Resolve<IFoxProfileSwitcher>();
             _foxIdentificationManager = App.Container.Resolve<IFoxIdentificationManager>();
             _foxNameManager = App.Container.Resolve<IFoxNameManager>();
+            _foxClockManager = App.Container.Resolve<IFoxClockManager>();
 
             // Setting up fox connector delegates
             _mainModel.OnFoxConnectorNewByteRead += OnNewByteRead;
@@ -481,8 +479,7 @@ namespace org.whitefossa.yiffhl.ViewModels
             FoxSerialNumber = serialNumber;
 
             // Setting fox time
-            _setDateAndTimeCommand.SetResponseDelegate(async (isSuccessfull) => await OnSetFoxDateAndTimeResponseAsync(isSuccessfull));
-            _setDateAndTimeCommand.SendSetDateAndTimeCommand(DateTime.Now);
+            await _foxClockManager.SynchronizeClockAsync(async (isSuccessfull) => await OnSetFoxDateAndTimeResponseAsync(isSuccessfull));
         }
 
         /// <summary>
@@ -588,14 +585,14 @@ Do you want to continue?");
 
         private async Task EnumerateProfilesAsync()
         {
-            await _foxProfilesEnumerator.EnumerateProfilesAsync(OnFoxProfilesEnumerated);
+            await _foxProfilesEnumerator.EnumerateProfilesAsync(async (profiles) => await OnFoxProfilesEnumeratedAsync(profiles));
         }
 
-        private void OnFoxProfilesEnumerated(IReadOnlyCollection<Profile> profiles)
+        private async Task OnFoxProfilesEnumeratedAsync(IReadOnlyCollection<Profile> profiles)
         {
             Profiles = new ObservableCollection<Profile>(profiles);
 
-            DetectActiveProfile();
+            await DetectActiveProfileAsync();
         }
 
         private async Task OnRefreshProfilesListClickedAsync()
@@ -636,7 +633,7 @@ Do you want to continue?");
                 return;
             }
 
-            await _foxProfileAdder.AddProfileAsync(profileNameData.Item2, OnFoxProfileAdded);
+            await _foxProfilesManager.AddProfileAsync(profileNameData.Item2, OnFoxProfileAdded);
         }
 
         private void OnFoxProfileAdded()
@@ -654,12 +651,12 @@ Do you want to continue?");
             _mainModel.SelectedProfile = selectedProfile;
 
             // Switching profile in the fox
-            await _foxProfileSwitcher.SwitchProfileAsync(selectedProfile.Id, OnSelectedProfileChanged);
+            await _foxProfileSwitcher.SwitchProfileAsync(selectedProfile.Id, OnSelectedProfileChangedAsync);
         }
 
-        private void OnSelectedProfileChanged()
+        private async void OnSelectedProfileChangedAsync()
         {
-            DetectActiveProfile();
+            await DetectActiveProfileAsync();
         }
 
         private async Task OnGetCurrentProfileIdResponseAsync(int profileId)
@@ -673,10 +670,9 @@ Do you want to continue?");
             // We are always renaming current profile, so there is no need to switch profile
         }
 
-        private void DetectActiveProfile()
+        private async Task DetectActiveProfileAsync()
         {
-            _getCurrentProfileIdCommand.SetResponseDelegate(async (profileId) => await OnGetCurrentProfileIdResponseAsync(profileId));
-            _getCurrentProfileIdCommand.SendGetCurrentProfileIdCommand();
+            await _foxProfilesManager.GetCurrentProfileId(async (profileId) => await OnGetCurrentProfileIdResponseAsync(profileId));
         }
     }
 }

@@ -5,31 +5,36 @@ using System.Threading.Tasks;
 
 namespace org.whitefossa.yiffhl.Business.Implementations
 {
-    public class FoxProfileAdder : IFoxProfileAdder
+    public class FoxProfilesManager : IFoxProfilesManager
     {
         private readonly IAddNewProfileCommand _addNewProfileCommand;
         private readonly IGetProfilesCountCommand _getProfilesCountCommand;
         private readonly ISetProfileNameCommand _setProfileNameCommand;
         private readonly IFoxProfileSwitcher _foxProfileSwitcher;
+        private readonly IGetCurrentProfileIdCommand _getCurrentProfileIdCommand;
 
-        private OnFoxProfileAddedDelegate _onFoxProfileAdded;
+        private OnProfileAddedDelegate _onProfileAdded;
 
         private string _newProfileName;
 
-        public FoxProfileAdder(IAddNewProfileCommand addNewProfileCommand,
+        private OnGetCurrentProfileIdDelegate _onGetCurrentProfileId;
+
+        public FoxProfilesManager(IAddNewProfileCommand addNewProfileCommand,
             IGetProfilesCountCommand getProfilesCountCommand,
             ISetProfileNameCommand setProfileNameCommand,
-            IFoxProfileSwitcher foxProfileSwitcher)
+            IFoxProfileSwitcher foxProfileSwitcher,
+            IGetCurrentProfileIdCommand getCurrentProfileIdCommand)
         {
             _addNewProfileCommand = addNewProfileCommand;
             _getProfilesCountCommand = getProfilesCountCommand;
             _setProfileNameCommand = setProfileNameCommand;
             _foxProfileSwitcher = foxProfileSwitcher;
+            _getCurrentProfileIdCommand = getCurrentProfileIdCommand;
         }
 
-        public async Task AddProfileAsync(string newProfileName, OnFoxProfileAddedDelegate onFoxProfileAdded)
+        public async Task AddProfileAsync(string newProfileName, OnProfileAddedDelegate onProfileAdded)
         {
-            _onFoxProfileAdded = onFoxProfileAdded ?? throw new ArgumentException(nameof(onFoxProfileAdded));
+            _onProfileAdded = onProfileAdded ?? throw new ArgumentException(nameof(onProfileAdded));
 
             if (string.IsNullOrWhiteSpace(newProfileName))
             {
@@ -76,7 +81,20 @@ namespace org.whitefossa.yiffhl.Business.Implementations
                 throw new InvalidOperationException("Failed to rename a new profile!");
             }
 
-            _onFoxProfileAdded();
+            _onProfileAdded();
+        }
+
+        public async Task GetCurrentProfileId(OnGetCurrentProfileIdDelegate onGetCurrentProfileId)
+        {
+            _onGetCurrentProfileId = onGetCurrentProfileId ?? throw new ArgumentNullException(nameof(onGetCurrentProfileId));
+
+            _getCurrentProfileIdCommand.SetResponseDelegate(OnGetCurrentProfileIdResponse);
+            _getCurrentProfileIdCommand.SendGetCurrentProfileIdCommand();
+        }
+
+        private void OnGetCurrentProfileIdResponse(int profileId)
+        {
+            _onGetCurrentProfileId(profileId);
         }
     }
 }
