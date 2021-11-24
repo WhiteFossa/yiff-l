@@ -20,20 +20,19 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         private const UInt16 SupportedProtocolVersion = 1;
 
-        private IFoxConnector _foxConnector;
-        private IPairedFoxesEnumerator _pairedFoxesEnumerator;
-        private IUserNotifier _userNotifier;
-        private IPacketsProcessor _packetsProcessor;
-        private IUserRequestor _userRequestor;
-        private IBluetoothManager _bluetoothManager;
-        private IFoxProfilesEnumerator _foxProfilesEnumerator;
-        private IFoxProfileAdder _foxProfileAdder;
-        private IGetIdentificationDataCommand _getIdentificationDataCommand;
-        private IGetFoxNameCommand _getFoxNameCommand;
-        private ISetDateAndTimeCommand _setDateAndTimeCommand;
-        private ISetFoxNameCommand _setFoxNameCommand;
-        private IGetCurrentProfileIdCommand _getCurrentProfileIdCommand;
-        private IFoxProfileSwitcher _foxProfileSwitcher;
+        private readonly IFoxConnector _foxConnector;
+        private readonly IPairedFoxesEnumerator _pairedFoxesEnumerator;
+        private readonly IUserNotifier _userNotifier;
+        private readonly IPacketsProcessor _packetsProcessor;
+        private readonly IUserRequestor _userRequestor;
+        private readonly IBluetoothManager _bluetoothManager;
+        private readonly IFoxProfilesEnumerator _foxProfilesEnumerator;
+        private readonly IFoxProfileAdder _foxProfileAdder;
+        private readonly ISetDateAndTimeCommand _setDateAndTimeCommand;
+        private readonly IGetCurrentProfileIdCommand _getCurrentProfileIdCommand;
+        private readonly IFoxProfileSwitcher _foxProfileSwitcher;
+        private readonly IFoxIdentificationManager _foxIdentificationManager;
+        private readonly IFoxNameManager _foxNameManager;
 
         /// <summary>
         /// Main model
@@ -154,7 +153,7 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// <summary>
         /// Fox hardware revision
         /// </summary>
-        public UInt16 FoxHardwareRevision
+        public uint FoxHardwareRevision
         {
             get => _mainModel.IdentificationData.HardwareRevision;
             set
@@ -167,7 +166,7 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// <summary>
         /// Fox firmware version
         /// </summary>
-        public UInt16 FoxFirmwareVersion
+        public uint FoxFirmwareVersion
         {
             get => _mainModel.IdentificationData.FirmwareVersion;
             set
@@ -180,7 +179,7 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// <summary>
         /// Fox serial number
         /// </summary>
-        public UInt32 FoxSerialNumber
+        public uint FoxSerialNumber
         {
             get => _mainModel.IdentificationData.SerialNumber;
             set
@@ -321,16 +320,15 @@ namespace org.whitefossa.yiffhl.ViewModels
             _bluetoothManager = App.Container.Resolve<IBluetoothManager>();
             _foxProfilesEnumerator = App.Container.Resolve<IFoxProfilesEnumerator>();
             _foxProfileAdder = App.Container.Resolve<IFoxProfileAdder>();
-            _getIdentificationDataCommand = App.Container.Resolve<IGetIdentificationDataCommand>();
-            _getFoxNameCommand = App.Container.Resolve<IGetFoxNameCommand>();
             _setDateAndTimeCommand = App.Container.Resolve<ISetDateAndTimeCommand>();
-            _setFoxNameCommand = App.Container.Resolve<ISetFoxNameCommand>();
             _getCurrentProfileIdCommand = App.Container.Resolve<IGetCurrentProfileIdCommand>();
             _foxProfileSwitcher = App.Container.Resolve<IFoxProfileSwitcher>();
+            _foxIdentificationManager = App.Container.Resolve<IFoxIdentificationManager>();
+            _foxNameManager = App.Container.Resolve<IFoxNameManager>();
 
             // Setting up fox connector delegates
             _mainModel.OnFoxConnectorNewByteRead += OnNewByteRead;
-            _mainModel.OnFoxConnectorConnected += OnConnected;
+            _mainModel.OnFoxConnectorConnected += OnConnectedAsync;
             _mainModel.OnFoxConnectorDisconnected += OnDisconnected;
             _mainModel.OnFoxConnectorFailedToConnect += OnFailedToConnect;
 
@@ -351,7 +349,7 @@ namespace org.whitefossa.yiffhl.ViewModels
             RefreshProfilesListClickedCommand = new Command(async () => await OnRefreshProfilesListClickedAsync());
             AddProfileClickedCommand = new Command(async () => await OnAddProfileClickedAsync());
             SelectedProfileChangedCommand = new Command<Profile>(async (p) => await OnChangeSelectedProfileAsync(p));
-            RenameFoxClickedCommand = new Command(async () => await OnRenameProfileClickedAsync());
+            RenameProfileClickedCommand = new Command(async () => await OnRenameProfileClickedAsync());
 
             // Initial state
             IsConnectButtonEnabled = false;
@@ -415,7 +413,7 @@ namespace org.whitefossa.yiffhl.ViewModels
             _packetsProcessor.NewByteReceived(data);
         }
 
-        private void OnConnected(PairedFoxDTO connectedFox)
+        private async void OnConnectedAsync(PairedFoxDTO connectedFox)
         {
             _mainModel.ConnectedFox = connectedFox;
             IsFoxConnected = true;
@@ -423,9 +421,8 @@ namespace org.whitefossa.yiffhl.ViewModels
             IsBtnDisconnectEnabled = true;
 
             // Requesting fox identification
-            _getIdentificationDataCommand.SetResponseDelegate(async (isFox, pVer, hwRev, fwVer, sn)
+            await _foxIdentificationManager.IdentifyFoxAsync(async (isFox, pVer, hwRev, fwVer, sn)
                 => await OnGetIdentificationDataResponseAsync(isFox, pVer, hwRev, fwVer, sn));
-            _getIdentificationDataCommand.SendGetIdentificationDataCommand();
         }
 
         private void OnDisconnected()
@@ -455,10 +452,10 @@ namespace org.whitefossa.yiffhl.ViewModels
         private async Task OnGetIdentificationDataResponseAsync
         (
             bool isFox,
-            UInt16 protocolVersion,
-            UInt16 hardwareRevision,
-            UInt16 firmwareVersion,
-            UInt32 serialNumber
+            uint protocolVersion,
+            uint hardwareRevision,
+            uint firmwareVersion,
+            uint serialNumber
         )
         {
             if (!isFox)
@@ -520,8 +517,7 @@ namespace org.whitefossa.yiffhl.ViewModels
             }
 
             // Requesting fox name
-            _getFoxNameCommand.SetResponseDelegate(async (name) => await OnGetFoxNameResponseAsync(name));
-            _getFoxNameCommand.SendGetFoxNameCommand();
+            await _foxNameManager.GetNameAsync(async (name) => await OnGetFoxNameResponseAsync(name));
         }
 
         private async Task OnRenameFoxClickedAsync()
@@ -567,8 +563,7 @@ Do you want to continue?");
                 return;
             }
 
-            _setFoxNameCommand.SetResponseDelegate(async (isSuccessfull) => await OnSetFoxNameResponseAsync(isSuccessfull));
-            _setFoxNameCommand.SendSetFoxNameCommand(newNameData.Item2);
+            await _foxNameManager.SetNameAsync(newNameData.Item2, async (isSuccessfull) => await OnSetFoxNameResponseAsync(isSuccessfull));
         }
 
         private async Task OnSetFoxNameResponseAsync(bool isSuccessfull)

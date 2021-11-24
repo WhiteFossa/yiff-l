@@ -30,6 +30,8 @@ namespace org.whitefossa.yiffhl.Droid
             App.Container.Register<IFoxProfilesEnumerator, FoxProfilesEnumerator>().AsSingleton();
             App.Container.Register<IFoxProfileAdder, FoxProfileAdder>().AsSingleton();
             App.Container.Register<IFoxProfileSwitcher, FoxProfileSwitcher>().AsSingleton();
+            App.Container.Register<IFoxIdentificationManager, FoxIdentificationManager>().AsSingleton();
+            App.Container.Register<IFoxNameManager, FoxNameManager>().AsSingleton();
 
             #region Commands
 
