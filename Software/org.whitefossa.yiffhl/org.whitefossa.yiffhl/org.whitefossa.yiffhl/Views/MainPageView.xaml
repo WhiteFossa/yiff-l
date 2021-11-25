@@ -9,15 +9,162 @@
     </ContentPage.BindingContext>
 
     <ContentPage.Content>
-        <StackLayout>
-            <!-- Fox selection -->
-            <Frame
+        <ScrollView>
+            <StackLayout>
+                <!-- Fox selection -->
+                <Frame
                 CornerRadius="10"
                 HasShadow="True"
                 Margin="5"
                 Padding="5">
 
-                <StackLayout>
+                    <StackLayout>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <Label
+                                Text="Connect to a fox"
+                                HorizontalOptions="Center"
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="3"/>
+
+                            <Picker
+                                Title="Select a fox to connect"
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                ItemsSource="{Binding PairedFoxes}"
+                                ItemDisplayBinding="{Binding DisplayName}"
+                                SelectedItem="{Binding SelectedFox}"
+                                SelectedIndexChanged="pkFox_SelectedIndexChanged"
+                                IsEnabled="{Binding IsFoxPickerEnabled}">
+                            </Picker>
+
+                            <Button
+                                Text="R"
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                HeightRequest="40"
+                                WidthRequest="40"
+                                Command="{Binding RefreshFoxesListClickedCommand}"
+                                IsEnabled="{Binding IsConnectRelatedControlsEnabled}" />
+
+                            <Button
+                                Text="Connect"
+                                Grid.Row="1"
+                                Grid.Column="2"
+                                Command="{Binding ConnectButtonClickedCommand}"
+                                IsEnabled="{Binding IsConnectButtonEnabled}" />
+
+                            <Button
+                                Text="Disconnect"
+                                HorizontalOptions="CenterAndExpand"
+                                Grid.Row="2"
+                                Grid.Column="2"
+                                Command="{Binding DisconnectButtonClickedCommand}"
+                                IsEnabled="{Binding IsBtnDisconnectEnabled}" />
+                        </Grid>
+
+                    </StackLayout>
+                </Frame>
+                <!-- End of fox selection -->
+
+                <!-- Fox identification -->
+                <Frame
+                    CornerRadius="10"
+                    HasShadow="True"
+                    Margin="5"
+                    Padding="10">
+
+                    <StackLayout>
+                        <Label
+                            Text="Fox information"
+                            HorizontalOptions="Center" />
+
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <StackLayout
+                                Grid.Row="0"
+                                Grid.Column="0">
+                                <StackLayout
+                                    Orientation="Horizontal">
+                                    <Label
+                                        Text="Name:" />
+                                    <Label
+                                        FontAttributes="Bold"
+                                        Text="{Binding FoxName}"/>
+                                </StackLayout>
+
+                                <StackLayout
+                                    Orientation="Horizontal">
+                                    <Label
+                                        Text="Hardware revision:" />
+                                    <Label
+                                        FontAttributes="Bold"
+                                        Text="{Binding FoxHardwareRevision}" />
+                                </StackLayout>
+
+                                <StackLayout
+                                    Orientation="Horizontal">
+                                    <Label
+                                        Text="Firmware verison:" />
+                                    <Label
+                                        FontAttributes="Bold"
+                                        Text="{Binding FoxFirmwareVersion}" />
+                                </StackLayout>
+
+                                <StackLayout
+                                    Orientation="Horizontal">
+                                    <Label
+                                        Text="Serial number:" />
+                                    <Label
+                                        FontAttributes="Bold"
+                                        Text="{Binding FoxSerialNumber}"/>
+                                </StackLayout>
+                            </StackLayout>
+
+                            <StackLayout
+                                Grid.Row="0"
+                                Grid.Column="1">
+                                <Button
+                                    Text="Rename fox"
+                                    Command="{Binding RenameFoxClickedCommand}"
+                                    IsEnabled="{Binding IsFoxConnected}" />
+
+                                <Button
+                                    Text="Check for updates"
+                                    IsEnabled="{Binding IsFoxConnected}"/>
+                            </StackLayout>
+                        </Grid>
+                    </StackLayout>
+                </Frame>
+                <!-- End of fox identification -->
+
+                <!-- Profiles -->
+                <Frame
+                    CornerRadius="10"
+                    HasShadow="True"
+                    Margin="5"
+                    Padding="5">
+
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
@@ -27,209 +174,167 @@
 
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
                         <Label
-                            Text="Connect to a fox"
+                            Text="Profiles"
                             HorizontalOptions="Center"
                             Grid.Row="0"
                             Grid.Column="0"
-                            Grid.ColumnSpan="3"/>
+                            Grid.ColumnSpan="4" />
 
                         <Picker
-                            Title="Select a fox to connect"
                             Grid.Row="1"
                             Grid.Column="0"
-                            ItemsSource="{Binding PairedFoxes}"
-                            ItemDisplayBinding="{Binding DisplayName}"
-                            SelectedItem="{Binding SelectedFox}"
-                            SelectedIndexChanged="pkFox_SelectedIndexChanged"
-                            IsEnabled="{Binding IsFoxPickerEnabled}">
+                            Grid.ColumnSpan="3"
+                            Title="Select a profile"
+                            ItemsSource="{Binding Profiles}"
+                            ItemDisplayBinding="{Binding Name}"
+                            IsEnabled="{Binding IsFoxConnected}"
+                            SelectedItem="{Binding SelectedProfile}"
+                            SelectedIndexChanged="pkProfile_SelectedIndexChanged">
                         </Picker>
 
                         <Button
-                            Text="R"
                             Grid.Row="1"
-                            Grid.Column="1"
+                            Grid.Column="3"
                             HeightRequest="40"
                             WidthRequest="40"
-                            Command="{Binding RefreshFoxesListClickedCommand}"
-                            IsEnabled="{Binding IsConnectRelatedControlsEnabled}" />
+                            Text="R"
+                            Command="{Binding RefreshProfilesListClickedCommand}"
+                            IsEnabled="{Binding IsFoxConnected}" />
 
-                        <Button
-                            Text="Connect"
-                            Grid.Row="1"
-                            Grid.Column="2"
-                            Command="{Binding ConnectButtonClickedCommand}"
-                            IsEnabled="{Binding IsConnectButtonEnabled}" />
-
-                        <Button
-                            Text="Disconnect"
+                        <Label
+                            Text="{Binding ProfilesCountText}"
+                            Grid.Row="2"
+                            Grid.Column="0"
                             HorizontalOptions="CenterAndExpand"
+                            VerticalOptions="CenterAndExpand" />
+
+                        <Button
+                            Grid.Row="2"
+                            Grid.Column="1"
+                            Text="Add"
+                            Command="{Binding AddProfileClickedCommand}"
+                            IsEnabled="{Binding IsAddProfileButtonEnabled}" />
+
+                        <Button
                             Grid.Row="2"
                             Grid.Column="2"
-                            Command="{Binding DisconnectButtonClickedCommand}"
-                            IsEnabled="{Binding IsBtnDisconnectEnabled}"
-                            />
+                            Grid.ColumnSpan="2"
+                            Text="Rename"
+                            Command="{Binding RenameProfileClickedCommand}"
+                            IsEnabled="{Binding IsFoxConnected}" />
                     </Grid>
-                    
-                </StackLayout>
-            </Frame>
-            <!-- End of fox selection -->
+                </Frame>
+                <!-- End of profiles -->
 
-            <!-- Fox identification -->
-            <Frame
-                CornerRadius="10"
-                HasShadow="True"
-                Margin="5"
-                Padding="10">
+                <!-- Profile settings -->
+                <Frame
+                    CornerRadius="10"
+                    HasShadow="True"
+                    Margin="5"
+                    Padding="10">
 
-                <StackLayout>
-                    <Label
-                        Text="Fox information"
+                    <StackLayout>
+                        <Label
+                        Text="Profile settings"
                         HorizontalOptions="Center" />
 
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-
-                        <StackLayout
-                            Grid.Row="0"
-                            Grid.Column="0">
-                            <StackLayout
-                            Orientation="Horizontal">
+                        <Frame
+                            CornerRadius="10"
+                            HasShadow="True"
+                            Padding="10">
+                            <StackLayout>
                                 <Label
-                                    Text="Name:" />
-                                <Label 
-                                    Text="{Binding FoxName}"/>
+                                    Text="Frequency"
+                                    HorizontalOptions="Center" />
+
+                                <StackLayout
+                                     Orientation="Horizontal">
+
+                                    <Label
+                                        Text="Range:"
+                                        VerticalOptions="Center" />
+
+                                    <Label
+                                        Text="80m"
+                                        FontAttributes="Bold"
+                                        VerticalOptions="Center" />
+
+                                    <Switch />
+
+                                    <Label
+                                        Text="2m"
+                                        FontAttributes="Bold"
+                                        VerticalOptions="Center" />
+
+                                </StackLayout>
+
+                                <StackLayout
+                                    Orientation="Horizontal">
+                                    <Label
+                                        Text="Frequency:"
+                                        VerticalOptions="Center" />
+
+                                    <Label
+                                        Text="3.575 MHz"
+                                        FontAttributes="Bold"
+                                        VerticalOptions="Center" />
+
+                                    <Stepper
+                                        Minimum="1"
+                                        Maximum="100"
+                                        Increment="1" />
+                                </StackLayout>
+                                
                             </StackLayout>
+                        </Frame>
 
-                            <StackLayout
-                            Orientation="Horizontal">
+                        <Frame
+                            CornerRadius="10"
+                            HasShadow="True"
+                            Padding="10">
+                            <StackLayout>
                                 <Label
-                                Text="Hardware revision:" />
-                                <Label
-                                    Text="{Binding FoxHardwareRevision}"/>
+                                    Text="Callsign"
+                                    HorizontalOptions="Center" />
+
+                                <StackLayout
+                                    Orientation="Horizontal">
+
+                                    <Label
+                                        Text="Callsign:"
+                                        VerticalOptions="Center" />
+
+                                    <Picker
+                                        Title="Select a callsign"
+                                        VerticalOptions="Center" />
+
+                                </StackLayout>
+
+                                <StackLayout
+                                    Orientation="Horizontal">
+
+                                    <Label
+                                        Text="Is fast?"
+                                        VerticalOptions="Center" />
+
+                                    <Switch />
+
+                                </StackLayout>
                             </StackLayout>
+                        </Frame>
 
-                            <StackLayout
-                            Orientation="Horizontal">
-                                <Label
-                                Text="Firmware verison:" />
-                                <Label
-                                    Text="{Binding FoxFirmwareVersion}"/>
-                            </StackLayout>
+                    </StackLayout>
 
-                            <StackLayout
-                            Orientation="Horizontal">
-                                <Label
-                                Text="Serial number:" />
-                                <Label
-                                    Text="{Binding FoxSerialNumber}"/>
-                            </StackLayout>
-                        </StackLayout>
-                        
-                        <StackLayout
-                            Grid.Row="0"
-                            Grid.Column="1">
-                            <Button
-                                Text="Rename fox"
-                                Command="{Binding RenameFoxClickedCommand}"
-                                IsEnabled="{Binding IsFoxConnected}" />
+                </Frame>
+                <!-- End of profile settings -->
 
-                            <Button
-                                Text="Check for updates"
-                                IsEnabled="{Binding IsFoxConnected}"/>
-                        </StackLayout>
-                    </Grid>
-                </StackLayout>
-            </Frame>
-            <!-- End of fox identification -->
-
-            <!-- Profiles -->
-            <Frame
-                CornerRadius="10"
-                HasShadow="True"
-                Margin="5"
-                Padding="5">
-
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-
-                    <Label
-                        Text="Profiles"
-                        HorizontalOptions="Center"
-                        Grid.Row="0"
-                        Grid.Column="0"
-                        Grid.ColumnSpan="4"
-                        />
-
-                    <Picker
-                        Grid.Row="1"
-                        Grid.Column="0"
-                        Grid.ColumnSpan="3"
-                        Title="Select a profile"
-                        ItemsSource="{Binding Profiles}"
-                        ItemDisplayBinding="{Binding Name}"
-                        IsEnabled="{Binding IsFoxConnected}"
-                        SelectedItem="{Binding SelectedProfile}"
-                        SelectedIndexChanged="pkProfile_SelectedIndexChanged">
-                    </Picker>
-
-                    <Button
-                        Grid.Row="1"
-                        Grid.Column="3"
-                        HeightRequest="40"
-                        WidthRequest="40"
-                        Text="R"
-                        Command="{Binding RefreshProfilesListClickedCommand}"
-                        IsEnabled="{Binding IsFoxConnected}" />
-
-                    <Label
-                        Text="{Binding ProfilesCountText}"
-                        Grid.Row="2"
-                        Grid.Column="0"
-                        HorizontalOptions="CenterAndExpand"
-                        VerticalOptions="CenterAndExpand" />
-
-                    <Button
-                        Grid.Row="2"
-                        Grid.Column="1"
-                        Text="Add"
-                        Command="{Binding AddProfileClickedCommand}"
-                        IsEnabled="{Binding IsAddProfileButtonEnabled}" />
-
-                    <Button
-                        Grid.Row="2"
-                        Grid.Column="2"
-                        Grid.ColumnSpan="2"
-                        Text="Rename"
-                        Command="{Binding RenameProfileClickedCommand}"
-                        IsEnabled="{Binding IsFoxConnected}" />
-                </Grid>
-            </Frame>
-            <!-- End of profiles -->
-            
-            
-        </StackLayout>
+            </StackLayout>
+        </ScrollView>
     </ContentPage.Content>
 </ContentPage>
