@@ -254,16 +254,19 @@
                                     HorizontalOptions="Center" />
 
                                 <StackLayout
+                                    HorizontalOptions="FillAndExpand"
                                      Orientation="Horizontal">
 
                                     <Label
                                         Text="Range:"
+                                        HorizontalOptions="Start"
                                         VerticalOptions="Center" />
 
                                     <Label
                                         Text="80m"
                                         FontAttributes="Bold"
-                                        VerticalOptions="Center" />
+                                        VerticalOptions="Center"
+                                        HorizontalOptions="EndAndExpand" />
 
                                     <Switch />
 
@@ -275,20 +278,24 @@
                                 </StackLayout>
 
                                 <StackLayout
-                                    Orientation="Horizontal">
+                                    Orientation="Horizontal"
+                                    HorizontalOptions="FillAndExpand">
                                     <Label
                                         Text="Frequency:"
-                                        VerticalOptions="Center" />
+                                        VerticalOptions="Center"
+                                        HorizontalOptions="Start" />
 
                                     <Label
                                         Text="3.575 MHz"
                                         FontAttributes="Bold"
-                                        VerticalOptions="Center" />
+                                        VerticalOptions="Center"
+                                        HorizontalOptions="EndAndExpand" />
 
                                     <Stepper
                                         Minimum="1"
                                         Maximum="100"
-                                        Increment="1" />
+                                        Increment="1"
+                                        HorizontalOptions="End" />
                                 </StackLayout>
                                 
                             </StackLayout>
@@ -304,28 +311,188 @@
                                     HorizontalOptions="Center" />
 
                                 <StackLayout
-                                    Orientation="Horizontal">
+                                    Orientation="Horizontal"
+                                    HorizontalOptions="FillAndExpand">
 
                                     <Label
                                         Text="Callsign:"
-                                        VerticalOptions="Center" />
+                                        VerticalOptions="Center"
+                                        HorizontalOptions="Start" />
 
                                     <Picker
                                         Title="Select a callsign"
-                                        VerticalOptions="Center" />
+                                        VerticalOptions="Center"
+                                        HorizontalOptions="EndAndExpand" />
 
                                 </StackLayout>
 
                                 <StackLayout
-                                    Orientation="Horizontal">
+                                    Orientation="Horizontal"
+                                    HorizontalOptions="FillAndExpand">
 
                                     <Label
-                                        Text="Is fast?"
-                                        VerticalOptions="Center" />
+                                        Text="TX speed:"
+                                        VerticalOptions="Center"
+                                        HorizontalOptions="Start" />
+                                    
+                                    <Label
+                                        Text="Slow"
+                                        FontAttributes="Bold"
+                                        VerticalOptions="Center"
+                                        HorizontalOptions="EndAndExpand"/>
 
                                     <Switch />
 
+                                    <Label
+                                        Text="Fast"
+                                        FontAttributes="Bold"
+                                        VerticalOptions="Center" />
+
+
                                 </StackLayout>
+                            </StackLayout>
+                        </Frame>
+
+                        <Frame
+                            CornerRadius="10"
+                            HasShadow="True"
+                            Padding="10">
+                            <StackLayout>
+                                <Label
+                                    Text="Cycle"
+                                    HorizontalOptions="Center" />
+
+                                <StackLayout
+                                    Orientation="Horizontal"
+                                    HorizontalOptions="FillAndExpand">
+
+                                    <Label
+                                        Text="Mode:"
+                                        VerticalOptions="Center"
+                                        HorizontalOptions="Start" />
+
+                                    <Label
+                                        Text="Cyclic"
+                                        FontAttributes="Bold"
+                                        VerticalOptions="Center"
+                                        HorizontalOptions="EndAndExpand" />
+
+                                    <Switch />
+
+                                    <Label
+                                        Text="Continuous"
+                                        FontAttributes="Bold"
+                                        VerticalOptions="Center" />
+                                </StackLayout>
+
+                                <StackLayout
+                                    Orientation="Horizontal"
+                                    HorizontalOptions="FillAndExpand">
+
+                                    <Label
+                                        Text="TX duration:"
+                                        HorizontalOptions="Start"
+                                        VerticalOptions="Center" />
+
+                                    <Label
+                                        Text="01:00"
+                                        FontAttributes="Bold"
+                                        VerticalOptions="Center"
+                                        HorizontalOptions="EndAndExpand" />
+
+                                    <Stepper
+                                        Minimum="1"
+                                        Maximum="100"
+                                        Increment="1"
+                                        HorizontalOptions="End" />
+                                </StackLayout>
+
+                                <StackLayout
+                                    Orientation="Horizontal"
+                                    HorizontalOptions="FillAndExpand">
+
+                                    <Label
+                                        Text="Pause duration:"
+                                        HorizontalOptions="Start"
+                                        VerticalOptions="Center" />
+
+                                    <Label
+                                        Text="04:00"
+                                        FontAttributes="Bold"
+                                        VerticalOptions="Center"
+                                        HorizontalOptions="EndAndExpand" />
+
+                                    <Stepper
+                                        Minimum="1"
+                                        Maximum="100"
+                                        Increment="1"
+                                        HorizontalOptions="End" />
+                                </StackLayout>
+
+                                <StackLayout
+                                    Orientation="Horizontal"
+                                    HorizontalOptions="FillAndExpand">
+
+                                    <Label
+                                        Text="Ending tone duration:"
+                                        HorizontalOptions="Start"
+                                        VerticalOptions="Center" />
+
+                                    <Label
+                                        Text="5s"
+                                        FontAttributes="Bold"
+                                        VerticalOptions="Center"
+                                        HorizontalOptions="EndAndExpand" />
+
+                                    <Stepper
+                                        Minimum="1"
+                                        Maximum="100"
+                                        Increment="1"
+                                        HorizontalOptions="End" />
+                                </StackLayout>
+                                
+                            </StackLayout>
+                        </Frame>
+
+                        <Frame
+                            CornerRadius="10"
+                            HasShadow="True"
+                            Padding="10">
+                            <StackLayout>
+                                <Label
+                                    Text="Run times"
+                                    HorizontalOptions="Center" />
+
+                                <StackLayout
+                                    Orientation="Horizontal"
+                                    HorizontalOptions="FillAndExpand">
+
+                                    <Label
+                                        Text="Start time:"
+                                        HorizontalOptions="Start"
+                                        VerticalOptions="Center" />
+
+                                    <TimePicker
+                                        Format="HH:mm"
+                                        VerticalOptions="Center"
+                                        HorizontalOptions="EndAndExpand" />
+                                </StackLayout>
+
+                                <StackLayout
+                                    Orientation="Horizontal"
+                                    HorizontalOptions="FillAndExpand">
+
+                                    <Label
+                                        Text="End time:"
+                                        HorizontalOptions="Start"
+                                        VerticalOptions="Center" />
+
+                                    <TimePicker
+                                        Format="HH:mm"
+                                        VerticalOptions="Center"
+                                        HorizontalOptions="EndAndExpand" />
+                                </StackLayout>
+                                
                             </StackLayout>
                         </Frame>
 
