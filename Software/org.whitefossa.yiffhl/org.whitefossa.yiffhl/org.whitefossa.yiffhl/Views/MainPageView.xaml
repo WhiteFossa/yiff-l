@@ -496,6 +496,40 @@
                             </StackLayout>
                         </Frame>
 
+                        <Frame
+                            CornerRadius="10"
+                            HasShadow="True"
+                            Padding="10">
+                            <StackLayout>
+                                <Label
+                                    Text="Power"
+                                    HorizontalOptions="Center" />
+
+                                <StackLayout
+                                    Orientation="Horizontal"
+                                    HorizontalOptions="FillAndExpand">
+
+                                    <Label
+                                        Text="Power (80m only):"
+                                        HorizontalOptions="Start"
+                                        VerticalOptions="Center" />
+
+                                    <Label
+                                        Text="5.0W"
+                                        FontAttributes="Bold"
+                                        HorizontalOptions="EndAndExpand"
+                                        VerticalOptions="Center" />
+
+                                    <Stepper
+                                        Minimum="1"
+                                        Maximum="100"
+                                        Increment="1"
+                                        HorizontalOptions="End" />
+                                </StackLayout>
+
+                            </StackLayout>
+                        </Frame>
+
                     </StackLayout>
 
                 </Frame>
