@@ -8,15 +8,76 @@
         <viewModels:MainPageViewModel />
     </ContentPage.BindingContext>
 
+    <ContentPage.Resources>
+
+        <!-- Light colors -->
+        <Color x:Key="LightPrimaryColor">White</Color>
+        <Color x:Key="LightSecondaryColor">Black</Color>
+
+        <!-- Inner frames light colors -->
+        <Color x:Key="InnerFramesLightPrimaryColor">#F5F5F5</Color>
+        <Color x:Key="InnerFramesLightSecondaryColor">Black</Color>
+        
+        <!-- Dark colors -->
+        <Color x:Key="DarkPrimaryColor">#404040</Color>
+        <Color x:Key="DarkSecondaryColor">White</Color>
+
+        <!-- Inner frames dark colors -->
+        <Color x:Key="InnerFramesDarkPrimaryColor">#505050</Color>
+        <Color x:Key="InnerFramesDarkSecondaryColor">White</Color>
+        
+        <!-- Ordinary frames -->
+        <Style
+            x:Key="FramesStyle"
+            TargetType="Frame">
+            <Setter
+                Property="BackgroundColor"
+                Value="{AppThemeBinding Light={StaticResource LightPrimaryColor}, Dark={StaticResource DarkPrimaryColor}}" />
+
+            <Setter
+                Property="CornerRadius"
+                Value="10" />
+
+            <Setter
+                Property="HasShadow"
+                Value="True" />
+
+            <Setter
+                Property="Margin"
+                Value="5" />
+
+            <Setter
+                Property="Padding"
+                Value="5" />
+        </Style>
+        
+        <!-- Inner frames -->
+        <Style
+            x:Key="InnerFramesStyle"
+            TargetType="Frame"
+            BasedOn="{StaticResource FramesStyle}">
+
+            <Setter
+                Property="BackgroundColor"
+                Value="{AppThemeBinding Light={StaticResource InnerFramesLightPrimaryColor}, Dark={StaticResource InnerFramesDarkPrimaryColor}}" />
+
+            <Setter
+                Property="Margin"
+                Value="0" />
+
+            <Setter
+                Property="Padding"
+                Value="10" />
+        </Style>
+
+    </ContentPage.Resources>
+
     <ContentPage.Content>
         <ScrollView>
             <StackLayout>
                 <!-- Fox selection -->
                 <Frame
-                CornerRadius="10"
-                HasShadow="True"
-                Margin="5"
-                Padding="5">
+                    Style="{StaticResource FramesStyle}">
 
                     <StackLayout>
                         <Grid>
@@ -81,10 +142,7 @@
 
                 <!-- Fox identification -->
                 <Frame
-                    CornerRadius="10"
-                    HasShadow="True"
-                    Margin="5"
-                    Padding="10">
+                    Style="{StaticResource FramesStyle}">
 
                     <StackLayout>
                         <Label
@@ -160,10 +218,7 @@
 
                 <!-- Profiles -->
                 <Frame
-                    CornerRadius="10"
-                    HasShadow="True"
-                    Margin="5"
-                    Padding="5">
+                    Style="{StaticResource FramesStyle}">
 
                     <Grid>
                         <Grid.RowDefinitions>
@@ -234,10 +289,7 @@
 
                 <!-- Profile settings -->
                 <Frame
-                    CornerRadius="10"
-                    HasShadow="True"
-                    Margin="5"
-                    Padding="10">
+                    Style="{StaticResource FramesStyle}">
 
                     <StackLayout>
                         <Label
@@ -245,9 +297,7 @@
                         HorizontalOptions="Center" />
 
                         <Frame
-                            CornerRadius="10"
-                            HasShadow="True"
-                            Padding="10">
+                            Style="{StaticResource InnerFramesStyle}">
                             <StackLayout>
                                 <Label
                                     Text="Frequency"
@@ -308,9 +358,7 @@
                         </Frame>
 
                         <Frame
-                            CornerRadius="10"
-                            HasShadow="True"
-                            Padding="10">
+                            Style="{StaticResource InnerFramesStyle}">
                             <StackLayout>
                                 <Label
                                     Text="Callsign"
@@ -360,9 +408,7 @@
                         </Frame>
 
                         <Frame
-                            CornerRadius="10"
-                            HasShadow="True"
-                            Padding="10">
+                            Style="{StaticResource InnerFramesStyle}">
                             <StackLayout>
                                 <Label
                                     Text="Cycle"
@@ -461,9 +507,7 @@
                         </Frame>
 
                         <Frame
-                            CornerRadius="10"
-                            HasShadow="True"
-                            Padding="10">
+                            Style="{StaticResource InnerFramesStyle}">
                             <StackLayout>
                                 <Label
                                     Text="Run times"
@@ -503,9 +547,7 @@
                         </Frame>
 
                         <Frame
-                            CornerRadius="10"
-                            HasShadow="True"
-                            Padding="10">
+                            Style="{StaticResource InnerFramesStyle}">
                             <StackLayout>
                                 <Label
                                     Text="Power"
