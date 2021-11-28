@@ -284,19 +284,23 @@
                                         VerticalOptions="Center"
                                         HorizontalOptions="Start" />
 
-                                    <Button
-                                        Text="&lt;"
-                                        HorizontalOptions="EndAndExpand"/>
-
                                     <Label
                                         Text="{Binding FrequencyFormatted}"
                                         FontAttributes="Bold"
                                         VerticalOptions="Center"
-                                        HorizontalOptions="End" />
+                                        HorizontalOptions="EndAndExpand" />
 
                                     <Button
+                                        Text="&lt;"
+                                        VerticalOptions="Center"
+                                        HorizontalOptions="End"
+                                        Command="{Binding DecreaseFoxFrequencyCommand}" />
+                                    
+                                    <Button
                                         Text="&gt;"
-                                        HorizontalOptions="End" />
+                                        VerticalOptions="Center"
+                                        HorizontalOptions="End"
+                                        Command="{Binding IncreaseFoxFrequencyCommand}" />
 
                                 </StackLayout>
                                 

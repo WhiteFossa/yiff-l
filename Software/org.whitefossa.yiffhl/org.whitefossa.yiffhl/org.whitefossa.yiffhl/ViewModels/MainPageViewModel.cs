@@ -390,6 +390,16 @@ namespace org.whitefossa.yiffhl.ViewModels
             }
         }
 
+        /// <summary>
+        /// Decrease fox frequency
+        /// </summary>
+        public ICommand DecreaseFoxFrequencyCommand { get; }
+
+        /// <summary>
+        /// Increase fox frequency
+        /// </summary>
+        public ICommand IncreaseFoxFrequencyCommand { get;  }
+
         public MainPageViewModel()
         {
             _foxConnector = App.Container.Resolve<IFoxConnector>();
@@ -430,6 +440,8 @@ namespace org.whitefossa.yiffhl.ViewModels
             SelectedProfileChangedCommand = new Command<Profile>(async (p) => await OnChangeSelectedProfileAsync(p));
             RenameProfileClickedCommand = new Command(async () => await OnRenameProfileClickedAsync());
             ToggleFoxFrequencyRangeCommand = new Command(async () => await OnToggleFoxFrequencyRangeAsync());
+            DecreaseFoxFrequencyCommand = new Command(async() => await OnDecreaseFoxFrequencyAsync());
+            IncreaseFoxFrequencyCommand = new Command(async() => await OnIncreaseFoxFrequencyAsync());
 
             // Initial state
             IsConnectButtonEnabled = false;
@@ -817,9 +829,9 @@ Do you want to continue?");
             OnPropertyChanged(nameof(FrequencyFormatted));
         }
 
-        private async Task SetFrequencyAsync()
+        private async Task SetFrequencyAsync(FrequencySettings frequencySettings)
         {
-            await _profileSettingsManager.SetFrequencySettingsAsync(_mainModel.CurrentProfileSettings.FrequencySettings,
+            await _profileSettingsManager.SetFrequencySettingsAsync(frequencySettings,
                 async () => await OnSetFrequencySettingsAsync());
         }
 
@@ -831,18 +843,74 @@ Do you want to continue?");
 
         private async Task OnToggleFoxFrequencyRangeAsync()
         {
-            _mainModel.CurrentProfileSettings.FrequencySettings.Is2m = !_mainModel.CurrentProfileSettings.FrequencySettings.Is2m;
+            var settings = (FrequencySettings)_mainModel.CurrentProfileSettings.FrequencySettings.Clone();
 
-            if (_mainModel.CurrentProfileSettings.FrequencySettings.Is2m)
+            settings.Is2m = !settings.Is2m;
+
+            if (settings.Is2m)
             {
-                _mainModel.CurrentProfileSettings.FrequencySettings.Frequency = DefaultFrequency2m;
+                settings.Frequency = DefaultFrequency2m;
             }
             else
             {
-                _mainModel.CurrentProfileSettings.FrequencySettings.Frequency = DefaultFrequency80m;
+                settings.Frequency = DefaultFrequency80m;
             }
 
-            await SetFrequencyAsync();
+            await SetFrequencyAsync(settings);
+        }
+
+        private async Task OnDecreaseFoxFrequencyAsync()
+        {
+            var settings = (FrequencySettings)_mainModel.CurrentProfileSettings.FrequencySettings.Clone();
+
+            int step;
+            int minValue;
+
+            if (settings.Is2m)
+            {
+                step = FrequencyStep2m;
+                minValue = MinFrequency2m;
+            }
+            else
+            {
+                step = FrequencyStep80m;
+                minValue = MinFrequency80m;
+            }
+
+            settings.Frequency -= step;
+            if (settings.Frequency < minValue)
+            {
+                settings.Frequency = minValue;
+            }
+
+            await SetFrequencyAsync(settings);
+        }
+
+        private async Task OnIncreaseFoxFrequencyAsync()
+        {
+            var settings = (FrequencySettings)_mainModel.CurrentProfileSettings.FrequencySettings.Clone();
+
+            int step;
+            int maxValue;
+
+            if (settings.Is2m)
+            {
+                step = FrequencyStep2m;
+                maxValue = MaxFrequency2m;
+            }
+            else
+            {
+                step = FrequencyStep80m;
+                maxValue = MaxFrequency80m;
+            }
+
+            settings.Frequency += step;
+            if (settings.Frequency > maxValue)
+            {
+                settings.Frequency = maxValue;
+            }
+
+            await SetFrequencyAsync(settings);
         }
     }
 }
