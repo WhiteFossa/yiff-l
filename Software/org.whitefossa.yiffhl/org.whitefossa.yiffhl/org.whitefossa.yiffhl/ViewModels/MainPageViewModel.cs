@@ -1,11 +1,11 @@
 ﻿using org.whitefossa.yiffhl.Abstractions.DTOs;
 using org.whitefossa.yiffhl.Abstractions.Interfaces;
-using org.whitefossa.yiffhl.Abstractions.Interfaces.Commands;
 using org.whitefossa.yiffhl.Business.Implementations.Commands;
 using org.whitefossa.yiffhl.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -20,6 +20,46 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         private const UInt16 SupportedProtocolVersion = 1;
 
+        /// <summary>
+        /// Minimal frequency for 80m range
+        /// </summary>
+        private const int MinFrequency80m = 3500000;
+
+        /// <summary>
+        /// Maximal frequency for 80m range
+        /// </summary>
+        private const int MaxFrequency80m = 3650000;
+
+        /// <summary>
+        /// Frequency step for 80m range
+        /// </summary>
+        private const int FrequencyStep80m = 5000;
+
+        /// <summary>
+        /// Default frequency for 80m range
+        /// </summary>
+        private const int DefaultFrequency80m = 3575000;
+
+        /// <summary>
+        /// Minimal frequency for 2m range
+        /// </summary>
+        private const int MinFrequency2m = 144000000;
+
+        /// <summary>
+        /// Maximal frequency for 2m range
+        /// </summary>
+        private const int MaxFrequency2m = 146000000;
+
+        /// <summary>
+        /// Frequency step for 2m range
+        /// </summary>
+        private const int FrequencyStep2m = 50000;
+
+        /// <summary>
+        /// Default frequency for 2m range
+        /// </summary>
+        private const int DefaultFrequency2m = 145000000;
+
         private readonly IFoxConnector _foxConnector;
         private readonly IPairedFoxesEnumerator _pairedFoxesEnumerator;
         private readonly IUserNotifier _userNotifier;
@@ -31,6 +71,7 @@ namespace org.whitefossa.yiffhl.ViewModels
         private readonly IFoxIdentificationManager _foxIdentificationManager;
         private readonly IFoxNameManager _foxNameManager;
         private readonly IFoxClockManager _foxClockManager;
+        private readonly IProfileSettingsManager _profileSettingsManager;
 
         /// <summary>
         /// Main model
@@ -290,10 +331,10 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         public Profile SelectedProfile
         {
-            get => _mainModel.SelectedProfile;
+            get => _mainModel.CurrentProfile;
             set
             {
-                _mainModel.SelectedProfile = value;
+                _mainModel.CurrentProfile = value;
                 OnPropertyChanged();
             }
         }
@@ -308,6 +349,47 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         public ICommand RenameProfileClickedCommand { get; }
 
+        /// <summary>
+        /// Formatted frequency range
+        /// </summary>
+        public string FoxRangeFormatted
+        {
+            get
+            {
+                if (_mainModel.CurrentProfileSettings.FrequencySettings.Is2m)
+                {
+                    return "2m";
+                }
+                else
+                {
+                    return "80m";
+                }
+            }
+        }
+
+        /// <summary>
+        /// Toggle fox frequency range
+        /// </summary>
+        public ICommand ToggleFoxFrequencyRangeCommand { get; }
+
+        /// <summary>
+        /// Formatted frequency for a label
+        /// </summary>
+        public string FrequencyFormatted
+        {
+            get
+            {
+                if (_mainModel.CurrentProfileSettings.FrequencySettings.Frequency == 0)
+                {
+                    return "N/A";
+                }
+                else
+                {
+                    return String.Format("{0:0.000 MHz}", _mainModel.CurrentProfileSettings.FrequencySettings.Frequency / 1000000.0);
+                }
+            }
+        }
+
         public MainPageViewModel()
         {
             _foxConnector = App.Container.Resolve<IFoxConnector>();
@@ -321,6 +403,7 @@ namespace org.whitefossa.yiffhl.ViewModels
             _foxIdentificationManager = App.Container.Resolve<IFoxIdentificationManager>();
             _foxNameManager = App.Container.Resolve<IFoxNameManager>();
             _foxClockManager = App.Container.Resolve<IFoxClockManager>();
+            _profileSettingsManager = App.Container.Resolve<IProfileSettingsManager>();
 
             // Setting up fox connector delegates
             _mainModel.OnFoxConnectorNewByteRead += OnNewByteRead;
@@ -346,6 +429,7 @@ namespace org.whitefossa.yiffhl.ViewModels
             AddProfileClickedCommand = new Command(async () => await OnAddProfileClickedAsync());
             SelectedProfileChangedCommand = new Command<Profile>(async (p) => await OnChangeSelectedProfileAsync(p));
             RenameProfileClickedCommand = new Command(async () => await OnRenameProfileClickedAsync());
+            ToggleFoxFrequencyRangeCommand = new Command(async () => await OnToggleFoxFrequencyRangeAsync());
 
             // Initial state
             IsConnectButtonEnabled = false;
@@ -646,7 +730,7 @@ Do you want to continue?");
                 return;
             }
 
-            _mainModel.SelectedProfile = selectedProfile;
+            _mainModel.CurrentProfile = selectedProfile;
 
             // Switching profile in the fox
             await _foxProfilesManager.SwitchProfileAsync(selectedProfile.Id, OnSelectedProfileChanged);
@@ -661,6 +745,8 @@ Do you want to continue?");
         {
             SelectedProfile = Profiles
                 .FirstOrDefault(p => p.Id == profileId);
+
+            Task.WhenAll(LoadProfileSettingsAsync());
         }
 
         private async Task OnRenameProfileClickedAsync()
@@ -708,6 +794,55 @@ Do you want to continue?");
         private async Task OnProfileRenamedAsync()
         {
             await EnumerateProfilesAsync();
+        }
+
+        /// <summary>
+        /// Entry point for profile data loading
+        /// </summary>
+        /// <returns></returns>
+        private async Task LoadProfileSettingsAsync()
+        {
+            await LoadFrequencySettingsAsync();
+        }
+
+        private async Task LoadFrequencySettingsAsync()
+        {
+            await _profileSettingsManager.LoadFrequencySettingsAsync(OnGetFrequencySettings);
+        }
+
+        private void OnGetFrequencySettings(FrequencySettings settings)
+        {
+            _mainModel.CurrentProfileSettings.FrequencySettings = settings;
+            OnPropertyChanged(nameof(FoxRangeFormatted));
+            OnPropertyChanged(nameof(FrequencyFormatted));
+        }
+
+        private async Task SetFrequencyAsync()
+        {
+            await _profileSettingsManager.SetFrequencySettingsAsync(_mainModel.CurrentProfileSettings.FrequencySettings,
+                async () => await OnSetFrequencySettingsAsync());
+        }
+
+        private async Task OnSetFrequencySettingsAsync()
+        {
+            // Re-reading data from fox
+            await LoadFrequencySettingsAsync();
+        }
+
+        private async Task OnToggleFoxFrequencyRangeAsync()
+        {
+            _mainModel.CurrentProfileSettings.FrequencySettings.Is2m = !_mainModel.CurrentProfileSettings.FrequencySettings.Is2m;
+
+            if (_mainModel.CurrentProfileSettings.FrequencySettings.Is2m)
+            {
+                _mainModel.CurrentProfileSettings.FrequencySettings.Frequency = DefaultFrequency2m;
+            }
+            else
+            {
+                _mainModel.CurrentProfileSettings.FrequencySettings.Frequency = DefaultFrequency80m;
+            }
+
+            await SetFrequencyAsync();
         }
     }
 }

@@ -52,7 +52,12 @@ namespace org.whitefossa.yiffhl.Models
         /// <summary>
         /// Current fox profile
         /// </summary>
-        public Profile SelectedProfile { get; set; }
+        public Profile CurrentProfile { get; set; }
+
+        /// <summary>
+        /// Current profile settings
+        /// </summary>
+        public ProfileSettings CurrentProfileSettings { get; set; } = new ProfileSettings();
 
         public MainModel()
         {

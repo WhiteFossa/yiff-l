@@ -32,6 +32,7 @@ namespace org.whitefossa.yiffhl.Droid
             App.Container.Register<IFoxIdentificationManager, FoxIdentificationManager>().AsSingleton();
             App.Container.Register<IFoxNameManager, FoxNameManager>().AsSingleton();
             App.Container.Register<IFoxClockManager, FoxClockManager>().AsSingleton();
+            App.Container.Register<IProfileSettingsManager, ProfileSettingsManager>().AsSingleton();
 
             #region Commands
 
@@ -45,6 +46,8 @@ namespace org.whitefossa.yiffhl.Droid
             App.Container.Register<ISetProfileNameCommand, SetProfileNameCommand>().AsSingleton();
             App.Container.Register<ISwitchToProfileCommand, SwitchToProfileCommand>().AsSingleton();
             App.Container.Register<IGetCurrentProfileIdCommand, GetCurrentProfileIdCommand>().AsSingleton();
+            App.Container.Register<IGetFrequencyCommand, GetFrequencyCommand>().AsSingleton();
+            App.Container.Register<ISetFrequencyCommand, SetFrequencyCommand>().AsSingleton();
 
             #endregion
 

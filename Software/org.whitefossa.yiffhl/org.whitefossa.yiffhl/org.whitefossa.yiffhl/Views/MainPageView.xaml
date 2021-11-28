@@ -263,17 +263,16 @@
                                         VerticalOptions="Center" />
 
                                     <Label
-                                        Text="80m"
+                                        Text="{Binding FoxRangeFormatted}"
                                         FontAttributes="Bold"
                                         VerticalOptions="Center"
                                         HorizontalOptions="EndAndExpand" />
 
-                                    <Switch />
-
-                                    <Label
-                                        Text="2m"
-                                        FontAttributes="Bold"
-                                        VerticalOptions="Center" />
+                                    <Button
+                                        Text="&lt;--&gt;"
+                                        VerticalOptions="Center"
+                                        HorizontalOptions="End" 
+                                        Command="{Binding ToggleFoxFrequencyRangeCommand}" />
 
                                 </StackLayout>
 
@@ -285,17 +284,20 @@
                                         VerticalOptions="Center"
                                         HorizontalOptions="Start" />
 
+                                    <Button
+                                        Text="&lt;"
+                                        HorizontalOptions="EndAndExpand"/>
+
                                     <Label
-                                        Text="3.575 MHz"
+                                        Text="{Binding FrequencyFormatted}"
                                         FontAttributes="Bold"
                                         VerticalOptions="Center"
-                                        HorizontalOptions="EndAndExpand" />
-
-                                    <Stepper
-                                        Minimum="1"
-                                        Maximum="100"
-                                        Increment="1"
                                         HorizontalOptions="End" />
+
+                                    <Button
+                                        Text="&gt;"
+                                        HorizontalOptions="End" />
+
                                 </StackLayout>
                                 
                             </StackLayout>
