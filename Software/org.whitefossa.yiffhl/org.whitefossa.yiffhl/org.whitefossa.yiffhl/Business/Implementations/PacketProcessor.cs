@@ -536,6 +536,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations
 
         public void SendCommand(CommandType command, IReadOnlyCollection<byte> commandPayload)
         {
+            Debug.WriteLine((int)command);
+
             var resultPayload = new List<byte>();
             resultPayload.Add((byte)PayloadType.CommandToFox);
             resultPayload.Add((byte)command);

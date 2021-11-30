@@ -120,8 +120,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         {
             _callsign = new Callsign() { Code = code };
 
-            //_getSpeedCommand.SetResponseDelegate(OnGetSpeedResponse);
-            //_getSpeedCommand.SendGetSpeedCommand();
+            _getSpeedCommand.SetResponseDelegate(OnGetSpeedResponse);
+            _getSpeedCommand.SendGetSpeedCommand();
         }
 
         private void OnGetSpeedResponse(bool isFast)
