@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace org.whitefossa.yiffhl.Abstractions.DTOs
+﻿namespace org.whitefossa.yiffhl.Abstractions.DTOs
 {
     /// <summary>
     /// Profile settings
@@ -13,5 +9,10 @@ namespace org.whitefossa.yiffhl.Abstractions.DTOs
         /// Profile frequency settings
         /// </summary>
         public FrequencySettings FrequencySettings { get; set; } = new FrequencySettings();
+
+        /// <summary>
+        /// Callsing settings
+        /// </summary>
+        public CallsignSettings CallsignSettings { get; set; } = new CallsignSettings();
     }
 }

@@ -48,6 +48,8 @@ namespace org.whitefossa.yiffhl.Droid
             App.Container.Register<IGetCurrentProfileIdCommand, GetCurrentProfileIdCommand>().AsSingleton();
             App.Container.Register<IGetFrequencyCommand, GetFrequencyCommand>().AsSingleton();
             App.Container.Register<ISetFrequencyCommand, SetFrequencyCommand>().AsSingleton();
+            App.Container.Register<IGetCodeCommand, GetCodeCommand>().AsSingleton();
+            App.Container.Register<IGetSpeedCommand, GetSpeedCommand>().AsSingleton();
 
             #endregion
 

@@ -1,7 +1,9 @@
 ﻿using org.whitefossa.yiffhl.Abstractions.DTOs;
+using org.whitefossa.yiffhl.Abstractions.Enums;
 using org.whitefossa.yiffhl.Abstractions.Interfaces;
 using org.whitefossa.yiffhl.Abstractions.Interfaces.Commands;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace org.whitefossa.yiffhl.Business.Implementations
@@ -10,19 +12,79 @@ namespace org.whitefossa.yiffhl.Business.Implementations
     {
         private readonly IGetFrequencyCommand _getFrequencyCommand;
         private readonly ISetFrequencyCommand _setFrequencyCommand;
+        private readonly IGetCodeCommand _getCodeCommand;
+        private readonly IGetSpeedCommand _getSpeedCommand;
 
-        private OnGetFrequencySettings _onGetFrequencySettings;
+        private OnGetFrequencySettingsDelegate _onGetFrequencySettings;
 
-        private OnSetFrequencySettings _onSetFrequencySettings;
+        private OnSetFrequencySettingsDelegate _onSetFrequencySettings;
+
+        private OnGetCallsignSettingsDelegate _onGetCallsignSettings;
+
+        private Callsign _callsign;
 
         public ProfileSettingsManager(IGetFrequencyCommand getFrequencyCommand,
-            ISetFrequencyCommand setFrequencyCommand)
+            ISetFrequencyCommand setFrequencyCommand,
+            IGetCodeCommand getCodeCommand,
+            IGetSpeedCommand getSpeedCommand)
         {
             _getFrequencyCommand = getFrequencyCommand;
             _setFrequencyCommand = setFrequencyCommand;
+            _getCodeCommand = getCodeCommand;
+            _getSpeedCommand = getSpeedCommand;
         }
 
-        public async Task LoadFrequencySettingsAsync(OnGetFrequencySettings onGetFrequencySettings)
+        public async Task<IReadOnlyCollection<Callsign>> GetCallsignsAsync()
+        {
+            var result = new List<Callsign>();
+
+            result.Add(new Callsign()
+            {
+                Code = FoxCode.Finish,
+            });
+
+            result.Add(new Callsign()
+            {
+                Code = FoxCode.Fox1,
+            });
+
+            result.Add(new Callsign()
+            {
+                Code = FoxCode.Fox2,
+            });
+
+            result.Add(new Callsign()
+            {
+                Code = FoxCode.Fox3,
+            });
+
+            result.Add(new Callsign()
+            {
+                Code = FoxCode.Fox4,
+            });
+
+            result.Add(new Callsign()
+            {
+                Code = FoxCode.Fox5,
+            });
+
+            result.Add(new Callsign()
+            {
+                Code = FoxCode.Beacon,
+            });
+
+            return result;
+        }
+
+        public async Task LoadCallsignSettingsAsync(OnGetCallsignSettingsDelegate onGetCallsingSettings)
+        {
+            _onGetCallsignSettings = onGetCallsingSettings ?? throw new ArgumentNullException(nameof(onGetCallsingSettings));
+
+            _getCodeCommand.SetResponseDelegate(OnGetCodeResponse);
+            _getCodeCommand.SendGetCodeCommand();
+        }
+
+        public async Task LoadFrequencySettingsAsync(OnGetFrequencySettingsDelegate onGetFrequencySettings)
         {
             _onGetFrequencySettings = onGetFrequencySettings ?? throw new ArgumentNullException(nameof(onGetFrequencySettings));
 
@@ -30,7 +92,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _getFrequencyCommand.SendGetFrequencyCommand();
         }
 
-        public async Task SetFrequencySettingsAsync(FrequencySettings settings, OnSetFrequencySettings onSetFrequencySettings)
+        public async Task SetFrequencySettingsAsync(FrequencySettings settings, OnSetFrequencySettingsDelegate onSetFrequencySettings)
         {
             _ = settings ?? throw new ArgumentNullException(nameof(settings));
             _onSetFrequencySettings = onSetFrequencySettings ?? throw new ArgumentNullException(nameof(onSetFrequencySettings));
@@ -52,6 +114,25 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             }
 
             _onSetFrequencySettings();
+        }
+
+        private void OnGetCodeResponse(FoxCode code)
+        {
+            _callsign = new Callsign() { Code = code };
+
+            //_getSpeedCommand.SetResponseDelegate(OnGetSpeedResponse);
+            //_getSpeedCommand.SendGetSpeedCommand();
+        }
+
+        private void OnGetSpeedResponse(bool isFast)
+        {
+            var callsignSettings = new CallsignSettings()
+            {
+                Callsing = _callsign,
+                IsFast = isFast
+            };
+
+            _onGetCallsignSettings(callsignSettings);
         }
     }
 }

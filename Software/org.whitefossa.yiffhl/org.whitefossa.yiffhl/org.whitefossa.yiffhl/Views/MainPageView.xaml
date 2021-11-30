@@ -311,6 +311,8 @@
 
                                     <Picker
                                         Title="Select a callsign"
+                                        ItemsSource="{Binding Callsigns}"
+                                        ItemDisplayBinding="{Binding Name}"
                                         VerticalOptions="Center"
                                         HorizontalOptions="EndAndExpand" />
 

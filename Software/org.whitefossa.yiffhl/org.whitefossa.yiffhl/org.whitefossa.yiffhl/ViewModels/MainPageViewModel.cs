@@ -397,7 +397,23 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// <summary>
         /// Increase fox frequency
         /// </summary>
-        public ICommand IncreaseFoxFrequencyCommand { get;  }
+        public ICommand IncreaseFoxFrequencyCommand { get; }
+
+        /// <summary>
+        /// Possible fox callsigns
+        /// </summary>
+        private ObservableCollection<Callsign> _callsigns = new ObservableCollection<Callsign>();
+
+        public ObservableCollection<Callsign> Callsigns
+        {
+            get => _callsigns;
+
+            set
+            {
+                _callsigns = value;
+                OnPropertyChanged();
+            }
+        }
 
         public MainPageViewModel()
         {
@@ -453,6 +469,9 @@ namespace org.whitefossa.yiffhl.ViewModels
 
             // Requesting foxes list
             Task.WaitAll(OnRefreshFoxesListClickedAsync());
+
+            // Callsigns list
+            Task.WaitAll(LoadCallsignsAsync());
         }
 
         public async Task OnSelectedFoxChangedAsync(PairedFoxDTO selectedFox)
@@ -818,10 +837,28 @@ Do you want to continue?");
 
         private async Task LoadFrequencySettingsAsync()
         {
-            await _profileSettingsManager.LoadFrequencySettingsAsync(OnGetFrequencySettings);
+            await _profileSettingsManager.LoadFrequencySettingsAsync(OnGetFrequencySettings_LoadPathway);
         }
 
-        private void OnGetFrequencySettings(FrequencySettings settings)
+        private async Task ReloadFrequencySettingsAsync()
+        {
+            await _profileSettingsManager.LoadFrequencySettingsAsync(OnGetFrequencySettings_ReloadPathway);
+        }
+
+        private async void OnGetFrequencySettings_LoadPathway(FrequencySettings settings)
+        {
+            UpdateFrquencySettings(settings);
+
+            // Load fox callsign next
+            await _profileSettingsManager.LoadCallsignSettingsAsync(OnGetCallsignSettings_LoadPathway);
+        }
+
+        private void OnGetFrequencySettings_ReloadPathway(FrequencySettings settings)
+        {
+            UpdateFrquencySettings(settings);
+        }
+
+        private void UpdateFrquencySettings(FrequencySettings settings)
         {
             _mainModel.CurrentProfileSettings.FrequencySettings = settings;
             OnPropertyChanged(nameof(FoxRangeFormatted));
@@ -837,7 +874,7 @@ Do you want to continue?");
         private async Task OnSetFrequencySettingsAsync()
         {
             // Re-reading data from fox
-            await LoadFrequencySettingsAsync();
+            await ReloadFrequencySettingsAsync();
         }
 
         private async Task OnToggleFoxFrequencyRangeAsync()
@@ -910,6 +947,16 @@ Do you want to continue?");
             }
 
             await SetFrequencyAsync(settings);
+        }
+
+        private async Task LoadCallsignsAsync()
+        {
+            Callsigns = new ObservableCollection<Callsign>(await _profileSettingsManager.GetCallsignsAsync());
+        }
+
+        void OnGetCallsignSettings_LoadPathway(CallsignSettings settings)
+        {
+            
         }
     }
 }
