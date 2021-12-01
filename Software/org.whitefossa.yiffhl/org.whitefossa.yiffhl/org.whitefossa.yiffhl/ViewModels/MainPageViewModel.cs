@@ -433,6 +433,24 @@ namespace org.whitefossa.yiffhl.ViewModels
             }
         }
 
+        /// <summary>
+        /// Formatted TX speed
+        /// </summary>
+        public string TxSpeedFormatted
+        {
+            get
+            {
+                if (_mainModel.CurrentProfileSettings.CallsignSettings.IsFast)
+                {
+                    return "Fast";
+                }
+                else
+                {
+                    return "Slow";
+                }
+            }
+        }
+
         public MainPageViewModel()
         {
             _foxConnector = App.Container.Resolve<IFoxConnector>();
@@ -972,6 +990,8 @@ Do you want to continue?");
 
             SelectedCallsign = Callsigns
                 .FirstOrDefault(cs => cs.Code == _mainModel.CurrentProfileSettings.CallsignSettings.Callsing.Code);
+
+            OnPropertyChanged(nameof(TxSpeedFormatted));
         }
     }
 }

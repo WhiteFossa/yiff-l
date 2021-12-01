@@ -329,17 +329,15 @@
                                         HorizontalOptions="Start" />
                                     
                                     <Label
-                                        Text="Slow"
+                                        Text="{Binding TxSpeedFormatted}"
                                         FontAttributes="Bold"
                                         VerticalOptions="Center"
                                         HorizontalOptions="EndAndExpand"/>
 
-                                    <Switch />
-
-                                    <Label
-                                        Text="Fast"
-                                        FontAttributes="Bold"
-                                        VerticalOptions="Center" />
+                                    <Button 
+                                        Text="&lt;--&gt;"
+                                        VerticalOptions="Center"
+                                        HorizontalOptions="End" />
 
 
                                 </StackLayout>
