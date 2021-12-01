@@ -313,6 +313,7 @@
                                         Title="Select a callsign"
                                         ItemsSource="{Binding Callsigns}"
                                         ItemDisplayBinding="{Binding Name}"
+                                        SelectedItem="{Binding SelectedCallsign}"
                                         VerticalOptions="Center"
                                         HorizontalOptions="EndAndExpand" />
 

@@ -418,6 +418,21 @@ namespace org.whitefossa.yiffhl.ViewModels
             }
         }
 
+        /// <summary>
+        /// Selected callsign
+        /// </summary>
+        private Callsign _selectedCallsign = null;
+
+        public Callsign SelectedCallsign
+        {
+            get => _selectedCallsign;
+            set
+            {
+                _selectedCallsign = value;
+                OnPropertyChanged();
+            }
+        }
+
         public MainPageViewModel()
         {
             _foxConnector = App.Container.Resolve<IFoxConnector>();
@@ -707,7 +722,7 @@ Do you want to continue?");
         {
             Profiles = new ObservableCollection<Profile>(profiles);
 
-            await DetectActiveProfileAsync();
+            await _foxProfilesManager.GetCurrentProfileId(OnGetCurrentProfileIdResponse);
         }
 
         private async Task OnRefreshProfilesListClickedAsync()
@@ -771,15 +786,14 @@ Do you want to continue?");
 
         private async Task OnSelectedProfileChangedAsync()
         {
-            await DetectActiveProfileAsync();
+            // We don't need to re-read current profile, because SwitchProfileAsync() guarantee that no errors happened
+            await LoadProfileSettingsAsync();
         }
 
         private void OnGetCurrentProfileIdResponse(int profileId)
         {
             SelectedProfile = Profiles
                 .FirstOrDefault(p => p.Id == profileId);
-
-            Task.WhenAll(LoadProfileSettingsAsync());
         }
 
         private async Task OnRenameProfileClickedAsync()
@@ -819,11 +833,6 @@ Do you want to continue?");
             await _foxProfilesManager.RenameCurrentProfileAsync(profileNameData.Item2, async() => await OnProfileRenamedAsync());
         }
 
-        private async Task DetectActiveProfileAsync()
-        {
-            await _foxProfilesManager.GetCurrentProfileId(OnGetCurrentProfileIdResponse);
-        }
-
         private async Task OnProfileRenamedAsync()
         {
             await EnumerateProfilesAsync();
@@ -835,8 +844,6 @@ Do you want to continue?");
         /// <returns></returns>
         private async Task LoadProfileSettingsAsync()
         {
-            Debug.WriteLine("Starting profile load");
-
             await LoadFrequencySettingsAsync();
         }
 
@@ -852,7 +859,6 @@ Do you want to continue?");
 
         private async void OnGetFrequencySettings_LoadPathway(FrequencySettings settings)
         {
-            Debug.WriteLine("Frequency loaded");
             UpdateFrquencySettings(settings);
 
             // Load fox callsign next
@@ -962,7 +968,10 @@ Do you want to continue?");
 
         private void OnGetCallsignSettings_LoadPathway(CallsignSettings settings)
         {
-            Debug.WriteLine("Callsigns loaded");
+            _mainModel.CurrentProfileSettings.CallsignSettings = settings;
+
+            SelectedCallsign = Callsigns
+                .FirstOrDefault(cs => cs.Code == _mainModel.CurrentProfileSettings.CallsignSettings.Callsing.Code);
         }
     }
 }
