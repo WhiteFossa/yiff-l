@@ -337,7 +337,8 @@
                                     <Button 
                                         Text="&lt;--&gt;"
                                         VerticalOptions="Center"
-                                        HorizontalOptions="End" />
+                                        HorizontalOptions="End"
+                                        Command="{Binding ToggleFoxSpeedCommand}"/>
 
 
                                 </StackLayout>

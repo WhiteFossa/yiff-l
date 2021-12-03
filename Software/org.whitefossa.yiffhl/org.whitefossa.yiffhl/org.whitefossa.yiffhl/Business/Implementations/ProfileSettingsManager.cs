@@ -14,24 +14,26 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private readonly ISetFrequencyCommand _setFrequencyCommand;
         private readonly IGetCodeCommand _getCodeCommand;
         private readonly IGetSpeedCommand _getSpeedCommand;
+        private readonly ISetSpeedCommand _setSpeedCommand;
 
         private OnGetFrequencySettingsDelegate _onGetFrequencySettings;
-
         private OnSetFrequencySettingsDelegate _onSetFrequencySettings;
-
         private OnGetCallsignSettingsDelegate _onGetCallsignSettings;
+        private OnSetSpeedDelegate _onSetSpeed;
 
         private Callsign _callsign;
 
         public ProfileSettingsManager(IGetFrequencyCommand getFrequencyCommand,
             ISetFrequencyCommand setFrequencyCommand,
             IGetCodeCommand getCodeCommand,
-            IGetSpeedCommand getSpeedCommand)
+            IGetSpeedCommand getSpeedCommand,
+            ISetSpeedCommand setSpeedCommand)
         {
             _getFrequencyCommand = getFrequencyCommand;
             _setFrequencyCommand = setFrequencyCommand;
             _getCodeCommand = getCodeCommand;
             _getSpeedCommand = getSpeedCommand;
+            _setSpeedCommand = setSpeedCommand;
         }
 
         public async Task<IReadOnlyCollection<Callsign>> GetCallsignsAsync()
@@ -133,6 +135,24 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             };
 
             _onGetCallsignSettings(callsignSettings);
+        }
+
+        public async Task SetSpeedAsync(bool isFast, OnSetSpeedDelegate onSetSpeed)
+        {
+            _onSetSpeed = onSetSpeed ?? throw new ArgumentNullException(nameof(onSetSpeed));
+
+            _setSpeedCommand.SetResponseDelegate(OnSetSpeedResponse);
+            _setSpeedCommand.SendSetSpeedCommand(isFast);
+        }
+
+        private void OnSetSpeedResponse(bool isSuccessfull)
+        {
+            if (!isSuccessfull)
+            {
+                throw new InvalidOperationException("Failed to set speed");
+            }
+
+            _onSetSpeed();
         }
     }
 }

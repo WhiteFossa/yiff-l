@@ -10,6 +10,8 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
 
     public delegate void OnGetCallsignSettingsDelegate(CallsignSettings settings);
 
+    public delegate void OnSetSpeedDelegate();
+
     /// <summary>
     /// Interface to work with profile settings
     /// </summary>
@@ -25,5 +27,7 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
         Task<IReadOnlyCollection<Callsign>> GetCallsignsAsync();
 
         Task LoadCallsignSettingsAsync(OnGetCallsignSettingsDelegate onGetCallsingSettings);
+
+        Task SetSpeedAsync(bool isFast, OnSetSpeedDelegate onSetSpeed);
     }
 }
