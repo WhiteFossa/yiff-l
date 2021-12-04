@@ -26,8 +26,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private Callsign _callsign;
 
         private bool _speedToSet;
-
         private Callsign _callsignToSet;
+        private FrequencySettings _frequencySettingsToSet;
 
         public ProfileSettingsManager(IGetFrequencyCommand getFrequencyCommand,
             ISetFrequencyCommand setFrequencyCommand,
@@ -104,16 +104,28 @@ namespace org.whitefossa.yiffhl.Business.Implementations
 
         public async Task SetFrequencySettingsAsync(FrequencySettings settings, OnSetFrequencySettingsDelegate onSetFrequencySettings)
         {
-            _ = settings ?? throw new ArgumentNullException(nameof(settings));
+            _frequencySettingsToSet = settings ?? throw new ArgumentNullException(nameof(settings));
             _onSetFrequencySettings = onSetFrequencySettings ?? throw new ArgumentNullException(nameof(onSetFrequencySettings));
 
-            _setFrequencyCommand.SetResponseDelegate(OnSetFrequencyResponse);
-            _setFrequencyCommand.SendSetFrequencyCommand(settings.Is2m, settings.Frequency);
+            // Checking if frequency settings changed
+            _getFrequencyCommand.SetResponseDelegate(OnGetFrequencyResponse_SetFrequencyPathway);
+            _getFrequencyCommand.SendGetFrequencyCommand();
         }
 
         private void OnGetFrequencyResponse(bool is144MHz, int frequency)
         {
             _onGetFrequencySettings(new FrequencySettings() { Is2m = is144MHz, Frequency = frequency });
+        }
+
+        private void OnGetFrequencyResponse_SetFrequencyPathway(bool is144MHz, int frequency)
+        {
+            if (_frequencySettingsToSet.Is2m == is144MHz && _frequencySettingsToSet.Frequency == frequency)
+            {
+                return;
+            }
+
+            _setFrequencyCommand.SetResponseDelegate(OnSetFrequencyResponse);
+            _setFrequencyCommand.SendSetFrequencyCommand(_frequencySettingsToSet.Is2m, _frequencySettingsToSet.Frequency);
         }
 
         private void OnSetFrequencyResponse(bool isSuccess)
