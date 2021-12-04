@@ -941,9 +941,11 @@ Do you want to continue?");
             await _profileSettingsManager.LoadFrequencySettingsAsync(OnGetFrequencySettings_ReloadPathway);
         }
 
+        #region Load frequency settings
+
         private async void OnGetFrequencySettings_LoadPathway(FrequencySettings settings)
         {
-            UpdateFrquencySettings(settings);
+            OnGetFrequencySettings_Common(settings);
 
             // Load fox callsign next
             await _profileSettingsManager.LoadCallsignSettingsAsync(OnGetCallsignSettings_LoadPathway);
@@ -951,27 +953,19 @@ Do you want to continue?");
 
         private void OnGetFrequencySettings_ReloadPathway(FrequencySettings settings)
         {
-            UpdateFrquencySettings(settings);
+            OnGetFrequencySettings_Common(settings);
         }
 
-        private void UpdateFrquencySettings(FrequencySettings settings)
+        private void OnGetFrequencySettings_Common(FrequencySettings settings)
         {
             _mainModel.CurrentProfileSettings.FrequencySettings = settings;
             OnPropertyChanged(nameof(FoxRangeFormatted));
             OnPropertyChanged(nameof(FrequencyFormatted));
         }
 
-        private async Task SetFrequencyAsync(FrequencySettings frequencySettings)
-        {
-            await _profileSettingsManager.SetFrequencySettingsAsync(frequencySettings,
-                async () => await OnSetFrequencySettingsAsync());
-        }
+        #endregion
 
-        private async Task OnSetFrequencySettingsAsync()
-        {
-            // Re-reading data from fox
-            await ReloadFrequencySettingsAsync();
-        }
+        #region Toggle frequency range
 
         private async Task OnToggleFoxFrequencyRangeAsync()
         {
@@ -990,6 +984,22 @@ Do you want to continue?");
 
             await SetFrequencyAsync(settings);
         }
+
+        private async Task SetFrequencyAsync(FrequencySettings frequencySettings)
+        {
+            await _profileSettingsManager.SetFrequencySettingsAsync(frequencySettings,
+                async () => await OnSetFrequencySettingsAsync());
+        }
+
+        private async Task OnSetFrequencySettingsAsync()
+        {
+            // Re-reading data from fox
+            await ReloadFrequencySettingsAsync();
+        }
+
+        #endregion
+
+        #region Frequency change
 
         private async Task OnDecreaseFoxFrequencyAsync()
         {
@@ -1045,23 +1055,50 @@ Do you want to continue?");
             await SetFrequencyAsync(settings);
         }
 
+        #endregion
+
         private async Task LoadCallsignsAsync()
         {
             Callsigns = new ObservableCollection<Callsign>(await _profileSettingsManager.GetCallsignsAsync());
         }
 
+        #region Load callsign settings
+
         private async void OnGetCallsignSettings_LoadPathway(CallsignSettings settings)
         {
-            _mainModel.CurrentProfileSettings.CallsignSettings = settings;
-
-            SelectedCallsign = Callsigns
-                .FirstOrDefault(cs => cs.Code == _mainModel.CurrentProfileSettings.CallsignSettings.Callsing.Code);
-
-            OnPropertyChanged(nameof(TxSpeedFormatted));
+            OnGetSpeed_Common(settings);
+            OnGetCallsign_Common(settings);
 
             // Loading cycle parameters next
             await _profileSettingsManager.LoadCycleSettingsAsync(OnGetCycleSettings_LoadPathway);
         }
+
+        private void OnGetSpeed_ReloadPathway(CallsignSettings settings)
+        {
+            OnGetSpeed_Common(settings);
+        }
+
+        private void OnGetSpeed_Common(CallsignSettings settings)
+        {
+            _mainModel.CurrentProfileSettings.CallsignSettings.IsFast = settings.IsFast;
+            OnPropertyChanged(nameof(TxSpeedFormatted));
+        }
+
+        private void OnGetCallsign_ReloadPathway(CallsignSettings settings)
+        {
+            OnGetCallsign_Common(settings);
+        }
+
+        private void OnGetCallsign_Common(CallsignSettings settings)
+        {
+            _mainModel.CurrentProfileSettings.CallsignSettings.Callsing = settings.Callsing;
+            SelectedCallsign = Callsigns
+                .FirstOrDefault(cs => cs.Code == _mainModel.CurrentProfileSettings.CallsignSettings.Callsing.Code);
+        }
+
+        #endregion
+
+        #region Toggle fox speed
 
         private async Task OnToggleFoxSpeedAsync()
         {
@@ -1074,11 +1111,9 @@ Do you want to continue?");
             await _profileSettingsManager.LoadCallsignSettingsAsync(OnGetSpeed_ReloadPathway);
         }
 
-        private void OnGetSpeed_ReloadPathway(CallsignSettings settings)
-        {
-            _mainModel.CurrentProfileSettings.CallsignSettings.IsFast = settings.IsFast;
-            OnPropertyChanged(nameof(TxSpeedFormatted));
-        }
+        #endregion
+
+        #region Change callsign
 
         public async Task OnChangeSelectedCallsignAsync(Callsign callsing)
         {
@@ -1090,23 +1125,34 @@ Do you want to continue?");
             await _profileSettingsManager.LoadCallsignSettingsAsync(OnGetCallsign_ReloadPathway);
         }
 
-        private void OnGetCallsign_ReloadPathway(CallsignSettings settings)
-        {
-            _mainModel.CurrentProfileSettings.CallsignSettings.Callsing = settings.Callsing;
-            SelectedCallsign = Callsigns
-                .FirstOrDefault(cs => cs.Code == _mainModel.CurrentProfileSettings.CallsignSettings.Callsing.Code);
-        }
+        #endregion
 
-        private void OnGetCycleSettings_LoadPathway(CycleSettings settings)
+        #region Load cycle settings
+
+        private void OnGetCycleSettings_Common(CycleSettings settings)
         {
             _mainModel.CurrentProfileSettings.CycleSettings = settings;
             OnPropertyChanged(nameof(FoxCycleTypeFormatted));
             OnPropertyChanged(nameof(TxDurationFormatted));
             OnPropertyChanged(nameof(PauseDurationFormatted));
             OnPropertyChanged(nameof(IsCycleControlsEnabled));
+        }
+
+        private void OnGetCycleSettings_LoadPathway(CycleSettings settings)
+        {
+            OnGetCycleSettings_Common(settings);
 
             // TODO: Load next setting
         }
+
+        private void OnGetCycleSettings_ReloadPathway(CycleSettings settings)
+        {
+            OnGetCycleSettings_Common(settings);
+        }
+
+        #endregion
+
+        #region Toggle cycle mode
 
         private async Task OnToggleCycleModeAsync()
         {
@@ -1121,13 +1167,6 @@ Do you want to continue?");
             await _profileSettingsManager.LoadCycleSettingsAsync(OnGetCycleSettings_ReloadPathway);
         }
 
-        private void OnGetCycleSettings_ReloadPathway(CycleSettings settings)
-        {
-            _mainModel.CurrentProfileSettings.CycleSettings = settings;
-            OnPropertyChanged(nameof(FoxCycleTypeFormatted));
-            OnPropertyChanged(nameof(TxDurationFormatted));
-            OnPropertyChanged(nameof(PauseDurationFormatted));
-            OnPropertyChanged(nameof(IsCycleControlsEnabled));
-        }
+        #endregion
     }
 }
