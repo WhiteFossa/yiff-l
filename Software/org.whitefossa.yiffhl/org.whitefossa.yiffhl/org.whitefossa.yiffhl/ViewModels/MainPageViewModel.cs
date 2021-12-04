@@ -62,6 +62,26 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         private const int DefaultFrequency2m = 145000000;
 
+        /// <summary>
+        /// Minimal TX duration in seconds
+        /// </summary>
+        private const int MinTxDuration = 6;
+
+        /// <summary>
+        /// Maximal TX duration in seconds
+        /// </summary>
+        private const int MaxTxDuration = 3599;
+
+        /// <summary>
+        /// Minimal pause duration in seconds
+        /// </summary>
+        private const int MinPauseDuration = 6;
+
+        /// <summary>
+        /// Maximal pause duration in seconds
+        /// </summary>
+        private const int MaxPauseDuration = 3599;
+
         private readonly IFoxConnector _foxConnector;
         private readonly IPairedFoxesEnumerator _pairedFoxesEnumerator;
         private readonly IUserNotifier _userNotifier;
@@ -514,6 +534,16 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         public ICommand ToggleCycleModeCommand { get; }
 
+        /// <summary>
+        /// Command to increase TX duration
+        /// </summary>
+        public ICommand IncreaseTxDurationCommand { get; }
+
+        /// <summary>
+        /// Command to decrease TX duration
+        /// </summary>
+        public ICommand DecreaseTxDurationCommand { get; }
+
         public MainPageViewModel()
         {
             _foxConnector = App.Container.Resolve<IFoxConnector>();
@@ -554,11 +584,13 @@ namespace org.whitefossa.yiffhl.ViewModels
             SelectedProfileChangedCommand = new Command<Profile>(async (p) => await OnChangeSelectedProfileAsync(p));
             RenameProfileClickedCommand = new Command(async () => await OnRenameProfileClickedAsync());
             ToggleFoxFrequencyRangeCommand = new Command(async () => await OnToggleFoxFrequencyRangeAsync());
-            DecreaseFoxFrequencyCommand = new Command(async() => await OnDecreaseFoxFrequencyAsync());
-            IncreaseFoxFrequencyCommand = new Command(async() => await OnIncreaseFoxFrequencyAsync());
-            ToggleFoxSpeedCommand = new Command(async() => await OnToggleFoxSpeedAsync());
+            DecreaseFoxFrequencyCommand = new Command(async () => await OnDecreaseFoxFrequencyAsync());
+            IncreaseFoxFrequencyCommand = new Command(async () => await OnIncreaseFoxFrequencyAsync());
+            ToggleFoxSpeedCommand = new Command(async () => await OnToggleFoxSpeedAsync());
             SelectedCallsignChangedCommand = new Command<Callsign>(async (c) => await OnChangeSelectedCallsignAsync(c));
-            ToggleCycleModeCommand = new Command(async() => await OnToggleCycleModeAsync());
+            ToggleCycleModeCommand = new Command(async () => await OnToggleCycleModeAsync());
+            IncreaseTxDurationCommand = new Command(async () => await OnIncreaseTxDurationAsync());
+            DecreaseTxDurationCommand = new Command(async () => await OnDecreaseTxDurationAsync());
 
             // Initial state
             IsConnectButtonEnabled = false;
@@ -1159,12 +1191,38 @@ Do you want to continue?");
             var newSettings = _mainModel.CurrentProfileSettings.CycleSettings;
             newSettings.IsContinuous = !newSettings.IsContinuous;
 
-            await _profileSettingsManager.SetCycleSettingsAsync(newSettings, async () => await OnSetCycleAsync());
+            await _profileSettingsManager.SetCycleSettingsAsync(newSettings, async () => await OnSetCycleSettingsAsync());
         }
 
-        private async Task OnSetCycleAsync()
+        private async Task OnSetCycleSettingsAsync()
         {
             await _profileSettingsManager.LoadCycleSettingsAsync(OnGetCycleSettings_ReloadPathway);
+        }
+
+        #endregion
+
+        #region TX duration
+
+        public async Task OnIncreaseTxDurationAsync()
+        {
+            if (_mainModel.CurrentProfileSettings.CycleSettings.TxDuration.TotalSeconds < MaxTxDuration)
+            {
+                var newSettings = _mainModel.CurrentProfileSettings.CycleSettings;
+                newSettings.TxDuration += new TimeSpan(0, 0, 1);
+
+                await _profileSettingsManager.SetCycleSettingsAsync(newSettings, async () => await OnSetCycleSettingsAsync());
+            }
+        }
+
+        public async Task OnDecreaseTxDurationAsync()
+        {
+            if (_mainModel.CurrentProfileSettings.CycleSettings.TxDuration.TotalSeconds > MinTxDuration)
+            {
+                var newSettings = _mainModel.CurrentProfileSettings.CycleSettings;
+                newSettings.TxDuration -= new TimeSpan(0, 0, 1);
+
+                await _profileSettingsManager.SetCycleSettingsAsync(newSettings, async () => await OnSetCycleSettingsAsync());
+            }
         }
 
         #endregion

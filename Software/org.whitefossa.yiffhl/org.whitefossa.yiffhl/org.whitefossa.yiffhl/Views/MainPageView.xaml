@@ -396,12 +396,14 @@
                                         Text="&lt;"
                                         VerticalOptions="Center"
                                         HorizontalOptions="End"
+                                        Command="{Binding DecreaseTxDurationCommand}"
                                         IsEnabled="{Binding IsCycleControlsEnabled}" />
 
                                     <Button
                                         Text="&gt;"
                                         VerticalOptions="Center"
                                         HorizontalOptions="End"
+                                        Command="{Binding IncreaseTxDurationCommand}"
                                         IsEnabled="{Binding IsCycleControlsEnabled}" />
                                 </StackLayout>
 
