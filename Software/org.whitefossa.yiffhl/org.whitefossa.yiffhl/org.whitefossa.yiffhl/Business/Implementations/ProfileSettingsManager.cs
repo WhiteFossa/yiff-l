@@ -16,25 +16,32 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private readonly IGetSpeedCommand _getSpeedCommand;
         private readonly ISetSpeedCommand _setSpeedCommand;
         private readonly ISetCodeCommand _setCodeCommand;
+        private readonly IGetCycleCommand _getCycleCommand;
+        private readonly ISetCycleCommand _setCycleCommand;
 
         private OnGetFrequencySettingsDelegate _onGetFrequencySettings;
         private OnSetFrequencySettingsDelegate _onSetFrequencySettings;
         private OnGetCallsignSettingsDelegate _onGetCallsignSettings;
         private OnSetSpeedDelegate _onSetSpeed;
         private OnSetCallsignDelegate _onSetCallsign;
+        private OnGetCycleSettingsDelegate _onGetCycleSettings;
+        private OnSetCycleSettingsDelegate _onSetCycleSettings;
 
         private Callsign _callsign;
 
         private bool _speedToSet;
         private Callsign _callsignToSet;
         private FrequencySettings _frequencySettingsToSet;
+        private CycleSettings _cycleSettingsToSet;
 
         public ProfileSettingsManager(IGetFrequencyCommand getFrequencyCommand,
             ISetFrequencyCommand setFrequencyCommand,
             IGetCodeCommand getCodeCommand,
             IGetSpeedCommand getSpeedCommand,
             ISetSpeedCommand setSpeedCommand,
-            ISetCodeCommand setCodeCommand)
+            ISetCodeCommand setCodeCommand,
+            IGetCycleCommand getCycleCommand,
+            ISetCycleCommand setCycleCommand)
         {
             _getFrequencyCommand = getFrequencyCommand;
             _setFrequencyCommand = setFrequencyCommand;
@@ -42,6 +49,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _getSpeedCommand = getSpeedCommand;
             _setSpeedCommand = setSpeedCommand;
             _setCodeCommand = setCodeCommand;
+            _getCycleCommand = getCycleCommand;
+            _setCycleCommand = setCycleCommand;
         }
 
         public async Task<IReadOnlyCollection<Callsign>> GetCallsignsAsync()
@@ -217,6 +226,62 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             }
 
             _onSetCallsign();
+        }
+
+        public async Task LoadCycleSettingsAsync(OnGetCycleSettingsDelegate onGetCycleSettings)
+        {
+            _onGetCycleSettings = onGetCycleSettings ?? throw new ArgumentNullException(nameof(onGetCycleSettings));
+
+            _getCycleCommand.SetResponseDelegate(OnGetCycleResponse);
+            _getCycleCommand.SendGetCycleCommand();
+        }
+
+        private void OnGetCycleResponse(bool isContinuous, TimeSpan txTime, TimeSpan pauseTime)
+        {
+            var cycleSettings = new CycleSettings
+            {
+                IsContinuous = isContinuous,
+                TxDuration = txTime,
+                PauseDuration = pauseTime
+            };
+
+            _onGetCycleSettings(cycleSettings);
+        }
+
+        public async Task SetCycleSettingsAsync(CycleSettings settings, OnSetCycleSettingsDelegate onSetCycleSettings)
+        {
+            _cycleSettingsToSet = settings ?? throw new ArgumentNullException(nameof(settings));
+            _onSetCycleSettings = onSetCycleSettings ?? throw new ArgumentNullException(nameof(onSetCycleSettings));
+
+            // Checking if cycle settings changed
+            _getCycleCommand.SetResponseDelegate(OnGetCycleResponse_SetCycleSettingsPathway);
+            _getCycleCommand.SendGetCycleCommand();
+
+        }
+
+        private void OnGetCycleResponse_SetCycleSettingsPathway(bool isContinuous, TimeSpan txTime, TimeSpan pauseTime)
+        {
+            if (isContinuous == _cycleSettingsToSet.IsContinuous
+                &&
+                txTime == _cycleSettingsToSet.TxDuration
+                &&
+                pauseTime == _cycleSettingsToSet.PauseDuration)
+            {
+                return;
+            }
+
+            _setCycleCommand.SetResponseDelegate(OnSetCycleResponse);
+            _setCycleCommand.SendSetCycleCommand(_cycleSettingsToSet.IsContinuous, _cycleSettingsToSet.TxDuration, _cycleSettingsToSet.PauseDuration);
+        }
+
+        private void OnSetCycleResponse(bool isSuccessfull)
+        {
+            if (!isSuccessfull)
+            {
+                throw new InvalidOperationException("Failed to set fox cycle");
+            }
+
+            _onSetCycleSettings();
         }
     }
 }

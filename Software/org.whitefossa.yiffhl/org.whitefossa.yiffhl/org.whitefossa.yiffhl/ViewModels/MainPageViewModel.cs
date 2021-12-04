@@ -461,6 +461,59 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         public ICommand SelectedCallsignChangedCommand { get; }
 
+        /// <summary>
+        /// Fox cycle type
+        /// </summary>
+        public string FoxCycleTypeFormatted
+        {
+            get
+            {
+                if (_mainModel.CurrentProfileSettings.CycleSettings.IsContinuous)
+                {
+                    return "Continuous";
+                }
+                else
+                {
+                    return "Cyclic";
+                }
+            }
+        }
+
+        /// <summary>
+        /// Transmission duration formatted
+        /// </summary>
+        public string TxDurationFormatted
+        {
+            get
+            {
+                return _mainModel.CurrentProfileSettings.CycleSettings.TxDuration.ToString(@"mm\:ss");
+            }
+        }
+
+        /// <summary>
+        /// Is cycle controls enabled (except cycle type switch)
+        /// </summary>
+        public bool IsCycleControlsEnabled
+        {
+            get => !_mainModel.CurrentProfileSettings.CycleSettings.IsContinuous;
+        }
+
+        /// <summary>
+        /// Pause duration formatted
+        /// </summary>
+        public string PauseDurationFormatted
+        {
+            get
+            {
+                return _mainModel.CurrentProfileSettings.CycleSettings.PauseDuration.ToString(@"mm\:ss");
+            }
+        }
+
+        /// <summary>
+        /// Command to togle fox cycle mode
+        /// </summary>
+        public ICommand ToggleCycleModeCommand { get; }
+
         public MainPageViewModel()
         {
             _foxConnector = App.Container.Resolve<IFoxConnector>();
@@ -505,6 +558,7 @@ namespace org.whitefossa.yiffhl.ViewModels
             IncreaseFoxFrequencyCommand = new Command(async() => await OnIncreaseFoxFrequencyAsync());
             ToggleFoxSpeedCommand = new Command(async() => await OnToggleFoxSpeedAsync());
             SelectedCallsignChangedCommand = new Command<Callsign>(async (c) => await OnChangeSelectedCallsignAsync(c));
+            ToggleCycleModeCommand = new Command(async() => await OnToggleCycleModeAsync());
 
             // Initial state
             IsConnectButtonEnabled = false;
@@ -996,7 +1050,7 @@ Do you want to continue?");
             Callsigns = new ObservableCollection<Callsign>(await _profileSettingsManager.GetCallsignsAsync());
         }
 
-        private void OnGetCallsignSettings_LoadPathway(CallsignSettings settings)
+        private async void OnGetCallsignSettings_LoadPathway(CallsignSettings settings)
         {
             _mainModel.CurrentProfileSettings.CallsignSettings = settings;
 
@@ -1004,6 +1058,9 @@ Do you want to continue?");
                 .FirstOrDefault(cs => cs.Code == _mainModel.CurrentProfileSettings.CallsignSettings.Callsing.Code);
 
             OnPropertyChanged(nameof(TxSpeedFormatted));
+
+            // Loading cycle parameters next
+            await _profileSettingsManager.LoadCycleSettingsAsync(OnGetCycleSettings_LoadPathway);
         }
 
         private async Task OnToggleFoxSpeedAsync()
@@ -1038,6 +1095,39 @@ Do you want to continue?");
             _mainModel.CurrentProfileSettings.CallsignSettings.Callsing = settings.Callsing;
             SelectedCallsign = Callsigns
                 .FirstOrDefault(cs => cs.Code == _mainModel.CurrentProfileSettings.CallsignSettings.Callsing.Code);
+        }
+
+        private void OnGetCycleSettings_LoadPathway(CycleSettings settings)
+        {
+            _mainModel.CurrentProfileSettings.CycleSettings = settings;
+            OnPropertyChanged(nameof(FoxCycleTypeFormatted));
+            OnPropertyChanged(nameof(TxDurationFormatted));
+            OnPropertyChanged(nameof(PauseDurationFormatted));
+            OnPropertyChanged(nameof(IsCycleControlsEnabled));
+
+            // TODO: Load next setting
+        }
+
+        private async Task OnToggleCycleModeAsync()
+        {
+            var newSettings = _mainModel.CurrentProfileSettings.CycleSettings;
+            newSettings.IsContinuous = !newSettings.IsContinuous;
+
+            await _profileSettingsManager.SetCycleSettingsAsync(newSettings, async () => await OnSetCycleAsync());
+        }
+
+        private async Task OnSetCycleAsync()
+        {
+            await _profileSettingsManager.LoadCycleSettingsAsync(OnGetCycleSettings_ReloadPathway);
+        }
+
+        private void OnGetCycleSettings_ReloadPathway(CycleSettings settings)
+        {
+            _mainModel.CurrentProfileSettings.CycleSettings = settings;
+            OnPropertyChanged(nameof(FoxCycleTypeFormatted));
+            OnPropertyChanged(nameof(TxDurationFormatted));
+            OnPropertyChanged(nameof(PauseDurationFormatted));
+            OnPropertyChanged(nameof(IsCycleControlsEnabled));
         }
     }
 }

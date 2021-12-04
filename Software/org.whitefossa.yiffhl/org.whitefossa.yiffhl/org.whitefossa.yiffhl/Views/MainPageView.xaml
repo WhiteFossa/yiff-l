@@ -363,17 +363,16 @@
                                         HorizontalOptions="Start" />
 
                                     <Label
-                                        Text="Cyclic"
+                                        Text="{Binding FoxCycleTypeFormatted}"
                                         FontAttributes="Bold"
                                         VerticalOptions="Center"
                                         HorizontalOptions="EndAndExpand" />
 
-                                    <Switch />
-
-                                    <Label
-                                        Text="Continuous"
-                                        FontAttributes="Bold"
-                                        VerticalOptions="Center" />
+                                    <Button 
+                                        Text="&lt;--&gt;"
+                                        VerticalOptions="Center"
+                                        HorizontalOptions="End"
+                                        Command="{Binding ToggleCycleModeCommand}" />
                                 </StackLayout>
 
                                 <StackLayout
@@ -383,19 +382,27 @@
                                     <Label
                                         Text="TX duration:"
                                         HorizontalOptions="Start"
-                                        VerticalOptions="Center" />
+                                        VerticalOptions="Center"
+                                        IsEnabled="{Binding IsCycleControlsEnabled}" />
 
                                     <Label
-                                        Text="01:00"
+                                        Text="{Binding TxDurationFormatted}"
                                         FontAttributes="Bold"
                                         VerticalOptions="Center"
-                                        HorizontalOptions="EndAndExpand" />
+                                        HorizontalOptions="EndAndExpand" 
+                                        IsEnabled="{Binding IsCycleControlsEnabled}" />
 
-                                    <Stepper
-                                        Minimum="1"
-                                        Maximum="100"
-                                        Increment="1"
-                                        HorizontalOptions="End" />
+                                    <Button
+                                        Text="&lt;"
+                                        VerticalOptions="Center"
+                                        HorizontalOptions="End"
+                                        IsEnabled="{Binding IsCycleControlsEnabled}" />
+
+                                    <Button
+                                        Text="&gt;"
+                                        VerticalOptions="Center"
+                                        HorizontalOptions="End"
+                                        IsEnabled="{Binding IsCycleControlsEnabled}" />
                                 </StackLayout>
 
                                 <StackLayout
@@ -405,19 +412,27 @@
                                     <Label
                                         Text="Pause duration:"
                                         HorizontalOptions="Start"
-                                        VerticalOptions="Center" />
+                                        VerticalOptions="Center"
+                                        IsEnabled="{Binding IsCycleControlsEnabled}" />
 
                                     <Label
-                                        Text="04:00"
+                                        Text="{Binding PauseDurationFormatted}"
                                         FontAttributes="Bold"
                                         VerticalOptions="Center"
-                                        HorizontalOptions="EndAndExpand" />
+                                        HorizontalOptions="EndAndExpand"
+                                        IsEnabled="{Binding IsCycleControlsEnabled}" />
 
-                                    <Stepper
-                                        Minimum="1"
-                                        Maximum="100"
-                                        Increment="1"
-                                        HorizontalOptions="End" />
+                                    <Button
+                                        Text="&lt;"
+                                        VerticalOptions="Center"
+                                        HorizontalOptions="End"
+                                        IsEnabled="{Binding IsCycleControlsEnabled}" />
+
+                                    <Button
+                                        Text="&gt;"
+                                        VerticalOptions="Center"
+                                        HorizontalOptions="End"
+                                        IsEnabled="{Binding IsCycleControlsEnabled}" />
                                 </StackLayout>
 
                                 <StackLayout
@@ -435,11 +450,17 @@
                                         VerticalOptions="Center"
                                         HorizontalOptions="EndAndExpand" />
 
-                                    <Stepper
-                                        Minimum="1"
-                                        Maximum="100"
-                                        Increment="1"
-                                        HorizontalOptions="End" />
+                                    <Button
+                                        Text="&lt;"
+                                        VerticalOptions="Center"
+                                        HorizontalOptions="End"
+                                        />
+
+                                    <Button
+                                        Text="&gt;"
+                                        VerticalOptions="Center"
+                                        HorizontalOptions="End"
+                                        />
                                 </StackLayout>
                                 
                             </StackLayout>

@@ -52,6 +52,8 @@ namespace org.whitefossa.yiffhl.Droid
             App.Container.Register<IGetSpeedCommand, GetSpeedCommand>().AsSingleton();
             App.Container.Register<ISetSpeedCommand, SetSpeedCommand>().AsSingleton();
             App.Container.Register<ISetCodeCommand, SetCodeCommand>().AsSingleton();
+            App.Container.Register<IGetCycleCommand, GetCycleCommand>().AsSingleton();
+            App.Container.Register<ISetCycleCommand, SetCycleCommand>().AsSingleton();
 
             #endregion
 

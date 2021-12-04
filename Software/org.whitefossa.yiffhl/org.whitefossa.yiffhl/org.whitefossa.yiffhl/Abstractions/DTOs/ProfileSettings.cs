@@ -14,5 +14,10 @@
         /// Callsing settings
         /// </summary>
         public CallsignSettings CallsignSettings { get; set; } = new CallsignSettings();
+
+        /// <summary>
+        /// Cycle settings
+        /// </summary>
+        public CycleSettings CycleSettings { get; set; } = new CycleSettings();
     }
 }
