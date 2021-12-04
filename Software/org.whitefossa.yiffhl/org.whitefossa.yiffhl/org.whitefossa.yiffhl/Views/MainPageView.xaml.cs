@@ -33,5 +33,12 @@ namespace org.whitefossa.yiffhl.Views
 
             ViewModel.SelectedProfileChangedCommand.Execute(selectedProfile);
         }
+
+        private void pkCallsign_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var selectedCallsign = (sender as Picker).SelectedItem;
+
+            ViewModel.SelectedCallsignChangedCommand.Execute(selectedCallsign);
+        }
     }
 }

@@ -15,25 +15,31 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private readonly IGetCodeCommand _getCodeCommand;
         private readonly IGetSpeedCommand _getSpeedCommand;
         private readonly ISetSpeedCommand _setSpeedCommand;
+        private readonly ISetCodeCommand _setCodeCommand;
 
         private OnGetFrequencySettingsDelegate _onGetFrequencySettings;
         private OnSetFrequencySettingsDelegate _onSetFrequencySettings;
         private OnGetCallsignSettingsDelegate _onGetCallsignSettings;
         private OnSetSpeedDelegate _onSetSpeed;
+        private OnSetCallsignDelegate _onSetCallsign;
 
         private Callsign _callsign;
+
+        private Callsign _callsignToSet;
 
         public ProfileSettingsManager(IGetFrequencyCommand getFrequencyCommand,
             ISetFrequencyCommand setFrequencyCommand,
             IGetCodeCommand getCodeCommand,
             IGetSpeedCommand getSpeedCommand,
-            ISetSpeedCommand setSpeedCommand)
+            ISetSpeedCommand setSpeedCommand,
+            ISetCodeCommand setCodeCommand)
         {
             _getFrequencyCommand = getFrequencyCommand;
             _setFrequencyCommand = setFrequencyCommand;
             _getCodeCommand = getCodeCommand;
             _getSpeedCommand = getSpeedCommand;
             _setSpeedCommand = setSpeedCommand;
+            _setCodeCommand = setCodeCommand;
         }
 
         public async Task<IReadOnlyCollection<Callsign>> GetCallsignsAsync()
@@ -153,6 +159,37 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             }
 
             _onSetSpeed();
+        }
+
+        public async Task SetCallsingAsync(Callsign callsign, OnSetCallsignDelegate onSetCallsign)
+        {
+            _callsignToSet = callsign ?? throw new ArgumentNullException(nameof(callsign));
+            _onSetCallsign = onSetCallsign ?? throw new ArgumentNullException(nameof(onSetCallsign));
+
+            // Checking if callsign changed
+            _getCodeCommand.SetResponseDelegate(OnGetCodeResponse_SetCallsignPathway);
+            _getCodeCommand.SendGetCodeCommand();
+        }
+
+        private void OnGetCodeResponse_SetCallsignPathway(FoxCode code)
+        {
+            if (_callsignToSet.Code == code)
+            {
+                return;
+            }
+
+            _setCodeCommand.SetResponseDelegate(OnSetCodeResponse);
+            _setCodeCommand.SendSetCodeCommand(_callsignToSet.Code);
+        }
+
+        private void OnSetCodeResponse(bool isSuccessfull)
+        {
+            if (!isSuccessfull)
+            {
+                throw new InvalidOperationException("Failed to set fox code");
+            }
+
+            _onSetCallsign();
         }
     }
 }

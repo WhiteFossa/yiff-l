@@ -315,7 +315,8 @@
                                         ItemDisplayBinding="{Binding Name}"
                                         SelectedItem="{Binding SelectedCallsign}"
                                         VerticalOptions="Center"
-                                        HorizontalOptions="EndAndExpand" />
+                                        HorizontalOptions="EndAndExpand"
+                                        SelectedIndexChanged="pkCallsign_SelectedIndexChanged" />
 
                                 </StackLayout>
 

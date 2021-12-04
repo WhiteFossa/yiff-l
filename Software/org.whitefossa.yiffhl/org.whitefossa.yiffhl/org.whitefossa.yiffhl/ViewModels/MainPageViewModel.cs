@@ -456,6 +456,11 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         public ICommand ToggleFoxSpeedCommand { get; }
 
+        /// <summary>
+        /// Command, executed on selected callsign change
+        /// </summary>
+        public ICommand SelectedCallsignChangedCommand { get; }
+
         public MainPageViewModel()
         {
             _foxConnector = App.Container.Resolve<IFoxConnector>();
@@ -499,6 +504,7 @@ namespace org.whitefossa.yiffhl.ViewModels
             DecreaseFoxFrequencyCommand = new Command(async() => await OnDecreaseFoxFrequencyAsync());
             IncreaseFoxFrequencyCommand = new Command(async() => await OnIncreaseFoxFrequencyAsync());
             ToggleFoxSpeedCommand = new Command(async() => await OnToggleFoxSpeedAsync());
+            SelectedCallsignChangedCommand = new Command<Callsign>(async (c) => await OnChangeSelectedCallsignAsync(c));
 
             // Initial state
             IsConnectButtonEnabled = false;
@@ -1015,6 +1021,23 @@ Do you want to continue?");
         {
             _mainModel.CurrentProfileSettings.CallsignSettings.IsFast = settings.IsFast;
             OnPropertyChanged(nameof(TxSpeedFormatted));
+        }
+
+        public async Task OnChangeSelectedCallsignAsync(Callsign callsing)
+        {
+            await _profileSettingsManager.SetCallsingAsync(callsing, async () => await OnSetCallsignAsync());
+        }
+
+        private async Task OnSetCallsignAsync()
+        {
+            await _profileSettingsManager.LoadCallsignSettingsAsync(OnGetCallsign_ReloadPathway);
+        }
+
+        private void OnGetCallsign_ReloadPathway(CallsignSettings settings)
+        {
+            _mainModel.CurrentProfileSettings.CallsignSettings.Callsing = settings.Callsing;
+            SelectedCallsign = Callsigns
+                .FirstOrDefault(cs => cs.Code == _mainModel.CurrentProfileSettings.CallsignSettings.Callsing.Code);
         }
     }
 }
