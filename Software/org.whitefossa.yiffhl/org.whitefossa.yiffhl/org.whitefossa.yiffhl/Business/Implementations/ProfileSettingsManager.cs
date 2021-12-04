@@ -25,6 +25,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations
 
         private Callsign _callsign;
 
+        private bool _speedToSet;
+
         private Callsign _callsignToSet;
 
         public ProfileSettingsManager(IGetFrequencyCommand getFrequencyCommand,
@@ -146,9 +148,22 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         public async Task SetSpeedAsync(bool isFast, OnSetSpeedDelegate onSetSpeed)
         {
             _onSetSpeed = onSetSpeed ?? throw new ArgumentNullException(nameof(onSetSpeed));
+            _speedToSet = isFast;
+
+            // Checking if speed changed
+            _getSpeedCommand.SetResponseDelegate(OnGetSpeedResponse_SetSpeedPathway);
+            _getSpeedCommand.SendGetSpeedCommand();
+        }
+
+        private void OnGetSpeedResponse_SetSpeedPathway(bool isFast)
+        {
+            if (_speedToSet == isFast)
+            {
+                return;
+            }
 
             _setSpeedCommand.SetResponseDelegate(OnSetSpeedResponse);
-            _setSpeedCommand.SendSetSpeedCommand(isFast);
+            _setSpeedCommand.SendSetSpeedCommand(_speedToSet);
         }
 
         private void OnSetSpeedResponse(bool isSuccessfull)
