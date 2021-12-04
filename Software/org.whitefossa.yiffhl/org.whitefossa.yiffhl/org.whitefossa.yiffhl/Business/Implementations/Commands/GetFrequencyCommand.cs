@@ -15,7 +15,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations.Commands
 
         public GetFrequencyCommand(IPacketsProcessor packetsProcessor)
         {
-            _packetsProcessor = App.Container.Resolve<IPacketsProcessor>();
+            _packetsProcessor = packetsProcessor;
             _packetsProcessor.SetOnGetFrequencyResponse(OnGetFrequencyResponse);
         }
 

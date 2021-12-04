@@ -13,9 +13,9 @@ namespace org.whitefossa.yiffhl.Business.Implementations.Commands
         private readonly IPacketsProcessor _packetsProcessor;
         private OnSetDateAndTimeResponseDelegate _onSetDateAndTimeResponse;
 
-        public SetDateAndTimeCommand()
+        public SetDateAndTimeCommand(IPacketsProcessor packetsProcessor)
         {
-            _packetsProcessor = App.Container.Resolve<IPacketsProcessor>();
+            _packetsProcessor = packetsProcessor;
             _packetsProcessor.SetOnSetDateAndTimeResponse(OnSetCurrentDateAndTimeResponse);
         }
 

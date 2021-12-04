@@ -19,9 +19,9 @@ namespace org.whitefossa.yiffhl.Business.Implementations.Commands
         private readonly IPacketsProcessor _packetsProcessor;
         private OnSetFrequencyResponseDelegate _onSetFrequencyResponse;
 
-        public SetFrequencyCommand()
+        public SetFrequencyCommand(IPacketsProcessor packetsProcessor)
         {
-            _packetsProcessor = App.Container.Resolve<IPacketsProcessor>();
+            _packetsProcessor = packetsProcessor;
             _packetsProcessor.SetOnSetFrequencyResponse(OnSetFrequencyResponse);
         }
 

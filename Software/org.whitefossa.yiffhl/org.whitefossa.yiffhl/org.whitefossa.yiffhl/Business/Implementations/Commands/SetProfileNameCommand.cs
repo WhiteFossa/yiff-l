@@ -17,9 +17,9 @@ namespace org.whitefossa.yiffhl.Business.Implementations.Commands
         private readonly IPacketsProcessor _packetsProcessor;
         private OnSetProfileNameResponseDelegate _onSetProfileNameResponse;
 
-        public SetProfileNameCommand()
+        public SetProfileNameCommand(IPacketsProcessor packetsProcessor)
         {
-            _packetsProcessor = App.Container.Resolve<IPacketsProcessor>();
+            _packetsProcessor = packetsProcessor;
             _packetsProcessor.SetOnSetProfileNameResponse(OnSetProfileNameResponse);
         }
 

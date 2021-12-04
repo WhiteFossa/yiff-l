@@ -11,9 +11,9 @@ namespace org.whitefossa.yiffhl.Business.Implementations.Commands
         private readonly IPacketsProcessor _packetsProcessor;
         private OnGetCodeResponseDelegate _onGetCodeResponse;
 
-        public GetCodeCommand()
+        public GetCodeCommand(IPacketsProcessor packetsProcessor)
         {
-            _packetsProcessor = App.Container.Resolve<IPacketsProcessor>();
+            _packetsProcessor = packetsProcessor;
             _packetsProcessor.SetOnGetCodeResponse(OnGetCodeResponse);
         }
 

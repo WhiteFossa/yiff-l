@@ -12,9 +12,9 @@ namespace org.whitefossa.yiffhl.Business.Implementations.Commands
         private readonly IPacketsProcessor _packetsProcessor;
         private OnSetCodeResponseDelegate _onSetCodeResponse;
 
-        public SetCodeCommand()
+        public SetCodeCommand(IPacketsProcessor packetsProcessor)
         {
-            _packetsProcessor = App.Container.Resolve<IPacketsProcessor>();
+            _packetsProcessor = packetsProcessor;
             _packetsProcessor.SetOnSetCodeResponse(OnSetCodeResponse);
         }
         public void SetResponseDelegate(OnSetCodeResponseDelegate onSetCodeResponse)

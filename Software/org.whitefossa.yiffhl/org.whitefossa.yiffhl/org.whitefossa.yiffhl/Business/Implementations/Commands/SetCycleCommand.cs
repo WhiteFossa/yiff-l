@@ -13,9 +13,9 @@ namespace org.whitefossa.yiffhl.Business.Implementations.Commands
         private readonly IPacketsProcessor _packetsProcessor;
         private OnSetCycleResponseDelegate _onSetCycleResponse;
 
-        public SetCycleCommand()
+        public SetCycleCommand(IPacketsProcessor packetsProcessor)
         {
-            _packetsProcessor = App.Container.Resolve<IPacketsProcessor>();
+            _packetsProcessor = packetsProcessor;
             _packetsProcessor.SetOnSetCycleResponse(OnSetCycleResponse);
         }
 

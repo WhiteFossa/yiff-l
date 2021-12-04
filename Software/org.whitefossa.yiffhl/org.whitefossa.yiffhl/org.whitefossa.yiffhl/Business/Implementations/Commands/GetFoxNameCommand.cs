@@ -15,9 +15,9 @@ namespace org.whitefossa.yiffhl.Business.Implementations.Commands
         private readonly IPacketsProcessor _packetsProcessor;
         private OnGetFoxNameResponseDelegate _onGetFoxNameResponse;
 
-        public GetFoxNameCommand()
+        public GetFoxNameCommand(IPacketsProcessor packetsProcessor)
         {
-            _packetsProcessor = App.Container.Resolve<IPacketsProcessor>();
+            _packetsProcessor = packetsProcessor;
             _packetsProcessor.SetOnGetFoxNameResponse(OnGetFoxNameResponse);
         }
 

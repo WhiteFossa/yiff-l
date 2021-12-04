@@ -12,9 +12,9 @@ namespace org.whitefossa.yiffhl.Business.Implementations.Commands
         private readonly IPacketsProcessor _packetsProcessor;
         private OnGetSpeedResponseDelegate _onGetSpeedResponse;
 
-        public GetSpeedCommand()
+        public GetSpeedCommand(IPacketsProcessor packetsProcessor)
         {
-            _packetsProcessor = App.Container.Resolve<IPacketsProcessor>();
+            _packetsProcessor = packetsProcessor;
             _packetsProcessor.SetOnGetSpeedResponse(OnGetSpeedResponse);
         }
 
