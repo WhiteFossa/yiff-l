@@ -516,7 +516,7 @@ namespace org.whitefossa.yiffhl.ViewModels
         public bool IsCycleControlsEnabled
         {
             get => !_mainModel.CurrentProfileSettings.CycleSettings.IsContinuous
-                && !_isFoxExectingACommand;
+                && !_isFoxExecutingACommand;
         }
 
         /// <summary>
@@ -558,7 +558,15 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// <summary>
         /// True, if fox executing a command
         /// </summary>
-        private bool _isFoxExectingACommand { get; set; }
+        private bool _isFoxExecutingACommand { get; set; }
+
+        /// <summary>
+        /// Controls should be disabled when fox executing a command
+        /// </summary>
+        public bool IsControlsEnabled
+        {
+            get => !_isFoxExecutingACommand;
+        }
 
         public MainPageViewModel()
         {
@@ -915,6 +923,8 @@ Do you want to continue?");
 
             _mainModel.CurrentProfile = selectedProfile;
 
+            SetFoxCommandInProgress(true);
+
             // Switching profile in the fox
             await _foxProfilesManager.SwitchProfileAsync(selectedProfile.Id, async () => await OnSelectedProfileChangedAsync());
         }
@@ -1005,6 +1015,8 @@ Do you want to continue?");
         private void OnGetFrequencySettings_ReloadPathway(FrequencySettings settings)
         {
             OnGetFrequencySettings_Common(settings);
+
+            SetFoxCommandInProgress(false);
         }
 
         private void OnGetFrequencySettings_Common(FrequencySettings settings)
@@ -1038,6 +1050,8 @@ Do you want to continue?");
 
         private async Task SetFrequencyAsync(FrequencySettings frequencySettings)
         {
+            SetFoxCommandInProgress(true);
+
             await _profileSettingsManager.SetFrequencySettingsAsync(frequencySettings,
                 async () => await OnSetFrequencySettingsAsync());
         }
@@ -1127,6 +1141,8 @@ Do you want to continue?");
         private void OnGetSpeed_ReloadPathway(CallsignSettings settings)
         {
             OnGetSpeed_Common(settings);
+
+            SetFoxCommandInProgress(false);
         }
 
         private void OnGetSpeed_Common(CallsignSettings settings)
@@ -1138,6 +1154,8 @@ Do you want to continue?");
         private void OnGetCallsign_ReloadPathway(CallsignSettings settings)
         {
             OnGetCallsign_Common(settings);
+
+            SetFoxCommandInProgress(false);
         }
 
         private void OnGetCallsign_Common(CallsignSettings settings)
@@ -1153,6 +1171,8 @@ Do you want to continue?");
 
         private async Task OnToggleFoxSpeedAsync()
         {
+            SetFoxCommandInProgress(true);
+
             await _profileSettingsManager.SetSpeedAsync(!_mainModel.CurrentProfileSettings.CallsignSettings.IsFast,
                 async () => await OnSetSpeedAsync());
         }
@@ -1168,6 +1188,8 @@ Do you want to continue?");
 
         public async Task OnChangeSelectedCallsignAsync(Callsign callsing)
         {
+            SetFoxCommandInProgress(true);
+
             await _profileSettingsManager.SetCallsingAsync(callsing, async () => await OnSetCallsignAsync());
         }
 
@@ -1196,6 +1218,7 @@ Do you want to continue?");
             OnGetCycleSettings_Common(settings);
 
             // TODO: Load next setting
+            SetFoxCommandInProgress(false);
         }
 
         private void OnGetCycleSettings_ReloadPathway(CycleSettings settings)
@@ -1288,8 +1311,9 @@ Do you want to continue?");
 
         private void SetFoxCommandInProgress(bool isInProgress)
         {
-            _isFoxExectingACommand = isInProgress;
+            _isFoxExecutingACommand = isInProgress;
 
+            OnPropertyChanged(nameof(IsControlsEnabled));
             OnPropertyChanged(nameof(IsCycleControlsEnabled));
         }
 

@@ -258,7 +258,8 @@
                                         Text="&lt;--&gt;"
                                         VerticalOptions="Center"
                                         HorizontalOptions="End" 
-                                        Command="{Binding ToggleFoxFrequencyRangeCommand}" />
+                                        Command="{Binding ToggleFoxFrequencyRangeCommand}"
+                                        IsEnabled="{Binding IsCycleControlsEnabled}" />
 
                                 </StackLayout>
 
@@ -280,13 +281,15 @@
                                         Text="&lt;"
                                         VerticalOptions="Center"
                                         HorizontalOptions="End"
-                                        Command="{Binding DecreaseFoxFrequencyCommand}" />
+                                        Command="{Binding DecreaseFoxFrequencyCommand}"
+                                        IsEnabled="{Binding IsCycleControlsEnabled}" />
                                     
                                     <Button
                                         Text="&gt;"
                                         VerticalOptions="Center"
                                         HorizontalOptions="End"
-                                        Command="{Binding IncreaseFoxFrequencyCommand}" />
+                                        Command="{Binding IncreaseFoxFrequencyCommand}"
+                                        IsEnabled="{Binding IsCycleControlsEnabled}" />
 
                                 </StackLayout>
                                 
@@ -316,7 +319,8 @@
                                         SelectedItem="{Binding SelectedCallsign}"
                                         VerticalOptions="Center"
                                         HorizontalOptions="EndAndExpand"
-                                        SelectedIndexChanged="pkCallsign_SelectedIndexChanged" />
+                                        SelectedIndexChanged="pkCallsign_SelectedIndexChanged"
+                                        IsEnabled="{Binding IsCycleControlsEnabled}" />
 
                                 </StackLayout>
 
@@ -339,7 +343,8 @@
                                         Text="&lt;--&gt;"
                                         VerticalOptions="Center"
                                         HorizontalOptions="End"
-                                        Command="{Binding ToggleFoxSpeedCommand}"/>
+                                        Command="{Binding ToggleFoxSpeedCommand}"
+                                        IsEnabled="{Binding IsCycleControlsEnabled}" />
 
 
                                 </StackLayout>
@@ -372,7 +377,8 @@
                                         Text="&lt;--&gt;"
                                         VerticalOptions="Center"
                                         HorizontalOptions="End"
-                                        Command="{Binding ToggleCycleModeCommand}" />
+                                        Command="{Binding ToggleCycleModeCommand}"
+                                        IsEnabled="{Binding IsControlsEnabled}" />
                                 </StackLayout>
 
                                 <StackLayout
