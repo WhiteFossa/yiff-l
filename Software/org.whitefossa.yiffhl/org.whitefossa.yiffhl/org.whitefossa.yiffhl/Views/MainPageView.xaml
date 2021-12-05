@@ -458,7 +458,8 @@
                                         Text="{Binding EndingToneDurationFormatted}"
                                         FontAttributes="Bold"
                                         VerticalOptions="Center"
-                                        HorizontalOptions="EndAndExpand" />
+                                        HorizontalOptions="EndAndExpand"
+                                        IsEnabled="{Binding IsCycleControlsEnabled}" />
 
                                     <Button
                                         Text="&lt;"
