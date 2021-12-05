@@ -544,6 +544,16 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         public ICommand DecreaseTxDurationCommand { get; }
 
+        /// <summary>
+        /// Command to increase pause duration
+        /// </summary>
+        public ICommand IncreasePauseDurationCommand { get; }
+
+        /// <summary>
+        /// Command to decrease pause duration
+        /// </summary>
+        public ICommand DecreasePauseDurationCommand { get; }
+
         public MainPageViewModel()
         {
             _foxConnector = App.Container.Resolve<IFoxConnector>();
@@ -591,6 +601,8 @@ namespace org.whitefossa.yiffhl.ViewModels
             ToggleCycleModeCommand = new Command(async () => await OnToggleCycleModeAsync());
             IncreaseTxDurationCommand = new Command(async () => await OnIncreaseTxDurationAsync());
             DecreaseTxDurationCommand = new Command(async () => await OnDecreaseTxDurationAsync());
+            IncreasePauseDurationCommand = new Command(async () => await OnIncreasePauseDuration());
+            DecreasePauseDurationCommand = new Command(async() => await OnDecreasePauseDuration());
 
             // Initial state
             IsConnectButtonEnabled = false;
@@ -1220,6 +1232,32 @@ Do you want to continue?");
             {
                 var newSettings = _mainModel.CurrentProfileSettings.CycleSettings;
                 newSettings.TxDuration -= new TimeSpan(0, 0, 1);
+
+                await _profileSettingsManager.SetCycleSettingsAsync(newSettings, async () => await OnSetCycleSettingsAsync());
+            }
+        }
+
+        #endregion
+
+        #region Pause duration
+
+        public async Task OnIncreasePauseDuration()
+        {
+            if (_mainModel.CurrentProfileSettings.CycleSettings.PauseDuration.TotalSeconds < MaxPauseDuration)
+            {
+                var newSettings = _mainModel.CurrentProfileSettings.CycleSettings;
+                newSettings.PauseDuration += new TimeSpan(0, 0, 1);
+
+                await _profileSettingsManager.SetCycleSettingsAsync(newSettings, async () => await OnSetCycleSettingsAsync());
+            }
+        }
+
+        public async Task OnDecreasePauseDuration()
+        {
+            if (_mainModel.CurrentProfileSettings.CycleSettings.PauseDuration.TotalSeconds > MinPauseDuration)
+            {
+                var newSettings = _mainModel.CurrentProfileSettings.CycleSettings;
+                newSettings.PauseDuration -= new TimeSpan(0, 0, 1);
 
                 await _profileSettingsManager.SetCycleSettingsAsync(newSettings, async () => await OnSetCycleSettingsAsync());
             }

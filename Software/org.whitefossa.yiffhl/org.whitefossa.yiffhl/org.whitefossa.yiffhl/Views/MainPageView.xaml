@@ -428,12 +428,14 @@
                                         Text="&lt;"
                                         VerticalOptions="Center"
                                         HorizontalOptions="End"
+                                        Command="{Binding DecreasePauseDurationCommand}"
                                         IsEnabled="{Binding IsCycleControlsEnabled}" />
 
                                     <Button
                                         Text="&gt;"
                                         VerticalOptions="Center"
                                         HorizontalOptions="End"
+                                        Command="{Binding IncreasePauseDurationCommand}"
                                         IsEnabled="{Binding IsCycleControlsEnabled}" />
                                 </StackLayout>
 
