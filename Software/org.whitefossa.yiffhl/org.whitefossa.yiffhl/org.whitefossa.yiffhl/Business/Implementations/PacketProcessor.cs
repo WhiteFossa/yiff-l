@@ -208,6 +208,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         {
             var responseTo = (CommandType)payload.ElementAt(0);
 
+            Debug.WriteLine($"Response to command: {responseTo}");
+
             var responsePayload = payload
                 .ToList()
                 .GetRange(1, payload.Count - 1)
@@ -536,7 +538,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
 
         public void SendCommand(CommandType command, IReadOnlyCollection<byte> commandPayload)
         {
-            Debug.WriteLine((int)command);
+            Debug.WriteLine($"Send command: {command}");
 
             var resultPayload = new List<byte>();
             resultPayload.Add((byte)PayloadType.CommandToFox);

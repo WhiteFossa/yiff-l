@@ -4,6 +4,7 @@ using org.whitefossa.yiffhl.Abstractions.Interfaces;
 using org.whitefossa.yiffhl.Abstractions.Interfaces.Commands;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace org.whitefossa.yiffhl.Business.Implementations
@@ -18,6 +19,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private readonly ISetCodeCommand _setCodeCommand;
         private readonly IGetCycleCommand _getCycleCommand;
         private readonly ISetCycleCommand _setCycleCommand;
+        private readonly IGetEndingToneDurationCommand _getEndingToneDurationCommand;
+        private readonly ISetEndingToneDurationCommand _setEndingToneDurationCommand;
 
         private OnGetFrequencySettingsDelegate _onGetFrequencySettings;
         private OnSetFrequencySettingsDelegate _onSetFrequencySettings;
@@ -28,6 +31,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private OnSetCycleSettingsDelegate _onSetCycleSettings;
 
         private Callsign _callsign;
+        private CycleSettings _cycleSettings;
 
         private bool _speedToSet;
         private Callsign _callsignToSet;
@@ -41,7 +45,9 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             ISetSpeedCommand setSpeedCommand,
             ISetCodeCommand setCodeCommand,
             IGetCycleCommand getCycleCommand,
-            ISetCycleCommand setCycleCommand)
+            ISetCycleCommand setCycleCommand,
+            IGetEndingToneDurationCommand getEndingToneDurationCommand,
+            ISetEndingToneDurationCommand setEndingToneDurationCommand)
         {
             _getFrequencyCommand = getFrequencyCommand;
             _setFrequencyCommand = setFrequencyCommand;
@@ -51,6 +57,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _setCodeCommand = setCodeCommand;
             _getCycleCommand = getCycleCommand;
             _setCycleCommand = setCycleCommand;
+            _getEndingToneDurationCommand = getEndingToneDurationCommand;
+            _setEndingToneDurationCommand = setEndingToneDurationCommand;
         }
 
         public async Task<IReadOnlyCollection<Callsign>> GetCallsignsAsync()
@@ -238,34 +246,45 @@ namespace org.whitefossa.yiffhl.Business.Implementations
 
         private void OnGetCycleResponse(bool isContinuous, TimeSpan txTime, TimeSpan pauseTime)
         {
-            var cycleSettings = new CycleSettings
+            _cycleSettings = new CycleSettings
             {
                 IsContinuous = isContinuous,
                 TxDuration = txTime,
                 PauseDuration = pauseTime
             };
 
-            _onGetCycleSettings(cycleSettings);
+            _getEndingToneDurationCommand.SetResponseDelegate(OnGetEndingToneDurationResponse);
+            _getEndingToneDurationCommand.SendGetEndingToneDurationCommand();
+        }
+
+        private void OnGetEndingToneDurationResponse(TimeSpan duration)
+        {
+            _cycleSettings.EndingToneDuration = duration;
+
+            _onGetCycleSettings(_cycleSettings);
         }
 
         public async Task SetCycleSettingsAsync(CycleSettings settings, OnSetCycleSettingsDelegate onSetCycleSettings)
         {
+            Debug.WriteLine("New settings request");
+
             _cycleSettingsToSet = settings ?? throw new ArgumentNullException(nameof(settings));
             _onSetCycleSettings = onSetCycleSettings ?? throw new ArgumentNullException(nameof(onSetCycleSettings));
 
             // Checking if cycle settings changed
-            _getCycleCommand.SetResponseDelegate(OnGetCycleResponse_SetCycleSettingsPathway);
-            _getCycleCommand.SendGetCycleCommand();
+            await LoadCycleSettingsAsync(OnGetCycleSettings_SetCycleSettingsPathway);
 
         }
 
-        private void OnGetCycleResponse_SetCycleSettingsPathway(bool isContinuous, TimeSpan txTime, TimeSpan pauseTime)
+        private void OnGetCycleSettings_SetCycleSettingsPathway(CycleSettings settings)
         {
-            if (isContinuous == _cycleSettingsToSet.IsContinuous
+            if (settings.IsContinuous == _cycleSettingsToSet.IsContinuous
                 &&
-                txTime == _cycleSettingsToSet.TxDuration
+                settings.TxDuration == _cycleSettingsToSet.TxDuration
                 &&
-                pauseTime == _cycleSettingsToSet.PauseDuration)
+                settings.PauseDuration == _cycleSettingsToSet.PauseDuration
+                &&
+                settings.EndingToneDuration == _cycleSettingsToSet.EndingToneDuration)
             {
                 return;
             }
@@ -279,6 +298,18 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             if (!isSuccessfull)
             {
                 throw new InvalidOperationException("Failed to set fox cycle");
+            }
+
+            // Setting ending tone duration
+            _setEndingToneDurationCommand.SetResponseDelegate(OnSetEndingToneDurationResponse);
+            _setEndingToneDurationCommand.SendSetEndingToneResponseDurationCommand(_cycleSettingsToSet.EndingToneDuration);
+        }
+
+        private void OnSetEndingToneDurationResponse(bool isSuccessfull)
+        {
+            if (!isSuccessfull)
+            {
+                throw new InvalidOperationException("Failed to set ending tone duration");
             }
 
             _onSetCycleSettings();

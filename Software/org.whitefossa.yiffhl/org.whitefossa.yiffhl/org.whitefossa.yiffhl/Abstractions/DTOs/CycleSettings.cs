@@ -21,5 +21,7 @@ namespace org.whitefossa.yiffhl.Abstractions.DTOs
         /// Pause duration
         /// </summary>
         public TimeSpan PauseDuration { get; set; }
+
+        public TimeSpan EndingToneDuration { get; set; }
     }
 }

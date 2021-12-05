@@ -515,7 +515,8 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         public bool IsCycleControlsEnabled
         {
-            get => !_mainModel.CurrentProfileSettings.CycleSettings.IsContinuous;
+            get => !_mainModel.CurrentProfileSettings.CycleSettings.IsContinuous
+                && !_isFoxExectingACommand;
         }
 
         /// <summary>
@@ -553,6 +554,11 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// Command to decrease pause duration
         /// </summary>
         public ICommand DecreasePauseDurationCommand { get; }
+
+        /// <summary>
+        /// True, if fox executing a command
+        /// </summary>
+        private bool _isFoxExectingACommand { get; set; }
 
         public MainPageViewModel()
         {
@@ -612,6 +618,7 @@ namespace org.whitefossa.yiffhl.ViewModels
             IsAddProfileButtonEnabled = false;
 
             ResetFoxRelatedData();
+            SetFoxCommandInProgress(false);
 
             // Requesting foxes list
             Task.WaitAll(OnRefreshFoxesListClickedAsync());
@@ -1180,6 +1187,8 @@ Do you want to continue?");
             OnPropertyChanged(nameof(TxDurationFormatted));
             OnPropertyChanged(nameof(PauseDurationFormatted));
             OnPropertyChanged(nameof(IsCycleControlsEnabled));
+
+            SetFoxCommandInProgress(false);
         }
 
         private void OnGetCycleSettings_LoadPathway(CycleSettings settings)
@@ -1200,6 +1209,8 @@ Do you want to continue?");
 
         private async Task OnToggleCycleModeAsync()
         {
+            SetFoxCommandInProgress(true);
+
             var newSettings = _mainModel.CurrentProfileSettings.CycleSettings;
             newSettings.IsContinuous = !newSettings.IsContinuous;
 
@@ -1217,6 +1228,8 @@ Do you want to continue?");
 
         public async Task OnIncreaseTxDurationAsync()
         {
+            SetFoxCommandInProgress(true);
+
             if (_mainModel.CurrentProfileSettings.CycleSettings.TxDuration.TotalSeconds < MaxTxDuration)
             {
                 var newSettings = _mainModel.CurrentProfileSettings.CycleSettings;
@@ -1228,6 +1241,8 @@ Do you want to continue?");
 
         public async Task OnDecreaseTxDurationAsync()
         {
+            SetFoxCommandInProgress(true);
+
             if (_mainModel.CurrentProfileSettings.CycleSettings.TxDuration.TotalSeconds > MinTxDuration)
             {
                 var newSettings = _mainModel.CurrentProfileSettings.CycleSettings;
@@ -1243,6 +1258,8 @@ Do you want to continue?");
 
         public async Task OnIncreasePauseDuration()
         {
+            SetFoxCommandInProgress(true);
+
             if (_mainModel.CurrentProfileSettings.CycleSettings.PauseDuration.TotalSeconds < MaxPauseDuration)
             {
                 var newSettings = _mainModel.CurrentProfileSettings.CycleSettings;
@@ -1254,6 +1271,8 @@ Do you want to continue?");
 
         public async Task OnDecreasePauseDuration()
         {
+            SetFoxCommandInProgress(true);
+
             if (_mainModel.CurrentProfileSettings.CycleSettings.PauseDuration.TotalSeconds > MinPauseDuration)
             {
                 var newSettings = _mainModel.CurrentProfileSettings.CycleSettings;
@@ -1261,6 +1280,17 @@ Do you want to continue?");
 
                 await _profileSettingsManager.SetCycleSettingsAsync(newSettings, async () => await OnSetCycleSettingsAsync());
             }
+        }
+
+        #endregion
+
+        #region Fox command in progress
+
+        private void SetFoxCommandInProgress(bool isInProgress)
+        {
+            _isFoxExectingACommand = isInProgress;
+
+            OnPropertyChanged(nameof(IsCycleControlsEnabled));
         }
 
         #endregion
