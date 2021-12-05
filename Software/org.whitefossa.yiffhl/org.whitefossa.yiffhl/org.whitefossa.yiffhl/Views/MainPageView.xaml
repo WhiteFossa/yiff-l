@@ -455,7 +455,7 @@
                                         VerticalOptions="Center" />
 
                                     <Label
-                                        Text="5s"
+                                        Text="{Binding EndingToneDurationFormatted}"
                                         FontAttributes="Bold"
                                         VerticalOptions="Center"
                                         HorizontalOptions="EndAndExpand" />
@@ -464,13 +464,15 @@
                                         Text="&lt;"
                                         VerticalOptions="Center"
                                         HorizontalOptions="End"
-                                        />
+                                        Command="{Binding DecreaseEndingToneDurationCommand}"
+                                        IsEnabled="{Binding IsCycleControlsEnabled}" />
 
                                     <Button
                                         Text="&gt;"
                                         VerticalOptions="Center"
                                         HorizontalOptions="End"
-                                        />
+                                        Command="{Binding IncreaseEndingToneDurationCommand}"
+                                        IsEnabled="{Binding IsCycleControlsEnabled}" />
                                 </StackLayout>
                                 
                             </StackLayout>

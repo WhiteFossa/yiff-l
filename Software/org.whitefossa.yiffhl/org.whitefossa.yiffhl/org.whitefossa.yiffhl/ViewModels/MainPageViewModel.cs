@@ -82,6 +82,13 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         private const int MaxPauseDuration = 3599;
 
+        /// <summary>
+        /// Minimal ending tone duration in seconds
+        /// </summary>
+        private const int MinEndingToneDuration = 0;
+
+        private const int MaxEndingToneDuration = 5;
+
         private readonly IFoxConnector _foxConnector;
         private readonly IPairedFoxesEnumerator _pairedFoxesEnumerator;
         private readonly IUserNotifier _userNotifier;
@@ -568,6 +575,27 @@ namespace org.whitefossa.yiffhl.ViewModels
             get => !_isFoxExecutingACommand;
         }
 
+        /// <summary>
+        /// Command to increase ending tone duration
+        /// </summary>
+        public ICommand IncreaseEndingToneDurationCommand { get; }
+
+        /// <summary>
+        /// Command to decrease ending tone duration
+        /// </summary>
+        public ICommand DecreaseEndingToneDurationCommand { get; }
+
+        /// <summary>
+        /// Ending tone duration formatted
+        /// </summary>
+        public string EndingToneDurationFormatted
+        {
+            get
+            {
+                return $"{ _mainModel.CurrentProfileSettings.CycleSettings.EndingToneDuration.TotalSeconds }s";
+            }
+        }
+
         public MainPageViewModel()
         {
             _foxConnector = App.Container.Resolve<IFoxConnector>();
@@ -615,8 +643,10 @@ namespace org.whitefossa.yiffhl.ViewModels
             ToggleCycleModeCommand = new Command(async () => await OnToggleCycleModeAsync());
             IncreaseTxDurationCommand = new Command(async () => await OnIncreaseTxDurationAsync());
             DecreaseTxDurationCommand = new Command(async () => await OnDecreaseTxDurationAsync());
-            IncreasePauseDurationCommand = new Command(async () => await OnIncreasePauseDuration());
-            DecreasePauseDurationCommand = new Command(async() => await OnDecreasePauseDuration());
+            IncreasePauseDurationCommand = new Command(async () => await OnIncreasePauseDurationAsync());
+            DecreasePauseDurationCommand = new Command(async() => await OnDecreasePauseDurationAsync());
+            IncreaseEndingToneDurationCommand = new Command(async() => await OnIncreaseEndingToneDurationAsync());
+            DecreaseEndingToneDurationCommand = new Command(async () => await OnDecreaseEndingToneDurationAsync());
 
             // Initial state
             IsConnectButtonEnabled = false;
@@ -1209,6 +1239,7 @@ Do you want to continue?");
             OnPropertyChanged(nameof(TxDurationFormatted));
             OnPropertyChanged(nameof(PauseDurationFormatted));
             OnPropertyChanged(nameof(IsCycleControlsEnabled));
+            OnPropertyChanged(nameof(EndingToneDurationFormatted));
 
             SetFoxCommandInProgress(false);
         }
@@ -1251,26 +1282,24 @@ Do you want to continue?");
 
         public async Task OnIncreaseTxDurationAsync()
         {
-            SetFoxCommandInProgress(true);
-
             if (_mainModel.CurrentProfileSettings.CycleSettings.TxDuration.TotalSeconds < MaxTxDuration)
             {
                 var newSettings = _mainModel.CurrentProfileSettings.CycleSettings;
                 newSettings.TxDuration += new TimeSpan(0, 0, 1);
 
+                SetFoxCommandInProgress(true);
                 await _profileSettingsManager.SetCycleSettingsAsync(newSettings, async () => await OnSetCycleSettingsAsync());
             }
         }
 
         public async Task OnDecreaseTxDurationAsync()
         {
-            SetFoxCommandInProgress(true);
-
             if (_mainModel.CurrentProfileSettings.CycleSettings.TxDuration.TotalSeconds > MinTxDuration)
             {
                 var newSettings = _mainModel.CurrentProfileSettings.CycleSettings;
                 newSettings.TxDuration -= new TimeSpan(0, 0, 1);
 
+                SetFoxCommandInProgress(true);
                 await _profileSettingsManager.SetCycleSettingsAsync(newSettings, async () => await OnSetCycleSettingsAsync());
             }
         }
@@ -1279,28 +1308,26 @@ Do you want to continue?");
 
         #region Pause duration
 
-        public async Task OnIncreasePauseDuration()
+        public async Task OnIncreasePauseDurationAsync()
         {
-            SetFoxCommandInProgress(true);
-
             if (_mainModel.CurrentProfileSettings.CycleSettings.PauseDuration.TotalSeconds < MaxPauseDuration)
             {
                 var newSettings = _mainModel.CurrentProfileSettings.CycleSettings;
                 newSettings.PauseDuration += new TimeSpan(0, 0, 1);
 
+                SetFoxCommandInProgress(true);
                 await _profileSettingsManager.SetCycleSettingsAsync(newSettings, async () => await OnSetCycleSettingsAsync());
             }
         }
 
-        public async Task OnDecreasePauseDuration()
+        public async Task OnDecreasePauseDurationAsync()
         {
-            SetFoxCommandInProgress(true);
-
             if (_mainModel.CurrentProfileSettings.CycleSettings.PauseDuration.TotalSeconds > MinPauseDuration)
             {
                 var newSettings = _mainModel.CurrentProfileSettings.CycleSettings;
                 newSettings.PauseDuration -= new TimeSpan(0, 0, 1);
 
+                SetFoxCommandInProgress(true);
                 await _profileSettingsManager.SetCycleSettingsAsync(newSettings, async () => await OnSetCycleSettingsAsync());
             }
         }
@@ -1315,6 +1342,34 @@ Do you want to continue?");
 
             OnPropertyChanged(nameof(IsControlsEnabled));
             OnPropertyChanged(nameof(IsCycleControlsEnabled));
+        }
+
+        #endregion
+
+        #region Ending tone duration
+
+        public async Task OnIncreaseEndingToneDurationAsync()
+        {
+            if (_mainModel.CurrentProfileSettings.CycleSettings.EndingToneDuration.TotalSeconds < MaxEndingToneDuration)
+            {
+                var newSettings = _mainModel.CurrentProfileSettings.CycleSettings;
+                newSettings.EndingToneDuration += new TimeSpan(0, 0, 1);
+
+                SetFoxCommandInProgress(true);
+                await _profileSettingsManager.SetCycleSettingsAsync(newSettings, async () => await OnSetCycleSettingsAsync());
+            }
+        }
+
+        public async Task OnDecreaseEndingToneDurationAsync()
+        {
+            if (_mainModel.CurrentProfileSettings.CycleSettings.EndingToneDuration.TotalSeconds > MinEndingToneDuration)
+            {
+                var newSettings = _mainModel.CurrentProfileSettings.CycleSettings;
+                newSettings.EndingToneDuration -= new TimeSpan(0, 0, 1);
+
+                SetFoxCommandInProgress(true);
+                await _profileSettingsManager.SetCycleSettingsAsync(newSettings, async () => await OnSetCycleSettingsAsync());
+            }
         }
 
         #endregion

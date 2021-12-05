@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace org.whitefossa.yiffhl.Business.Implementations
 {
@@ -538,6 +539,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations
 
         public void SendCommand(CommandType command, IReadOnlyCollection<byte> commandPayload)
         {
+            Thread.Sleep(50); // TODO: Remove this dirty as hell hack
+
             Debug.WriteLine($"Send command: {command}");
 
             var resultPayload = new List<byte>();

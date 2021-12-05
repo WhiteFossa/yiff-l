@@ -138,6 +138,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         {
             if (_frequencySettingsToSet.Is2m == is144MHz && _frequencySettingsToSet.Frequency == frequency)
             {
+                _onSetFrequencySettings();
                 return;
             }
 
@@ -188,6 +189,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         {
             if (_speedToSet == isFast)
             {
+                _onSetSpeed();
                 return;
             }
 
@@ -219,6 +221,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         {
             if (_callsignToSet.Code == code)
             {
+                _onSetCallsign();
                 return;
             }
 
@@ -273,7 +276,6 @@ namespace org.whitefossa.yiffhl.Business.Implementations
 
             // Checking if cycle settings changed
             await LoadCycleSettingsAsync(OnGetCycleSettings_SetCycleSettingsPathway);
-
         }
 
         private void OnGetCycleSettings_SetCycleSettingsPathway(CycleSettings settings)
@@ -286,6 +288,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
                 &&
                 settings.EndingToneDuration == _cycleSettingsToSet.EndingToneDuration)
             {
+                _onSetCycleSettings();
                 return;
             }
 
