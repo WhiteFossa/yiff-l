@@ -5,10 +5,7 @@ using org.whitefossa.yiffhl.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -87,7 +84,25 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         private const int MinEndingToneDuration = 0;
 
+        /// <summary>
+        /// Maximal ending tone duration in seconds
+        /// </summary>
         private const int MaxEndingToneDuration = 5;
+
+        /// <summary>
+        /// Change durations by this value when "small step" buttons are pressed
+        /// </summary>
+        private const int DurationStepSmall = 1;
+
+        /// <summary>
+        /// Change durations by this value when "big step" buttons are pressed
+        /// </summary>
+        private const int DurationStepBig = 15;
+
+        /// <summary>
+        /// Change ending tone duration by this value
+        /// </summary>
+        private const int EndingToneDurationStep = 1;
 
         private readonly IFoxConnector _foxConnector;
         private readonly IPairedFoxesEnumerator _pairedFoxesEnumerator;
@@ -543,24 +558,44 @@ namespace org.whitefossa.yiffhl.ViewModels
         public ICommand ToggleCycleModeCommand { get; }
 
         /// <summary>
-        /// Command to increase TX duration
+        /// Command to increase TX duration (small)
         /// </summary>
-        public ICommand IncreaseTxDurationCommand { get; }
+        public ICommand IncreaseTxDurationSmallCommand { get; }
 
         /// <summary>
-        /// Command to decrease TX duration
+        /// Command to increase TX duration (big)
         /// </summary>
-        public ICommand DecreaseTxDurationCommand { get; }
+        public ICommand IncreaseTxDurationBigCommand { get; }
 
         /// <summary>
-        /// Command to increase pause duration
+        /// Command to decrease TX duration (small)
         /// </summary>
-        public ICommand IncreasePauseDurationCommand { get; }
+        public ICommand DecreaseTxDurationSmallCommand { get; }
 
         /// <summary>
-        /// Command to decrease pause duration
+        /// Command to decrease TX duration (big)
         /// </summary>
-        public ICommand DecreasePauseDurationCommand { get; }
+        public ICommand DecreaseTxDurationBigCommand { get; }
+
+        /// <summary>
+        /// Command to increase pause duration (small)
+        /// </summary>
+        public ICommand IncreasePauseDurationSmallCommand { get; }
+
+        /// <summary>
+        /// Command to increase pause duration (big)
+        /// </summary>
+        public ICommand IncreasePauseDurationBigCommand { get; }
+
+        /// <summary>
+        /// Command to decrease pause duration (small)
+        /// </summary>
+        public ICommand DecreasePauseDurationSmallCommand { get; }
+
+        /// <summary>
+        /// Command to decrease pause duration (big)
+        /// </summary>
+        public ICommand DecreasePauseDurationBigCommand { get; }
 
         /// <summary>
         /// True, if fox executing a command
@@ -641,12 +676,21 @@ namespace org.whitefossa.yiffhl.ViewModels
             ToggleFoxSpeedCommand = new Command(async () => await OnToggleFoxSpeedAsync());
             SelectedCallsignChangedCommand = new Command<Callsign>(async (c) => await OnChangeSelectedCallsignAsync(c));
             ToggleCycleModeCommand = new Command(async () => await OnToggleCycleModeAsync());
-            IncreaseTxDurationCommand = new Command(async () => await OnIncreaseTxDurationAsync());
-            DecreaseTxDurationCommand = new Command(async () => await OnDecreaseTxDurationAsync());
-            IncreasePauseDurationCommand = new Command(async () => await OnIncreasePauseDurationAsync());
-            DecreasePauseDurationCommand = new Command(async() => await OnDecreasePauseDurationAsync());
-            IncreaseEndingToneDurationCommand = new Command(async() => await OnIncreaseEndingToneDurationAsync());
-            DecreaseEndingToneDurationCommand = new Command(async () => await OnDecreaseEndingToneDurationAsync());
+
+            IncreaseTxDurationSmallCommand = new Command(async () => await OnIncreaseTxDurationAsync(DurationStepSmall));
+            IncreaseTxDurationBigCommand = new Command(async () => await OnIncreaseTxDurationAsync(DurationStepBig));
+
+            DecreaseTxDurationSmallCommand = new Command(async () => await OnDecreaseTxDurationAsync(DurationStepSmall));
+            DecreaseTxDurationBigCommand = new Command(async () => await OnDecreaseTxDurationAsync(DurationStepBig));
+
+            IncreasePauseDurationSmallCommand = new Command(async () => await OnIncreasePauseDurationAsync(DurationStepSmall));
+            IncreasePauseDurationBigCommand = new Command(async () => await OnIncreasePauseDurationAsync(DurationStepBig));
+
+            DecreasePauseDurationSmallCommand = new Command(async() => await OnDecreasePauseDurationAsync(DurationStepSmall));
+            DecreasePauseDurationBigCommand = new Command(async () => await OnDecreasePauseDurationAsync(DurationStepBig));
+
+            IncreaseEndingToneDurationCommand = new Command(async() => await OnIncreaseEndingToneDurationAsync(EndingToneDurationStep));
+            DecreaseEndingToneDurationCommand = new Command(async () => await OnDecreaseEndingToneDurationAsync(EndingToneDurationStep));
 
             // Initial state
             IsConnectButtonEnabled = false;
@@ -1280,24 +1324,28 @@ Do you want to continue?");
 
         #region TX duration
 
-        public async Task OnIncreaseTxDurationAsync()
+        public async Task OnIncreaseTxDurationAsync(int delta)
         {
-            if (_mainModel.CurrentProfileSettings.CycleSettings.TxDuration.TotalSeconds < MaxTxDuration)
+            var newValue = _mainModel.CurrentProfileSettings.CycleSettings.TxDuration + new TimeSpan(0, 0, delta);
+
+            if (newValue.TotalSeconds <= MaxTxDuration)
             {
                 var newSettings = _mainModel.CurrentProfileSettings.CycleSettings;
-                newSettings.TxDuration += new TimeSpan(0, 0, 1);
+                newSettings.TxDuration = newValue;
 
                 SetFoxCommandInProgress(true);
                 await _profileSettingsManager.SetCycleSettingsAsync(newSettings, async () => await OnSetCycleSettingsAsync());
             }
         }
 
-        public async Task OnDecreaseTxDurationAsync()
+        public async Task OnDecreaseTxDurationAsync(int delta)
         {
-            if (_mainModel.CurrentProfileSettings.CycleSettings.TxDuration.TotalSeconds > MinTxDuration)
+            var newValue = _mainModel.CurrentProfileSettings.CycleSettings.TxDuration - new TimeSpan(0, 0, delta);
+
+            if (newValue.TotalSeconds >= MinTxDuration)
             {
                 var newSettings = _mainModel.CurrentProfileSettings.CycleSettings;
-                newSettings.TxDuration -= new TimeSpan(0, 0, 1);
+                newSettings.TxDuration = newValue;
 
                 SetFoxCommandInProgress(true);
                 await _profileSettingsManager.SetCycleSettingsAsync(newSettings, async () => await OnSetCycleSettingsAsync());
@@ -1308,24 +1356,28 @@ Do you want to continue?");
 
         #region Pause duration
 
-        public async Task OnIncreasePauseDurationAsync()
+        public async Task OnIncreasePauseDurationAsync(int delta)
         {
-            if (_mainModel.CurrentProfileSettings.CycleSettings.PauseDuration.TotalSeconds < MaxPauseDuration)
+            var newValue = _mainModel.CurrentProfileSettings.CycleSettings.PauseDuration + new TimeSpan(0, 0, delta);
+
+            if (newValue.TotalSeconds <= MaxPauseDuration)
             {
                 var newSettings = _mainModel.CurrentProfileSettings.CycleSettings;
-                newSettings.PauseDuration += new TimeSpan(0, 0, 1);
+                newSettings.PauseDuration = newValue;
 
                 SetFoxCommandInProgress(true);
                 await _profileSettingsManager.SetCycleSettingsAsync(newSettings, async () => await OnSetCycleSettingsAsync());
             }
         }
 
-        public async Task OnDecreasePauseDurationAsync()
+        public async Task OnDecreasePauseDurationAsync(int delta)
         {
-            if (_mainModel.CurrentProfileSettings.CycleSettings.PauseDuration.TotalSeconds > MinPauseDuration)
+            var newValue = _mainModel.CurrentProfileSettings.CycleSettings.PauseDuration - new TimeSpan(0, 0, delta);
+
+            if (newValue.TotalSeconds >= MinPauseDuration)
             {
                 var newSettings = _mainModel.CurrentProfileSettings.CycleSettings;
-                newSettings.PauseDuration -= new TimeSpan(0, 0, 1);
+                newSettings.PauseDuration = newValue;
 
                 SetFoxCommandInProgress(true);
                 await _profileSettingsManager.SetCycleSettingsAsync(newSettings, async () => await OnSetCycleSettingsAsync());
@@ -1348,24 +1400,28 @@ Do you want to continue?");
 
         #region Ending tone duration
 
-        public async Task OnIncreaseEndingToneDurationAsync()
+        public async Task OnIncreaseEndingToneDurationAsync(int delta)
         {
-            if (_mainModel.CurrentProfileSettings.CycleSettings.EndingToneDuration.TotalSeconds < MaxEndingToneDuration)
+            var newValue = _mainModel.CurrentProfileSettings.CycleSettings.EndingToneDuration + new TimeSpan(0, 0, delta);
+
+            if (newValue.TotalSeconds <= MaxEndingToneDuration)
             {
                 var newSettings = _mainModel.CurrentProfileSettings.CycleSettings;
-                newSettings.EndingToneDuration += new TimeSpan(0, 0, 1);
+                newSettings.EndingToneDuration = newValue;
 
                 SetFoxCommandInProgress(true);
                 await _profileSettingsManager.SetCycleSettingsAsync(newSettings, async () => await OnSetCycleSettingsAsync());
             }
         }
 
-        public async Task OnDecreaseEndingToneDurationAsync()
+        public async Task OnDecreaseEndingToneDurationAsync(int delta)
         {
-            if (_mainModel.CurrentProfileSettings.CycleSettings.EndingToneDuration.TotalSeconds > MinEndingToneDuration)
+            var newValue = _mainModel.CurrentProfileSettings.CycleSettings.EndingToneDuration - new TimeSpan(0, 0, delta);
+
+            if (newValue.TotalSeconds >= MinEndingToneDuration)
             {
                 var newSettings = _mainModel.CurrentProfileSettings.CycleSettings;
-                newSettings.EndingToneDuration -= new TimeSpan(0, 0, 1);
+                newSettings.EndingToneDuration = newValue;
 
                 SetFoxCommandInProgress(true);
                 await _profileSettingsManager.SetCycleSettingsAsync(newSettings, async () => await OnSetCycleSettingsAsync());

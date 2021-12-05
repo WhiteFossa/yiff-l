@@ -399,17 +399,35 @@
                                         IsEnabled="{Binding IsCycleControlsEnabled}" />
 
                                     <Button
+                                        Text="&lt;&lt;"
+                                        VerticalOptions="Center"
+                                        HorizontalOptions="End"
+                                        WidthRequest="40"
+                                        Command="{Binding DecreaseTxDurationBigCommand}"
+                                        IsEnabled="{Binding IsCycleControlsEnabled}" />
+                                    
+                                    <Button
                                         Text="&lt;"
                                         VerticalOptions="Center"
                                         HorizontalOptions="End"
-                                        Command="{Binding DecreaseTxDurationCommand}"
+                                        WidthRequest="40"
+                                        Command="{Binding DecreaseTxDurationSmallCommand}"
                                         IsEnabled="{Binding IsCycleControlsEnabled}" />
 
                                     <Button
                                         Text="&gt;"
                                         VerticalOptions="Center"
                                         HorizontalOptions="End"
-                                        Command="{Binding IncreaseTxDurationCommand}"
+                                        WidthRequest="40"
+                                        Command="{Binding IncreaseTxDurationSmallCommand}"
+                                        IsEnabled="{Binding IsCycleControlsEnabled}" />
+
+                                    <Button
+                                        Text="&gt;&gt;"
+                                        VerticalOptions="Center"
+                                        HorizontalOptions="End"
+                                        WidthRequest="40"
+                                        Command="{Binding IncreaseTxDurationBigCommand}"
                                         IsEnabled="{Binding IsCycleControlsEnabled}" />
                                 </StackLayout>
 
@@ -431,17 +449,35 @@
                                         IsEnabled="{Binding IsCycleControlsEnabled}" />
 
                                     <Button
+                                        Text="&lt;&lt;"
+                                        VerticalOptions="Center"
+                                        HorizontalOptions="End"
+                                        WidthRequest="40"
+                                        Command="{Binding DecreasePauseDurationBigCommand}"
+                                        IsEnabled="{Binding IsCycleControlsEnabled}" />
+                                    
+                                    <Button
                                         Text="&lt;"
                                         VerticalOptions="Center"
                                         HorizontalOptions="End"
-                                        Command="{Binding DecreasePauseDurationCommand}"
+                                        WidthRequest="40"
+                                        Command="{Binding DecreasePauseDurationSmallCommand}"
                                         IsEnabled="{Binding IsCycleControlsEnabled}" />
 
                                     <Button
                                         Text="&gt;"
                                         VerticalOptions="Center"
                                         HorizontalOptions="End"
-                                        Command="{Binding IncreasePauseDurationCommand}"
+                                        WidthRequest="40"
+                                        Command="{Binding IncreasePauseDurationSmallCommand}"
+                                        IsEnabled="{Binding IsCycleControlsEnabled}" />
+
+                                    <Button
+                                        Text="&gt;&gt;"
+                                        VerticalOptions="Center"
+                                        HorizontalOptions="End"
+                                        WidthRequest="40"
+                                        Command="{Binding IncreasePauseDurationBigCommand}"
                                         IsEnabled="{Binding IsCycleControlsEnabled}" />
                                 </StackLayout>
 
