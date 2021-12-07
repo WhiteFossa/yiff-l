@@ -532,9 +532,27 @@
                                         VerticalOptions="Center" />
 
                                     <TimePicker
-                                        Format="HH:mm"
+                                        Format="HH:mm:ss"
                                         VerticalOptions="Center"
-                                        HorizontalOptions="EndAndExpand" />
+                                        HorizontalOptions="EndAndExpand"
+                                        Time="{Binding StartTime}"
+                                        IsEnabled="{Binding IsControlsEnabled}" />
+
+                                    <Button
+                                        Text="&lt;"
+                                        VerticalOptions="Center"
+                                        HorizontalOptions="End"
+                                        WidthRequest="40"
+                                        IsEnabled="{Binding IsControlsEnabled}" />
+
+                                    <Button
+                                        Text="&gt;"
+                                        VerticalOptions="Center"
+                                        HorizontalOptions="End"
+                                        WidthRequest="40"
+                                        IsEnabled="{Binding IsControlsEnabled}" />
+
+
                                 </StackLayout>
 
                                 <StackLayout
@@ -547,9 +565,25 @@
                                         VerticalOptions="Center" />
 
                                     <TimePicker
-                                        Format="HH:mm"
+                                        Format="HH:mm:ss"
                                         VerticalOptions="Center"
-                                        HorizontalOptions="EndAndExpand" />
+                                        HorizontalOptions="EndAndExpand"
+                                        Time="{Binding FinishTime}"
+                                        IsEnabled="{Binding IsControlsEnabled}" />
+
+                                    <Button
+                                        Text="&lt;"
+                                        VerticalOptions="Center"
+                                        HorizontalOptions="End"
+                                        WidthRequest="40"
+                                        IsEnabled="{Binding IsControlsEnabled}" />
+
+                                    <Button
+                                        Text="&gt;"
+                                        VerticalOptions="Center"
+                                        HorizontalOptions="End"
+                                        WidthRequest="40"
+                                        IsEnabled="{Binding IsControlsEnabled}" />
                                 </StackLayout>
                                 
                             </StackLayout>

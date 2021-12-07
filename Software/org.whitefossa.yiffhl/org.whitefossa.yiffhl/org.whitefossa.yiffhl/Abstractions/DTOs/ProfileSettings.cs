@@ -19,5 +19,10 @@
         /// Cycle settings
         /// </summary>
         public CycleSettings CycleSettings { get; set; } = new CycleSettings();
+
+        /// <summary>
+        /// Run times settings
+        /// </summary>
+        public RunTimesSettings RunTimesSettings { get; set; } = new RunTimesSettings();
     }
 }

@@ -18,6 +18,8 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
 
     public delegate void OnSetCycleSettingsDelegate();
 
+    public delegate void OnGetRunTimesSettingsDelegate(RunTimesSettings settings);
+
     /// <summary>
     /// Interface to work with profile settings
     /// </summary>
@@ -41,5 +43,7 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
         Task LoadCycleSettingsAsync(OnGetCycleSettingsDelegate onGetCycleSettings);
 
         Task SetCycleSettingsAsync(CycleSettings settings, OnSetCycleSettingsDelegate onSetCycleSettings);
+
+        Task LoadRunTimesSettinesAsync(OnGetRunTimesSettingsDelegate onGetRunTimesSettings);
     }
 }

@@ -631,6 +631,28 @@ namespace org.whitefossa.yiffhl.ViewModels
             }
         }
 
+        /// <summary>
+        /// Fox start time
+        /// </summary>
+        public TimeSpan StartTime
+        {
+            get
+            {
+                return _mainModel.CurrentProfileSettings.RunTimesSettings.StartTime - DateTime.MinValue;
+            }
+        }
+
+        /// <summary>
+        /// Fox finish time
+        /// </summary>
+        public TimeSpan FinishTime
+        {
+            get
+            {
+                return _mainModel.CurrentProfileSettings.RunTimesSettings.FinishTime - DateTime.MinValue;
+            }
+        }
+
         public MainPageViewModel()
         {
             _foxConnector = App.Container.Resolve<IFoxConnector>();
@@ -1284,21 +1306,21 @@ Do you want to continue?");
             OnPropertyChanged(nameof(PauseDurationFormatted));
             OnPropertyChanged(nameof(IsCycleControlsEnabled));
             OnPropertyChanged(nameof(EndingToneDurationFormatted));
-
-            SetFoxCommandInProgress(false);
         }
 
-        private void OnGetCycleSettings_LoadPathway(CycleSettings settings)
+        private async void OnGetCycleSettings_LoadPathway(CycleSettings settings)
         {
             OnGetCycleSettings_Common(settings);
 
-            // TODO: Load next setting
-            SetFoxCommandInProgress(false);
+            // Loading run times
+            await _profileSettingsManager.LoadRunTimesSettinesAsync(OnGetRunTimesSettings_LoadPathway);
         }
 
         private void OnGetCycleSettings_ReloadPathway(CycleSettings settings)
         {
             OnGetCycleSettings_Common(settings);
+
+            SetFoxCommandInProgress(false);
         }
 
         #endregion
@@ -1426,6 +1448,25 @@ Do you want to continue?");
                 SetFoxCommandInProgress(true);
                 await _profileSettingsManager.SetCycleSettingsAsync(newSettings, async () => await OnSetCycleSettingsAsync());
             }
+        }
+
+        #endregion
+
+        #region Load start and finish times
+
+        private void OnGetRunTimesSettings_LoadPathway(RunTimesSettings settings)
+        {
+            OnGetRunTimesSettings_Common(settings);
+
+            // TODO: Load next data
+            SetFoxCommandInProgress(false);
+        }
+
+        private void OnGetRunTimesSettings_Common(RunTimesSettings settings)
+        {
+            _mainModel.CurrentProfileSettings.RunTimesSettings = settings;
+            OnPropertyChanged(nameof(StartTime));
+            OnPropertyChanged(nameof(FinishTime));
         }
 
         #endregion

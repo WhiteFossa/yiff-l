@@ -1,4 +1,6 @@
-﻿namespace org.whitefossa.yiffhl.Business.Implementations.Commands
+﻿using System;
+
+namespace org.whitefossa.yiffhl.Business.Implementations.Commands
 {
     /// <summary>
     /// Constants, used in many commands

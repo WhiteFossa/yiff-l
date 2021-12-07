@@ -21,6 +21,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private readonly ISetCycleCommand _setCycleCommand;
         private readonly IGetEndingToneDurationCommand _getEndingToneDurationCommand;
         private readonly ISetEndingToneDurationCommand _setEndingToneDurationCommand;
+        private readonly IGetBeginAndEndTimesCommand _getBeginAndEndTimesCommand;
 
         private OnGetFrequencySettingsDelegate _onGetFrequencySettings;
         private OnSetFrequencySettingsDelegate _onSetFrequencySettings;
@@ -29,6 +30,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private OnSetCallsignDelegate _onSetCallsign;
         private OnGetCycleSettingsDelegate _onGetCycleSettings;
         private OnSetCycleSettingsDelegate _onSetCycleSettings;
+        private OnGetRunTimesSettingsDelegate _onGetRunTimesSettings;
 
         private Callsign _callsign;
         private CycleSettings _cycleSettings;
@@ -47,7 +49,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             IGetCycleCommand getCycleCommand,
             ISetCycleCommand setCycleCommand,
             IGetEndingToneDurationCommand getEndingToneDurationCommand,
-            ISetEndingToneDurationCommand setEndingToneDurationCommand)
+            ISetEndingToneDurationCommand setEndingToneDurationCommand,
+            IGetBeginAndEndTimesCommand getBeginAndEndTimesCommand)
         {
             _getFrequencyCommand = getFrequencyCommand;
             _setFrequencyCommand = setFrequencyCommand;
@@ -59,6 +62,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _setCycleCommand = setCycleCommand;
             _getEndingToneDurationCommand = getEndingToneDurationCommand;
             _setEndingToneDurationCommand = setEndingToneDurationCommand;
+            _getBeginAndEndTimesCommand = getBeginAndEndTimesCommand;
         }
 
         public async Task<IReadOnlyCollection<Callsign>> GetCallsignsAsync()
@@ -316,6 +320,25 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             }
 
             _onSetCycleSettings();
+        }
+
+        public async Task LoadRunTimesSettinesAsync(OnGetRunTimesSettingsDelegate onGetRunTimesSettings)
+        {
+            _onGetRunTimesSettings = onGetRunTimesSettings ?? throw new ArgumentNullException(nameof(onGetRunTimesSettings));
+
+            _getBeginAndEndTimesCommand.SetResponseDelegate(OnGetBeginAndEndTimesResponse);
+            _getBeginAndEndTimesCommand.SendGetBeginAndEndTimesCommand();
+        }
+
+        private void OnGetBeginAndEndTimesResponse(DateTime beginTime, DateTime endTime)
+        {
+            var runTimesSettings = new RunTimesSettings()
+            {
+                StartTime = beginTime,
+                FinishTime = endTime
+            };
+
+            _onGetRunTimesSettings(runTimesSettings);
         }
     }
 }
