@@ -40,5 +40,27 @@ namespace org.whitefossa.yiffhl.Views
 
             ViewModel.SelectedCallsignChangedCommand.Execute(selectedCallsign);
         }
+
+        private void tpStart_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName != "Time")
+            {
+                return;
+            }
+
+            var startTime = (sender as TimePicker).Time;
+            ViewModel.SetStartTimeCommand.Execute(startTime);
+        }
+
+        private void tpFinish_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName != "Time")
+            {
+                return;
+            }
+
+            var finishTime = (sender as TimePicker).Time;
+            ViewModel.SetFinishTimeCommand.Execute(finishTime);
+        }
     }
 }

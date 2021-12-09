@@ -4,7 +4,6 @@ using org.whitefossa.yiffhl.Abstractions.Interfaces;
 using org.whitefossa.yiffhl.Abstractions.Interfaces.Commands;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace org.whitefossa.yiffhl.Business.Implementations
@@ -22,6 +21,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private readonly IGetEndingToneDurationCommand _getEndingToneDurationCommand;
         private readonly ISetEndingToneDurationCommand _setEndingToneDurationCommand;
         private readonly IGetBeginAndEndTimesCommand _getBeginAndEndTimesCommand;
+        private readonly ISetBeginAndEndTimesCommand _setBeginAndEndTimesCommand;
 
         private OnGetFrequencySettingsDelegate _onGetFrequencySettings;
         private OnSetFrequencySettingsDelegate _onSetFrequencySettings;
@@ -31,6 +31,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private OnGetCycleSettingsDelegate _onGetCycleSettings;
         private OnSetCycleSettingsDelegate _onSetCycleSettings;
         private OnGetRunTimesSettingsDelegate _onGetRunTimesSettings;
+        private OnSetRunTimesSettingsDelegate _onSetRunTimesSettings;
 
         private Callsign _callsign;
         private CycleSettings _cycleSettings;
@@ -39,6 +40,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private Callsign _callsignToSet;
         private FrequencySettings _frequencySettingsToSet;
         private CycleSettings _cycleSettingsToSet;
+        private RunTimesSettings _runTimesSettingsToSet;
 
         public ProfileSettingsManager(IGetFrequencyCommand getFrequencyCommand,
             ISetFrequencyCommand setFrequencyCommand,
@@ -50,7 +52,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             ISetCycleCommand setCycleCommand,
             IGetEndingToneDurationCommand getEndingToneDurationCommand,
             ISetEndingToneDurationCommand setEndingToneDurationCommand,
-            IGetBeginAndEndTimesCommand getBeginAndEndTimesCommand)
+            IGetBeginAndEndTimesCommand getBeginAndEndTimesCommand,
+            ISetBeginAndEndTimesCommand setBeginAndEndTimesCommand)
         {
             _getFrequencyCommand = getFrequencyCommand;
             _setFrequencyCommand = setFrequencyCommand;
@@ -63,6 +66,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _getEndingToneDurationCommand = getEndingToneDurationCommand;
             _setEndingToneDurationCommand = setEndingToneDurationCommand;
             _getBeginAndEndTimesCommand = getBeginAndEndTimesCommand;
+            _setBeginAndEndTimesCommand = setBeginAndEndTimesCommand;
         }
 
         public async Task<IReadOnlyCollection<Callsign>> GetCallsignsAsync()
@@ -273,8 +277,6 @@ namespace org.whitefossa.yiffhl.Business.Implementations
 
         public async Task SetCycleSettingsAsync(CycleSettings settings, OnSetCycleSettingsDelegate onSetCycleSettings)
         {
-            Debug.WriteLine("New settings request");
-
             _cycleSettingsToSet = settings ?? throw new ArgumentNullException(nameof(settings));
             _onSetCycleSettings = onSetCycleSettings ?? throw new ArgumentNullException(nameof(onSetCycleSettings));
 
@@ -339,6 +341,38 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             };
 
             _onGetRunTimesSettings(runTimesSettings);
+        }
+
+        public async Task SetRunTimesSettingsAsync(RunTimesSettings settings, OnSetRunTimesSettingsDelegate onSetRunTimesSettines)
+        {
+            _runTimesSettingsToSet = settings ?? throw new ArgumentNullException(nameof(settings));
+            _onSetRunTimesSettings = onSetRunTimesSettines ?? throw new ArgumentNullException(nameof(onSetRunTimesSettines));
+
+            // Do we need to change something?
+            await LoadRunTimesSettinesAsync(OnGetBeginAndEndTimesResponse_SetRunTimesSettingsPathway);
+        }
+
+        private void OnGetBeginAndEndTimesResponse_SetRunTimesSettingsPathway(RunTimesSettings settings)
+        {
+            if (settings.StartTime == _runTimesSettingsToSet.StartTime
+                &&
+                settings.FinishTime == _runTimesSettingsToSet.FinishTime)
+            {
+                _onSetRunTimesSettings();
+            }
+
+            _setBeginAndEndTimesCommand.SetResponseDelegate(OnSetBeginAndEndTimesResponse);
+            _setBeginAndEndTimesCommand.SendSetBeginAndEndTimesCommand(_runTimesSettingsToSet.StartTime, _runTimesSettingsToSet.FinishTime);
+        }
+
+        private void OnSetBeginAndEndTimesResponse(bool isSuccessfull)
+        {
+            if (!isSuccessfull)
+            {
+                throw new InvalidOperationException("Failed to set start and finish times");
+            }
+
+            _onSetRunTimesSettings();
         }
     }
 }

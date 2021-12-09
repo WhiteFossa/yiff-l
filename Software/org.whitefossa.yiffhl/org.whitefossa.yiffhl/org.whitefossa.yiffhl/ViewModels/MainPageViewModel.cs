@@ -5,6 +5,7 @@ using org.whitefossa.yiffhl.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -103,6 +104,11 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// Change ending tone duration by this value
         /// </summary>
         private const int EndingToneDurationStep = 1;
+
+        /// <summary>
+        /// Fine-tune fox run times by this step
+        /// </summary>
+        private const int RunTimesStep = 1;
 
         private readonly IFoxConnector _foxConnector;
         private readonly IPairedFoxesEnumerator _pairedFoxesEnumerator;
@@ -653,6 +659,36 @@ namespace org.whitefossa.yiffhl.ViewModels
             }
         }
 
+        /// <summary>
+        /// Set fox start time
+        /// </summary>
+        public ICommand SetStartTimeCommand { get; }
+
+        /// <summary>
+        /// Set fox finish time
+        /// </summary>
+        public ICommand SetFinishTimeCommand { get; }
+
+        /// <summary>
+        /// Increase fox start time
+        /// </summary>
+        public ICommand IncreaseStartTime { get; }
+
+        /// <summary>
+        /// Decrease fox start time
+        /// </summary>
+        public ICommand DecreaseStartTime { get; }
+
+        /// <summary>
+        /// Increase fox finish time
+        /// </summary>
+        public ICommand IncreaseFinishTime { get; }
+
+        /// <summary>
+        /// Decrease fox finish time
+        /// </summary>
+        public ICommand DecreaseFinishTime { get; }
+
         public MainPageViewModel()
         {
             _foxConnector = App.Container.Resolve<IFoxConnector>();
@@ -713,6 +749,15 @@ namespace org.whitefossa.yiffhl.ViewModels
 
             IncreaseEndingToneDurationCommand = new Command(async() => await OnIncreaseEndingToneDurationAsync(EndingToneDurationStep));
             DecreaseEndingToneDurationCommand = new Command(async () => await OnDecreaseEndingToneDurationAsync(EndingToneDurationStep));
+
+            SetStartTimeCommand = new Command<TimeSpan>(async(ts) => await OnSetStartTimeAsync(ts));
+            SetFinishTimeCommand = new Command<TimeSpan>(async (ts) => await OnSetFinishTimeAsync(ts));
+
+            IncreaseStartTime = new Command(async() => await OnApplyDeltaToStartTimeAsync(RunTimesStep));
+            DecreaseStartTime = new Command(async () => await OnApplyDeltaToStartTimeAsync(-1 * RunTimesStep));
+
+            IncreaseFinishTime = new Command(async () => await OnApplyDeltaToFinishTimeAsync(RunTimesStep));
+            DecreaseFinishTime = new Command(async () => await OnApplyDeltaToFinishTimeAsync(-1 * RunTimesStep));
 
             // Initial state
             IsConnectButtonEnabled = false;
@@ -1467,6 +1512,76 @@ Do you want to continue?");
             _mainModel.CurrentProfileSettings.RunTimesSettings = settings;
             OnPropertyChanged(nameof(StartTime));
             OnPropertyChanged(nameof(FinishTime));
+        }
+
+        private void OnGetRunTimesSettings_ReloadPathway(RunTimesSettings settings)
+        {
+            OnGetRunTimesSettings_Common(settings);
+
+            // TODO: Load next data
+            SetFoxCommandInProgress(false);
+        }
+
+        #endregion
+
+        #region Set run times
+
+        private async Task OnSetStartTimeAsync(TimeSpan timespan)
+        {
+            var newSettings = _mainModel.CurrentProfileSettings.RunTimesSettings;
+            newSettings.StartTime = PrepareFoxRunTime(timespan);
+
+            SetFoxCommandInProgress(true);
+            await _profileSettingsManager.SetRunTimesSettingsAsync(newSettings, async () => await OnSetRunTimesAsync());
+        }
+
+        private async Task OnSetFinishTimeAsync(TimeSpan timespan)
+        {
+            var newSettings = _mainModel.CurrentProfileSettings.RunTimesSettings;
+            newSettings.FinishTime = PrepareFoxRunTime(timespan);
+
+            SetFoxCommandInProgress(true);
+            await _profileSettingsManager.SetRunTimesSettingsAsync(newSettings, async () => await OnSetRunTimesAsync());
+        }
+
+        private async Task OnApplyDeltaToStartTimeAsync(int delta)
+        {
+            var newSettings = _mainModel.CurrentProfileSettings.RunTimesSettings;
+            newSettings.StartTime = ApplyDeltaToTimeWithLoop(newSettings.StartTime, new TimeSpan(0, 0, delta));
+
+            SetFoxCommandInProgress(true);
+            await _profileSettingsManager.SetRunTimesSettingsAsync(newSettings, async () => await OnSetRunTimesAsync());
+        }
+
+        private async Task OnApplyDeltaToFinishTimeAsync(int delta)
+        {
+            var newSettings = _mainModel.CurrentProfileSettings.RunTimesSettings;
+            newSettings.FinishTime = ApplyDeltaToTimeWithLoop(newSettings.FinishTime, new TimeSpan(0, 0, delta));
+
+            SetFoxCommandInProgress(true);
+            await _profileSettingsManager.SetRunTimesSettingsAsync(newSettings, async () => await OnSetRunTimesAsync());
+        }
+
+        private DateTime PrepareFoxRunTime(TimeSpan runTime)
+        {
+            var result = new DateTime(DateTime.MinValue.Year, DateTime.MinValue.Month, DateTime.MinValue.Day);
+            result += runTime;
+
+            return result;
+        }
+
+        public DateTime ApplyDeltaToTimeWithLoop(DateTime time, TimeSpan delta)
+        {
+            time = new DateTime(2000, 1, 1, time.Hour, time.Minute, time.Second); // Random date, don't care about it
+
+            time += delta;
+
+            return new DateTime(DateTime.MinValue.Year, DateTime.MinValue.Month, DateTime.MinValue.Day, time.Hour, time.Minute, time.Second);
+        }
+
+        private async Task OnSetRunTimesAsync()
+        {
+            await _profileSettingsManager.LoadRunTimesSettinesAsync(OnGetRunTimesSettings_ReloadPathway);
         }
 
         #endregion

@@ -536,6 +536,7 @@
                                         VerticalOptions="Center"
                                         HorizontalOptions="EndAndExpand"
                                         Time="{Binding StartTime}"
+                                        PropertyChanged="tpStart_PropertyChanged"
                                         IsEnabled="{Binding IsControlsEnabled}" />
 
                                     <Button
@@ -543,6 +544,7 @@
                                         VerticalOptions="Center"
                                         HorizontalOptions="End"
                                         WidthRequest="40"
+                                        Command="{Binding DecreaseStartTime}"
                                         IsEnabled="{Binding IsControlsEnabled}" />
 
                                     <Button
@@ -550,6 +552,7 @@
                                         VerticalOptions="Center"
                                         HorizontalOptions="End"
                                         WidthRequest="40"
+                                        Command="{Binding IncreaseStartTime}"
                                         IsEnabled="{Binding IsControlsEnabled}" />
 
 
@@ -569,6 +572,7 @@
                                         VerticalOptions="Center"
                                         HorizontalOptions="EndAndExpand"
                                         Time="{Binding FinishTime}"
+                                        PropertyChanged="tpFinish_PropertyChanged"
                                         IsEnabled="{Binding IsControlsEnabled}" />
 
                                     <Button
@@ -576,6 +580,7 @@
                                         VerticalOptions="Center"
                                         HorizontalOptions="End"
                                         WidthRequest="40"
+                                        Command="{Binding DecreaseFinishTime}"
                                         IsEnabled="{Binding IsControlsEnabled}" />
 
                                     <Button
@@ -583,6 +588,7 @@
                                         VerticalOptions="Center"
                                         HorizontalOptions="End"
                                         WidthRequest="40"
+                                        Command="{Binding IncreaseFinishTime}"
                                         IsEnabled="{Binding IsControlsEnabled}" />
                                 </StackLayout>
                                 
