@@ -22,6 +22,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private readonly ISetEndingToneDurationCommand _setEndingToneDurationCommand;
         private readonly IGetBeginAndEndTimesCommand _getBeginAndEndTimesCommand;
         private readonly ISetBeginAndEndTimesCommand _setBeginAndEndTimesCommand;
+        private readonly IGetPowerCommand _getPowerCommand;
 
         private OnGetFrequencySettingsDelegate _onGetFrequencySettings;
         private OnSetFrequencySettingsDelegate _onSetFrequencySettings;
@@ -32,6 +33,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private OnSetCycleSettingsDelegate _onSetCycleSettings;
         private OnGetRunTimesSettingsDelegate _onGetRunTimesSettings;
         private OnSetRunTimesSettingsDelegate _onSetRunTimesSettings;
+        private OnGetPowerSettingsDelegate _onGetPowerSettings;
 
         private Callsign _callsign;
         private CycleSettings _cycleSettings;
@@ -53,7 +55,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             IGetEndingToneDurationCommand getEndingToneDurationCommand,
             ISetEndingToneDurationCommand setEndingToneDurationCommand,
             IGetBeginAndEndTimesCommand getBeginAndEndTimesCommand,
-            ISetBeginAndEndTimesCommand setBeginAndEndTimesCommand)
+            ISetBeginAndEndTimesCommand setBeginAndEndTimesCommand,
+            IGetPowerCommand getPowerCommand)
         {
             _getFrequencyCommand = getFrequencyCommand;
             _setFrequencyCommand = setFrequencyCommand;
@@ -67,6 +70,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _setEndingToneDurationCommand = setEndingToneDurationCommand;
             _getBeginAndEndTimesCommand = getBeginAndEndTimesCommand;
             _setBeginAndEndTimesCommand = setBeginAndEndTimesCommand;
+            _getPowerCommand = getPowerCommand;
         }
 
         public async Task<IReadOnlyCollection<Callsign>> GetCallsignsAsync()
@@ -373,6 +377,24 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             }
 
             _onSetRunTimesSettings();
+        }
+
+        public async Task LoadPowerSettingsAsync(OnGetPowerSettingsDelegate onGetPowerSettings)
+        {
+            _onGetPowerSettings = onGetPowerSettings ?? throw new ArgumentNullException(nameof(onGetPowerSettings));
+
+            _getPowerCommand.SetResponseDelegate(OnGetPowerResponse);
+            _getPowerCommand.SendGetPowerCommand();
+        }
+
+        private void OnGetPowerResponse(float power)
+        {
+            var settings = new PowerSettings
+            {
+                Power = power
+            };
+
+            _onGetPowerSettings(settings);
         }
     }
 }

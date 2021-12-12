@@ -612,7 +612,7 @@
                                         VerticalOptions="Center" />
 
                                     <Label
-                                        Text="5.0W"
+                                        Text="{Binding PowerFormatted}"
                                         FontAttributes="Bold"
                                         HorizontalOptions="EndAndExpand"
                                         VerticalOptions="Center" />

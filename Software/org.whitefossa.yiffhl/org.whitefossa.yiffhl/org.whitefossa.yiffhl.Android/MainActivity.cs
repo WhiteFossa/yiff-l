@@ -58,6 +58,7 @@ namespace org.whitefossa.yiffhl.Droid
             App.Container.Register<ISetEndingToneDurationCommand, SetEndingToneDurationCommand>().AsSingleton();
             App.Container.Register<IGetBeginAndEndTimesCommand, GetBeginAndEndTimesCommand>().AsSingleton();
             App.Container.Register<ISetBeginAndEndTimesCommand, SetBeginAndEndTimesCommand>().AsSingleton();
+            App.Container.Register<IGetPowerCommand, GetPowerCommand>().AsSingleton();
 
             #endregion
 

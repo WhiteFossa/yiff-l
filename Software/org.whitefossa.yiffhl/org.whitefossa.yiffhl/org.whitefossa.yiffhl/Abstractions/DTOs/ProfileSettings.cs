@@ -24,5 +24,10 @@
         /// Run times settings
         /// </summary>
         public RunTimesSettings RunTimesSettings { get; set; } = new RunTimesSettings();
+
+        /// <summary>
+        /// Fox power settings
+        /// </summary>
+        public PowerSettings PowerSettings { get; set; } = new PowerSettings();
     }
 }

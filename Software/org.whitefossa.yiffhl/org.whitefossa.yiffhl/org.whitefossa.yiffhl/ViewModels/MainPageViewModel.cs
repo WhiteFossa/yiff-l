@@ -689,6 +689,24 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         public ICommand DecreaseFinishTime { get; }
 
+        /// <summary>
+        /// Fox power, formatted
+        /// </summary>
+        public string PowerFormatted
+        {
+            get
+            {
+                if (_mainModel.CurrentProfileSettings.FrequencySettings.Is2m)
+                {
+                    return @"N/A";
+                }
+                else
+                {
+                    return String.Format("{0:0.0 W}", _mainModel.CurrentProfileSettings.PowerSettings.Power);
+                }
+            }
+        }
+
         public MainPageViewModel()
         {
             _foxConnector = App.Container.Resolve<IFoxConnector>();
@@ -1499,12 +1517,11 @@ Do you want to continue?");
 
         #region Load start and finish times
 
-        private void OnGetRunTimesSettings_LoadPathway(RunTimesSettings settings)
+        private async void OnGetRunTimesSettings_LoadPathway(RunTimesSettings settings)
         {
             OnGetRunTimesSettings_Common(settings);
 
-            // TODO: Load next data
-            SetFoxCommandInProgress(false);
+            await _profileSettingsManager.LoadPowerSettingsAsync(OnGetPowerSettings_LoadPathway);
         }
 
         private void OnGetRunTimesSettings_Common(RunTimesSettings settings)
@@ -1518,7 +1535,6 @@ Do you want to continue?");
         {
             OnGetRunTimesSettings_Common(settings);
 
-            // TODO: Load next data
             SetFoxCommandInProgress(false);
         }
 
@@ -1582,6 +1598,31 @@ Do you want to continue?");
         private async Task OnSetRunTimesAsync()
         {
             await _profileSettingsManager.LoadRunTimesSettinesAsync(OnGetRunTimesSettings_ReloadPathway);
+        }
+
+        #endregion
+
+        #region Load power settings
+
+        private void OnGetPowerSettings_LoadPathway(PowerSettings settings)
+        {
+            OnGetPowerSettings_Common(settings);
+
+            // TODO: Load next data
+            SetFoxCommandInProgress(false);
+        }
+
+        private void OnGetPowerSettings_Common(PowerSettings settings)
+        {
+            _mainModel.CurrentProfileSettings.PowerSettings = settings;
+            OnPropertyChanged(nameof(PowerFormatted));
+        }
+
+        private void OnGetPowerSettings_ReloadPathway(PowerSettings settings)
+        {
+            OnGetPowerSettings_Common(settings);
+
+            SetFoxCommandInProgress(false);
         }
 
         #endregion
