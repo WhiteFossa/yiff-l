@@ -617,11 +617,21 @@
                                         HorizontalOptions="EndAndExpand"
                                         VerticalOptions="Center" />
 
-                                    <Stepper
-                                        Minimum="1"
-                                        Maximum="100"
-                                        Increment="1"
-                                        HorizontalOptions="End" />
+                                    <Button
+                                        Text="&lt;"
+                                        VerticalOptions="Center"
+                                        HorizontalOptions="End"
+                                        WidthRequest="40"
+                                        Command="{Binding DecreasePower}"
+                                        IsEnabled="{Binding IsPowerControlsEnabled}" />
+
+                                    <Button
+                                        Text="&gt;"
+                                        VerticalOptions="Center"
+                                        HorizontalOptions="End"
+                                        WidthRequest="40"
+                                        Command="{Binding IncreasePower}"
+                                        IsEnabled="{Binding IsPowerControlsEnabled}" />
                                 </StackLayout>
 
                             </StackLayout>

@@ -110,6 +110,21 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         private const int RunTimesStep = 1;
 
+        /// <summary>
+        /// Minimal allowed power
+        /// </summary>
+        private const float MinPower = 2.0f;
+
+        /// <summary>
+        /// Maximal allowed power
+        /// </summary>
+        private const float MaxPower = 5.0f;
+
+        /// <summary>
+        /// Power change step
+        /// </summary>
+        private const float PowerStep = 0.1f;
+
         private readonly IFoxConnector _foxConnector;
         private readonly IPairedFoxesEnumerator _pairedFoxesEnumerator;
         private readonly IUserNotifier _userNotifier;
@@ -707,6 +722,25 @@ namespace org.whitefossa.yiffhl.ViewModels
             }
         }
 
+        /// <summary>
+        /// Is power controls enabled
+        /// </summary>
+        public bool IsPowerControlsEnabled
+        {
+            get => !_mainModel.CurrentProfileSettings.FrequencySettings.Is2m
+                && !_isFoxExecutingACommand;
+        }
+
+        /// <summary>
+        /// Increase power
+        /// </summary>
+        public ICommand IncreasePower { get; }
+
+        /// <summary>
+        /// Decrease power
+        /// </summary>
+        public ICommand DecreasePower { get; }
+
         public MainPageViewModel()
         {
             _foxConnector = App.Container.Resolve<IFoxConnector>();
@@ -776,6 +810,9 @@ namespace org.whitefossa.yiffhl.ViewModels
 
             IncreaseFinishTime = new Command(async () => await OnApplyDeltaToFinishTimeAsync(RunTimesStep));
             DecreaseFinishTime = new Command(async () => await OnApplyDeltaToFinishTimeAsync(-1 * RunTimesStep));
+
+            IncreasePower = new Command(async () => await OnIncreasePowerAsync(PowerStep));
+            DecreasePower = new Command(async () => await OnDecreasePowerAsync(PowerStep));
 
             // Initial state
             IsConnectButtonEnabled = false;
@@ -1183,6 +1220,7 @@ Do you want to continue?");
             _mainModel.CurrentProfileSettings.FrequencySettings = settings;
             OnPropertyChanged(nameof(FoxRangeFormatted));
             OnPropertyChanged(nameof(FrequencyFormatted));
+            OnPropertyChanged(nameof(PowerFormatted));
         }
 
         #endregion
@@ -1479,6 +1517,7 @@ Do you want to continue?");
 
             OnPropertyChanged(nameof(IsControlsEnabled));
             OnPropertyChanged(nameof(IsCycleControlsEnabled));
+            OnPropertyChanged(nameof(IsPowerControlsEnabled));
         }
 
         #endregion
@@ -1623,6 +1662,43 @@ Do you want to continue?");
             OnGetPowerSettings_Common(settings);
 
             SetFoxCommandInProgress(false);
+        }
+
+        #endregion
+
+        #region Set power
+
+        public async Task OnIncreasePowerAsync(float delta)
+        {
+            var newValue = _mainModel.CurrentProfileSettings.PowerSettings.Power + delta;
+
+            if (newValue <= MaxPower)
+            {
+                var newSettings = _mainModel.CurrentProfileSettings.PowerSettings;
+                newSettings.Power = newValue;
+
+                SetFoxCommandInProgress(true);
+                await _profileSettingsManager.SetPowerSettingsAsync(newSettings, async () => await OnSetPowerSettingsAsync());
+            }
+        }
+
+        public async Task OnDecreasePowerAsync(float delta)
+        {
+            var newValue = _mainModel.CurrentProfileSettings.PowerSettings.Power - delta;
+
+            if (newValue >= MinPower)
+            {
+                var newSettings = _mainModel.CurrentProfileSettings.PowerSettings;
+                newSettings.Power = newValue;
+
+                SetFoxCommandInProgress(true);
+                await _profileSettingsManager.SetPowerSettingsAsync(newSettings, async () => await OnSetPowerSettingsAsync());
+            }
+        }
+
+        private async Task OnSetPowerSettingsAsync()
+        {
+            await _profileSettingsManager.LoadPowerSettingsAsync(OnGetPowerSettings_ReloadPathway);
         }
 
         #endregion

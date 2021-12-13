@@ -10,6 +10,11 @@ namespace org.whitefossa.yiffhl.Business.Implementations
 {
     public class ProfileSettingsManager : IProfileSettingsManager
     {
+        /// <summary>
+        /// Treat power as the same if it differs no more than this value
+        /// </summary>
+        private const float PowerSigma = 0.01f;
+
         private readonly IGetFrequencyCommand _getFrequencyCommand;
         private readonly ISetFrequencyCommand _setFrequencyCommand;
         private readonly IGetCodeCommand _getCodeCommand;
@@ -23,6 +28,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private readonly IGetBeginAndEndTimesCommand _getBeginAndEndTimesCommand;
         private readonly ISetBeginAndEndTimesCommand _setBeginAndEndTimesCommand;
         private readonly IGetPowerCommand _getPowerCommand;
+        private readonly ISetPowerCommand _setPowerCommand;
 
         private OnGetFrequencySettingsDelegate _onGetFrequencySettings;
         private OnSetFrequencySettingsDelegate _onSetFrequencySettings;
@@ -34,6 +40,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private OnGetRunTimesSettingsDelegate _onGetRunTimesSettings;
         private OnSetRunTimesSettingsDelegate _onSetRunTimesSettings;
         private OnGetPowerSettingsDelegate _onGetPowerSettings;
+        private OnSetPowerSettingsDelegate _onSetPowerSettings;
 
         private Callsign _callsign;
         private CycleSettings _cycleSettings;
@@ -43,6 +50,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private FrequencySettings _frequencySettingsToSet;
         private CycleSettings _cycleSettingsToSet;
         private RunTimesSettings _runTimesSettingsToSet;
+        private PowerSettings _powerSettingsToSet;
 
         public ProfileSettingsManager(IGetFrequencyCommand getFrequencyCommand,
             ISetFrequencyCommand setFrequencyCommand,
@@ -56,7 +64,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             ISetEndingToneDurationCommand setEndingToneDurationCommand,
             IGetBeginAndEndTimesCommand getBeginAndEndTimesCommand,
             ISetBeginAndEndTimesCommand setBeginAndEndTimesCommand,
-            IGetPowerCommand getPowerCommand)
+            IGetPowerCommand getPowerCommand,
+            ISetPowerCommand setPowerCommand)
         {
             _getFrequencyCommand = getFrequencyCommand;
             _setFrequencyCommand = setFrequencyCommand;
@@ -71,6 +80,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _getBeginAndEndTimesCommand = getBeginAndEndTimesCommand;
             _setBeginAndEndTimesCommand = setBeginAndEndTimesCommand;
             _getPowerCommand = getPowerCommand;
+            _setPowerCommand = setPowerCommand;
         }
 
         public async Task<IReadOnlyCollection<Callsign>> GetCallsignsAsync()
@@ -395,6 +405,36 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             };
 
             _onGetPowerSettings(settings);
+        }
+
+        public async Task SetPowerSettingsAsync(PowerSettings settings, OnSetPowerSettingsDelegate onSetPowerSettings)
+        {
+            _powerSettingsToSet = settings ?? throw new ArgumentNullException(nameof(settings));
+            _onSetPowerSettings = onSetPowerSettings ?? throw new ArgumentNullException(nameof(onSetPowerSettings));
+
+            // Checking if power changed
+            await LoadPowerSettingsAsync(OnGetPowerSettings_SetPowerSettingsPathway);
+        }
+
+        private void OnGetPowerSettings_SetPowerSettingsPathway(PowerSettings settings)
+        {
+            if (Math.Abs(settings.Power - _powerSettingsToSet.Power) <= PowerSigma)
+            {
+                _onSetPowerSettings();
+            }
+
+            _setPowerCommand.SetResponseDelegate(OnSetPowerResponse);
+            _setPowerCommand.SendSetPowerCommand(_powerSettingsToSet.Power);
+        }
+
+        private void OnSetPowerResponse(bool isSuccessfull)
+        {
+            if (!isSuccessfull)
+            {
+                throw new InvalidOperationException("Failed to set fox power");
+            }
+
+            _onSetPowerSettings();
         }
     }
 }

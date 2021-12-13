@@ -24,6 +24,8 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
 
     public delegate void OnGetPowerSettingsDelegate(PowerSettings settings);
 
+    public delegate void OnSetPowerSettingsDelegate();
+
     /// <summary>
     /// Interface to work with profile settings
     /// </summary>
@@ -53,5 +55,7 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
         Task SetRunTimesSettingsAsync(RunTimesSettings settings, OnSetRunTimesSettingsDelegate onSetRunTimesSettines);
 
         Task LoadPowerSettingsAsync(OnGetPowerSettingsDelegate onGetPowerSettings);
+
+        Task SetPowerSettingsAsync(PowerSettings settings, OnSetPowerSettingsDelegate onSetPowerSettings);
     }
 }
