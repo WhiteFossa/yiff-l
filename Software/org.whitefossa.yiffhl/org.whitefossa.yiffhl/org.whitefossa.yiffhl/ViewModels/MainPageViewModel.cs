@@ -565,8 +565,7 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         public bool IsCycleControlsEnabled
         {
-            get => !_mainModel.CurrentProfileSettings.CycleSettings.IsContinuous
-                && !_isFoxExecutingACommand;
+            get => !_mainModel.CurrentProfileSettings.CycleSettings.IsContinuous;
         }
 
         /// <summary>
@@ -626,16 +625,11 @@ namespace org.whitefossa.yiffhl.ViewModels
         public ICommand DecreasePauseDurationBigCommand { get; }
 
         /// <summary>
-        /// True, if fox executing a command
-        /// </summary>
-        private bool _isFoxExecutingACommand { get; set; }
-
-        /// <summary>
         /// Controls should be disabled when fox executing a command
         /// </summary>
         public bool IsControlsEnabled
         {
-            get => !_isFoxExecutingACommand;
+            get => true; // TODO: Change it depending on arming status
         }
 
         /// <summary>
@@ -734,8 +728,7 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         public bool IsPowerControlsEnabled
         {
-            get => !_mainModel.CurrentProfileSettings.FrequencySettings.Is2m
-                && !_isFoxExecutingACommand;
+            get => !_mainModel.CurrentProfileSettings.FrequencySettings.Is2m;
         }
 
         /// <summary>
@@ -837,7 +830,6 @@ namespace org.whitefossa.yiffhl.ViewModels
             IsAddProfileButtonEnabled = false;
 
             ResetFoxRelatedData();
-            SetFoxCommandInProgress(false);
 
             // Requesting foxes list
             Task.WaitAll(OnRefreshFoxesListClickedAsync());
@@ -1140,8 +1132,6 @@ Do you want to continue?");
 
             _mainModel.CurrentProfile = selectedProfile;
 
-            SetFoxCommandInProgress(true);
-
             // Switching profile in the fox
             await _foxProfilesManager.SwitchProfileAsync(selectedProfile.Id, async () => await OnSelectedProfileChangedAsync());
         }
@@ -1232,8 +1222,6 @@ Do you want to continue?");
         private void OnGetFrequencySettings_ReloadPathway(FrequencySettings settings)
         {
             OnGetFrequencySettings_Common(settings);
-
-            SetFoxCommandInProgress(false);
         }
 
         private void OnGetFrequencySettings_Common(FrequencySettings settings)
@@ -1268,8 +1256,6 @@ Do you want to continue?");
 
         private async Task SetFrequencyAsync(FrequencySettings frequencySettings)
         {
-            SetFoxCommandInProgress(true);
-
             await _profileSettingsManager.SetFrequencySettingsAsync(frequencySettings,
                 async () => await OnSetFrequencySettingsAsync());
         }
@@ -1359,8 +1345,6 @@ Do you want to continue?");
         private void OnGetSpeed_ReloadPathway(CallsignSettings settings)
         {
             OnGetSpeed_Common(settings);
-
-            SetFoxCommandInProgress(false);
         }
 
         private void OnGetSpeed_Common(CallsignSettings settings)
@@ -1372,8 +1356,6 @@ Do you want to continue?");
         private void OnGetCallsign_ReloadPathway(CallsignSettings settings)
         {
             OnGetCallsign_Common(settings);
-
-            SetFoxCommandInProgress(false);
         }
 
         private void OnGetCallsign_Common(CallsignSettings settings)
@@ -1389,8 +1371,6 @@ Do you want to continue?");
 
         private async Task OnToggleFoxSpeedAsync()
         {
-            SetFoxCommandInProgress(true);
-
             await _profileSettingsManager.SetSpeedAsync(!_mainModel.CurrentProfileSettings.CallsignSettings.IsFast,
                 async () => await OnSetSpeedAsync());
         }
@@ -1406,8 +1386,6 @@ Do you want to continue?");
 
         public async Task OnChangeSelectedCallsignAsync(Callsign callsing)
         {
-            SetFoxCommandInProgress(true);
-
             await _profileSettingsManager.SetCallsingAsync(callsing, async () => await OnSetCallsignAsync());
         }
 
@@ -1441,8 +1419,6 @@ Do you want to continue?");
         private void OnGetCycleSettings_ReloadPathway(CycleSettings settings)
         {
             OnGetCycleSettings_Common(settings);
-
-            SetFoxCommandInProgress(false);
         }
 
         #endregion
@@ -1451,8 +1427,6 @@ Do you want to continue?");
 
         private async Task OnToggleCycleModeAsync()
         {
-            SetFoxCommandInProgress(true);
-
             var newSettings = _mainModel.CurrentProfileSettings.CycleSettings;
             newSettings.IsContinuous = !newSettings.IsContinuous;
 
@@ -1476,8 +1450,6 @@ Do you want to continue?");
             {
                 var newSettings = _mainModel.CurrentProfileSettings.CycleSettings;
                 newSettings.TxDuration = newValue;
-
-                SetFoxCommandInProgress(true);
                 await _profileSettingsManager.SetCycleSettingsAsync(newSettings, async () => await OnSetCycleSettingsAsync());
             }
         }
@@ -1490,8 +1462,6 @@ Do you want to continue?");
             {
                 var newSettings = _mainModel.CurrentProfileSettings.CycleSettings;
                 newSettings.TxDuration = newValue;
-
-                SetFoxCommandInProgress(true);
                 await _profileSettingsManager.SetCycleSettingsAsync(newSettings, async () => await OnSetCycleSettingsAsync());
             }
         }
@@ -1508,8 +1478,6 @@ Do you want to continue?");
             {
                 var newSettings = _mainModel.CurrentProfileSettings.CycleSettings;
                 newSettings.PauseDuration = newValue;
-
-                SetFoxCommandInProgress(true);
                 await _profileSettingsManager.SetCycleSettingsAsync(newSettings, async () => await OnSetCycleSettingsAsync());
             }
         }
@@ -1522,23 +1490,8 @@ Do you want to continue?");
             {
                 var newSettings = _mainModel.CurrentProfileSettings.CycleSettings;
                 newSettings.PauseDuration = newValue;
-
-                SetFoxCommandInProgress(true);
                 await _profileSettingsManager.SetCycleSettingsAsync(newSettings, async () => await OnSetCycleSettingsAsync());
             }
-        }
-
-        #endregion
-
-        #region Fox command in progress
-
-        private void SetFoxCommandInProgress(bool isInProgress)
-        {
-            _isFoxExecutingACommand = isInProgress;
-
-            OnPropertyChanged(nameof(IsControlsEnabled));
-            OnPropertyChanged(nameof(IsCycleControlsEnabled));
-            OnPropertyChanged(nameof(IsPowerControlsEnabled));
         }
 
         #endregion
@@ -1553,8 +1506,6 @@ Do you want to continue?");
             {
                 var newSettings = _mainModel.CurrentProfileSettings.CycleSettings;
                 newSettings.EndingToneDuration = newValue;
-
-                SetFoxCommandInProgress(true);
                 await _profileSettingsManager.SetCycleSettingsAsync(newSettings, async () => await OnSetCycleSettingsAsync());
             }
         }
@@ -1567,8 +1518,6 @@ Do you want to continue?");
             {
                 var newSettings = _mainModel.CurrentProfileSettings.CycleSettings;
                 newSettings.EndingToneDuration = newValue;
-
-                SetFoxCommandInProgress(true);
                 await _profileSettingsManager.SetCycleSettingsAsync(newSettings, async () => await OnSetCycleSettingsAsync());
             }
         }
@@ -1594,8 +1543,6 @@ Do you want to continue?");
         private void OnGetRunTimesSettings_ReloadPathway(RunTimesSettings settings)
         {
             OnGetRunTimesSettings_Common(settings);
-
-            SetFoxCommandInProgress(false);
         }
 
         #endregion
@@ -1606,8 +1553,6 @@ Do you want to continue?");
         {
             var newSettings = _mainModel.CurrentProfileSettings.RunTimesSettings;
             newSettings.StartTime = PrepareFoxRunTime(timespan);
-
-            SetFoxCommandInProgress(true);
             await _profileSettingsManager.SetRunTimesSettingsAsync(newSettings, async () => await OnSetRunTimesAsync());
         }
 
@@ -1615,8 +1560,6 @@ Do you want to continue?");
         {
             var newSettings = _mainModel.CurrentProfileSettings.RunTimesSettings;
             newSettings.FinishTime = PrepareFoxRunTime(timespan);
-
-            SetFoxCommandInProgress(true);
             await _profileSettingsManager.SetRunTimesSettingsAsync(newSettings, async () => await OnSetRunTimesAsync());
         }
 
@@ -1624,8 +1567,6 @@ Do you want to continue?");
         {
             var newSettings = _mainModel.CurrentProfileSettings.RunTimesSettings;
             newSettings.StartTime = ApplyDeltaToTimeWithLoop(newSettings.StartTime, new TimeSpan(0, 0, delta));
-
-            SetFoxCommandInProgress(true);
             await _profileSettingsManager.SetRunTimesSettingsAsync(newSettings, async () => await OnSetRunTimesAsync());
         }
 
@@ -1633,8 +1574,6 @@ Do you want to continue?");
         {
             var newSettings = _mainModel.CurrentProfileSettings.RunTimesSettings;
             newSettings.FinishTime = ApplyDeltaToTimeWithLoop(newSettings.FinishTime, new TimeSpan(0, 0, delta));
-
-            SetFoxCommandInProgress(true);
             await _profileSettingsManager.SetRunTimesSettingsAsync(newSettings, async () => await OnSetRunTimesAsync());
         }
 
@@ -1667,8 +1606,6 @@ Do you want to continue?");
         private void OnGetPowerSettings_LoadPathway(PowerSettings settings)
         {
             OnGetPowerSettings_Common(settings);
-
-            SetFoxCommandInProgress(false);
         }
 
         private void OnGetPowerSettings_Common(PowerSettings settings)
@@ -1680,8 +1617,6 @@ Do you want to continue?");
         private void OnGetPowerSettings_ReloadPathway(PowerSettings settings)
         {
             OnGetPowerSettings_Common(settings);
-
-            SetFoxCommandInProgress(false);
         }
 
         #endregion
@@ -1696,8 +1631,6 @@ Do you want to continue?");
             {
                 var newSettings = _mainModel.CurrentProfileSettings.PowerSettings;
                 newSettings.Power = newValue;
-
-                SetFoxCommandInProgress(true);
                 await _profileSettingsManager.SetPowerSettingsAsync(newSettings, async () => await OnSetPowerSettingsAsync());
             }
         }
@@ -1710,8 +1643,6 @@ Do you want to continue?");
             {
                 var newSettings = _mainModel.CurrentProfileSettings.PowerSettings;
                 newSettings.Power = newValue;
-
-                SetFoxCommandInProgress(true);
                 await _profileSettingsManager.SetPowerSettingsAsync(newSettings, async () => await OnSetPowerSettingsAsync());
             }
         }

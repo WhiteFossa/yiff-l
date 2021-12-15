@@ -318,7 +318,7 @@
                                         VerticalOptions="Center"
                                         HorizontalOptions="End" 
                                         Command="{Binding ToggleFoxFrequencyRangeCommand}"
-                                        IsEnabled="{Binding IsCycleControlsEnabled}" />
+                                        IsEnabled="{Binding IsControlsEnabled}" />
 
                                 </StackLayout>
 
@@ -341,17 +341,15 @@
                                         VerticalOptions="Center"
                                         HorizontalOptions="End"
                                         Command="{Binding DecreaseFoxFrequencyCommand}"
-                                        IsEnabled="{Binding IsCycleControlsEnabled}" />
-                                    
+                                        IsEnabled="{Binding IsControlsEnabled}" />
+
                                     <Button
                                         Text="&gt;"
                                         VerticalOptions="Center"
                                         HorizontalOptions="End"
                                         Command="{Binding IncreaseFoxFrequencyCommand}"
-                                        IsEnabled="{Binding IsCycleControlsEnabled}" />
-
+                                        IsEnabled="{Binding IsControlsEnabled}" />
                                 </StackLayout>
-                                
                             </StackLayout>
                         </Frame>
 
@@ -379,7 +377,7 @@
                                         VerticalOptions="Center"
                                         HorizontalOptions="EndAndExpand"
                                         SelectedIndexChanged="pkCallsign_SelectedIndexChanged"
-                                        IsEnabled="{Binding IsCycleControlsEnabled}" />
+                                        IsEnabled="{Binding IsControlsEnabled}" />
 
                                 </StackLayout>
 
@@ -403,7 +401,7 @@
                                         VerticalOptions="Center"
                                         HorizontalOptions="End"
                                         Command="{Binding ToggleFoxSpeedCommand}"
-                                        IsEnabled="{Binding IsCycleControlsEnabled}" />
+                                        IsEnabled="{Binding IsControlsEnabled}" />
 
 
                                 </StackLayout>

@@ -592,6 +592,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations
 
         private void StopWaitingForResponse()
         {
+            Thread.Sleep(50); // TODO: Fixme. Tiny pause to give fox some time to prepare for a next command
+
             isWaitingForResponse = false;
         }
 
