@@ -151,6 +151,65 @@
                     </StackLayout>
                 </Frame>
                 <!-- End of fox identification -->
+                
+                <!-- Fox status -->
+
+                <Frame
+                    Style="{StaticResource FramesStyle}">
+
+                    <StackLayout>
+
+                        <Label
+                            Text="Fox status"
+                            HorizontalOptions="Center" />
+
+                        <StackLayout
+                            HorizontalOptions="FillAndExpand"
+                            Orientation="Horizontal">
+
+                            <Label
+                                Text="Battery:"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                            <Label
+                                Text="100%"
+                                FontAttributes="Bold"
+                                HorizontalOptions="StartAndExpand"
+                                VerticalOptions="Center" />
+                        </StackLayout>
+
+                        <StackLayout
+                            HorizontalOptions="FillAndExpand"
+                            Orientation="Horizontal">
+
+                            <Label
+                                Text="Status:"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                            <Label
+                                Text="Not armed"
+                                FontAttributes="Bold"
+                                HorizontalOptions="StartAndExpand"
+                                VerticalOptions="Center" />
+
+                            <Button
+                                Text="Arm"
+                                VerticalOptions="Center"
+                                HorizontalOptions="End" />
+
+                            <Button
+                                Text="Disarm"
+                                VerticalOptions="Center"
+                                HorizontalOptions="End" />
+                        </StackLayout>
+
+                    </StackLayout>
+                    
+                </Frame>
+
+                <!-- End of fox status -->
 
                 <!-- Profiles -->
                 <Frame
@@ -241,7 +300,7 @@
 
                                 <StackLayout
                                     HorizontalOptions="FillAndExpand"
-                                     Orientation="Horizontal">
+                                    Orientation="Horizontal">
 
                                     <Label
                                         Text="Range:"

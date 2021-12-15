@@ -21,6 +21,16 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private const int MinPayloadLength = 1;
         private const int MaxPayloadLength = 59;
 
+        /// <summary>
+        /// How long one iteration of waiting for response is
+        /// </summary>
+        private const int WaitForResponseIterationSleepLength = 1;
+
+        /// <summary>
+        /// If we have >= than this iterations during waiting for response, we will throw an exception.
+        /// </summary>
+        private const int WaitForResponseIterationsTimeout = 1000;
+
         #region Command responses
 
         private OnResponseDelegate onSetDateAndTimeResponse;
@@ -83,6 +93,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private int expectedPacketLength;
 
         private readonly IBluetoothCommunicator bluetoothCommunicator;
+
+        private bool isWaitingForResponse;
 
         public PacketsProcessor(IBluetoothCommunicator bluetoothCommunicator)
         {
@@ -207,6 +219,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations
 
         private void OnNewResponseToCommand(IReadOnlyCollection<byte> payload)
         {
+            StopWaitingForResponse();
+
             var responseTo = (CommandType)payload.ElementAt(0);
 
             Debug.WriteLine($"Response to command: {responseTo}");
@@ -539,9 +553,29 @@ namespace org.whitefossa.yiffhl.Business.Implementations
 
         public void SendCommand(CommandType command, IReadOnlyCollection<byte> commandPayload)
         {
-            Thread.Sleep(50); // TODO: Remove this dirty as hell hack
+            var thread = new Thread(() => SendCommandInner(command, commandPayload));
+            thread.Start();
+        }
 
-            Debug.WriteLine($"Send command: {command}");
+        private void SendCommandInner(CommandType command, IReadOnlyCollection<byte> commandPayload)
+        {
+            Debug.WriteLine($"Command requested: {command}");
+
+            var waitTimer = 0;
+            while (isWaitingForResponse)
+            {
+                Thread.Sleep(WaitForResponseIterationSleepLength);
+                waitTimer++;
+
+                if (waitTimer >= WaitForResponseIterationsTimeout)
+                {
+                    throw new TimeoutException("Timeout during waiting for command response");
+                }
+            }
+
+            StartWaitingForResponse();
+
+            Debug.WriteLine($"Command send: {command}");
 
             var resultPayload = new List<byte>();
             resultPayload.Add((byte)PayloadType.CommandToFox);
@@ -549,6 +583,16 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             resultPayload.AddRange(commandPayload);
 
             SendPacket(resultPayload);
+        }
+
+        private void StartWaitingForResponse()
+        {
+            isWaitingForResponse = true;
+        }
+
+        private void StopWaitingForResponse()
+        {
+            isWaitingForResponse = false;
         }
 
         public void SetOnSetDateAndTimeResponse(OnResponseDelegate onSetDateAndTimeResponse)
