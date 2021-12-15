@@ -59,6 +59,8 @@ namespace org.whitefossa.yiffhl.Models
         /// </summary>
         public ProfileSettings CurrentProfileSettings { get; set; } = new ProfileSettings();
 
+        public FoxStatus FoxStatus { get; set; } = new FoxStatus();
+
         public MainModel()
         {
             // Initial state

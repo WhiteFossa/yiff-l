@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -125,6 +126,11 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         private const float PowerStep = 0.1f;
 
+        /// <summary>
+        /// Interval in milliseconds to poll fox status
+        /// </summary>
+        private const int PollFoxStatusInterval = 1000;
+
         private readonly IFoxConnector _foxConnector;
         private readonly IPairedFoxesEnumerator _pairedFoxesEnumerator;
         private readonly IUserNotifier _userNotifier;
@@ -137,6 +143,7 @@ namespace org.whitefossa.yiffhl.ViewModels
         private readonly IFoxNameManager _foxNameManager;
         private readonly IFoxClockManager _foxClockManager;
         private readonly IProfileSettingsManager _profileSettingsManager;
+        private readonly IFoxStatusManager _foxStatusManager;
 
         /// <summary>
         /// Main model
@@ -741,6 +748,13 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         public ICommand DecreasePower { get; }
 
+        public string BatteryLevelFormatted
+        {
+            get => String.Format("{0:0.0%}", _mainModel.FoxStatus.BatteryLevel);
+        }
+
+        private Timer PollFoxStatusTimer;
+
         public MainPageViewModel()
         {
             _foxConnector = App.Container.Resolve<IFoxConnector>();
@@ -755,6 +769,7 @@ namespace org.whitefossa.yiffhl.ViewModels
             _foxNameManager = App.Container.Resolve<IFoxNameManager>();
             _foxClockManager = App.Container.Resolve<IFoxClockManager>();
             _profileSettingsManager = App.Container.Resolve<IProfileSettingsManager>();
+            _foxStatusManager = App.Container.Resolve<IFoxStatusManager>();
 
             // Setting up fox connector delegates
             _mainModel.OnFoxConnectorNewByteRead += OnNewByteRead;
@@ -829,6 +844,12 @@ namespace org.whitefossa.yiffhl.ViewModels
 
             // Callsigns list
             Task.WaitAll(LoadCallsignsAsync());
+
+            // Setting up fox poll timer
+            PollFoxStatusTimer = new Timer(PollFoxStatusInterval);
+            PollFoxStatusTimer.Elapsed += OnFoxStatusPollRequest;
+            PollFoxStatusTimer.AutoReset = true;
+            PollFoxStatusTimer.Start();
         }
 
         public async Task OnSelectedFoxChangedAsync(PairedFoxDTO selectedFox)
@@ -1647,7 +1668,6 @@ Do you want to continue?");
         {
             OnGetPowerSettings_Common(settings);
 
-            // TODO: Load next data
             SetFoxCommandInProgress(false);
         }
 
@@ -1699,6 +1719,26 @@ Do you want to continue?");
         private async Task OnSetPowerSettingsAsync()
         {
             await _profileSettingsManager.LoadPowerSettingsAsync(OnGetPowerSettings_ReloadPathway);
+        }
+
+        #endregion
+
+        #region Fox status polling
+
+        private async void OnFoxStatusPollRequest(Object source, ElapsedEventArgs e)
+        {
+            if (!_mainModel.IsConnected)
+            {
+                return;
+            }
+
+            await _foxStatusManager.GetFoxStatusAsync(OnGetFoxStatus);
+        }
+
+        private void OnGetFoxStatus(FoxStatus status)
+        {
+            _mainModel.FoxStatus = status;
+            OnPropertyChanged(nameof(BatteryLevelFormatted));
         }
 
         #endregion

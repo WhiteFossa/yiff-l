@@ -173,7 +173,7 @@
                                 VerticalOptions="Center" />
 
                             <Label
-                                Text="100%"
+                                Text="{Binding BatteryLevelFormatted}"
                                 FontAttributes="Bold"
                                 HorizontalOptions="StartAndExpand"
                                 VerticalOptions="Center" />
