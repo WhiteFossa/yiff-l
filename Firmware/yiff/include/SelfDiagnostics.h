@@ -515,6 +515,11 @@ typedef enum
 	 * Fox start or end timespans are invalid
 	 */
 	YhlFailureCause_InvalidStartOrEndTimespans = 99,
+
+	/**
+	 * Fox is already armed
+	 */
+	YhlFailureCause_AlreadyArmed = 100,
 }
 YhlFailureCausesEnum;
 

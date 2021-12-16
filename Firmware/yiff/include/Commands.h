@@ -79,6 +79,11 @@ typedef struct
 	 * If true, then we need to arm fox
 	 */
 	bool NeedToArmFox;
+
+	/**
+	 * If true, then we need to arm fox manually
+	 */
+	bool NeedToArmFoxByHandpaws;
 }
 PendingCommandsFlagsStruct;
 

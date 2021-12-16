@@ -35,6 +35,7 @@ void FoxState_Init(void)
 	PendingCommandsFlags.NeedToSetBeginAndEndTimes = false;
 	PendingCommandsFlags.NeedToSetPower = false;
 	PendingCommandsFlags.NeedToArmFox = false;
+	PendingCommandsFlags.NeedToArmFoxByHandpaws = false;
 
 	FoxState.CurrentDisplay = StatusDisplay;
 

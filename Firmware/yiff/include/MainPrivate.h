@@ -131,6 +131,11 @@ void Main_MeasureBatteryLevel(void);
 void Main_ProcessFoxArming(void);
 
 /**
+ * Common code for fox arming both by command and by hands
+ */
+void Main_ProcessFoxArmingCommon(void);
+
+/**
  * Left button pressed event
  */
 void Main_OnLeftButtonPressedInterrupt(void);

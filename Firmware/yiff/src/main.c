@@ -357,12 +357,7 @@ void Main_ProcessFoxArming(void)
 			uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
 			SendResponse(ArmFox, 1, &response);
 
-			Main_PrepareAndMatchAntenna();
-			HL_UnPrepareFoxFromCycle();
-
-			GSM_Arm();
-
-			EmitFoxArmedEvent();
+			Main_ProcessFoxArmingCommon();
 		}
 		else
 		{
@@ -372,6 +367,28 @@ void Main_ProcessFoxArming(void)
 
 		PendingCommandsFlags.NeedToArmFox = false;
 	}
+
+	if (PendingCommandsFlags.NeedToArmFoxByHandpaws)
+	{
+		Main_ProcessFoxArmingCommon();
+
+		PendingCommandsFlags.NeedToArmFoxByHandpaws = false;
+	}
+}
+
+void Main_ProcessFoxArmingCommon(void)
+{
+	if (FoxState.GlobalState.IsArmed)
+	{
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_AlreadyArmed);
+	}
+
+	Main_PrepareAndMatchAntenna();
+	HL_UnPrepareFoxFromCycle();
+
+	GSM_Arm();
+
+	EmitFoxArmedEvent();
 }
 
 void Main_PrepareAndMatchAntenna(void)

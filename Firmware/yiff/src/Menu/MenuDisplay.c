@@ -965,7 +965,7 @@ void MenuDisplay_Arm(void)
 		return;
 	}
 
-	PendingCommandsFlags.NeedToArmFox = true;
+	PendingCommandsFlags.NeedToArmFoxByHandpaws = true;
 }
 
 void MenuDisplay_Disarm(void)
