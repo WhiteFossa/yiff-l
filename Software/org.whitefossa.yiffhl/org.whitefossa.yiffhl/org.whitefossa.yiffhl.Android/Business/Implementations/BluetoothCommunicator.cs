@@ -143,7 +143,7 @@ namespace org.whitefossa.yiffhl.Droid.Business.Implementations
                         _onBTCommunicatorNewByteRead(buffer[i]);
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     // Exceptions occurs when socket is getting closed on disconnect
                     Disconnect();
