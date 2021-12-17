@@ -1,6 +1,5 @@
 ﻿using org.whitefossa.yiffhl.Abstractions.DTOs;
 using org.whitefossa.yiffhl.Abstractions.Interfaces;
-using org.whitefossa.yiffhl.Business.Implementations.Commands;
 
 namespace org.whitefossa.yiffhl.Models
 {
@@ -61,6 +60,25 @@ namespace org.whitefossa.yiffhl.Models
 
         public FoxStatus FoxStatus { get; set; } = new FoxStatus();
 
+        #region Fox events
+
+        /// <summary>
+        /// Delegate, called when fox is armed
+        /// </summary>
+        public OnFoxArmedEventDelegate OnFoxArmed { get; set; }
+
+        /// <summary>
+        /// Delegate, called when new antenna matching measurement event arrives
+        /// </summary>
+        public OnAntennaMatchingMeasurementEventDelegate OnAntennaMatchingMeasurement { get; set; }
+
+        /// <summary>
+        /// Delegate, called when fox going to sleepmode
+        /// </summary>
+        public OnEnteringSleepmodeEventDelegate OnEnteringSleepmode { get; set; }
+
+        #endregion
+
         public MainModel()
         {
             // Initial state
@@ -71,6 +89,10 @@ namespace org.whitefossa.yiffhl.Models
             OnFoxConnectorConnected = null;
             OnFoxConnectorDisconnected = null;
             OnFoxConnectorFailedToConnect = null;
+
+            OnFoxArmed = null;
+            OnAntennaMatchingMeasurement = null;
+            OnEnteringSleepmode = null;
         }
     }
 }

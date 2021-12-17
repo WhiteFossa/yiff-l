@@ -1,5 +1,6 @@
 ﻿using org.whitefossa.yiffhl.Abstractions.DTOs;
 using org.whitefossa.yiffhl.Abstractions.Interfaces;
+using org.whitefossa.yiffhl.Abstractions.Interfaces.Events;
 using org.whitefossa.yiffhl.Business.Implementations.Commands;
 using org.whitefossa.yiffhl.Models;
 using System;
@@ -777,6 +778,15 @@ namespace org.whitefossa.yiffhl.ViewModels
                 _mainModel.OnFoxConnectorDisconnected,
                 _mainModel.OnFoxConnectorFailedToConnect
             );
+
+            // Setting up fox events delegates
+            _mainModel.OnFoxArmed += OnFoxArmed;
+            _mainModel.OnAntennaMatchingMeasurement += OnAntennaMatchingMeasurement;
+            _mainModel.OnEnteringSleepmode += OnEnteringSleepmode;
+
+            _packetsProcessor.RegisterOnFoxArmedEventHandler(_mainModel.OnFoxArmed);
+            _packetsProcessor.RegisterOnAntennaMatchingMeasurementEventHandler(_mainModel.OnAntennaMatchingMeasurement);
+            _packetsProcessor.RegisterOnEnteringSleepmodeEventHandler(_mainModel.OnEnteringSleepmode);
 
             // Binding commands to handlers
             SelectedFoxChangedCommand = new Command<PairedFoxDTO>(async (f) => await OnSelectedFoxChangedAsync(f));
@@ -1670,6 +1680,26 @@ Do you want to continue?");
         {
             _mainModel.FoxStatus = status;
             OnPropertyChanged(nameof(BatteryLevelFormatted));
+        }
+
+        #endregion
+
+        #region Fox-generated events
+
+        private void OnFoxArmed(IFoxArmedEvent foxArmedEvent)
+        {
+            Debug.WriteLine("Fox armed.");
+        }
+
+        private void OnAntennaMatchingMeasurement(IAntennaMatchingMeasurementEvent antennaMatchingMeasurementEvent)
+        {
+            Debug.WriteLine($"Tuner position: { antennaMatchingMeasurementEvent.GetMatchingPosition() }," +
+                $"voltage: { antennaMatchingMeasurementEvent.GetAntennaVoltage() }");
+        }
+
+        private void OnEnteringSleepmode(IEnteringSleepmodeEvent enteringSleepmodeEvent)
+        {
+            Debug.WriteLine("Entering sleepmode");
         }
 
         #endregion
