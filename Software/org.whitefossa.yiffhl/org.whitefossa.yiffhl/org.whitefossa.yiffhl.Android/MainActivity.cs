@@ -33,7 +33,8 @@ namespace org.whitefossa.yiffhl.Droid
             App.Container.Register<IFoxNameManager, FoxNameManager>().AsSingleton();
             App.Container.Register<IFoxClockManager, FoxClockManager>().AsSingleton();
             App.Container.Register<IProfileSettingsManager, ProfileSettingsManager>().AsSingleton();
-            App.Container.Register<IFoxStatusManager, FoxStatusManager>().AsSingleton();
+            App.Container.Register<IDynamicFoxStatusManager, DynamicFoxStatusManager>().AsSingleton();
+            App.Container.Register<IStaticFoxStatusManager, StaticFoxStatusManager>().AsSingleton();
 
             #region Commands
 
@@ -62,6 +63,8 @@ namespace org.whitefossa.yiffhl.Droid
             App.Container.Register<IGetPowerCommand, GetPowerCommand>().AsSingleton();
             App.Container.Register<ISetPowerCommand, SetPowerCommand>().AsSingleton();
             App.Container.Register<IGetBatteryLevelCommand, GetBatteryLevelCommand>().AsSingleton();
+            App.Container.Register<IIsFoxArmedCommand, IsFoxArmedCommand>().AsSingleton();
+            App.Container.Register<IArmFoxCommand, ArmFoxCommand>().AsSingleton();
 
             #endregion
 

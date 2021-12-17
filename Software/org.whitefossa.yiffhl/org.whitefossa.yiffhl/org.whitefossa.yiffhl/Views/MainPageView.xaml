@@ -189,7 +189,7 @@
                                 VerticalOptions="Center" />
 
                             <Label
-                                Text="Not armed"
+                                Text="{Binding IsFoxArmedFormatted}"
                                 FontAttributes="Bold"
                                 HorizontalOptions="StartAndExpand"
                                 VerticalOptions="Center" />
@@ -197,12 +197,15 @@
                             <Button
                                 Text="Arm"
                                 VerticalOptions="Center"
-                                HorizontalOptions="End" />
+                                HorizontalOptions="End"
+                                Command="{Binding ArmFoxCommand}"
+                                IsEnabled="{Binding IsArmButtonEnabled}" />
 
                             <Button
                                 Text="Disarm"
                                 VerticalOptions="Center"
-                                HorizontalOptions="End" />
+                                HorizontalOptions="End"
+                                IsEnabled="{Binding IsDisarmButtonEnabled}" />
                         </StackLayout>
 
                     </StackLayout>

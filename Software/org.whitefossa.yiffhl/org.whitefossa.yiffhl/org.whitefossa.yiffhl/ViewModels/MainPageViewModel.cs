@@ -144,7 +144,8 @@ namespace org.whitefossa.yiffhl.ViewModels
         private readonly IFoxNameManager _foxNameManager;
         private readonly IFoxClockManager _foxClockManager;
         private readonly IProfileSettingsManager _profileSettingsManager;
-        private readonly IFoxStatusManager _foxStatusManager;
+        private readonly IDynamicFoxStatusManager _dynamicFoxStatusManager;
+        private readonly IStaticFoxStatusManager _staticFoxStatusManager;
 
         /// <summary>
         /// Main model
@@ -744,10 +745,42 @@ namespace org.whitefossa.yiffhl.ViewModels
 
         public string BatteryLevelFormatted
         {
-            get => String.Format("{0:0.0%}", _mainModel.FoxStatus.BatteryLevel);
+            get => String.Format("{0:0.0%}", _mainModel.DynamicFoxStatus.BatteryLevel);
         }
 
+        /// <summary>
+        /// Timer to poll fox dynamic status
+        /// </summary>
         private Timer PollFoxStatusTimer;
+
+        /// <summary>
+        /// Is fox armed? (as a string)
+        /// </summary>
+        public string IsFoxArmedFormatted
+        {
+            get => _mainModel.StaticFoxStatus.IsFoxArmed ? "Armed" : "Not armed";
+        }
+
+        /// <summary>
+        /// Is Arm button enabled
+        /// </summary>
+        public bool IsArmButtonEnabled
+        {
+            get => !_mainModel.StaticFoxStatus.IsFoxArmed;
+        }
+
+        /// <summary>
+        /// Is Disarm button enabled
+        /// </summary>
+        public bool IsDisarmButtonEnabled
+        {
+            get => _mainModel.StaticFoxStatus.IsFoxArmed;
+        }
+
+        /// <summary>
+        /// Arm fox
+        /// </summary>
+        public ICommand ArmFoxCommand { get; }
 
         public MainPageViewModel()
         {
@@ -763,7 +796,8 @@ namespace org.whitefossa.yiffhl.ViewModels
             _foxNameManager = App.Container.Resolve<IFoxNameManager>();
             _foxClockManager = App.Container.Resolve<IFoxClockManager>();
             _profileSettingsManager = App.Container.Resolve<IProfileSettingsManager>();
-            _foxStatusManager = App.Container.Resolve<IFoxStatusManager>();
+            _dynamicFoxStatusManager = App.Container.Resolve<IDynamicFoxStatusManager>();
+            _staticFoxStatusManager = App.Container.Resolve<IStaticFoxStatusManager>();
 
             // Setting up fox connector delegates
             _mainModel.OnFoxConnectorNewByteRead += OnNewByteRead;
@@ -832,6 +866,8 @@ namespace org.whitefossa.yiffhl.ViewModels
             IncreasePower = new Command(async () => await OnIncreasePowerAsync(PowerStep));
             DecreasePower = new Command(async () => await OnDecreasePowerAsync(PowerStep));
 
+            ArmFoxCommand = new Command(async() => await OnArmFoxAsync());
+
             // Initial state
             IsConnectButtonEnabled = false;
             IsFoxPickerEnabled = true;
@@ -849,7 +885,7 @@ namespace org.whitefossa.yiffhl.ViewModels
 
             // Setting up fox poll timer
             PollFoxStatusTimer = new Timer(PollFoxStatusInterval);
-            PollFoxStatusTimer.Elapsed += OnFoxStatusPollRequest;
+            PollFoxStatusTimer.Elapsed += async (s, e) => await OnDynamicFoxStatusPollRequest(s, e);
             PollFoxStatusTimer.AutoReset = true;
             PollFoxStatusTimer.Start();
         }
@@ -970,8 +1006,14 @@ namespace org.whitefossa.yiffhl.ViewModels
             FoxFirmwareVersion = firmwareVersion;
             FoxSerialNumber = serialNumber;
 
-            // Setting fox time
-            await _foxClockManager.SynchronizeClockAsync(async (isSuccessfull) => await OnSetFoxDateAndTimeResponseAsync(isSuccessfull));
+            // Requesting fox status
+            await LoadStaticFoxStatusAsync();
+
+            // Requesting fox name
+            await _foxNameManager.GetNameAsync(async (name) => await OnGetFoxNameResponseAsync(name));
+
+            // Enumerating profiles
+            await EnumerateProfilesAsync();
         }
 
         /// <summary>
@@ -980,8 +1022,6 @@ namespace org.whitefossa.yiffhl.ViewModels
         private async Task OnGetFoxNameResponseAsync(string name)
         {
             FoxName = name;
-
-            await EnumerateProfilesAsync();
         }
 
         /// <summary>
@@ -1004,9 +1044,6 @@ namespace org.whitefossa.yiffhl.ViewModels
                 await _userNotifier.ShowErrorMessageAsync("Error:", "Failed to set fox date and time!");
                 return;
             }
-
-            // Requesting fox name
-            await _foxNameManager.GetNameAsync(async (name) => await OnGetFoxNameResponseAsync(name));
         }
 
         private async Task OnRenameFoxClickedAsync()
@@ -1666,19 +1703,19 @@ Do you want to continue?");
 
         #region Fox status polling
 
-        private async void OnFoxStatusPollRequest(Object source, ElapsedEventArgs e)
+        private async Task OnDynamicFoxStatusPollRequest(Object source, ElapsedEventArgs e)
         {
             if (!_mainModel.IsConnected)
             {
                 return;
             }
 
-            await _foxStatusManager.GetFoxStatusAsync(OnGetFoxStatus);
+            await _dynamicFoxStatusManager.GetDynamicFoxStatusAsync(OnGetDynamicFoxStatus);
         }
 
-        private void OnGetFoxStatus(FoxStatus status)
+        private void OnGetDynamicFoxStatus(DynamicFoxStatus status)
         {
-            _mainModel.FoxStatus = status;
+            _mainModel.DynamicFoxStatus = status;
             OnPropertyChanged(nameof(BatteryLevelFormatted));
         }
 
@@ -1700,6 +1737,53 @@ Do you want to continue?");
         private void OnEnteringSleepmode(IEnteringSleepmodeEvent enteringSleepmodeEvent)
         {
             Debug.WriteLine("Entering sleepmode");
+        }
+
+        #endregion
+
+        #region Static fox status
+
+        private async Task LoadStaticFoxStatusAsync()
+        {
+            await _staticFoxStatusManager.GetStaticFoxStatusAsync(async (s) => await OnGetStaticFoxStatusAsync_LoadPathway(s));
+        }
+
+        private async Task OnGetStaticFoxStatusAsync_LoadPathway(StaticFoxStatus status)
+        {
+            OnGetStaticFoxStatus_Common(status);
+
+            if (!_mainModel.StaticFoxStatus.IsFoxArmed)
+            {
+                // Setting fox time
+                await _foxClockManager.SynchronizeClockAsync(async (isSuccessfull) => await OnSetFoxDateAndTimeResponseAsync(isSuccessfull));
+            }
+        }
+
+        private async Task OnGetStaticFoxStatusAsync_ReloadPathway(StaticFoxStatus status)
+        {
+            OnGetStaticFoxStatus_Common(status);
+        }
+
+        private void OnGetStaticFoxStatus_Common(StaticFoxStatus status)
+        {
+            _mainModel.StaticFoxStatus = status;
+            OnPropertyChanged(nameof(IsFoxArmedFormatted));
+            OnPropertyChanged(nameof(IsArmButtonEnabled));
+            OnPropertyChanged(nameof(IsDisarmButtonEnabled));
+        }
+
+        #endregion
+
+        #region Arm fox
+
+        public async Task OnArmFoxAsync()
+        {
+            await _staticFoxStatusManager.ArmFoxAsync(async () => await OnArmFoxResponseAsync());
+        }
+
+        private async Task OnArmFoxResponseAsync()
+        {
+            await _staticFoxStatusManager.GetStaticFoxStatusAsync(async (s) => await OnGetStaticFoxStatusAsync_ReloadPathway(s));
         }
 
         #endregion

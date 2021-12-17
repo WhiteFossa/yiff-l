@@ -1,9 +1,9 @@
 ﻿namespace org.whitefossa.yiffhl.Abstractions.DTOs
 {
     /// <summary>
-    /// Fox status
+    /// Dynamic fox status (have to be polled)
     /// </summary>
-    public class FoxStatus
+    public class DynamicFoxStatus
     {
         /// <summary>
         /// Battery level in percent

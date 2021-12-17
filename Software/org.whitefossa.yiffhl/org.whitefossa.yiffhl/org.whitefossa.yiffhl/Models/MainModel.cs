@@ -58,7 +58,15 @@ namespace org.whitefossa.yiffhl.Models
         /// </summary>
         public ProfileSettings CurrentProfileSettings { get; set; } = new ProfileSettings();
 
-        public FoxStatus FoxStatus { get; set; } = new FoxStatus();
+        /// <summary>
+        /// Dynamic fox status
+        /// </summary>
+        public DynamicFoxStatus DynamicFoxStatus { get; set; } = new DynamicFoxStatus();
+
+        /// <summary>
+        /// Static fox status
+        /// </summary>
+        public StaticFoxStatus StaticFoxStatus { get; set; } = new StaticFoxStatus();
 
         #region Fox events
 

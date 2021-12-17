@@ -6,22 +6,22 @@ using System.Threading.Tasks;
 
 namespace org.whitefossa.yiffhl.Business.Implementations
 {
-    public class FoxStatusManager : IFoxStatusManager
+    public class DynamicFoxStatusManager : IDynamicFoxStatusManager
     {
         private readonly IGetBatteryLevelCommand _getBatteryLevelCommand;
 
-        private OnGetFoxStatus _onGetFoxStatus;
+        private OnGetDynamicFoxStatus _onGetDynamicFoxStatus;
 
-        private FoxStatus _statusToLoad = new FoxStatus();
+        private DynamicFoxStatus _statusToLoad = new DynamicFoxStatus();
 
-        public FoxStatusManager(IGetBatteryLevelCommand getBatteryLevelCommand)
+        public DynamicFoxStatusManager(IGetBatteryLevelCommand getBatteryLevelCommand)
         {
             _getBatteryLevelCommand = getBatteryLevelCommand;
         }
 
-        public async Task GetFoxStatusAsync(OnGetFoxStatus onGetFoxStatus)
+        public async Task GetDynamicFoxStatusAsync(OnGetDynamicFoxStatus onGetDynamicFoxStatus)
         {
-            _onGetFoxStatus = onGetFoxStatus ?? throw new ArgumentNullException(nameof(onGetFoxStatus));
+            _onGetDynamicFoxStatus = onGetDynamicFoxStatus ?? throw new ArgumentNullException(nameof(onGetDynamicFoxStatus));
 
             _getBatteryLevelCommand.SetResponseDelegate(OnGetBatteryLevelResponse);
             _getBatteryLevelCommand.SendGetBatteryLevelCommand();
@@ -31,7 +31,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         {
             _statusToLoad.BatteryLevel = level;
 
-            _onGetFoxStatus(_statusToLoad);
+            _onGetDynamicFoxStatus(_statusToLoad);
         }
     }
 }
