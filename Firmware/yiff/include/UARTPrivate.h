@@ -50,9 +50,4 @@ uint8_t UART_ExpectedPacketLength;
  */
 void (*UART_OnNewPacket)(uint8_t packetFullLength, uint8_t* packet);
 
-/**
- * True if there is ongoing semiblocking transmission
- */
-volatile bool UART_TransmissionInProgress;
-
 #endif /* INCLUDE_UARTPRIVATE_H_ */

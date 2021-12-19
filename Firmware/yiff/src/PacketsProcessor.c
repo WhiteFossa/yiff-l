@@ -1174,7 +1174,7 @@ void SendPacket(uint8_t payloadSize, uint8_t* payload)
 	uint32_t crc = L2HAL_CRC_Calculate(&CRC_Context, fullPacket, fullPacketSize - 4U);
 	memcpy(fullPacket + fullPacketSize - 4U, (uint8_t*)&crc, 4);
 
-	UART_SendSemiBlocking(fullPacket, fullPacketSize);
+	UART_SendBlocking(fullPacket, fullPacketSize);
 	free(fullPacket);
 }
 
