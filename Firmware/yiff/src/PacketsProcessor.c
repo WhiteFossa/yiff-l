@@ -1093,7 +1093,7 @@ void OnGetIdentificationData(uint8_t payloadSize, uint8_t* payload)
 
 void EmitFoxArmedEvent(void)
 {
-	SendEvent(FoxArmed, 0, NULL);
+	SendEvent(Armed, 0, NULL);
 }
 
 void EmitAntennaMatchingMeasurementEvent(uint8_t matchingPosition, float uAnt)
@@ -1109,6 +1109,11 @@ void EmitAntennaMatchingMeasurementEvent(uint8_t matchingPosition, float uAnt)
 void EmitEnteringSleepmodeEvent(void)
 {
 	SendEvent(EnteringSleepmode, 0, NULL);
+}
+
+void EmitFoxArmingInitiated(void)
+{
+	SendEvent(ArmingInitiated, 0, NULL);
 }
 
 uint8_t FromBool(bool data)
