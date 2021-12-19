@@ -5,10 +5,12 @@
     /// </summary>
     public enum EventType
     {
-        FoxIsArmed = 0x01,
+        Armed = 0x01,
 
         AntennaMatchingMeasurement = 0x02,
 
-        EnteringSleepmode = 0x03
+        EnteringSleepmode = 0x03,
+
+        ArmingInitiatedEvent = 0x04
     }
 }

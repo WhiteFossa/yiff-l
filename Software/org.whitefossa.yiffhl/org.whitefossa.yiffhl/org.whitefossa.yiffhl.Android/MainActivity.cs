@@ -65,6 +65,7 @@ namespace org.whitefossa.yiffhl.Droid
             App.Container.Register<IGetBatteryLevelCommand, GetBatteryLevelCommand>().AsSingleton();
             App.Container.Register<IIsFoxArmedCommand, IsFoxArmedCommand>().AsSingleton();
             App.Container.Register<IArmFoxCommand, ArmFoxCommand>().AsSingleton();
+            App.Container.Register<IDisarmFoxCommand, DisarmFoxCommand>().AsSingleton();
 
             #endregion
 
