@@ -151,7 +151,9 @@ typedef enum
 
 	EnteringSleepmode = 0x03,
 
-	ArmingInitiated = 0x04
+	ArmingInitiated = 0x04,
+
+	Disarmed = 0x05
 }
 EventsFromFoxEnum;
 
@@ -379,7 +381,12 @@ void EmitEnteringSleepmodeEvent(void);
 /**
  * Emits "Fox arming initiated" event
  */
-void EmitFoxArmingInitiated(void);
+void EmitFoxArmingInitiatedEvent(void);
+
+/**
+ * Emits "Fox disarmed" event
+ */
+void EmitFoxDisarmedEvent(void);
 
 /**
  * Returns 0x00 if false, 0x01 if true

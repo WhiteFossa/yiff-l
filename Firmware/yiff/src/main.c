@@ -383,7 +383,7 @@ void Main_ProcessFoxArmingCommon(void)
 		SelfDiagnostics_HaltOnFailure(YhlFailureCause_AlreadyArmed);
 	}
 
-	EmitFoxArmingInitiated();
+	EmitFoxArmingInitiatedEvent();
 
 	Main_PrepareAndMatchAntenna();
 	HL_UnPrepareFoxFromCycle();

@@ -879,6 +879,8 @@ OnDisarmFox_Validate:
 
 	uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
 	SendResponse(DisarmFox, 1, &response);
+
+	EmitFoxDisarmedEvent();
 }
 
 void OnSetBeginAndEndTimes(uint8_t payloadSize, uint8_t* payload)
@@ -1111,9 +1113,14 @@ void EmitEnteringSleepmodeEvent(void)
 	SendEvent(EnteringSleepmode, 0, NULL);
 }
 
-void EmitFoxArmingInitiated(void)
+void EmitFoxArmingInitiatedEvent(void)
 {
 	SendEvent(ArmingInitiated, 0, NULL);
+}
+
+void EmitFoxDisarmedEvent(void)
+{
+	SendEvent(Disarmed, 0, NULL);
 }
 
 uint8_t FromBool(bool data)

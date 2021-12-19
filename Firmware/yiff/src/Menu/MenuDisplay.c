@@ -977,6 +977,8 @@ void MenuDisplay_Disarm(void)
 	}
 	GSM_Disarm();
 
+	EmitFoxDisarmedEvent();
+
 	InformationPopup_Show("Disarmed!", "Fox disarmed.", MenuDisplay);
 }
 
