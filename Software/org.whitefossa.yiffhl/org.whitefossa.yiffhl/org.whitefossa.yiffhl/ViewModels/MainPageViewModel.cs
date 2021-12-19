@@ -782,6 +782,11 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         public ICommand ArmFoxCommand { get; }
 
+        /// <summary>
+        /// Disarm fox
+        /// </summary>
+        public ICommand DisarmFoxCommand { get; }
+
         public MainPageViewModel()
         {
             _foxConnector = App.Container.Resolve<IFoxConnector>();
@@ -814,13 +819,15 @@ namespace org.whitefossa.yiffhl.ViewModels
             );
 
             // Setting up fox events delegates
-            _mainModel.OnFoxArmed += OnFoxArmed;
+            _mainModel.OnFoxArmed += async (e) => await OnFoxArmedAsync(e);
             _mainModel.OnAntennaMatchingMeasurement += OnAntennaMatchingMeasurement;
             _mainModel.OnEnteringSleepmode += OnEnteringSleepmode;
+            _mainModel.OnFoxArmingInitiated += OnFoxArmingInitiated;
 
             _packetsProcessor.RegisterOnFoxArmedEventHandler(_mainModel.OnFoxArmed);
             _packetsProcessor.RegisterOnAntennaMatchingMeasurementEventHandler(_mainModel.OnAntennaMatchingMeasurement);
             _packetsProcessor.RegisterOnEnteringSleepmodeEventHandler(_mainModel.OnEnteringSleepmode);
+            _packetsProcessor.RegisterOnFoxArmingInitiatedEventHandler(_mainModel.OnFoxArmingInitiated);
 
             // Binding commands to handlers
             SelectedFoxChangedCommand = new Command<PairedFoxDTO>(async (f) => await OnSelectedFoxChangedAsync(f));
@@ -866,7 +873,8 @@ namespace org.whitefossa.yiffhl.ViewModels
             IncreasePower = new Command(async () => await OnIncreasePowerAsync(PowerStep));
             DecreasePower = new Command(async () => await OnDecreasePowerAsync(PowerStep));
 
-            ArmFoxCommand = new Command(async() => await OnArmFoxAsync());
+            ArmFoxCommand = new Command(async () => await OnArmFoxAsync());
+            DisarmFoxCommand = new Command(async () => await OnDisarmFoxAsync());
 
             // Initial state
             IsConnectButtonEnabled = false;
@@ -1723,15 +1731,22 @@ Do you want to continue?");
 
         #region Fox-generated events
 
-        private void OnFoxArmed(IFoxArmedEvent foxArmedEvent)
+        private void OnFoxArmingInitiated(IFoxArmingInitiatedEvent foxArmingInitiatedEvent)
         {
-            Debug.WriteLine("Fox armed.");
+            Debug.WriteLine("Fox arming initiated");
         }
 
         private void OnAntennaMatchingMeasurement(IAntennaMatchingMeasurementEvent antennaMatchingMeasurementEvent)
         {
             Debug.WriteLine($"Tuner position: { antennaMatchingMeasurementEvent.GetMatchingPosition() }," +
                 $"voltage: { antennaMatchingMeasurementEvent.GetAntennaVoltage() }");
+        }
+
+        private async Task OnFoxArmedAsync(IFoxArmedEvent foxArmedEvent)
+        {
+            Debug.WriteLine("Fox armed.");
+
+            await _staticFoxStatusManager.GetStaticFoxStatusAsync(async (s) => await OnGetStaticFoxStatusAsync_ReloadPathway(s));
         }
 
         private void OnEnteringSleepmode(IEnteringSleepmodeEvent enteringSleepmodeEvent)
@@ -1782,6 +1797,20 @@ Do you want to continue?");
         }
 
         private async Task OnArmFoxResponseAsync()
+        {
+            // Do nothing, armed status will change in corresponding event
+        }
+
+        #endregion
+
+        #region Disarm fox
+
+        public async Task OnDisarmFoxAsync()
+        {
+            await _staticFoxStatusManager.DisarmFoxAsync(async () => await OnDisarmFoxResponseAsync());
+        }
+
+        private async Task OnDisarmFoxResponseAsync()
         {
             await _staticFoxStatusManager.GetStaticFoxStatusAsync(async (s) => await OnGetStaticFoxStatusAsync_ReloadPathway(s));
         }

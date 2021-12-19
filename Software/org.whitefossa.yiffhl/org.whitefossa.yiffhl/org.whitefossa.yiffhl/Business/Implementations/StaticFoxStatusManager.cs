@@ -10,17 +10,21 @@ namespace org.whitefossa.yiffhl.Business.Implementations
     {
         private readonly IIsFoxArmedCommand _isFoxArmedCommand;
         private readonly IArmFoxCommand _armFoxCommand;
+        private readonly IDisarmFoxCommand _disarmFoxCommand;
 
         private OnGetStaticFoxStatusDelegate _onGetStaticFoxStatus;
         private OnArmFoxDelegate _onArmFox;
+        private OnDisarmFoxDelegate _onDisarmFox;
 
         private StaticFoxStatus _statusToLoad = new StaticFoxStatus();
 
         public StaticFoxStatusManager(IIsFoxArmedCommand isFoxArmedCommand,
-            IArmFoxCommand armFoxCommand)
+            IArmFoxCommand armFoxCommand,
+            IDisarmFoxCommand disarmFoxCommand)
         {
             _isFoxArmedCommand = isFoxArmedCommand;
             _armFoxCommand = armFoxCommand;
+            _disarmFoxCommand = disarmFoxCommand;
         }
 
         public async Task GetStaticFoxStatusAsync(OnGetStaticFoxStatusDelegate onGetStaticFoxStatus)
@@ -40,7 +44,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
 
         public async Task ArmFoxAsync(OnArmFoxDelegate onArmFox)
         {
-            _onArmFox = onArmFox ?? throw new ArgumentException(nameof(onArmFox));
+            _onArmFox = onArmFox ?? throw new ArgumentNullException(nameof(onArmFox));
 
             _armFoxCommand.SetResponseDelegate(OnArmFoxResponse);
             _armFoxCommand.SendArmFoxCommand();
@@ -54,6 +58,24 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             }
 
             _onArmFox();
+        }
+
+        public async Task DisarmFoxAsync(OnDisarmFoxDelegate onDisarmFox)
+        {
+            _onDisarmFox = onDisarmFox ?? throw new ArgumentNullException(nameof(onDisarmFox));
+
+            _disarmFoxCommand.SetResponseDelegate(OnDisarmFoxResponse);
+            _disarmFoxCommand.SendDisarmFoxCommand();
+        }
+
+        private void OnDisarmFoxResponse(bool isSuccessful)
+        {
+            if (!isSuccessful)
+            {
+                throw new InvalidOperationException("Failed to disarm fox.");
+            }
+
+            _onDisarmFox();
         }
     }
 }

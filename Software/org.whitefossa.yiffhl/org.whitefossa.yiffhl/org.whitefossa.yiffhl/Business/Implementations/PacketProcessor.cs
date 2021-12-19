@@ -73,9 +73,10 @@ namespace org.whitefossa.yiffhl.Business.Implementations
 
         #region Events
 
-        private OnFoxArmedEventDelegate onFoxArmedEvent;
-        private OnAntennaMatchingMeasurementEventDelegate onAntennaMatchingMeasurementEvent;
-        private OnEnteringSleepmodeEventDelegate onEnteringSleepmodeEvent;
+        private OnFoxArmedEventDelegate _onFoxArmedEvent;
+        private OnAntennaMatchingMeasurementEventDelegate _onAntennaMatchingMeasurementEvent;
+        private OnEnteringSleepmodeEventDelegate _onEnteringSleepmodeEvent;
+        private OnFoxArmingInitiatedEventDelegate _onFoxArmingInitiatedEvent;
 
         #endregion
 
@@ -502,7 +503,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             switch (eventType)
             {
                 // Fox is armed
-                case EventType.FoxIsArmed:
+                case EventType.Armed:
                     OnFoxIsArmedEvent(eventPayload);
                     break;
 
@@ -516,6 +517,11 @@ namespace org.whitefossa.yiffhl.Business.Implementations
                     OnEnteringSleepmodeEvent(eventPayload);
                     break;
 
+                // Arming initiated
+                case EventType.ArmingInitiatedEvent:
+                    OnArmingInitiatedEvent(eventPayload);
+                    break;
+
                 // We've got some junk
                 default:
                     return;
@@ -524,14 +530,14 @@ namespace org.whitefossa.yiffhl.Business.Implementations
 
         private void OnFoxIsArmedEvent(IReadOnlyCollection<byte> payload)
         {
-            _ = onFoxArmedEvent ?? throw new InvalidOperationException("Handler for Fox Is Armed event isn't registered");
+            _ = _onFoxArmedEvent ?? throw new InvalidOperationException("Handler for Fox Is Armed event isn't registered");
 
-            onFoxArmedEvent(new FoxArmedEvent());
+            _onFoxArmedEvent(new FoxArmedEvent());
         }
 
         private void OnAntennaMatchingMeasurementEvent(IReadOnlyCollection<byte> payload)
         {
-            _ = onAntennaMatchingMeasurementEvent ?? throw new InvalidOperationException("Handler for Antenna Matching Measurement event isn't registered");
+            _ = _onAntennaMatchingMeasurementEvent ?? throw new InvalidOperationException("Handler for Antenna Matching Measurement event isn't registered");
 
             if (payload.Count != 5)
             {
@@ -541,14 +547,21 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             var matchingPosition = (int)payload.ElementAt(0);
             var antennaVoltage = BitConverter.ToSingle(payload.ToArray(), 1);
 
-            onAntennaMatchingMeasurementEvent(new AntennaMatchingMeasurementEvent(matchingPosition, antennaVoltage));
+            _onAntennaMatchingMeasurementEvent(new AntennaMatchingMeasurementEvent(matchingPosition, antennaVoltage));
         }
 
         private void OnEnteringSleepmodeEvent(IReadOnlyCollection<byte> payload)
         {
-            _ = onEnteringSleepmodeEvent ?? throw new InvalidOperationException("Handler for Entring Sleepmode event isn't registered");
+            _ = _onEnteringSleepmodeEvent ?? throw new InvalidOperationException("Handler for Entring Sleepmode event isn't registered");
 
-            onEnteringSleepmodeEvent(new EnteringSleepmodeEvent());
+            _onEnteringSleepmodeEvent(new EnteringSleepmodeEvent());
+        }
+
+        private void OnArmingInitiatedEvent(IReadOnlyCollection<byte> payload)
+        {
+            _ = _onFoxArmingInitiatedEvent ?? throw new InvalidOperationException("Handler for Fox Arming Initiated event isn't registered");
+
+            _onFoxArmingInitiatedEvent(new FoxArmingInitiatedEvent());
         }
 
         public void SendCommand(CommandType command, IReadOnlyCollection<byte> commandPayload)
@@ -764,17 +777,17 @@ namespace org.whitefossa.yiffhl.Business.Implementations
 
         public void RegisterOnFoxArmedEventHandler(OnFoxArmedEventDelegate onFoxArmedEvent)
         {
-            this.onFoxArmedEvent = onFoxArmedEvent ?? throw new ArgumentNullException(nameof(onFoxArmedEvent));
+            _onFoxArmedEvent = onFoxArmedEvent ?? throw new ArgumentNullException(nameof(onFoxArmedEvent));
         }
 
         public void RegisterOnAntennaMatchingMeasurementEventHandler(OnAntennaMatchingMeasurementEventDelegate onAntennaMatchingMeasurementEvent)
         {
-            this.onAntennaMatchingMeasurementEvent = onAntennaMatchingMeasurementEvent ?? throw new ArgumentNullException(nameof(onAntennaMatchingMeasurementEvent));
+            _onAntennaMatchingMeasurementEvent = onAntennaMatchingMeasurementEvent ?? throw new ArgumentNullException(nameof(onAntennaMatchingMeasurementEvent));
         }
 
         public void RegisterOnEnteringSleepmodeEventHandler(OnEnteringSleepmodeEventDelegate onEnteringSleepmodeEvent)
         {
-            this.onEnteringSleepmodeEvent = onEnteringSleepmodeEvent ?? throw new ArgumentNullException(nameof(onEnteringSleepmodeEvent));
+            _onEnteringSleepmodeEvent = onEnteringSleepmodeEvent ?? throw new ArgumentNullException(nameof(onEnteringSleepmodeEvent));
         }
 
         public void SetOnNoOperationResponse(OnResponseDelegate onNoOperationResponse)
@@ -785,6 +798,11 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         public void SetOnGetIdentificationDataResponse(OnResponseDelegate onGetIdentificationDataResponse)
         {
             this.onGetIdentificationDataResponse = onGetIdentificationDataResponse ?? throw new ArgumentNullException(nameof(onGetIdentificationDataResponse));
+        }
+
+        public void RegisterOnFoxArmingInitiatedEventHandler(OnFoxArmingInitiatedEventDelegate onFoxArmingInitiatedEvent)
+        {
+            _onFoxArmingInitiatedEvent = onFoxArmingInitiatedEvent ?? throw new ArgumentNullException(nameof(onFoxArmingInitiatedEvent));
         }
     }
 }

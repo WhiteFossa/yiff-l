@@ -205,6 +205,7 @@
                                 Text="Disarm"
                                 VerticalOptions="Center"
                                 HorizontalOptions="End"
+                                Command="{Binding DisarmFoxCommand}"
                                 IsEnabled="{Binding IsDisarmButtonEnabled}" />
                         </StackLayout>
 
