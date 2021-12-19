@@ -145,11 +145,13 @@ CommandToFoxEnum;
  */
 typedef enum
 {
-	FoxArmed = 0x01,
+	Armed = 0x01,
 
 	AntennaMatchingMeasurement = 0x02,
 
-	EnteringSleepmode = 0x03
+	EnteringSleepmode = 0x03,
+
+	ArmingInitiated = 0x04
 }
 EventsFromFoxEnum;
 
@@ -373,6 +375,11 @@ void EmitAntennaMatchingMeasurementEvent(uint8_t matchingPosition, float uAnt);
  * Emits "Entering sleepmode" event
  */
 void EmitEnteringSleepmodeEvent(void);
+
+/**
+ * Emits "Fox arming initiated" event
+ */
+void EmitFoxArmingInitiated(void);
 
 /**
  * Returns 0x00 if false, 0x01 if true
