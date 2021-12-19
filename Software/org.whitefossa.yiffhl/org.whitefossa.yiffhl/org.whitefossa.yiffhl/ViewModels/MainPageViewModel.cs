@@ -823,11 +823,13 @@ namespace org.whitefossa.yiffhl.ViewModels
             _mainModel.OnAntennaMatchingMeasurement += OnAntennaMatchingMeasurement;
             _mainModel.OnEnteringSleepmode += OnEnteringSleepmode;
             _mainModel.OnFoxArmingInitiated += OnFoxArmingInitiated;
+            _mainModel.OnFoxDisarmed += async (e) => await OnFoxDisarmedAsync(e);
 
             _packetsProcessor.RegisterOnFoxArmedEventHandler(_mainModel.OnFoxArmed);
             _packetsProcessor.RegisterOnAntennaMatchingMeasurementEventHandler(_mainModel.OnAntennaMatchingMeasurement);
             _packetsProcessor.RegisterOnEnteringSleepmodeEventHandler(_mainModel.OnEnteringSleepmode);
             _packetsProcessor.RegisterOnFoxArmingInitiatedEventHandler(_mainModel.OnFoxArmingInitiated);
+            _packetsProcessor.RegisterOnFoxDisarmedEventsHandler(_mainModel.OnFoxDisarmed);
 
             // Binding commands to handlers
             SelectedFoxChangedCommand = new Command<PairedFoxDTO>(async (f) => await OnSelectedFoxChangedAsync(f));
@@ -1752,6 +1754,13 @@ Do you want to continue?");
         private void OnEnteringSleepmode(IEnteringSleepmodeEvent enteringSleepmodeEvent)
         {
             Debug.WriteLine("Entering sleepmode");
+        }
+
+        private async Task OnFoxDisarmedAsync(IFoxDisarmedEvent foxDisarmedEvent)
+        {
+            Debug.WriteLine("Fox disarmed.");
+
+            await _staticFoxStatusManager.GetStaticFoxStatusAsync(async (s) => await OnGetStaticFoxStatusAsync_ReloadPathway(s));
         }
 
         #endregion

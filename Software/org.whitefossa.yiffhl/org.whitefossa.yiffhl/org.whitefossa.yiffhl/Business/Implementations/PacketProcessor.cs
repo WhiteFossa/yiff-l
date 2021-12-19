@@ -29,7 +29,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         /// <summary>
         /// If we have >= than this iterations during waiting for response, we will throw an exception.
         /// </summary>
-        private const int WaitForResponseIterationsTimeout = 1000;
+        private const int WaitForResponseIterationsTimeout = 10000;
 
         #region Command responses
 
@@ -77,6 +77,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private OnAntennaMatchingMeasurementEventDelegate _onAntennaMatchingMeasurementEvent;
         private OnEnteringSleepmodeEventDelegate _onEnteringSleepmodeEvent;
         private OnFoxArmingInitiatedEventDelegate _onFoxArmingInitiatedEvent;
+        private OnFoxDisarmedEventDelegate _onFoxDisarmedEvent;
 
         #endregion
 
@@ -522,6 +523,11 @@ namespace org.whitefossa.yiffhl.Business.Implementations
                     OnArmingInitiatedEvent(eventPayload);
                     break;
 
+                // Disarmed
+                case EventType.Disarmed:
+                    OnDisarmedEvent(eventPayload);
+                    break;
+
                 // We've got some junk
                 default:
                     return;
@@ -562,6 +568,13 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _ = _onFoxArmingInitiatedEvent ?? throw new InvalidOperationException("Handler for Fox Arming Initiated event isn't registered");
 
             _onFoxArmingInitiatedEvent(new FoxArmingInitiatedEvent());
+        }
+
+        private void OnDisarmedEvent(IReadOnlyCollection<byte> payload)
+        {
+            _ = _onFoxDisarmedEvent ?? throw new InvalidOperationException("Handler for Fox Disarmed event isn't registered");
+
+            _onFoxDisarmedEvent(new FoxDisarmedEvent());
         }
 
         public void SendCommand(CommandType command, IReadOnlyCollection<byte> commandPayload)
@@ -803,6 +816,11 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         public void RegisterOnFoxArmingInitiatedEventHandler(OnFoxArmingInitiatedEventDelegate onFoxArmingInitiatedEvent)
         {
             _onFoxArmingInitiatedEvent = onFoxArmingInitiatedEvent ?? throw new ArgumentNullException(nameof(onFoxArmingInitiatedEvent));
+        }
+
+        public void RegisterOnFoxDisarmedEventsHandler(OnFoxDisarmedEventDelegate onFoxDisarmedEvent)
+        {
+            _onFoxDisarmedEvent = onFoxDisarmedEvent ?? throw new ArgumentNullException(nameof(onFoxDisarmedEvent));
         }
     }
 }

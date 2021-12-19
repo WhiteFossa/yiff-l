@@ -11,6 +11,8 @@
 
         EnteringSleepmode = 0x03,
 
-        ArmingInitiatedEvent = 0x04
+        ArmingInitiatedEvent = 0x04,
+
+        Disarmed = 0x05
     }
 }

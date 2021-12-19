@@ -90,6 +90,11 @@ namespace org.whitefossa.yiffhl.Models
         /// </summary>
         public OnFoxArmingInitiatedEventDelegate OnFoxArmingInitiated { get; set; }
 
+        /// <summary>
+        /// Delegate, called when fox is disarmed
+        /// </summary>
+        public OnFoxDisarmedEventDelegate OnFoxDisarmed { get; set; }
+
         #endregion
 
         public MainModel()
@@ -107,6 +112,7 @@ namespace org.whitefossa.yiffhl.Models
             OnAntennaMatchingMeasurement = null;
             OnEnteringSleepmode = null;
             OnFoxArmingInitiated = null;
+            OnFoxDisarmed = null;
         }
     }
 }
