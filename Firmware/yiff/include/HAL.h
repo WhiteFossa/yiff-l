@@ -96,16 +96,10 @@ extern FoxStateStruct FoxState;
 #define HAL_ADC_AVERAGING 500U
 
 /**
- * Battery voltages
- */
-#define HAL_FULL_BATTERY_VOLTS 8.0f
-#define HAL_EMPTY_BATTERY_VOLTS 6.0f
-
-/**
  * Battery voltage to charge level factors
  */
-#define HAL_BATTERY_LEVEL_A 0.5f
-#define HAL_BATTERY_LEVEL_B -3.0f
+#define HAL_BATTERY_LEVEL_A 0.4167f
+#define HAL_BATTERY_LEVEL_B -2.5002f
 
 /**
  * 3.5MHz output stage power regulator address
