@@ -21,8 +21,6 @@ void FoxState_Init(void)
 	FoxState.ForceCarrierOff = false;
 	FoxState.ForceCarrierOn = false;
 
-	PendingCommandsFlags.NeedToFlushCurrentProfileToEEPROM = false; /* At load current profile is actual */
-
 	PendingCommandsFlags.FoxStateNameChanged = false;
 	PendingCommandsFlags.NeedToAddNewProfile = false;
 	PendingCommandsFlags.NeedToSwitchProfile = false;

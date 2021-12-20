@@ -174,9 +174,6 @@ int main(int argc, char* argv[])
 		Main_ProcessSetPower();
 		Main_ProcessFoxArming();
 
-		/* Flush profile changes to EEPROM, must be called last in sequence */
-		Main_FlushProfileToEEPROM();
-
 		/* Hardware controls events */
 		Main_CheckLeftButtonPressedEvent();
 		Main_CheckRightButtonPressedEvent();
@@ -239,7 +236,7 @@ void Main_ProcessSetProfileName(void)
 	if (PendingCommandsFlags.NeedToSetProfileName)
 	{
 		strncpy(EEPROM_CurrentProfile.Name, SetThisProfileName, YHL_PROFILE_NAME_MEMORY_SIZE);
-		Main_MarkCurrentProfileToFlushIntoEEPROM();
+		EEPROM_UpdateCurrentProfile();
 
 		uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
 		SendResponse(SetProfileName, 1, &response);
@@ -253,7 +250,7 @@ void Main_ProcessSetFrequency(void)
 	if (PendingCommandsFlags.NeedToSetFrequency)
 	{
 		EEPROM_CurrentProfile.Frequency = FoxState.Frequency;
-		Main_MarkCurrentProfileToFlushIntoEEPROM();
+		EEPROM_UpdateCurrentProfile();
 
 		uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
 		SendResponse(SetFrequency, 1, &response);
@@ -267,7 +264,7 @@ void Main_ProcessSetCode(void)
 	if (PendingCommandsFlags.NeedToSetCode)
 	{
 		EEPROM_CurrentProfile.Code = FoxState.Code;
-		Main_MarkCurrentProfileToFlushIntoEEPROM();
+		EEPROM_UpdateCurrentProfile();
 
 		uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
 		SendResponse(SetCode, 1, &response);
@@ -281,7 +278,7 @@ void Main_ProcessSetSpeed(void)
 	if (PendingCommandsFlags.NeedToSetSpeed)
 	{
 		EEPROM_CurrentProfile.IsFast = FoxState.IsFast;
-		Main_MarkCurrentProfileToFlushIntoEEPROM();
+		EEPROM_UpdateCurrentProfile();
 
 		uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
 		SendResponse(SetSpeed, 1, &response);
@@ -295,7 +292,7 @@ void Main_ProcessSetCycle(void)
 	if (PendingCommandsFlags.NeedToSetCycle)
 	{
 		EEPROM_CurrentProfile.Cycle = FoxState.Cycle;
-		Main_MarkCurrentProfileToFlushIntoEEPROM();
+		EEPROM_UpdateCurrentProfile();
 
 		uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
 		SendResponse(SetCycle, 1, &response);
@@ -309,7 +306,7 @@ void Main_ProcessSetEndingToneDuration(void)
 	if (PendingCommandsFlags.NeedToSetEndingToneDuration)
 	{
 		EEPROM_CurrentProfile.EndingToneLength = FoxState.EndingToneLength;
-		Main_MarkCurrentProfileToFlushIntoEEPROM();
+		EEPROM_UpdateCurrentProfile();
 
 		uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
 		SendResponse(SetEndingToneDuration, 1, &response);
@@ -324,7 +321,7 @@ void Main_ProcessSetBeginAndEndTimes(void)
 	{
 		EEPROM_CurrentProfile.StartTimespan = FoxState.GlobalState.StartTimespan;
 		EEPROM_CurrentProfile.EndTimespan = FoxState.GlobalState.EndTimespan;
-		Main_MarkCurrentProfileToFlushIntoEEPROM();
+		EEPROM_UpdateCurrentProfile();
 
 		uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
 		SendResponse(SetBeginAndEndTimes, 1, &response);
@@ -338,7 +335,7 @@ void Main_ProcessSetPower(void)
 	if (PendingCommandsFlags.NeedToSetPower)
 	{
 		EEPROM_CurrentProfile.Power = FoxState.Power;
-		Main_MarkCurrentProfileToFlushIntoEEPROM();
+		EEPROM_UpdateCurrentProfile();
 
 		uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
 		SendResponse(SetFoxPower, 1, &response);
@@ -417,16 +414,6 @@ void Main_PrepareAndMatchAntenna(void)
 
 	FMGL_API_ClearScreen(&fmglContext);
 
-}
-
-void Main_FlushProfileToEEPROM(void)
-{
-	if (PendingCommandsFlags.NeedToFlushCurrentProfileToEEPROM)
-	{
-		EEPROM_UpdateCurrentProfile();
-
-		PendingCommandsFlags.NeedToFlushCurrentProfileToEEPROM = false;
-	}
 }
 
 void Main_MeasureBatteryLevel(void)
@@ -720,10 +707,6 @@ void Main_InitDisplayAndShowBootScreen(void)
 	FMGL_API_PushFramebuffer(&fmglContext);
 }
 
-void Main_MarkCurrentProfileToFlushIntoEEPROM(void)
-{
-	PendingCommandsFlags.NeedToFlushCurrentProfileToEEPROM = true;
-}
 
 #pragma GCC diagnostic pop
 
