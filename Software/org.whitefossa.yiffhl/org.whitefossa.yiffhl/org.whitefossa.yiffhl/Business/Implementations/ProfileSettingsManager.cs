@@ -373,6 +373,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
                 settings.FinishTime == _runTimesSettingsToSet.FinishTime)
             {
                 _onSetRunTimesSettings();
+                return;
             }
 
             _setBeginAndEndTimesCommand.SetResponseDelegate(OnSetBeginAndEndTimesResponse);
@@ -421,6 +422,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             if (Math.Abs(settings.Power - _powerSettingsToSet.Power) <= PowerSigma)
             {
                 _onSetPowerSettings();
+                return;
             }
 
             _setPowerCommand.SetResponseDelegate(OnSetPowerResponse);

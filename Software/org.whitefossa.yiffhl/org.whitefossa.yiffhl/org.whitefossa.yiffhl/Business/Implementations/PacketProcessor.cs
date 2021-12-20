@@ -29,7 +29,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         /// <summary>
         /// If we have >= than this iterations during waiting for response, we will throw an exception.
         /// </summary>
-        private const int WaitForResponseIterationsTimeout = 10000;
+        private const int WaitForResponseIterationsTimeout = int.MaxValue; // TODO: Return to sane value
 
         #region Command responses
 
@@ -618,8 +618,6 @@ namespace org.whitefossa.yiffhl.Business.Implementations
 
         private void StopWaitingForResponse()
         {
-            Thread.Sleep(100); // TODO: Fixme. Tiny pause to give fox some time to prepare for a next command
-
             isWaitingForResponse = false;
         }
 
