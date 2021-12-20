@@ -100,12 +100,6 @@ void UART_SendBlocking(uint8_t* message, uint8_t size);
 void UART_ReadBlocking(uint8_t* buffer, uint8_t size);
 
 /**
- * Send message in semiblocking mode. If no second call of this function during transmission, then it will be no blocking,
- * otherwise second call will wait for transmission completion.
- */
-void UART_SendSemiBlocking(uint8_t* message, uint8_t size);
-
-/**
  * Call this every millisecond
  */
 void UART_Tick(void);

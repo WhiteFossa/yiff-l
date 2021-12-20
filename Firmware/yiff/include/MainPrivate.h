@@ -178,5 +178,10 @@ void Main_ControlSleep(void);
  */
 void Main_InitDisplayAndShowBootScreen(void);
 
+/**
+ * Call this to mark current profile to flush into EEPROM
+ */
+void Main_MarkCurrentProfileToFlushIntoEEPROM(void);
+
 
 #endif /* INCLUDE_MAINPRIVATE_H_ */

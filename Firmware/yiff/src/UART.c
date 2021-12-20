@@ -25,17 +25,6 @@ void UART_Tick(void)
 	}
 }
 
-void HAL_UART_TxCpltCallback(UART_HandleTypeDef *UartHandle)
-{
-	if (UART_TransmissionInProgress)
-	{
-		free(UART_TxBuffer);
-		UART_TxBuffer = NULL;
-		UART_TransmissionInProgress = false;
-	}
-}
-
-
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *UartHandle)
 {
 	switch (UART_PSMState)
@@ -135,25 +124,10 @@ void UART_ReadBlocking(uint8_t* buffer, uint8_t size)
 
 void UART_Init(void)
 {
-	UART_TransmissionInProgress = false;
 	UART_TxBuffer = NULL;
 	UART_PSMState = BeforeListen;
 
 	L2HAL_SysTick_RegisterHandler(&UART_Tick);
-}
-
-void UART_SendSemiBlocking(uint8_t* message, uint8_t size)
-{
-	while(UART_TransmissionInProgress) {}
-
-	UART_TransmissionInProgress = true;
-	UART_TxBuffer = malloc(size);
-	memcpy(UART_TxBuffer, message, size);
-
-	if (HAL_UART_Transmit_IT(&UART_Handle, UART_TxBuffer, size) != HAL_OK)
-	{
-		SelfDiagnostics_HaltOnFailure(YhlFailureCause_FailedToTransmitOverUartIt);
-	}
 }
 
 void UART_AskForNextByte(void)
