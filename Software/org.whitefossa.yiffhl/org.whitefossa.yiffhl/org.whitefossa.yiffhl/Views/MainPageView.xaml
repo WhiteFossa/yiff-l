@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="org.whitefossa.yiffhl.Views.MainPageView"
-             xmlns:viewModels="clr-namespace:org.whitefossa.yiffhl.ViewModels" >
+             xmlns:viewModels="clr-namespace:org.whitefossa.yiffhl.ViewModels">
 
     <ContentPage.BindingContext>
         <viewModels:MainPageViewModel />

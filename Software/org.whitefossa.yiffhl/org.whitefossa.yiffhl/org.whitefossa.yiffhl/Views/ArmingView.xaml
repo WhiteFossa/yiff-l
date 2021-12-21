@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="org.whitefossa.yiffhl.Views.ArmingView"
+             xmlns:viewModels="clr-namespace:org.whitefossa.yiffhl.ViewModels"
+             xmlns:skia="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms">
+
+    <ContentPage.BindingContext>
+        <viewModels:ArmingViewModel />
+    </ContentPage.BindingContext>
+
+    <ContentPage.Content>
+        <ScrollView>
+            <StackLayout
+                VerticalOptions="FillAndExpand">
+                <Frame
+                    Style="{StaticResource FramesStyle}">
+                    <StackLayout>
+
+                        <Label
+                        Text="Fox arming"
+                        HorizontalOptions="Center" />
+
+                        <StackLayout
+                                HorizontalOptions="FillAndExpand"
+                                Orientation="Horizontal">
+
+                            <Label
+                                    Text="Arming status:"
+                                    HorizontalOptions="Start"
+                                    VerticalOptions="Center" />
+
+                            <Label
+                                    Text="Initiated"
+                                    FontAttributes="Bold"
+                                    HorizontalOptions="StartAndExpand"
+                                    VerticalOptions="Center" />
+                        </StackLayout>
+                    </StackLayout>
+                </Frame>
+
+                <Frame
+                    Style="{StaticResource FramesStyle}"
+                    VerticalOptions="FillAndExpand">
+
+                    <StackLayout
+                        VerticalOptions="FillAndExpand">
+
+                        <Label
+                        Text="Antenna matching"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Start" />
+
+                        <StackLayout
+                            VerticalOptions="FillAndExpand">
+                            
+                            <skia:SKCanvasView
+                                VerticalOptions="FillAndExpand"
+                                PaintSurface="CanvasView_PaintSurface" />
+
+                        </StackLayout>
+
+                    </StackLayout>
+                </Frame>
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+    
+</ContentPage>

@@ -150,7 +150,7 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// <summary>
         /// Main model
         /// </summary>
-        private MainModel _mainModel = new MainModel();
+        public MainModel MainModel = new MainModel();
 
         /// <summary>
         /// List of foxes, paired to a phone
@@ -255,10 +255,10 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         public string FoxName
         {
-            get => _mainModel.FoxName;
+            get => MainModel.FoxName;
             set
             {
-                _mainModel.FoxName = value;
+                MainModel.FoxName = value;
                 OnPropertyChanged();
             }
         }
@@ -268,10 +268,10 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         public uint FoxHardwareRevision
         {
-            get => _mainModel.IdentificationData.HardwareRevision;
+            get => MainModel.IdentificationData.HardwareRevision;
             set
             {
-                _mainModel.IdentificationData.HardwareRevision = value;
+                MainModel.IdentificationData.HardwareRevision = value;
                 OnPropertyChanged();
             }
         }
@@ -281,10 +281,10 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         public uint FoxFirmwareVersion
         {
-            get => _mainModel.IdentificationData.FirmwareVersion;
+            get => MainModel.IdentificationData.FirmwareVersion;
             set
             {
-                _mainModel.IdentificationData.FirmwareVersion = value;
+                MainModel.IdentificationData.FirmwareVersion = value;
                 OnPropertyChanged();
             }
         }
@@ -294,10 +294,10 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         public uint FoxSerialNumber
         {
-            get => _mainModel.IdentificationData.SerialNumber;
+            get => MainModel.IdentificationData.SerialNumber;
             set
             {
-                _mainModel.IdentificationData.SerialNumber = value;
+                MainModel.IdentificationData.SerialNumber = value;
                 OnPropertyChanged();
             }
         }
@@ -307,10 +307,10 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         public bool IsFoxConnected
         {
-            get => _mainModel.IsConnected;
+            get => MainModel.IsConnected;
             set
             {
-                _mainModel.IsConnected = value;
+                MainModel.IsConnected = value;
                 OnPropertyChanged();
             }
         }
@@ -372,7 +372,7 @@ namespace org.whitefossa.yiffhl.ViewModels
         {
             get
             {
-                var countAsText = _mainModel.IsConnected ? $"{ Profiles.Count }" : "N/A";
+                var countAsText = MainModel.IsConnected ? $"{ Profiles.Count }" : "N/A";
 
                 var maxProfilesWarning = CanWeAddProfiles ? String.Empty : ". No space left!";
 
@@ -405,10 +405,10 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         public Profile SelectedProfile
         {
-            get => _mainModel.CurrentProfile;
+            get => MainModel.CurrentProfile;
             set
             {
-                _mainModel.CurrentProfile = value;
+                MainModel.CurrentProfile = value;
                 OnPropertyChanged();
             }
         }
@@ -430,7 +430,7 @@ namespace org.whitefossa.yiffhl.ViewModels
         {
             get
             {
-                if (_mainModel.CurrentProfileSettings.FrequencySettings.Is2m)
+                if (MainModel.CurrentProfileSettings.FrequencySettings.Is2m)
                 {
                     return "2m";
                 }
@@ -453,13 +453,13 @@ namespace org.whitefossa.yiffhl.ViewModels
         {
             get
             {
-                if (_mainModel.CurrentProfileSettings.FrequencySettings.Frequency == 0)
+                if (MainModel.CurrentProfileSettings.FrequencySettings.Frequency == 0)
                 {
                     return "N/A";
                 }
                 else
                 {
-                    return String.Format("{0:0.000 MHz}", _mainModel.CurrentProfileSettings.FrequencySettings.Frequency / 1000000.0);
+                    return String.Format("{0:0.000 MHz}", MainModel.CurrentProfileSettings.FrequencySettings.Frequency / 1000000.0);
                 }
             }
         }
@@ -512,7 +512,7 @@ namespace org.whitefossa.yiffhl.ViewModels
         {
             get
             {
-                if (_mainModel.CurrentProfileSettings.CallsignSettings.IsFast)
+                if (MainModel.CurrentProfileSettings.CallsignSettings.IsFast)
                 {
                     return "Fast";
                 }
@@ -540,7 +540,7 @@ namespace org.whitefossa.yiffhl.ViewModels
         {
             get
             {
-                if (_mainModel.CurrentProfileSettings.CycleSettings.IsContinuous)
+                if (MainModel.CurrentProfileSettings.CycleSettings.IsContinuous)
                 {
                     return "Continuous";
                 }
@@ -558,7 +558,7 @@ namespace org.whitefossa.yiffhl.ViewModels
         {
             get
             {
-                return _mainModel.CurrentProfileSettings.CycleSettings.TxDuration.ToString(@"mm\:ss");
+                return MainModel.CurrentProfileSettings.CycleSettings.TxDuration.ToString(@"mm\:ss");
             }
         }
 
@@ -567,7 +567,7 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         public bool IsCycleControlsEnabled
         {
-            get => !_mainModel.CurrentProfileSettings.CycleSettings.IsContinuous;
+            get => !MainModel.CurrentProfileSettings.CycleSettings.IsContinuous;
         }
 
         /// <summary>
@@ -577,7 +577,7 @@ namespace org.whitefossa.yiffhl.ViewModels
         {
             get
             {
-                return _mainModel.CurrentProfileSettings.CycleSettings.PauseDuration.ToString(@"mm\:ss");
+                return MainModel.CurrentProfileSettings.CycleSettings.PauseDuration.ToString(@"mm\:ss");
             }
         }
 
@@ -651,7 +651,7 @@ namespace org.whitefossa.yiffhl.ViewModels
         {
             get
             {
-                return $"{ _mainModel.CurrentProfileSettings.CycleSettings.EndingToneDuration.TotalSeconds }s";
+                return $"{ MainModel.CurrentProfileSettings.CycleSettings.EndingToneDuration.TotalSeconds }s";
             }
         }
 
@@ -662,7 +662,7 @@ namespace org.whitefossa.yiffhl.ViewModels
         {
             get
             {
-                return _mainModel.CurrentProfileSettings.RunTimesSettings.StartTime - DateTime.MinValue;
+                return MainModel.CurrentProfileSettings.RunTimesSettings.StartTime - DateTime.MinValue;
             }
         }
 
@@ -673,7 +673,7 @@ namespace org.whitefossa.yiffhl.ViewModels
         {
             get
             {
-                return _mainModel.CurrentProfileSettings.RunTimesSettings.FinishTime - DateTime.MinValue;
+                return MainModel.CurrentProfileSettings.RunTimesSettings.FinishTime - DateTime.MinValue;
             }
         }
 
@@ -714,13 +714,13 @@ namespace org.whitefossa.yiffhl.ViewModels
         {
             get
             {
-                if (_mainModel.CurrentProfileSettings.FrequencySettings.Is2m)
+                if (MainModel.CurrentProfileSettings.FrequencySettings.Is2m)
                 {
                     return @"N/A";
                 }
                 else
                 {
-                    return String.Format("{0:0.0 W}", _mainModel.CurrentProfileSettings.PowerSettings.Power);
+                    return String.Format("{0:0.0 W}", MainModel.CurrentProfileSettings.PowerSettings.Power);
                 }
             }
         }
@@ -730,7 +730,7 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         public bool IsPowerControlsEnabled
         {
-            get => !_mainModel.CurrentProfileSettings.FrequencySettings.Is2m;
+            get => !MainModel.CurrentProfileSettings.FrequencySettings.Is2m;
         }
 
         /// <summary>
@@ -745,7 +745,7 @@ namespace org.whitefossa.yiffhl.ViewModels
 
         public string BatteryLevelFormatted
         {
-            get => String.Format("{0:0.0%}", _mainModel.DynamicFoxStatus.BatteryLevel);
+            get => String.Format("{0:0.0%}", MainModel.DynamicFoxStatus.BatteryLevel);
         }
 
         /// <summary>
@@ -758,7 +758,7 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         public string IsFoxArmedFormatted
         {
-            get => _mainModel.StaticFoxStatus.IsFoxArmed ? "Armed" : "Not armed";
+            get => MainModel.StaticFoxStatus.IsFoxArmed ? "Armed" : "Not armed";
         }
 
         /// <summary>
@@ -766,7 +766,7 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         public bool IsArmButtonEnabled
         {
-            get => !_mainModel.StaticFoxStatus.IsFoxArmed;
+            get => !MainModel.StaticFoxStatus.IsFoxArmed;
         }
 
         /// <summary>
@@ -774,7 +774,7 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         public bool IsDisarmButtonEnabled
         {
-            get => _mainModel.StaticFoxStatus.IsFoxArmed;
+            get => MainModel.StaticFoxStatus.IsFoxArmed;
         }
 
         /// <summary>
@@ -805,31 +805,31 @@ namespace org.whitefossa.yiffhl.ViewModels
             _staticFoxStatusManager = App.Container.Resolve<IStaticFoxStatusManager>();
 
             // Setting up fox connector delegates
-            _mainModel.OnFoxConnectorNewByteRead += OnNewByteRead;
-            _mainModel.OnFoxConnectorConnected += OnConnectedAsync;
-            _mainModel.OnFoxConnectorDisconnected += OnDisconnected;
-            _mainModel.OnFoxConnectorFailedToConnect += OnFailedToConnect;
+            MainModel.OnFoxConnectorNewByteRead += OnNewByteRead;
+            MainModel.OnFoxConnectorConnected += OnConnectedAsync;
+            MainModel.OnFoxConnectorDisconnected += OnDisconnected;
+            MainModel.OnFoxConnectorFailedToConnect += OnFailedToConnect;
 
             _foxConnector.SetupDelegates
             (
-                _mainModel.OnFoxConnectorNewByteRead,
-                _mainModel.OnFoxConnectorConnected,
-                _mainModel.OnFoxConnectorDisconnected,
-                _mainModel.OnFoxConnectorFailedToConnect
+                MainModel.OnFoxConnectorNewByteRead,
+                MainModel.OnFoxConnectorConnected,
+                MainModel.OnFoxConnectorDisconnected,
+                MainModel.OnFoxConnectorFailedToConnect
             );
 
             // Setting up fox events delegates
-            _mainModel.OnFoxArmed += async (e) => await OnFoxArmedAsync(e);
-            _mainModel.OnAntennaMatchingMeasurement += OnAntennaMatchingMeasurement;
-            _mainModel.OnEnteringSleepmode += OnEnteringSleepmode;
-            _mainModel.OnFoxArmingInitiated += OnFoxArmingInitiated;
-            _mainModel.OnFoxDisarmed += async (e) => await OnFoxDisarmedAsync(e);
+            MainModel.OnFoxArmed += async (e) => await OnFoxArmedAsync(e);
+            MainModel.OnAntennaMatchingMeasurement += OnAntennaMatchingMeasurement;
+            MainModel.OnEnteringSleepmode += OnEnteringSleepmode;
+            //MainModel.OnFoxArmingInitiated += OnFoxArmingInitiated;
+            MainModel.OnFoxDisarmed += async (e) => await OnFoxDisarmedAsync(e);
 
-            _packetsProcessor.RegisterOnFoxArmedEventHandler(_mainModel.OnFoxArmed);
-            _packetsProcessor.RegisterOnAntennaMatchingMeasurementEventHandler(_mainModel.OnAntennaMatchingMeasurement);
-            _packetsProcessor.RegisterOnEnteringSleepmodeEventHandler(_mainModel.OnEnteringSleepmode);
-            _packetsProcessor.RegisterOnFoxArmingInitiatedEventHandler(_mainModel.OnFoxArmingInitiated);
-            _packetsProcessor.RegisterOnFoxDisarmedEventsHandler(_mainModel.OnFoxDisarmed);
+            _packetsProcessor.RegisterOnFoxArmedEventHandler(MainModel.OnFoxArmed);
+            _packetsProcessor.RegisterOnAntennaMatchingMeasurementEventHandler(MainModel.OnAntennaMatchingMeasurement);
+            _packetsProcessor.RegisterOnEnteringSleepmodeEventHandler(MainModel.OnEnteringSleepmode);
+            //_packetsProcessor.RegisterOnFoxArmingInitiatedEventHandler(MainModel.OnFoxArmingInitiated);
+            _packetsProcessor.RegisterOnFoxDisarmedEventsHandler(MainModel.OnFoxDisarmed);
 
             // Binding commands to handlers
             SelectedFoxChangedCommand = new Command<PairedFoxDTO>(async (f) => await OnSelectedFoxChangedAsync(f));
@@ -951,7 +951,7 @@ namespace org.whitefossa.yiffhl.ViewModels
 
         private async void OnConnectedAsync(PairedFoxDTO connectedFox)
         {
-            _mainModel.ConnectedFox = connectedFox;
+            MainModel.ConnectedFox = connectedFox;
             IsFoxConnected = true;
 
             IsBtnDisconnectEnabled = true;
@@ -964,7 +964,7 @@ namespace org.whitefossa.yiffhl.ViewModels
         private void OnDisconnected()
         {
             IsFoxConnected = false;
-            _mainModel.ConnectedFox = null;
+            MainModel.ConnectedFox = null;
 
             ResetFoxRelatedData();
 
@@ -1104,7 +1104,7 @@ Do you want to continue?");
 
         private async Task OnSetFoxNameResponseAsync(bool isSuccessfull)
         {
-            var fox = _mainModel.ConnectedFox;
+            var fox = MainModel.ConnectedFox;
 
             await OnDisconnectButtonClickedAsync();
 
@@ -1187,7 +1187,7 @@ Do you want to continue?");
                 return;
             }
 
-            _mainModel.CurrentProfile = selectedProfile;
+            MainModel.CurrentProfile = selectedProfile;
 
             // Switching profile in the fox
             await _foxProfilesManager.SwitchProfileAsync(selectedProfile.Id, async () => await OnSelectedProfileChangedAsync());
@@ -1283,7 +1283,7 @@ Do you want to continue?");
 
         private void OnGetFrequencySettings_Common(FrequencySettings settings)
         {
-            _mainModel.CurrentProfileSettings.FrequencySettings = settings;
+            MainModel.CurrentProfileSettings.FrequencySettings = settings;
             OnPropertyChanged(nameof(FoxRangeFormatted));
             OnPropertyChanged(nameof(FrequencyFormatted));
             OnPropertyChanged(nameof(PowerFormatted));
@@ -1295,7 +1295,7 @@ Do you want to continue?");
 
         private async Task OnToggleFoxFrequencyRangeAsync()
         {
-            var settings = (FrequencySettings)_mainModel.CurrentProfileSettings.FrequencySettings.Clone();
+            var settings = (FrequencySettings)MainModel.CurrentProfileSettings.FrequencySettings.Clone();
 
             settings.Is2m = !settings.Is2m;
 
@@ -1329,7 +1329,7 @@ Do you want to continue?");
 
         private async Task OnDecreaseFoxFrequencyAsync()
         {
-            var settings = (FrequencySettings)_mainModel.CurrentProfileSettings.FrequencySettings.Clone();
+            var settings = (FrequencySettings)MainModel.CurrentProfileSettings.FrequencySettings.Clone();
 
             int step;
             int minValue;
@@ -1356,7 +1356,7 @@ Do you want to continue?");
 
         private async Task OnIncreaseFoxFrequencyAsync()
         {
-            var settings = (FrequencySettings)_mainModel.CurrentProfileSettings.FrequencySettings.Clone();
+            var settings = (FrequencySettings)MainModel.CurrentProfileSettings.FrequencySettings.Clone();
 
             int step;
             int maxValue;
@@ -1406,7 +1406,7 @@ Do you want to continue?");
 
         private void OnGetSpeed_Common(CallsignSettings settings)
         {
-            _mainModel.CurrentProfileSettings.CallsignSettings.IsFast = settings.IsFast;
+            MainModel.CurrentProfileSettings.CallsignSettings.IsFast = settings.IsFast;
             OnPropertyChanged(nameof(TxSpeedFormatted));
         }
 
@@ -1417,9 +1417,9 @@ Do you want to continue?");
 
         private void OnGetCallsign_Common(CallsignSettings settings)
         {
-            _mainModel.CurrentProfileSettings.CallsignSettings.Callsing = settings.Callsing;
+            MainModel.CurrentProfileSettings.CallsignSettings.Callsing = settings.Callsing;
             SelectedCallsign = Callsigns
-                .FirstOrDefault(cs => cs.Code == _mainModel.CurrentProfileSettings.CallsignSettings.Callsing.Code);
+                .FirstOrDefault(cs => cs.Code == MainModel.CurrentProfileSettings.CallsignSettings.Callsing.Code);
         }
 
         #endregion
@@ -1428,7 +1428,7 @@ Do you want to continue?");
 
         private async Task OnToggleFoxSpeedAsync()
         {
-            await _profileSettingsManager.SetSpeedAsync(!_mainModel.CurrentProfileSettings.CallsignSettings.IsFast,
+            await _profileSettingsManager.SetSpeedAsync(!MainModel.CurrentProfileSettings.CallsignSettings.IsFast,
                 async () => await OnSetSpeedAsync());
         }
 
@@ -1457,7 +1457,7 @@ Do you want to continue?");
 
         private void OnGetCycleSettings_Common(CycleSettings settings)
         {
-            _mainModel.CurrentProfileSettings.CycleSettings = settings;
+            MainModel.CurrentProfileSettings.CycleSettings = settings;
             OnPropertyChanged(nameof(FoxCycleTypeFormatted));
             OnPropertyChanged(nameof(TxDurationFormatted));
             OnPropertyChanged(nameof(PauseDurationFormatted));
@@ -1484,7 +1484,7 @@ Do you want to continue?");
 
         private async Task OnToggleCycleModeAsync()
         {
-            var newSettings = _mainModel.CurrentProfileSettings.CycleSettings;
+            var newSettings = MainModel.CurrentProfileSettings.CycleSettings;
             newSettings.IsContinuous = !newSettings.IsContinuous;
 
             await _profileSettingsManager.SetCycleSettingsAsync(newSettings, async () => await OnSetCycleSettingsAsync());
@@ -1501,11 +1501,11 @@ Do you want to continue?");
 
         public async Task OnIncreaseTxDurationAsync(int delta)
         {
-            var newValue = _mainModel.CurrentProfileSettings.CycleSettings.TxDuration + new TimeSpan(0, 0, delta);
+            var newValue = MainModel.CurrentProfileSettings.CycleSettings.TxDuration + new TimeSpan(0, 0, delta);
 
             if (newValue.TotalSeconds <= MaxTxDuration)
             {
-                var newSettings = _mainModel.CurrentProfileSettings.CycleSettings;
+                var newSettings = MainModel.CurrentProfileSettings.CycleSettings;
                 newSettings.TxDuration = newValue;
                 await _profileSettingsManager.SetCycleSettingsAsync(newSettings, async () => await OnSetCycleSettingsAsync());
             }
@@ -1513,11 +1513,11 @@ Do you want to continue?");
 
         public async Task OnDecreaseTxDurationAsync(int delta)
         {
-            var newValue = _mainModel.CurrentProfileSettings.CycleSettings.TxDuration - new TimeSpan(0, 0, delta);
+            var newValue = MainModel.CurrentProfileSettings.CycleSettings.TxDuration - new TimeSpan(0, 0, delta);
 
             if (newValue.TotalSeconds >= MinTxDuration)
             {
-                var newSettings = _mainModel.CurrentProfileSettings.CycleSettings;
+                var newSettings = MainModel.CurrentProfileSettings.CycleSettings;
                 newSettings.TxDuration = newValue;
                 await _profileSettingsManager.SetCycleSettingsAsync(newSettings, async () => await OnSetCycleSettingsAsync());
             }
@@ -1529,11 +1529,11 @@ Do you want to continue?");
 
         public async Task OnIncreasePauseDurationAsync(int delta)
         {
-            var newValue = _mainModel.CurrentProfileSettings.CycleSettings.PauseDuration + new TimeSpan(0, 0, delta);
+            var newValue = MainModel.CurrentProfileSettings.CycleSettings.PauseDuration + new TimeSpan(0, 0, delta);
 
             if (newValue.TotalSeconds <= MaxPauseDuration)
             {
-                var newSettings = _mainModel.CurrentProfileSettings.CycleSettings;
+                var newSettings = MainModel.CurrentProfileSettings.CycleSettings;
                 newSettings.PauseDuration = newValue;
                 await _profileSettingsManager.SetCycleSettingsAsync(newSettings, async () => await OnSetCycleSettingsAsync());
             }
@@ -1541,11 +1541,11 @@ Do you want to continue?");
 
         public async Task OnDecreasePauseDurationAsync(int delta)
         {
-            var newValue = _mainModel.CurrentProfileSettings.CycleSettings.PauseDuration - new TimeSpan(0, 0, delta);
+            var newValue = MainModel.CurrentProfileSettings.CycleSettings.PauseDuration - new TimeSpan(0, 0, delta);
 
             if (newValue.TotalSeconds >= MinPauseDuration)
             {
-                var newSettings = _mainModel.CurrentProfileSettings.CycleSettings;
+                var newSettings = MainModel.CurrentProfileSettings.CycleSettings;
                 newSettings.PauseDuration = newValue;
                 await _profileSettingsManager.SetCycleSettingsAsync(newSettings, async () => await OnSetCycleSettingsAsync());
             }
@@ -1557,11 +1557,11 @@ Do you want to continue?");
 
         public async Task OnIncreaseEndingToneDurationAsync(int delta)
         {
-            var newValue = _mainModel.CurrentProfileSettings.CycleSettings.EndingToneDuration + new TimeSpan(0, 0, delta);
+            var newValue = MainModel.CurrentProfileSettings.CycleSettings.EndingToneDuration + new TimeSpan(0, 0, delta);
 
             if (newValue.TotalSeconds <= MaxEndingToneDuration)
             {
-                var newSettings = _mainModel.CurrentProfileSettings.CycleSettings;
+                var newSettings = MainModel.CurrentProfileSettings.CycleSettings;
                 newSettings.EndingToneDuration = newValue;
                 await _profileSettingsManager.SetCycleSettingsAsync(newSettings, async () => await OnSetCycleSettingsAsync());
             }
@@ -1569,11 +1569,11 @@ Do you want to continue?");
 
         public async Task OnDecreaseEndingToneDurationAsync(int delta)
         {
-            var newValue = _mainModel.CurrentProfileSettings.CycleSettings.EndingToneDuration - new TimeSpan(0, 0, delta);
+            var newValue = MainModel.CurrentProfileSettings.CycleSettings.EndingToneDuration - new TimeSpan(0, 0, delta);
 
             if (newValue.TotalSeconds >= MinEndingToneDuration)
             {
-                var newSettings = _mainModel.CurrentProfileSettings.CycleSettings;
+                var newSettings = MainModel.CurrentProfileSettings.CycleSettings;
                 newSettings.EndingToneDuration = newValue;
                 await _profileSettingsManager.SetCycleSettingsAsync(newSettings, async () => await OnSetCycleSettingsAsync());
             }
@@ -1592,7 +1592,7 @@ Do you want to continue?");
 
         private void OnGetRunTimesSettings_Common(RunTimesSettings settings)
         {
-            _mainModel.CurrentProfileSettings.RunTimesSettings = settings;
+            MainModel.CurrentProfileSettings.RunTimesSettings = settings;
             OnPropertyChanged(nameof(StartTime));
             OnPropertyChanged(nameof(FinishTime));
         }
@@ -1608,28 +1608,28 @@ Do you want to continue?");
 
         private async Task OnSetStartTimeAsync(TimeSpan timespan)
         {
-            var newSettings = _mainModel.CurrentProfileSettings.RunTimesSettings;
+            var newSettings = MainModel.CurrentProfileSettings.RunTimesSettings;
             newSettings.StartTime = PrepareFoxRunTime(timespan);
             await _profileSettingsManager.SetRunTimesSettingsAsync(newSettings, async () => await OnSetRunTimesAsync());
         }
 
         private async Task OnSetFinishTimeAsync(TimeSpan timespan)
         {
-            var newSettings = _mainModel.CurrentProfileSettings.RunTimesSettings;
+            var newSettings = MainModel.CurrentProfileSettings.RunTimesSettings;
             newSettings.FinishTime = PrepareFoxRunTime(timespan);
             await _profileSettingsManager.SetRunTimesSettingsAsync(newSettings, async () => await OnSetRunTimesAsync());
         }
 
         private async Task OnApplyDeltaToStartTimeAsync(int delta)
         {
-            var newSettings = _mainModel.CurrentProfileSettings.RunTimesSettings;
+            var newSettings = MainModel.CurrentProfileSettings.RunTimesSettings;
             newSettings.StartTime = ApplyDeltaToTimeWithLoop(newSettings.StartTime, new TimeSpan(0, 0, delta));
             await _profileSettingsManager.SetRunTimesSettingsAsync(newSettings, async () => await OnSetRunTimesAsync());
         }
 
         private async Task OnApplyDeltaToFinishTimeAsync(int delta)
         {
-            var newSettings = _mainModel.CurrentProfileSettings.RunTimesSettings;
+            var newSettings = MainModel.CurrentProfileSettings.RunTimesSettings;
             newSettings.FinishTime = ApplyDeltaToTimeWithLoop(newSettings.FinishTime, new TimeSpan(0, 0, delta));
             await _profileSettingsManager.SetRunTimesSettingsAsync(newSettings, async () => await OnSetRunTimesAsync());
         }
@@ -1667,7 +1667,7 @@ Do you want to continue?");
 
         private void OnGetPowerSettings_Common(PowerSettings settings)
         {
-            _mainModel.CurrentProfileSettings.PowerSettings = settings;
+            MainModel.CurrentProfileSettings.PowerSettings = settings;
             OnPropertyChanged(nameof(PowerFormatted));
         }
 
@@ -1682,11 +1682,11 @@ Do you want to continue?");
 
         public async Task OnIncreasePowerAsync(float delta)
         {
-            var newValue = _mainModel.CurrentProfileSettings.PowerSettings.Power + delta;
+            var newValue = MainModel.CurrentProfileSettings.PowerSettings.Power + delta;
 
             if (newValue <= MaxPower)
             {
-                var newSettings = _mainModel.CurrentProfileSettings.PowerSettings;
+                var newSettings = MainModel.CurrentProfileSettings.PowerSettings;
                 newSettings.Power = newValue;
                 await _profileSettingsManager.SetPowerSettingsAsync(newSettings, async () => await OnSetPowerSettingsAsync());
             }
@@ -1694,11 +1694,11 @@ Do you want to continue?");
 
         public async Task OnDecreasePowerAsync(float delta)
         {
-            var newValue = _mainModel.CurrentProfileSettings.PowerSettings.Power - delta;
+            var newValue = MainModel.CurrentProfileSettings.PowerSettings.Power - delta;
 
             if (newValue >= MinPower)
             {
-                var newSettings = _mainModel.CurrentProfileSettings.PowerSettings;
+                var newSettings = MainModel.CurrentProfileSettings.PowerSettings;
                 newSettings.Power = newValue;
                 await _profileSettingsManager.SetPowerSettingsAsync(newSettings, async () => await OnSetPowerSettingsAsync());
             }
@@ -1715,7 +1715,7 @@ Do you want to continue?");
 
         private async Task OnDynamicFoxStatusPollRequest(Object source, ElapsedEventArgs e)
         {
-            if (!_mainModel.IsConnected)
+            if (!MainModel.IsConnected)
             {
                 return;
             }
@@ -1725,7 +1725,7 @@ Do you want to continue?");
 
         private void OnGetDynamicFoxStatus(DynamicFoxStatus status)
         {
-            _mainModel.DynamicFoxStatus = status;
+            MainModel.DynamicFoxStatus = status;
             OnPropertyChanged(nameof(BatteryLevelFormatted));
         }
 
@@ -1776,7 +1776,7 @@ Do you want to continue?");
         {
             OnGetStaticFoxStatus_Common(status);
 
-            if (!_mainModel.StaticFoxStatus.IsFoxArmed)
+            if (!MainModel.StaticFoxStatus.IsFoxArmed)
             {
                 // Setting fox time
                 await _foxClockManager.SynchronizeClockAsync(async (isSuccessfull) => await OnSetFoxDateAndTimeResponseAsync(isSuccessfull));
@@ -1790,7 +1790,7 @@ Do you want to continue?");
 
         private void OnGetStaticFoxStatus_Common(StaticFoxStatus status)
         {
-            _mainModel.StaticFoxStatus = status;
+            MainModel.StaticFoxStatus = status;
             OnPropertyChanged(nameof(IsFoxArmedFormatted));
             OnPropertyChanged(nameof(IsArmButtonEnabled));
             OnPropertyChanged(nameof(IsDisarmButtonEnabled));

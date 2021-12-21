@@ -1,6 +1,9 @@
-﻿using org.whitefossa.yiffhl.ViewModels;
+﻿using org.whitefossa.yiffhl.Abstractions.Interfaces;
+using org.whitefossa.yiffhl.Abstractions.Interfaces.Events;
+using org.whitefossa.yiffhl.ViewModels;
 using System;
-
+using System.Diagnostics;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -18,6 +21,12 @@ namespace org.whitefossa.yiffhl.Views
         public MainPageView()
         {
             InitializeComponent();
+
+            // Attaching to events
+            var packetsProcessor = App.Container.Resolve<IPacketsProcessor>();
+
+            ViewModel.MainModel.OnFoxArmingInitiated += async (e) => await OnFoxArmingInitiated(e);
+            packetsProcessor.RegisterOnFoxArmingInitiatedEventHandler(ViewModel.MainModel.OnFoxArmingInitiated);
         }
 
         private void pkFox_SelectedIndexChanged(object sender, EventArgs e)
@@ -61,6 +70,16 @@ namespace org.whitefossa.yiffhl.Views
 
             var finishTime = (sender as TimePicker).Time;
             ViewModel.SetFinishTimeCommand.Execute(finishTime);
+        }
+
+        private async Task OnFoxArmingInitiated(IFoxArmingInitiatedEvent foxArmingInitiatedEvent)
+        {
+            var armingView = new ArmingView();
+
+            Device.BeginInvokeOnMainThread(async () =>
+            {
+                await Navigation.PushModalAsync(armingView);
+            });
         }
     }
 }
