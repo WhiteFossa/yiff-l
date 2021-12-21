@@ -31,11 +31,6 @@ typedef struct
 	bool NeedToSwitchProfile;
 
 	/**
-	 * If true, then current profile have changes, which must be saved to EEPROM
-	 */
-	bool NeedToFlushCurrentProfileToEEPROM;
-
-	/**
 	 * If true, then we need to set current profile name to SetThisProfileName
 	 */
 	bool NeedToSetProfileName;

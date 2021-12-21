@@ -37,6 +37,9 @@ void OnNewPacket(uint8_t payloadSize, uint8_t* payload)
 	/* We have a packet with correct payload, preventing fox from sleeping */
 	Sleepmodes_PreventSleep();
 
+	/* We can't process a new command while EEPROM data is being changed */
+	//while (PendingCommandsFlags.NeedToFlushCurrentProfileToEEPROM) {}
+
 	if (YHL_PACKET_PROCESSOR_COMMAND_TO_FOX == payload[0])
 	{
 		if (payloadSize >= YHL_PACKET_PROCESSOR_MIN_COMMAND_TO_FOX_PAYLOAD_LENGTH)

@@ -116,11 +116,6 @@ void Main_ProcessSetBeginAndEndTimes(void);
 void Main_ProcessSetPower(void);
 
 /**
- * Flushes current profile changes into EEPROM if needed
- */
-void Main_FlushProfileToEEPROM(void);
-
-/**
  * Measures battery level and store it into fox state.
  */
 void Main_MeasureBatteryLevel(void);
@@ -177,11 +172,6 @@ void Main_ControlSleep(void);
  * Initialize display and show splash screen
  */
 void Main_InitDisplayAndShowBootScreen(void);
-
-/**
- * Call this to mark current profile to flush into EEPROM
- */
-void Main_MarkCurrentProfileToFlushIntoEEPROM(void);
 
 
 #endif /* INCLUDE_MAINPRIVATE_H_ */
