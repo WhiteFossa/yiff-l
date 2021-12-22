@@ -7,9 +7,11 @@ using Android.Runtime;
 using Nancy.TinyIoc;
 using org.whitefossa.yiffhl.Abstractions.Interfaces;
 using org.whitefossa.yiffhl.Abstractions.Interfaces.Commands;
+using org.whitefossa.yiffhl.Abstractions.Interfaces.Models;
 using org.whitefossa.yiffhl.Business.Implementations;
 using org.whitefossa.yiffhl.Business.Implementations.Commands;
 using org.whitefossa.yiffhl.Droid.Business.Implementations;
+using org.whitefossa.yiffhl.Models;
 
 namespace org.whitefossa.yiffhl.Droid
 {
@@ -20,6 +22,7 @@ namespace org.whitefossa.yiffhl.Droid
         {
             // Registering IoC stuff
             App.Container = new TinyIoCContainer();
+            App.Container.Register<IMainModel, MainModel>().AsSingleton();
             App.Container.Register<IFoxConnector, FoxConnector>().AsSingleton();
             App.Container.Register<IPairedFoxesEnumerator, PairedFoxesEnumerator>().AsSingleton();
             App.Container.Register<IUserNotifier, UserNotifier>().AsSingleton();

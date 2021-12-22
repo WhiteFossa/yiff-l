@@ -1,12 +1,13 @@
 ﻿using org.whitefossa.yiffhl.Abstractions.DTOs;
 using org.whitefossa.yiffhl.Abstractions.Interfaces;
+using org.whitefossa.yiffhl.Abstractions.Interfaces.Models;
 
 namespace org.whitefossa.yiffhl.Models
 {
     /// <summary>
     /// Main model
     /// </summary>
-    public class MainModel
+    public class MainModel : IMainModel
     {
         /// <summary>
         /// Are we connected to a fox?
@@ -67,6 +68,8 @@ namespace org.whitefossa.yiffhl.Models
         /// Static fox status
         /// </summary>
         public StaticFoxStatus StaticFoxStatus { get; set; } = new StaticFoxStatus();
+
+        public ArmingModel ArmingModel { get; set; } = new ArmingModel();
 
         #region Fox events
 

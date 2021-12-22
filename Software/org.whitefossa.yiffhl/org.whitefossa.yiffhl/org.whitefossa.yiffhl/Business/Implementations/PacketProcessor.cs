@@ -29,7 +29,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         /// <summary>
         /// If we have >= than this iterations during waiting for response, we will throw an exception.
         /// </summary>
-        private const int WaitForResponseIterationsTimeout = int.MaxValue; // TODO: Return to sane value
+        private const int WaitForResponseIterationsTimeout = 10000;
 
         #region Command responses
 

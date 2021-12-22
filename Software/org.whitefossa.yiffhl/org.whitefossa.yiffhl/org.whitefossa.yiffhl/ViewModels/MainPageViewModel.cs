@@ -1,6 +1,7 @@
 ﻿using org.whitefossa.yiffhl.Abstractions.DTOs;
 using org.whitefossa.yiffhl.Abstractions.Interfaces;
 using org.whitefossa.yiffhl.Abstractions.Interfaces.Events;
+using org.whitefossa.yiffhl.Abstractions.Interfaces.Models;
 using org.whitefossa.yiffhl.Business.Implementations.Commands;
 using org.whitefossa.yiffhl.Models;
 using System;
@@ -150,7 +151,7 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// <summary>
         /// Main model
         /// </summary>
-        public MainModel MainModel = new MainModel();
+        public MainModel MainModel;
 
         /// <summary>
         /// List of foxes, paired to a phone
@@ -789,6 +790,8 @@ namespace org.whitefossa.yiffhl.ViewModels
 
         public MainPageViewModel()
         {
+            MainModel = App.Container.Resolve<IMainModel>() as MainModel;
+
             _foxConnector = App.Container.Resolve<IFoxConnector>();
             _pairedFoxesEnumerator = App.Container.Resolve<IPairedFoxesEnumerator>();
             _userNotifier = App.Container.Resolve<IUserNotifier>();
@@ -822,13 +825,10 @@ namespace org.whitefossa.yiffhl.ViewModels
             MainModel.OnFoxArmed += async (e) => await OnFoxArmedAsync(e);
             MainModel.OnAntennaMatchingMeasurement += OnAntennaMatchingMeasurement;
             MainModel.OnEnteringSleepmode += OnEnteringSleepmode;
-            //MainModel.OnFoxArmingInitiated += OnFoxArmingInitiated;
+            MainModel.OnFoxArmingInitiated += OnFoxArmingInitiated;
             MainModel.OnFoxDisarmed += async (e) => await OnFoxDisarmedAsync(e);
 
-            _packetsProcessor.RegisterOnFoxArmedEventHandler(MainModel.OnFoxArmed);
-            _packetsProcessor.RegisterOnAntennaMatchingMeasurementEventHandler(MainModel.OnAntennaMatchingMeasurement);
             _packetsProcessor.RegisterOnEnteringSleepmodeEventHandler(MainModel.OnEnteringSleepmode);
-            //_packetsProcessor.RegisterOnFoxArmingInitiatedEventHandler(MainModel.OnFoxArmingInitiated);
             _packetsProcessor.RegisterOnFoxDisarmedEventsHandler(MainModel.OnFoxDisarmed);
 
             // Binding commands to handlers

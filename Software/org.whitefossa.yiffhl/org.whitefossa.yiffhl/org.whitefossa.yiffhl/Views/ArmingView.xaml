@@ -31,7 +31,7 @@
                                     VerticalOptions="Center" />
 
                             <Label
-                                    Text="Initiated"
+                                    Text="{Binding ArmingStatusFormatted}"
                                     FontAttributes="Bold"
                                     HorizontalOptions="StartAndExpand"
                                     VerticalOptions="Center" />

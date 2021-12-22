@@ -1,8 +1,8 @@
-﻿using org.whitefossa.yiffhl.Abstractions.Interfaces;
+﻿using org.whitefossa.yiffhl.Abstractions.Enums;
+using org.whitefossa.yiffhl.Abstractions.Interfaces;
 using org.whitefossa.yiffhl.Abstractions.Interfaces.Events;
 using org.whitefossa.yiffhl.ViewModels;
 using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -74,6 +74,8 @@ namespace org.whitefossa.yiffhl.Views
 
         private async Task OnFoxArmingInitiated(IFoxArmingInitiatedEvent foxArmingInitiatedEvent)
         {
+            ViewModel.MainModel.ArmingModel.Status = ArmingStatus.Initiated;
+
             var armingView = new ArmingView();
 
             Device.BeginInvokeOnMainThread(async () =>
