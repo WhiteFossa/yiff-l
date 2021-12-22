@@ -1,9 +1,11 @@
 ﻿using org.whitefossa.yiffhl.Abstractions.Enums;
+using org.whitefossa.yiffhl.Abstractions.Interfaces;
+using org.whitefossa.yiffhl.Abstractions.Interfaces.Events;
 using org.whitefossa.yiffhl.Models;
 using org.whitefossa.yiffhl.ViewModels;
 using SkiaSharp;
 using SkiaSharp.Views.Forms;
-
+using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -21,6 +23,12 @@ namespace org.whitefossa.yiffhl.Views
         public ArmingView()
         {
             InitializeComponent();
+
+            // Attaching to events
+            var packetsProcessor = App.Container.Resolve<IPacketsProcessor>();
+
+            ViewModel.MainModel.OnFoxDisarmed += async (e) => await OnFoxDisarmedAsync(e);
+            packetsProcessor.RegisterOnFoxDisarmedEventsHandler(ViewModel.MainModel.OnFoxDisarmed);
         }
 
         private void CanvasView_PaintSurface(object sender, SkiaSharp.Views.Forms.SKPaintSurfaceEventArgs e)
@@ -49,6 +57,11 @@ namespace org.whitefossa.yiffhl.Views
 
             Navigation.PopModalAsync();
             return true;
+        }
+
+        private async Task OnFoxDisarmedAsync(IFoxDisarmedEvent foxDisarmedEvent)
+        {
+            await Navigation.PopModalAsync();
         }
     }
 }

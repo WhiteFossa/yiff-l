@@ -828,7 +828,10 @@ namespace org.whitefossa.yiffhl.ViewModels
             MainModel.OnFoxArmingInitiated += OnFoxArmingInitiated;
             MainModel.OnFoxDisarmed += async (e) => await OnFoxDisarmedAsync(e);
 
+            _packetsProcessor.RegisterOnFoxArmedEventHandler(MainModel.OnFoxArmed);
+            _packetsProcessor.RegisterOnAntennaMatchingMeasurementEventHandler(MainModel.OnAntennaMatchingMeasurement);
             _packetsProcessor.RegisterOnEnteringSleepmodeEventHandler(MainModel.OnEnteringSleepmode);
+            _packetsProcessor.RegisterOnFoxArmingInitiatedEventHandler(MainModel.OnFoxArmingInitiated);
             _packetsProcessor.RegisterOnFoxDisarmedEventsHandler(MainModel.OnFoxDisarmed);
 
             // Binding commands to handlers
