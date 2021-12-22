@@ -545,15 +545,16 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         {
             _ = _onAntennaMatchingMeasurementEvent ?? throw new InvalidOperationException("Handler for Antenna Matching Measurement event isn't registered");
 
-            if (payload.Count != 5)
+            if (payload.Count != 6)
             {
                 return;
             }
 
             var matchingPosition = (int)payload.ElementAt(0);
-            var antennaVoltage = BitConverter.ToSingle(payload.ToArray(), 1);
+            var totalMatchingPositions = (int)payload.ElementAt(1);
+            var antennaVoltage = BitConverter.ToSingle(payload.ToArray(), 2);
 
-            _onAntennaMatchingMeasurementEvent(new AntennaMatchingMeasurementEvent(matchingPosition, antennaVoltage));
+            _onAntennaMatchingMeasurementEvent(new AntennaMatchingMeasurementEvent(matchingPosition, totalMatchingPositions, antennaVoltage));
         }
 
         private void OnEnteringSleepmodeEvent(IReadOnlyCollection<byte> payload)

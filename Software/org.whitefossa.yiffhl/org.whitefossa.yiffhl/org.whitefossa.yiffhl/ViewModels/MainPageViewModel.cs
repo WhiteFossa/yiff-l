@@ -1744,6 +1744,7 @@ Do you want to continue?");
         private void OnAntennaMatchingMeasurement(IAntennaMatchingMeasurementEvent antennaMatchingMeasurementEvent)
         {
             Debug.WriteLine($"Tuner position: { antennaMatchingMeasurementEvent.GetMatchingPosition() }," +
+                $"total positions: {antennaMatchingMeasurementEvent.GetTotalMatchingPositionsCount() }" +
                 $"voltage: { antennaMatchingMeasurementEvent.GetAntennaVoltage() }");
         }
 

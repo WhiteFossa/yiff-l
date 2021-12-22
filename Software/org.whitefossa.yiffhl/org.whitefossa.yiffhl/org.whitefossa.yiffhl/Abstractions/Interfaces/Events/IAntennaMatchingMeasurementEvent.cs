@@ -4,6 +4,8 @@
     {
         int GetMatchingPosition();
 
+        int GetTotalMatchingPositionsCount();
+
         float GetAntennaVoltage();
     }
 }

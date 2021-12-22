@@ -4,27 +4,34 @@ namespace org.whitefossa.yiffhl.Business.Implementations.Events
 {
     public class AntennaMatchingMeasurementEvent : IAntennaMatchingMeasurementEvent
     {
-        private readonly int MatchingPosition;
-        private readonly float AntennaVoltage;
+        private readonly int _matchingPosition;
+        private readonly int _totalMatchingPositions;
+        private readonly float _antennaVoltage;
 
         private AntennaMatchingMeasurementEvent()
         {
         }
 
-        public AntennaMatchingMeasurementEvent(int matchingPosition, float antennaVoltage)
+        public AntennaMatchingMeasurementEvent(int matchingPosition, int totalMatchingPositions, float antennaVoltage)
         {
-            MatchingPosition = matchingPosition;
-            AntennaVoltage = antennaVoltage;
+            _matchingPosition = matchingPosition;
+            _totalMatchingPositions = totalMatchingPositions;
+            _antennaVoltage = antennaVoltage;
         }
 
         public float GetAntennaVoltage()
         {
-            return AntennaVoltage;
+            return _antennaVoltage;
         }
 
         public int GetMatchingPosition()
         {
-            return MatchingPosition;
+            return _matchingPosition;
+        }
+
+        public int GetTotalMatchingPositionsCount()
+        {
+            return _totalMatchingPositions;
         }
     }
 }
