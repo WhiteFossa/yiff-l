@@ -30,7 +30,8 @@ namespace org.whitefossa.yiffhl.ViewModels
                         return "Initiated";
 
                     case ArmingStatus.MatchingInProgress:
-                        return "Matching";
+                        return $"Antenna matching: { MainModel.ArmingModel.CurrentMatchingPosition } of " +
+                               $"{ MainModel.ArmingModel.TotalMatchingPositions }";
 
                     case ArmingStatus.Completed:
                         return "Completed";
@@ -57,6 +58,8 @@ namespace org.whitefossa.yiffhl.ViewModels
         private async Task OnAntennaMatchingMeasurementAsync(IAntennaMatchingMeasurementEvent antennaMatchingMeasurementEvent)
         {
             MainModel.ArmingModel.Status = ArmingStatus.MatchingInProgress;
+            MainModel.ArmingModel.CurrentMatchingPosition = antennaMatchingMeasurementEvent.GetMatchingPosition() + 1; // Cause counting from 0
+            MainModel.ArmingModel.TotalMatchingPositions = antennaMatchingMeasurementEvent.GetTotalMatchingPositionsCount();
             OnPropertyChanged(nameof(ArmingStatusFormatted));
         }
 
