@@ -482,6 +482,13 @@ float HAL_GetUAntADC(void)
 	return HAL_AntennaLevelADC;
 }
 
+float HAL_GetUAntVolts(void)
+{
+	float adc = HAL_GetUAntADC();
+
+	return EEPROM_Header.UAntADCA * adc + EEPROM_Header.UAntADCB;
+}
+
 float HAL_GetUBattADC(void)
 {
 	return HAL_BatteryLevelADC;

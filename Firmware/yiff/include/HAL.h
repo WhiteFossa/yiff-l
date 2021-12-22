@@ -357,6 +357,12 @@ void HAL_SetupADCForU80mMeasurement(void);
 float HAL_GetUAntADC(void);
 
 /**
+ * Get antenna voltage (in volts)
+ * @return
+ */
+float HAL_GetUAntVolts(void);
+
+/**
  * Get battery voltage (in ADC measurements)
  */
 float HAL_GetUBattADC(void);

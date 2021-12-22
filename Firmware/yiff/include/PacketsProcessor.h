@@ -371,7 +371,7 @@ void EmitFoxArmedEvent(void);
 /**
  * Emits "Antenna matching measurement" event
  */
-void EmitAntennaMatchingMeasurementEvent(uint8_t matchingPosition, float uAnt);
+void EmitAntennaMatchingMeasurementEvent(uint8_t matchingPosition, uint8_t totalPositions, float uAnt);
 
 /**
  * Emits "Entering sleepmode" event

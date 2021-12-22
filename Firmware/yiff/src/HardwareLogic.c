@@ -269,7 +269,7 @@ void HL_Setup80mAntenna(void)
 		HAL_SetAntennaMatchingValue(amValue);
 		HAL_Delay(YHL_HL_FOX_WAIT_FOR_UANT_DELAY);
 
-		float measuredSignalLevel = HAL_GetUAntADC();
+		float measuredSignalLevel = HAL_GetUAntVolts();
 		FoxState.MatchingDisplayData.MatchingLevels[amValue] = measuredSignalLevel;
 
 		if (measuredSignalLevel > signalLevel)
@@ -278,7 +278,7 @@ void HL_Setup80mAntenna(void)
 			HL_OptimalAntennaMatching = amValue;
 		}
 
-		EmitAntennaMatchingMeasurementEvent(amValue, measuredSignalLevel);
+		EmitAntennaMatchingMeasurementEvent(amValue, HAL_AM_MAX_VALUE + 1, measuredSignalLevel);
 	}
 
 	FoxState.ForceCarrierOn = false;

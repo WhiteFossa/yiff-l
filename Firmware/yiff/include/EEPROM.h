@@ -70,6 +70,12 @@ extern L2HAL_24x_ContextStruct EEPROMContext;
 #define YHL_DEFAULT_P80M_B 2.952f
 
 /**
+ * Default factors for Uant(ADC)->Volts conversion
+ */
+#define YHL_DEFAULT_ADC_UANT_A 0.08057
+#define YHL_DEFAULT_ADC_UANT_B 0
+
+/**
  * EEPROM constant header. It's structure must not change from version
  * to version
  */
@@ -132,6 +138,12 @@ typedef struct
 	 */
 	float P80mA;
 	float P80mB;
+
+	/**
+	 * Factors to calculate Uant(volts) from Uant(ADC)
+	 */
+	float UAntADCA;
+	float UAntADCB;
 
 	/**
 	 * Code of last failure

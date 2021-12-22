@@ -1101,12 +1101,13 @@ void EmitFoxArmedEvent(void)
 	SendEvent(Armed, 0, NULL);
 }
 
-void EmitAntennaMatchingMeasurementEvent(uint8_t matchingPosition, float uAnt)
+void EmitAntennaMatchingMeasurementEvent(uint8_t matchingPosition, uint8_t totalPositions, float uAnt)
 {
-	uint8_t payload[5];
+	uint8_t payload[6];
 
 	payload[0] = matchingPosition;
-	memcpy(&payload[1], &uAnt, 4);
+	payload[1] = totalPositions;
+	memcpy(&payload[2], &uAnt, 4);
 
 	SendEvent(AntennaMatchingMeasurement, 5, payload);
 }

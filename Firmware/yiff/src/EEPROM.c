@@ -43,6 +43,10 @@ void EEPROM_Format(void)
 	defaultHeader.P80mA = YHL_DEFAULT_P80M_A;
 	defaultHeader.P80mB = YHL_DEFAULT_P80M_B;
 
+	/* Factors for antenna voltage */
+	defaultHeader.UAntADCA = YHL_DEFAULT_ADC_UANT_A;
+	defaultHeader.UAntADCB = YHL_DEFAULT_ADC_UANT_B;
+
 	/* No failure after format */
 	defaultHeader.LastFailure = YhlFailureCause_OK;
 
