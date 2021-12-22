@@ -5,6 +5,8 @@ using org.whitefossa.yiffhl.Models;
 using org.whitefossa.yiffhl.ViewModels;
 using SkiaSharp;
 using SkiaSharp.Views.Forms;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -14,6 +16,17 @@ namespace org.whitefossa.yiffhl.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ArmingView : ContentPage
     {
+        /// <summary>
+        /// How many matching positions do we have
+        /// </summary>
+        private const int NumberOfMatchingPositions = 64;
+
+        private const int BordersSpan = 10;
+
+        private const int MatchingPointRadius = 5;
+
+        private const float AutoScaleMaxVoltageGraphHeight = 0.9f;
+
         private ArmingViewModel ViewModel
         {
             get => BindingContext as ArmingViewModel;
@@ -29,23 +42,126 @@ namespace org.whitefossa.yiffhl.Views
 
             ViewModel.MainModel.OnFoxDisarmed += async (e) => await OnFoxDisarmedAsync(e);
             packetsProcessor.RegisterOnFoxDisarmedEventsHandler(ViewModel.MainModel.OnFoxDisarmed);
+
+            ViewModel.MainModel.OnAntennaMatchingMeasurement += async (e) => await OnAntennaMatchingMeasurementAsync(e);
+            packetsProcessor.RegisterOnAntennaMatchingMeasurementEventHandler(ViewModel.MainModel.OnAntennaMatchingMeasurement);
         }
 
-        private void CanvasView_PaintSurface(object sender, SkiaSharp.Views.Forms.SKPaintSurfaceEventArgs e)
+        private void MatchingGraphView_PaintSurface(object sender, SkiaSharp.Views.Forms.SKPaintSurfaceEventArgs e)
         {
             var info = e.Info;
-            var surface = e.Surface;
-            var canvas = surface.Canvas;
+            var canvas = e.Surface.Canvas;
 
             canvas.Clear();
 
-            // In this example, we will draw a circle in the middle of the canvas
-            var paint = new SKPaint
+            // Main (dark assuming white theme) paint
+            var mainPaint = new SKPaint
             {
-                Style = SKPaintStyle.Fill,
-                Color = Color.Red.ToSKColor(), // Alternatively: SKColors.Red
+                Style = SKPaintStyle.Stroke,
+                Color = SKColors.Black,
+                StrokeWidth = 3
             };
-            canvas.DrawCircle(info.Width / 2, info.Height / 2, 100, paint);
+
+            // Secondary (pale lines) paint
+            var secondaryPaint = new SKPaint
+            {
+                Style = SKPaintStyle.Stroke,
+                Color = SKColors.Gray,
+                StrokeWidth = 1
+            };
+
+            // Matching points
+            var matchingPointsPaint = new SKPaint
+            {
+                Style = SKPaintStyle.StrokeAndFill,
+                Color = SKColors.Red,
+                StrokeWidth = 1
+            };
+
+            // Lines between matching points
+            var matchingPointsLinesPaint = new SKPaint
+            {
+                Style = SKPaintStyle.StrokeAndFill,
+                Color = SKColors.Red,
+                StrokeWidth = 3
+            };
+
+            // Best matching lines
+            var bestMatchingLinesPaint = new SKPaint
+            {
+                Style = SKPaintStyle.StrokeAndFill,
+                Color = SKColors.Blue,
+                StrokeWidth = 3
+            };
+
+            // Borders
+            var bordersRect = new SKRect(BordersSpan, BordersSpan, info.Width - BordersSpan, info.Height - BordersSpan);
+            canvas.DrawRect(bordersRect, mainPaint);
+
+            // Vertical (matching) lines
+            for (var matchingPosition = 0; matchingPosition < NumberOfMatchingPositions; matchingPosition ++)
+            {
+                var x = MatcherPositionToX(bordersRect, matchingPosition);
+                canvas.DrawLine(x, bordersRect.Bottom, x, bordersRect.Top, secondaryPaint);
+            }
+
+            // Matching points
+            if (ViewModel.MainModel.ArmingModel.OrderdMatchingData != null)
+            {
+                var maxValue = ViewModel.MainModel.ArmingModel.OrderdMatchingData
+                    .Max(kv => kv.Value);
+
+                if (maxValue == 0)
+                {
+                    maxValue = 0.0000001f;
+                }
+
+                var yScale = bordersRect.Height * AutoScaleMaxVoltageGraphHeight / maxValue;
+
+                KeyValuePair<int, float> previousPoint;
+                foreach (var currentPoint in ViewModel.MainModel.ArmingModel.OrderdMatchingData)
+                {
+                    // Point itself
+                    var x = MatcherPositionToX(bordersRect, currentPoint.Key);
+                    var y = AntennaVoltageToY(bordersRect, yScale, currentPoint.Value);
+
+                    canvas.DrawCircle(x, y, MatchingPointRadius, matchingPointsPaint);
+
+                    // Connecting line
+                    if (currentPoint.Key != ViewModel.MainModel.ArmingModel.OrderdMatchingData.First().Key)
+                    {
+                        var previousX = MatcherPositionToX(bordersRect, previousPoint.Key);
+                        var previousY = AntennaVoltageToY(bordersRect, yScale, previousPoint.Value);
+
+                        canvas.DrawLine(x, y, previousX, previousY, matchingPointsLinesPaint);
+                    }
+
+                    previousPoint = currentPoint;
+                }
+
+                // Best matching
+                var bestMatchingX = MatcherPositionToX(bordersRect, ViewModel.MainModel.ArmingModel.BestMatchingPosition);
+                var bestMatchingY = AntennaVoltageToY(bordersRect, yScale, ViewModel.MainModel.ArmingModel.BestMatchingPositionVoltage);
+
+                canvas.DrawLine(bordersRect.Left, bestMatchingY, bordersRect.Right, bestMatchingY, bestMatchingLinesPaint);
+                canvas.DrawLine(bestMatchingX, bordersRect.Top, bestMatchingX, bordersRect.Bottom, bestMatchingLinesPaint);
+
+            }
+        }
+
+        private float CalculateCellWidth(SKRect borders)
+        {
+            return borders.Width / (NumberOfMatchingPositions - 1);
+        }
+
+        private float MatcherPositionToX(SKRect borders, int position)
+        {
+            return borders.Left + CalculateCellWidth(borders) * position;
+        }
+
+        private float AntennaVoltageToY(SKRect borders, float yScale, float voltage)
+        {
+            return borders.Bottom - voltage * yScale;
         }
 
         protected override bool OnBackButtonPressed()
@@ -57,6 +173,11 @@ namespace org.whitefossa.yiffhl.Views
 
             Navigation.PopModalAsync();
             return true;
+        }
+
+        private async Task OnAntennaMatchingMeasurementAsync(IAntennaMatchingMeasurementEvent antennaMatchingMeasurementEvent)
+        {
+            MatchingGraphView.InvalidateSurface();
         }
 
         private async Task OnFoxDisarmedAsync(IFoxDisarmedEvent foxDisarmedEvent)

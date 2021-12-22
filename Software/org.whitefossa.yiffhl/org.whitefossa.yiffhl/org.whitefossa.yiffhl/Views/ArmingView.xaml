@@ -55,8 +55,9 @@
                             VerticalOptions="FillAndExpand">
                             
                             <skia:SKCanvasView
+                                x:Name="MatchingGraphView"
                                 VerticalOptions="FillAndExpand"
-                                PaintSurface="CanvasView_PaintSurface" />
+                                PaintSurface="MatchingGraphView_PaintSurface" />
 
                         </StackLayout>
 

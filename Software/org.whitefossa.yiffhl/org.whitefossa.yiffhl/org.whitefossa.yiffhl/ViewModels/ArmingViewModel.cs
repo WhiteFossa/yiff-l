@@ -5,6 +5,8 @@ using org.whitefossa.yiffhl.Abstractions.Interfaces.Models;
 using org.whitefossa.yiffhl.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -44,19 +46,48 @@ namespace org.whitefossa.yiffhl.ViewModels
 
         public ArmingViewModel()
         {
-            _packetsProcessor = App.Container.Resolve<IPacketsProcessor>();
-
             MainModel = App.Container.Resolve<IMainModel>() as MainModel;
 
-            MainModel.OnFoxArmed += async (e) => await OnFoxArmedAsync(e);
-            MainModel.OnAntennaMatchingMeasurement += async (e) => await OnAntennaMatchingMeasurementAsync(e);
+            if (MainModel.ArmingModel.IsNeedToSubscribeToEvents)
+            {
+                MainModel.OnFoxArmed += async (e) => await OnFoxArmedAsync(e);
+                MainModel.OnAntennaMatchingMeasurement += async (e) => await OnAntennaMatchingMeasurementAsync(e);
+                MainModel.OnFoxArmingInitiated += async (e) => await OnFoxArmingInitiatedAsync(e);
 
-            _packetsProcessor.RegisterOnFoxArmedEventHandler(MainModel.OnFoxArmed);
-            _packetsProcessor.RegisterOnAntennaMatchingMeasurementEventHandler(MainModel.OnAntennaMatchingMeasurement);
+                _packetsProcessor = App.Container.Resolve<IPacketsProcessor>();
+
+                _packetsProcessor.RegisterOnFoxArmedEventHandler(MainModel.OnFoxArmed);
+                _packetsProcessor.RegisterOnAntennaMatchingMeasurementEventHandler(MainModel.OnAntennaMatchingMeasurement);
+                _packetsProcessor.RegisterOnFoxArmingInitiatedEventHandler(MainModel.OnFoxArmingInitiated);
+
+                MainModel.ArmingModel.IsNeedToSubscribeToEvents = false;
+            }
+        }
+
+        private async Task OnFoxArmingInitiatedAsync(IFoxArmingInitiatedEvent foxArmingInitiatedEvent)
+        {
+            MainModel.ArmingModel.MatchingData.Clear();
+            MainModel.ArmingModel.OrderdMatchingData = null;
+            MainModel.ArmingModel.BestMatchingPosition = 0;
+            MainModel.ArmingModel.BestMatchingPositionVoltage = 0;
         }
 
         private async Task OnAntennaMatchingMeasurementAsync(IAntennaMatchingMeasurementEvent antennaMatchingMeasurementEvent)
         {
+            var position = antennaMatchingMeasurementEvent.GetMatchingPosition();
+            var voltage = antennaMatchingMeasurementEvent.GetAntennaVoltage();
+
+            MainModel.ArmingModel.MatchingData.Add(position, voltage);
+            MainModel.ArmingModel.OrderdMatchingData = MainModel.ArmingModel.MatchingData
+                .OrderBy(kv => kv.Key);
+
+            // Seeking for best matching
+            if (voltage > MainModel.ArmingModel.BestMatchingPositionVoltage)
+            {
+                MainModel.ArmingModel.BestMatchingPositionVoltage = voltage;
+                MainModel.ArmingModel.BestMatchingPosition = position;
+            }
+
             MainModel.ArmingModel.Status = ArmingStatus.MatchingInProgress;
             MainModel.ArmingModel.CurrentMatchingPosition = antennaMatchingMeasurementEvent.GetMatchingPosition() + 1; // Cause counting from 0
             MainModel.ArmingModel.TotalMatchingPositions = antennaMatchingMeasurementEvent.GetTotalMatchingPositionsCount();
