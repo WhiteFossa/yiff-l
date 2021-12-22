@@ -1109,7 +1109,7 @@ void EmitAntennaMatchingMeasurementEvent(uint8_t matchingPosition, uint8_t total
 	payload[1] = totalPositions;
 	memcpy(&payload[2], &uAnt, 4);
 
-	SendEvent(AntennaMatchingMeasurement, 5, payload);
+	SendEvent(AntennaMatchingMeasurement, 6, payload);
 }
 
 void EmitEnteringSleepmodeEvent(void)
