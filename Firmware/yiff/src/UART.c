@@ -64,7 +64,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *UartHandle)
 				UART_PSMState = Listen;
 				UART_RxPacketBufferIndex = 0;
 
-				uint8_t* packet = malloc(UART_ExpectedPacketLength);
+				uint8_t packet[YHL_UART_PACKET_MAX_SIZE];
 				memcpy(packet, UART_RxPacketBuffer, UART_ExpectedPacketLength);
 
 				(*UART_OnNewPacket)(UART_ExpectedPacketLength, packet);
@@ -103,15 +103,14 @@ void UART_AbortListen(void)
 
 void UART_SendBlocking(uint8_t* message, uint8_t size)
 {
-	uint8_t* tmpBuffer = malloc(size);
+	// To be sure that data wouldn't be changed via interrupt
+	uint8_t tmpBuffer[YHL_UART_PACKET_MAX_SIZE];
 	memcpy(tmpBuffer, message, size);
 
 	if (HAL_UART_Transmit(&UART_Handle, tmpBuffer, size, YHL_UART_BLOCKING_TRANSFER_TIMEOUT) != HAL_OK)
 	{
 		SelfDiagnostics_HaltOnFailure(YhlFailureCause_FailedToTransmitOverUart);
 	}
-
-	free(tmpBuffer);
 }
 
 void UART_ReadBlocking(uint8_t* buffer, uint8_t size)

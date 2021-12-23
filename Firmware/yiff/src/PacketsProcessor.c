@@ -19,7 +19,6 @@ void OnNewRawPacket(uint8_t size, uint8_t* packet)
 
 	if (expectedCRC != calculatedCRC)
 	{
-		free(packet);
 		return;
 	}
 
@@ -27,7 +26,6 @@ void OnNewRawPacket(uint8_t size, uint8_t* packet)
 	uint8_t* payload = malloc(payloadSize);
 
 	memcpy(payload, packet + 1, payloadSize); /* Skip first byte of packet, there is packet size stored */
-	free(packet);
 
 	OnNewPacket(payloadSize, payload);
 }
