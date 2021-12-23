@@ -30,6 +30,14 @@ namespace org.whitefossa.yiffhl.Views
 
         private const int TextPadding = 10;
 
+        private const int TextSize = 40;
+
+        private const int StrokeThin = 1;
+
+        private const int StrokeThick = 3;
+
+        private IColorsFactory _colorsFactory;
+
         private ArmingViewModel ViewModel
         {
             get => BindingContext as ArmingViewModel;
@@ -38,6 +46,8 @@ namespace org.whitefossa.yiffhl.Views
 
         public ArmingView()
         {
+            _colorsFactory = App.Container.Resolve<IColorsFactory>();
+
             InitializeComponent();
 
             // Attaching to events
@@ -61,49 +71,49 @@ namespace org.whitefossa.yiffhl.Views
             var mainPaint = new SKPaint
             {
                 Style = SKPaintStyle.Stroke,
-                Color = SKColors.Black,
-                StrokeWidth = 3
+                Color = _colorsFactory.GetMainColor(),
+                StrokeWidth = StrokeThick
             };
 
             // Secondary (pale lines) paint
             var secondaryPaint = new SKPaint
             {
                 Style = SKPaintStyle.Stroke,
-                Color = SKColors.Gray,
-                StrokeWidth = 1
+                Color = _colorsFactory.GetSecondaryColor(),
+                StrokeWidth = StrokeThin
             };
 
             // Matching points
             var matchingPointsPaint = new SKPaint
             {
                 Style = SKPaintStyle.StrokeAndFill,
-                Color = SKColors.Red,
-                StrokeWidth = 1
+                Color = _colorsFactory.GetMatchingPointsColor(),
+                StrokeWidth = StrokeThin
             };
 
             // Lines between matching points
             var matchingPointsLinesPaint = new SKPaint
             {
                 Style = SKPaintStyle.StrokeAndFill,
-                Color = SKColors.Red,
-                StrokeWidth = 3
+                Color = _colorsFactory.GetMatchingPointsLinesColor(),
+                StrokeWidth = StrokeThick
             };
 
             // Best matching lines
             var bestMatchingLinesPaint = new SKPaint
             {
                 Style = SKPaintStyle.StrokeAndFill,
-                Color = SKColors.Blue,
-                StrokeWidth = 3
+                Color = _colorsFactory.GetBestMatchingPointLinesColor(),
+                StrokeWidth = StrokeThick
             };
 
             // Text paint
             var textPaint = new SKPaint
             {
                 Style = SKPaintStyle.StrokeAndFill,
-                Color = SKColors.Black,
-                StrokeWidth = 1,
-                TextSize = 40
+                Color = _colorsFactory.GetMainColor(),
+                StrokeWidth = StrokeThin,
+                TextSize = TextSize
             };
 
             // Borders

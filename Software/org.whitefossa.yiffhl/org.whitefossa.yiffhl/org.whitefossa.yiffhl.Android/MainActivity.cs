@@ -38,6 +38,7 @@ namespace org.whitefossa.yiffhl.Droid
             App.Container.Register<IProfileSettingsManager, ProfileSettingsManager>().AsSingleton();
             App.Container.Register<IDynamicFoxStatusManager, DynamicFoxStatusManager>().AsSingleton();
             App.Container.Register<IStaticFoxStatusManager, StaticFoxStatusManager>().AsSingleton();
+            App.Container.Register<IColorsFactory, ColorsFactory>().AsSingleton();
 
             #region Commands
 
