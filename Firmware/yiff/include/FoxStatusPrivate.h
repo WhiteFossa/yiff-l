@@ -12,7 +12,9 @@
 #include <stdint.h>
 #include <l2hal_aux.h>
 
-#define YHL_FOX_NAME_BUFFER_LENGTH 33
+#define YHL_FOX_NAME_MAX_LENGTH 32
+
+#define YHL_FOX_NAME_BUFFER_LENGTH (YHL_FOX_NAME_MAX_LENGTH + 1)
 
 /**
  * Set to HAL_AM_MAX_VALUE + 1

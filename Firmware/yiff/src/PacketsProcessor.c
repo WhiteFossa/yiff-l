@@ -23,9 +23,9 @@ void OnNewRawPacket(uint8_t size, uint8_t* packet)
 	}
 
 	uint8_t payloadSize = (uint8_t)(size - YHL_PACKET_PROCESSOR_PAYLOAD_SIZE_DELTA);
-	uint8_t* payload = malloc(payloadSize);
+	uint8_t payload[YHL_UART_PACKET_MAX_SIZE - YHL_PACKET_PROCESSOR_PAYLOAD_SIZE_DELTA];
 
-	memcpy(payload, packet + 1, payloadSize); /* Skip first byte of packet, there is packet size stored */
+	memcpy(payload, packet + 1, payloadSize); /* Skip first byte of packet, where is packet size stored */
 
 	OnNewPacket(payloadSize, payload);
 }
@@ -35,25 +35,19 @@ void OnNewPacket(uint8_t payloadSize, uint8_t* payload)
 	/* We have a packet with correct payload, preventing fox from sleeping */
 	Sleepmodes_PreventSleep();
 
-	/* We can't process a new command while EEPROM data is being changed */
-	//while (PendingCommandsFlags.NeedToFlushCurrentProfileToEEPROM) {}
-
 	if (YHL_PACKET_PROCESSOR_COMMAND_TO_FOX == payload[0])
 	{
 		if (payloadSize >= YHL_PACKET_PROCESSOR_MIN_COMMAND_TO_FOX_PAYLOAD_LENGTH)
 		{
 			uint8_t commandPayloadSize = (uint8_t)(payloadSize - 1U);
-			uint8_t* commandPayload = malloc(commandPayloadSize);
+			uint8_t commandPayload[YHL_UART_PACKET_MAX_SIZE - YHL_PACKET_PROCESSOR_PAYLOAD_SIZE_DELTA - 1U];
 			memcpy(commandPayload, payload + 1, commandPayloadSize);
-			free(payload);
 
 			OnNewCommandToFox(commandPayloadSize, commandPayload);
 
 			return;
 		}
 	}
-
-	free(payload);
 }
 
 void OnNewCommandToFox(uint8_t payloadSize, uint8_t* payload)
@@ -235,8 +229,6 @@ void OnNewCommandToFox(uint8_t payloadSize, uint8_t* payload)
 			OnGetIdentificationData(payloadSize, payload);
 			break;
 	}
-
-	free(payload);
 }
 
 void OnSetDateAndTime(uint8_t payloadSize, uint8_t* payload)
@@ -374,12 +366,11 @@ void OnGetName(uint8_t payloadSize, uint8_t* payload)
 	uint8_t nameLength = (uint8_t)strlen(FoxState.Name);
 	uint8_t responseSize = (uint8_t)(nameLength + 1U);
 
-	uint8_t* response = malloc(responseSize);
+	uint8_t response[YHL_FOX_NAME_MAX_LENGTH + 1U];
 	response[0] = nameLength;
 	memcpy(&response[1], FoxState.Name, nameLength);
 
 	SendResponse(GetName, responseSize, response);
-	free(response);
 }
 
 void OnGetProfilesCount(uint8_t payloadSize, uint8_t* payload)
@@ -422,7 +413,7 @@ OnGetProfileName_Validate:
 	uint8_t nameLength = (uint8_t)strlen(profile.Name);
 	uint8_t responseLength = nameLength + 3;
 
-	uint8_t* response = malloc(responseLength);
+	uint8_t response[YHL_PROFILE_NAME_MAX_LENGTH + 3];
 
 	response[0] = YHL_PACKET_PROCESSOR_SUCCESS;
 	response[1] = profileId;
@@ -430,7 +421,6 @@ OnGetProfileName_Validate:
 	memcpy(&response[3], profile.Name, nameLength);
 
 	SendResponse(GetProfileName, responseLength, response);
-	free(response);
 }
 
 void OnAddNewProfile(uint8_t payloadSize, uint8_t* payload)
@@ -1169,7 +1159,7 @@ void SendPacket(uint8_t payloadSize, uint8_t* payload)
 
 	uint8_t fullPacketSize = (uint8_t)(payloadSize + YHL_PACKET_PROCESSOR_PAYLOAD_SIZE_DELTA);
 
-	uint8_t* fullPacket = malloc(fullPacketSize);
+	uint8_t fullPacket[YHL_PACKET_PROCESSOR_MAX_PAYLOAD_SIZE + YHL_PACKET_PROCESSOR_PAYLOAD_SIZE_DELTA];
 	fullPacket[0] = fullPacketSize; /* Length */
 	memcpy(fullPacket + 1, payload, payloadSize); /* Payload */
 
@@ -1177,13 +1167,12 @@ void SendPacket(uint8_t payloadSize, uint8_t* payload)
 	memcpy(fullPacket + fullPacketSize - 4U, (uint8_t*)&crc, 4);
 
 	UART_SendBlocking(fullPacket, fullPacketSize);
-	free(fullPacket);
 }
 
 void SendResponse(CommandToFoxEnum responseTo, uint8_t payloadSize, uint8_t* payload)
 {
 	uint8_t fullPayloadSize = payloadSize + 2; /* +2 because one byte is response marker, another is command to what we respond */
-	uint8_t* fullPayload = malloc(fullPayloadSize);
+	uint8_t fullPayload[YHL_PACKET_PROCESSOR_MAX_PAYLOAD_SIZE];
 
 	fullPayload[0] = YHL_PACKET_PROCESSOR_RESPONSE_FROM_FOX;
 	fullPayload[1] = responseTo;
@@ -1194,13 +1183,12 @@ void SendResponse(CommandToFoxEnum responseTo, uint8_t payloadSize, uint8_t* pay
 	}
 
 	SendPacket(fullPayloadSize, fullPayload);
-	free(fullPayload);
 }
 
 void SendEvent(EventsFromFoxEnum event, uint8_t payloadSize, uint8_t* payload)
 {
 	uint8_t fullPayloadSize = payloadSize + 2; /* +2 because one byte is event marker, another is event type */
-	uint8_t* fullPayload = malloc(fullPayloadSize);
+	uint8_t fullPayload[YHL_PACKET_PROCESSOR_MAX_PAYLOAD_SIZE];
 
 	fullPayload[0] = YHL_PACKET_PROCESSOR_EVENT_FROM_FOX;
 	fullPayload[1] = event;
@@ -1211,5 +1199,4 @@ void SendEvent(EventsFromFoxEnum event, uint8_t payloadSize, uint8_t* payload)
 	}
 
 	SendPacket(fullPayloadSize, fullPayload);
-	free(fullPayload);
 }
