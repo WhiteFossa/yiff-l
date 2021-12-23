@@ -6,6 +6,7 @@ using org.whitefossa.yiffhl.ViewModels;
 using SkiaSharp;
 using SkiaSharp.Views.Forms;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -26,6 +27,8 @@ namespace org.whitefossa.yiffhl.Views
         private const int MatchingPointRadius = 5;
 
         private const float AutoScaleMaxVoltageGraphHeight = 0.9f;
+
+        private const int TextPadding = 10;
 
         private ArmingViewModel ViewModel
         {
@@ -94,6 +97,15 @@ namespace org.whitefossa.yiffhl.Views
                 StrokeWidth = 3
             };
 
+            // Text paint
+            var textPaint = new SKPaint
+            {
+                Style = SKPaintStyle.StrokeAndFill,
+                Color = SKColors.Black,
+                StrokeWidth = 1,
+                TextSize = 40
+            };
+
             // Borders
             var bordersRect = new SKRect(BordersSpan, BordersSpan, info.Width - BordersSpan, info.Height - BordersSpan);
             canvas.DrawRect(bordersRect, mainPaint);
@@ -145,6 +157,26 @@ namespace org.whitefossa.yiffhl.Views
 
                 canvas.DrawLine(bordersRect.Left, bestMatchingY, bordersRect.Right, bestMatchingY, bestMatchingLinesPaint);
                 canvas.DrawLine(bestMatchingX, bordersRect.Top, bestMatchingX, bordersRect.Bottom, bestMatchingLinesPaint);
+
+                // Voltage (at horizontal line)
+                var voltageString = $"{ ViewModel.MainModel.ArmingModel.BestMatchingPositionVoltage }V";
+
+                var voltageBounds = new SKRect();
+                textPaint.MeasureText(voltageString, ref voltageBounds);
+
+                var voltageY = bestMatchingY - TextPadding;
+                canvas.DrawText(voltageString, bordersRect.Left + TextPadding, voltageY, textPaint); // Left
+                canvas.DrawText(voltageString, bordersRect.Right - voltageBounds.Width - TextPadding, voltageY, textPaint); // Right
+
+                // Matcher position (at vertical line)
+                var matcherString = $"{ ViewModel.MainModel.ArmingModel.BestMatchingPosition }";
+
+                var matcherBounds = new SKRect();
+                textPaint.MeasureText(matcherString, ref matcherBounds);
+
+                var matcherX = bestMatchingX + TextPadding;
+                canvas.DrawText(matcherString, matcherX, bordersRect.Top + matcherBounds.Height + TextPadding, textPaint); // Top
+                canvas.DrawText(matcherString, matcherX, bordersRect.Bottom - TextPadding, textPaint); // Bottom
 
             }
         }

@@ -42,15 +42,5 @@ namespace org.whitefossa.yiffhl.Models
         /// Antenna voltage at best matching position
         /// </summary>
         public float BestMatchingPositionVoltage { get; set; }
-
-        /// <summary>
-        /// True if we need to subscribe to events
-        /// </summary>
-        public bool IsNeedToSubscribeToEvents { get; set; }
-
-        public ArmingModel()
-        {
-            IsNeedToSubscribeToEvents = true;
-        }
     }
 }

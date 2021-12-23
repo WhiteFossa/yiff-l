@@ -18,6 +18,11 @@ namespace org.whitefossa.yiffhl.Views
             set => BindingContext = value;
         }
 
+        /// <summary>
+        /// Arming view
+        /// </summary>
+        private ArmingView _armingView = new ArmingView();
+
         public MainPageView()
         {
             InitializeComponent();
@@ -76,11 +81,9 @@ namespace org.whitefossa.yiffhl.Views
         {
             ViewModel.MainModel.ArmingModel.Status = ArmingStatus.Initiated;
 
-            var armingView = new ArmingView();
-
             Device.BeginInvokeOnMainThread(async () =>
             {
-                await Navigation.PushModalAsync(armingView);
+                await Navigation.PushModalAsync(_armingView);
             });
         }
     }

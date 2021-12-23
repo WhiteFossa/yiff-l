@@ -48,24 +48,22 @@ namespace org.whitefossa.yiffhl.ViewModels
         {
             MainModel = App.Container.Resolve<IMainModel>() as MainModel;
 
-            if (MainModel.ArmingModel.IsNeedToSubscribeToEvents)
-            {
-                MainModel.OnFoxArmed += async (e) => await OnFoxArmedAsync(e);
-                MainModel.OnAntennaMatchingMeasurement += async (e) => await OnAntennaMatchingMeasurementAsync(e);
-                MainModel.OnFoxArmingInitiated += async (e) => await OnFoxArmingInitiatedAsync(e);
+            MainModel.OnFoxArmed += async (e) => await OnFoxArmedAsync(e);
+            MainModel.OnAntennaMatchingMeasurement += async (e) => await OnAntennaMatchingMeasurementAsync(e);
+            MainModel.OnFoxArmingInitiated += async (e) => await OnFoxArmingInitiatedAsync(e);
 
-                _packetsProcessor = App.Container.Resolve<IPacketsProcessor>();
+            _packetsProcessor = App.Container.Resolve<IPacketsProcessor>();
 
-                _packetsProcessor.RegisterOnFoxArmedEventHandler(MainModel.OnFoxArmed);
-                _packetsProcessor.RegisterOnAntennaMatchingMeasurementEventHandler(MainModel.OnAntennaMatchingMeasurement);
-                _packetsProcessor.RegisterOnFoxArmingInitiatedEventHandler(MainModel.OnFoxArmingInitiated);
-
-                MainModel.ArmingModel.IsNeedToSubscribeToEvents = false;
-            }
+            _packetsProcessor.RegisterOnFoxArmedEventHandler(MainModel.OnFoxArmed);
+            _packetsProcessor.RegisterOnAntennaMatchingMeasurementEventHandler(MainModel.OnAntennaMatchingMeasurement);
+            _packetsProcessor.RegisterOnFoxArmingInitiatedEventHandler(MainModel.OnFoxArmingInitiated);
         }
 
         private async Task OnFoxArmingInitiatedAsync(IFoxArmingInitiatedEvent foxArmingInitiatedEvent)
         {
+            MainModel.ArmingModel.Status = ArmingStatus.Initiated;
+            OnPropertyChanged(nameof(ArmingStatusFormatted));
+
             MainModel.ArmingModel.MatchingData.Clear();
             MainModel.ArmingModel.OrderdMatchingData = null;
             MainModel.ArmingModel.BestMatchingPosition = 0;
@@ -89,6 +87,7 @@ namespace org.whitefossa.yiffhl.ViewModels
             }
 
             MainModel.ArmingModel.Status = ArmingStatus.MatchingInProgress;
+
             MainModel.ArmingModel.CurrentMatchingPosition = antennaMatchingMeasurementEvent.GetMatchingPosition() + 1; // Cause counting from 0
             MainModel.ArmingModel.TotalMatchingPositions = antennaMatchingMeasurementEvent.GetTotalMatchingPositionsCount();
             OnPropertyChanged(nameof(ArmingStatusFormatted));
