@@ -47,6 +47,11 @@
 #include <stdlib.h>
 
 /**
+ * Maximal possible count of SysTick handlers
+ */
+#define L2HAL_SYSTICK_MAX_HANDLERS 16U
+
+/**
  * Call it to initialize SysTick driver. Place it into void L2HAL_Init(void) after clocks initialization.
  */
 void L2HAL_SysTick_Init(void);

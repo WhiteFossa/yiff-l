@@ -76,10 +76,17 @@ void FMGL_Priv_RenderCharacter(FMGL_API_DriverContext* context, FMGL_API_FontSet
 void FMGL_Priv_RenderSubstring(FMGL_API_DriverContext* context, FMGL_API_FontSettings* fontSettings, uint16_t startPos, uint16_t length,
 		uint16_t x, uint16_t* y, uint16_t scaledLineHeight, uint16_t* width, bool isDryRun, char* string)
 {
-	char* substr = AUX_Str_Substring(string, startPos, length);
+	if (length > FMGL_PRIV_MAX_SUBSTRING_LENGTH)
+	{
+		L2HAL_Error(Generic);
+	}
+
+	char substr[FMGL_PRIV_MAX_SUBSTRING_LENGTH + 1];
+	memcpy(substr, string + startPos, length);
+	substr[length] = '\0';
+
 	uint16_t currWidth = 0;
 	FMGL_API_RenderOneLineDumb(context, fontSettings, x, *y, &currWidth, isDryRun, substr);
-	AUX_Mem_SafeFree(substr);
 
 	if (currWidth > *width)
 	{

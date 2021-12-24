@@ -53,6 +53,8 @@
 #define L2HAL_INCLUDE_L2HAL_SYSTICK_H_
 
 #include <stdint.h>
+#include <l2hal_errors.h>
+#include <l2hal_systick_private.h>
 
 /**
  * Context, associated with SysTick driver.
@@ -67,7 +69,7 @@ typedef struct
 	/**
 	 * Array of pointers to registered SysTick handlers.
 	 */
-	void (**Handlers)(void);
+	void (*Handlers[L2HAL_SYSTICK_MAX_HANDLERS])(void);
 
 } L2HAL_SysTick_ContextStruct;
 
