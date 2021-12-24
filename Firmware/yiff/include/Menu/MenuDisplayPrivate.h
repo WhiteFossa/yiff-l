@@ -82,9 +82,54 @@ MenuActionEnum;
 MenuNode MenuDisplay_RootNode;
 
 /**
- * Current menu node
+ * Clock node
  */
-MenuNode MenuDisplay_CurrentNode;
+MenuNode MenuDisplay_ClockNode;
+
+/**
+ * Profile settings node
+ */
+MenuNode MenuDisplay_ProfileSettingsNode;
+
+/**
+ * Edit current profile node
+ */
+MenuNode MenuDisplay_EditCurrentProfileNode;
+
+/**
+ * Frequency settings node
+ */
+MenuNode MenuDisplay_FrequencySettingsNode;
+
+/**
+ * Code and speed settings node
+ */
+MenuNode MenuDisplay_CodeAndSpeedSettingsNode;
+
+/**
+ * Cycle settings node
+ */
+MenuNode MenuDisplay_CycleSettingsNode;
+
+/**
+ * Run times menu node
+ */
+MenuNode MenuDisplay_RunTimesSettingsNode;
+
+/**
+ * Tx power settings menu node
+ */
+MenuNode MenuDisplay_TxPowerSettingsNode;
+
+/**
+ * Arming settings menu node
+ */
+MenuNode MenuDisplay_ArmingSettingsNode;
+
+/**
+ * Pointer to current menu node
+ */
+MenuNode* MenuDisplay_CurrentNodePtr;
 
 /**
  * Index of active line
