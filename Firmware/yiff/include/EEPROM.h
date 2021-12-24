@@ -29,12 +29,18 @@ extern L2HAL_24x_ContextStruct EEPROMContext;
 /**
  * How much profiles can we have
  */
-#define YHL_MAX_PROFILES_COUNT 128U
+//#define YHL_MAX_PROFILES_COUNT 128U
+#define YHL_MAX_PROFILES_COUNT 16U // TODO: Return back
+
+/**
+ * Max profile name length
+ */
+#define YHL_PROFILE_NAME_MAX_LENGTH 16U
 
 /**
  * Profile name memory size
  */
-#define YHL_PROFILE_NAME_MEMORY_SIZE 17U
+#define YHL_PROFILE_NAME_MEMORY_SIZE (YHL_PROFILE_NAME_MAX_LENGTH + 1U)
 
 /**
  * Newly-generated profiles have this name

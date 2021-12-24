@@ -15,130 +15,90 @@ void MenuDisplay_InitMenuDisplay(void)
 
 	/* Root menu nodes */
 	MenuDisplay_RootNode.NodesCount = 4;
-	MenuDisplay_RootNode.Nodes = malloc(sizeof(MenuNode) * MenuDisplay_RootNode.NodesCount);
 
 	/* Clock */
-	MenuNode* clockNode = &((MenuNode*)MenuDisplay_RootNode.Nodes)[0];
-	clockNode->Parent = &MenuDisplay_RootNode;
-	clockNode->NamePtr = MenuDisplay_ClockNodeName;
-	clockNode->LeavesCount = 1;
-	clockNode->Leaves = malloc(sizeof(MenuLeaf*) * clockNode->LeavesCount);
-
-	clockNode->Leaves[0] = &MenuDisplay_SetCurrentTimeLeaf; /* Clock -> Set current time */
-
-	clockNode->NodesCount = 0;
-	clockNode->Nodes = NULL;
+	MenuDisplay_RootNode.Nodes[0] = &MenuDisplay_ClockNode;
+	MenuDisplay_ClockNode.Parent = &MenuDisplay_RootNode;
+	MenuDisplay_ClockNode.NamePtr = MenuDisplay_ClockNodeName;
+	MenuDisplay_ClockNode.LeavesCount = 1;
+	MenuDisplay_ClockNode.LeavesPtrs[0] = &MenuDisplay_SetCurrentTimeLeaf; /* Clock -> Set current time */
+	MenuDisplay_ClockNode.NodesCount = 0;
 
 	/* Profile settings */
-	MenuNode* profileSettingsNode = &((MenuNode*)MenuDisplay_RootNode.Nodes)[1];
-	profileSettingsNode->Parent = &MenuDisplay_RootNode;
-	profileSettingsNode->NamePtr = MenuDisplay_ProfileSettingsNodeName;
-	profileSettingsNode->LeavesCount = 2;
-	profileSettingsNode->Leaves = malloc(sizeof(MenuLeaf*) * profileSettingsNode->LeavesCount);
-
-	profileSettingsNode->Leaves[0] = &MenuDisplay_ShowCurrentProfileLeaf; /* Profile settings -> Show current profile */
-	profileSettingsNode->Leaves[1] = &MenuDisplay_SelectProfileLeaf; /* Profile settings -> Select profile*/
-
-	profileSettingsNode->NodesCount = 0;
-	profileSettingsNode->Nodes = NULL;
+	MenuDisplay_RootNode.Nodes[1] = &MenuDisplay_ProfileSettingsNode;
+	MenuDisplay_ProfileSettingsNode.Parent = &MenuDisplay_RootNode;
+	MenuDisplay_ProfileSettingsNode.NamePtr = MenuDisplay_ProfileSettingsNodeName;
+	MenuDisplay_ProfileSettingsNode.LeavesCount = 2;
+	MenuDisplay_ProfileSettingsNode.LeavesPtrs[0] = &MenuDisplay_ShowCurrentProfileLeaf; /* Profile settings -> Show current profile */
+	MenuDisplay_ProfileSettingsNode.LeavesPtrs[1] = &MenuDisplay_SelectProfileLeaf; /* Profile settings -> Select profile*/
+	MenuDisplay_ProfileSettingsNode.NodesCount = 0;
 
 	/* Edit current profile */
-	MenuNode* editCurrentProfileNode = &((MenuNode*)MenuDisplay_RootNode.Nodes)[2];
-	editCurrentProfileNode->Parent = &MenuDisplay_RootNode;
-	editCurrentProfileNode->NamePtr = MenuDisplay_EditCurrentProfileNodeName;
-	editCurrentProfileNode->LeavesCount = 0;
-	editCurrentProfileNode->Leaves = malloc(sizeof(MenuLeaf) * profileSettingsNode->LeavesCount);
-
-	editCurrentProfileNode->NodesCount = 5;
-	editCurrentProfileNode->Nodes = malloc(sizeof(MenuNode) * editCurrentProfileNode->NodesCount);
+	MenuDisplay_RootNode.Nodes[2] = &MenuDisplay_EditCurrentProfileNode;
+	MenuDisplay_EditCurrentProfileNode.Parent = &MenuDisplay_RootNode;
+	MenuDisplay_EditCurrentProfileNode.NamePtr = MenuDisplay_EditCurrentProfileNodeName;
+	MenuDisplay_EditCurrentProfileNode.LeavesCount = 0;
+	MenuDisplay_EditCurrentProfileNode.NodesCount = 5;
 
 	/* Edit current profile -> Frequency */
-	MenuNode* frequencySettingsNode = &((MenuNode*)editCurrentProfileNode->Nodes)[0];
-	frequencySettingsNode->Parent = editCurrentProfileNode;
-	frequencySettingsNode->NamePtr = MenuDisplay_FrequencyNodeName;
-	frequencySettingsNode->LeavesCount = 2;
-	frequencySettingsNode->Leaves = malloc(sizeof(MenuLeaf*) * frequencySettingsNode->LeavesCount);
-
-	frequencySettingsNode->Leaves[0] = &MenuDisplay_FrequencyRangeLeaf; /* Edit current profile -> Frequency -> Range */
-	frequencySettingsNode->Leaves[1] = &MenuDisplay_FrequencyValueLeaf; /* Edit current profile -> Frequency -> Value */
-
-	frequencySettingsNode->NodesCount = 0;
-	frequencySettingsNode->Nodes = NULL;
+	MenuDisplay_EditCurrentProfileNode.Nodes[0] = &MenuDisplay_FrequencySettingsNode;
+	MenuDisplay_FrequencySettingsNode.Parent = &MenuDisplay_EditCurrentProfileNode;
+	MenuDisplay_FrequencySettingsNode.NamePtr = MenuDisplay_FrequencyNodeName;
+	MenuDisplay_FrequencySettingsNode.LeavesCount = 2;
+	MenuDisplay_FrequencySettingsNode.LeavesPtrs[0] = &MenuDisplay_FrequencyRangeLeaf; /* Edit current profile -> Frequency -> Range */
+	MenuDisplay_FrequencySettingsNode.LeavesPtrs[1] = &MenuDisplay_FrequencyValueLeaf; /* Edit current profile -> Frequency -> Value */
+	MenuDisplay_FrequencySettingsNode.NodesCount = 0;
 
 	/* Edit current profile -> Code and speed */
-	MenuNode* codeAndSpeedSettingsNode = &((MenuNode*)editCurrentProfileNode->Nodes)[1];
-	codeAndSpeedSettingsNode->Parent = editCurrentProfileNode;
-	codeAndSpeedSettingsNode->NamePtr = MenuDisplay_CodeAndSpeedNodeName;
-	codeAndSpeedSettingsNode->LeavesCount = 2;
-	codeAndSpeedSettingsNode->Leaves = malloc(sizeof(MenuLeaf*) * codeAndSpeedSettingsNode->LeavesCount);
-
-	codeAndSpeedSettingsNode->Leaves[0] = &MenuDisplay_CodeLeaf; /* Edit current profile -> Code and speed -> Code */
-	codeAndSpeedSettingsNode->Leaves[1] = &MenuDisplay_SpeedLeaf; /* Edit current profile -> Code and speed -> Speed */
-
-	codeAndSpeedSettingsNode->NodesCount = 0;
-	codeAndSpeedSettingsNode->Nodes = NULL;
+	MenuDisplay_EditCurrentProfileNode.Nodes[1] = &MenuDisplay_CodeAndSpeedSettingsNode;
+	MenuDisplay_CodeAndSpeedSettingsNode.Parent = &MenuDisplay_EditCurrentProfileNode;
+	MenuDisplay_CodeAndSpeedSettingsNode.NamePtr = MenuDisplay_CodeAndSpeedNodeName;
+	MenuDisplay_CodeAndSpeedSettingsNode.LeavesCount = 2;
+	MenuDisplay_CodeAndSpeedSettingsNode.LeavesPtrs[0] = &MenuDisplay_CodeLeaf; /* Edit current profile -> Code and speed -> Code */
+	MenuDisplay_CodeAndSpeedSettingsNode.LeavesPtrs[1] = &MenuDisplay_SpeedLeaf; /* Edit current profile -> Code and speed -> Speed */
+	MenuDisplay_CodeAndSpeedSettingsNode.NodesCount = 0;
 
 	/* Edit current profile -> Cycle */
-	MenuNode* cycleSettingsNode = &((MenuNode*)editCurrentProfileNode->Nodes)[2];
-	cycleSettingsNode->Parent = editCurrentProfileNode;
-	cycleSettingsNode->NamePtr = MenuDisplay_CycleNodeName;
-	cycleSettingsNode->LeavesCount = 4;
-	cycleSettingsNode->Leaves = malloc(sizeof(MenuLeaf*) * cycleSettingsNode->LeavesCount);
-
-	cycleSettingsNode->Leaves[0] = &MenuDisplay_IsContinuousLeaf; /* Edit current profile -> Cycle -> Is continuous */
-	cycleSettingsNode->Leaves[1] = &MenuDisplay_TxTimeLeaf; /* Edit current profile -> Cycle -> TX time */
-	cycleSettingsNode->Leaves[2] = &MenuDisplay_PauseTimeLeaf; /* Edit current profile -> Cycle -> Pause time */
-	cycleSettingsNode->Leaves[3] = &MenuDisplay_EndingToneLeaf; /* Edit current profile -> Cycle -> Ending tone duration */
-
-
-	cycleSettingsNode->NodesCount = 0;
-	cycleSettingsNode->Nodes = NULL;
+	MenuDisplay_EditCurrentProfileNode.Nodes[2] = &MenuDisplay_CycleSettingsNode;
+	MenuDisplay_CycleSettingsNode.Parent = &MenuDisplay_EditCurrentProfileNode;
+	MenuDisplay_CycleSettingsNode.NamePtr = MenuDisplay_CycleNodeName;
+	MenuDisplay_CycleSettingsNode.LeavesCount = 4;
+	MenuDisplay_CycleSettingsNode.LeavesPtrs[0] = &MenuDisplay_IsContinuousLeaf; /* Edit current profile -> Cycle -> Is continuous */
+	MenuDisplay_CycleSettingsNode.LeavesPtrs[1] = &MenuDisplay_TxTimeLeaf; /* Edit current profile -> Cycle -> TX time */
+	MenuDisplay_CycleSettingsNode.LeavesPtrs[2] = &MenuDisplay_PauseTimeLeaf; /* Edit current profile -> Cycle -> Pause time */
+	MenuDisplay_CycleSettingsNode.LeavesPtrs[3] = &MenuDisplay_EndingToneLeaf; /* Edit current profile -> Cycle -> Ending tone duration */
+	MenuDisplay_CycleSettingsNode.NodesCount = 0;
 
 	/* Edit current profile -> Run times */
-	MenuNode* runTimesSettingsNode = &((MenuNode*)editCurrentProfileNode->Nodes)[3];
-	runTimesSettingsNode->Parent = editCurrentProfileNode;
-	runTimesSettingsNode->NamePtr = MenuDisplay_RunTimesNodeName;
-	runTimesSettingsNode->LeavesCount = 2;
-	runTimesSettingsNode->Leaves = malloc(sizeof(MenuLeaf*) * runTimesSettingsNode->LeavesCount);
-
-	runTimesSettingsNode->Leaves[0] = &MenuDisplay_StartTimeLeaf; /* Edit current profile -> Run times -> Start time */
-	runTimesSettingsNode->Leaves[1] = &MenuDisplay_FinishTimeLeaf; /* Edit current profile -> Run times -> Finish time */
-
-	runTimesSettingsNode->NodesCount = 0;
-	runTimesSettingsNode->Nodes = NULL;
+	MenuDisplay_EditCurrentProfileNode.Nodes[3] = &MenuDisplay_RunTimesSettingsNode;
+	MenuDisplay_RunTimesSettingsNode.Parent = &MenuDisplay_EditCurrentProfileNode;
+	MenuDisplay_RunTimesSettingsNode.NamePtr = MenuDisplay_RunTimesNodeName;
+	MenuDisplay_RunTimesSettingsNode.LeavesCount = 2;
+	MenuDisplay_RunTimesSettingsNode.LeavesPtrs[0] = &MenuDisplay_StartTimeLeaf; /* Edit current profile -> Run times -> Start time */
+	MenuDisplay_RunTimesSettingsNode.LeavesPtrs[1] = &MenuDisplay_FinishTimeLeaf; /* Edit current profile -> Run times -> Finish time */
+	MenuDisplay_RunTimesSettingsNode.NodesCount = 0;
 
 	/* Edit current profile -> TX power */
-	MenuNode* txPowerSettingsNode = &((MenuNode*)editCurrentProfileNode->Nodes)[4];
-	txPowerSettingsNode->Parent = editCurrentProfileNode;
-	txPowerSettingsNode->NamePtr = MenuDisplay_TxPowerNodeName;
-	txPowerSettingsNode->LeavesCount = 1;
-	txPowerSettingsNode->Leaves = malloc(sizeof(MenuLeaf*) * txPowerSettingsNode->LeavesCount);
-
-	txPowerSettingsNode->Leaves[0] = &MenuDisplay_TxPowerLeaf; /* Edit current profile -> TX power -> TX power */
-
-	txPowerSettingsNode->NodesCount = 0;
-	txPowerSettingsNode->Nodes = NULL;
+	MenuDisplay_EditCurrentProfileNode.Nodes[4] = &MenuDisplay_TxPowerSettingsNode;
+	MenuDisplay_TxPowerSettingsNode.Parent = &MenuDisplay_EditCurrentProfileNode;
+	MenuDisplay_TxPowerSettingsNode.NamePtr = MenuDisplay_TxPowerNodeName;
+	MenuDisplay_TxPowerSettingsNode.LeavesCount = 1;
+	MenuDisplay_TxPowerSettingsNode.LeavesPtrs[0] = &MenuDisplay_TxPowerLeaf; /* Edit current profile -> TX power -> TX power */
+	MenuDisplay_TxPowerSettingsNode.NodesCount = 0;
 
 	/* Arming */
-	MenuNode* armingSettingsNode = &((MenuNode*)MenuDisplay_RootNode.Nodes)[3];
-	armingSettingsNode->Parent = &MenuDisplay_RootNode;
-	armingSettingsNode->NamePtr = MenuDisplay_ArmingNodeName;
-	armingSettingsNode->LeavesCount = 2;
-	armingSettingsNode->Leaves = malloc(sizeof(MenuLeaf*) * armingSettingsNode->LeavesCount);
-
-	armingSettingsNode->Leaves[0] = &MenuDisplay_ArmLeaf; /* Arming -> Arm */
-	armingSettingsNode->Leaves[1] = &MenuDisplay_DisarmLeaf; /* Arming -> Disarm */
-
-	armingSettingsNode->NodesCount = 0;
-	armingSettingsNode->Nodes = NULL;
+	MenuDisplay_RootNode.Nodes[3] = &MenuDisplay_ArmingSettingsNode;
+	MenuDisplay_ArmingSettingsNode.Parent = &MenuDisplay_RootNode;
+	MenuDisplay_ArmingSettingsNode.NamePtr = MenuDisplay_ArmingNodeName;
+	MenuDisplay_ArmingSettingsNode.LeavesCount = 2;
+	MenuDisplay_ArmingSettingsNode.LeavesPtrs[0] = &MenuDisplay_ArmLeaf; /* Arming -> Arm */
+	MenuDisplay_ArmingSettingsNode.LeavesPtrs[1] = &MenuDisplay_DisarmLeaf; /* Arming -> Disarm */
+	MenuDisplay_ArmingSettingsNode.NodesCount = 0;
 
 	/* Root menu leaves */
 	MenuDisplay_RootNode.LeavesCount = 0;
-	MenuDisplay_RootNode.Leaves = malloc(sizeof(MenuLeaf) * MenuDisplay_RootNode.LeavesCount);
 
 	MenuDisplay_ActiveLineIndex = 0;
-	MenuDisplay_CurrentNodeLines = NULL;
-	MenuDisplay_ProfilesNames = NULL;
 
 	MenuDisplay_SwitchNode(&MenuDisplay_RootNode);
 }
@@ -146,31 +106,24 @@ void MenuDisplay_InitMenuDisplay(void)
 
 void MenuDisplay_SwitchNode(MenuNode* nodePtr)
 {
-	MenuDisplay_CurrentNode = *nodePtr;
-
-	MenuDisplay_CurrentNodeLinesCount = MenuDisplay_CurrentNode.NodesCount + MenuDisplay_CurrentNode.LeavesCount;
-	if (MenuDisplay_CurrentNodeLines != NULL)
-	{
-		free(MenuDisplay_CurrentNodeLines);
-	}
-
-	MenuDisplay_CurrentNodeLines = malloc(MenuDisplay_CurrentNodeLinesCount * YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
+	MenuDisplay_CurrentNodePtr = nodePtr;
+	MenuDisplay_CurrentNodeLinesCount = MenuDisplay_CurrentNodePtr->NodesCount + MenuDisplay_CurrentNodePtr->LeavesCount;
 
 	/* Nodes first */
-	for (uint8_t nodesCounter = 0; nodesCounter < MenuDisplay_CurrentNode.NodesCount; nodesCounter ++)
+	for (uint8_t nodesCounter = 0; nodesCounter < MenuDisplay_CurrentNodePtr->NodesCount; nodesCounter ++)
 	{
-		char* dst = (char*)(MenuDisplay_CurrentNodeLines + nodesCounter * YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
-		MenuNode node = ((MenuNode*)MenuDisplay_CurrentNode.Nodes)[nodesCounter];
-		const char* src = node.NamePtr;
+		char* dst = MenuDisplay_CurrentNodeLines[nodesCounter];
+		MenuNode* nodePtr = (MenuNode*)MenuDisplay_CurrentNodePtr->Nodes[nodesCounter];
+		const char* src = nodePtr->NamePtr;
 		strncpy(dst, src, YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
 	}
 
 	/* Leaves then */
-	for (uint8_t leavesCounter = 0; leavesCounter < MenuDisplay_CurrentNode.LeavesCount; leavesCounter ++)
+	for (uint8_t leavesCounter = 0; leavesCounter < MenuDisplay_CurrentNodePtr->LeavesCount; leavesCounter ++)
 	{
-		uint8_t baseCount = MenuDisplay_CurrentNode.NodesCount;
-		char* dst = (char*)(MenuDisplay_CurrentNodeLines + (baseCount + leavesCounter) * YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
-		const char* src = MenuDisplay_CurrentNode.Leaves[leavesCounter]->Name;
+		uint8_t baseCount = MenuDisplay_CurrentNodePtr->NodesCount;
+		char* dst = MenuDisplay_CurrentNodeLines[baseCount + leavesCounter];
+		const char* src = MenuDisplay_CurrentNodePtr->LeavesPtrs[leavesCounter]->Name;
 		strncpy(dst, src, YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
 	}
 
@@ -190,7 +143,7 @@ void MenuDisplay_SwitchNode(MenuNode* nodePtr)
 
 void MenuDisplay_GoToParentNode(void)
 {
-	MenuNode* parent = MenuDisplay_CurrentNode.Parent;
+	MenuNode* parent = MenuDisplay_CurrentNodePtr->Parent;
 	if (NULL == parent)
 	{
 		/* Exiting menu */
@@ -231,7 +184,7 @@ void MenuDisplay_DrawMenuDisplay(void)
 
 	for (uint8_t linesCounter = 0; linesCounter < MenuDisplay_WindowLinesCount; linesCounter ++)
 	{
-		char* src = (char*)(MenuDisplay_CurrentNodeLines + (MenuDisplay_BaseLine + linesCounter) * YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
+		char* src = MenuDisplay_CurrentNodeLines[MenuDisplay_BaseLine + linesCounter];
 		char* dst = window[linesCounter];
 		strncpy(dst, src, YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
 	}
@@ -247,7 +200,7 @@ void MenuDisplay_DrawMenuDisplay(void)
 	}
 	else
 	{
-		strncpy(LeftButton.Text, MenuDisplay_CurrentNode.Leaves[leafIndex]->LeftButtonText, YHL_MENU_MAX_LEFT_BUTTON_TEXT_MEMORY_SIZE);
+		strncpy(LeftButton.Text, MenuDisplay_CurrentNodePtr->LeavesPtrs[leafIndex]->LeftButtonText, YHL_MENU_MAX_LEFT_BUTTON_TEXT_MEMORY_SIZE);
 	}
 
 	strncpy(RightButton.Text, "Back", YHL_MAX_BUTTON_TEXT_MEMORY_SIZE);
@@ -264,7 +217,7 @@ uint8_t MenuDisplay_GetCurrentNodeActiveLineIndex(void)
 
 int16_t MenuDisplay_GetCurrentSubNodeIndex(uint8_t currentNodeActiveLineIndex)
 {
-	if (currentNodeActiveLineIndex > MenuDisplay_CurrentNode.NodesCount - 1)
+	if (currentNodeActiveLineIndex > MenuDisplay_CurrentNodePtr->NodesCount - 1)
 	{
 		return YHL_MENU_NOT_A_NODE;
 	}
@@ -282,7 +235,7 @@ int16_t MenuDisplay_GetCurrentLeafIndex(uint8_t currentNodeActiveLineIndex)
 		return YHL_MENU_NOT_A_LEAF;
 	}
 
-	return currentNodeActiveLineIndex - MenuDisplay_CurrentNode.NodesCount;
+	return currentNodeActiveLineIndex - MenuDisplay_CurrentNodePtr->NodesCount;
 }
 
 void MenuDisplay_LeftButtonHandler(void)
@@ -298,7 +251,7 @@ void MenuDisplay_OnAction(MenuActionEnum action)
 
 	if (subNodeIndex != YHL_MENU_NOT_A_NODE)
 	{
-		MenuNode* subNode = &((MenuNode*)MenuDisplay_CurrentNode.Nodes)[subNodeIndex];
+		MenuNode* subNode = (MenuNode*)MenuDisplay_CurrentNodePtr->Nodes[subNodeIndex];
 		MenuDisplay_ActionOnNodeHandler(subNode, action);
 		return;
 	}
@@ -310,7 +263,7 @@ void MenuDisplay_OnAction(MenuActionEnum action)
 		SelfDiagnostics_HaltOnFailure(YhlFailureCause_NotANodeNotALeaf);
 	}
 
-	const MenuLeaf* leafPtr = MenuDisplay_CurrentNode.Leaves[leafIndex];
+	const MenuLeaf* leafPtr = MenuDisplay_CurrentNodePtr->LeavesPtrs[leafIndex];
 	MenuDisplay_ActionOnLeafHandler(leafPtr, action);
 }
 
@@ -463,11 +416,10 @@ void MenuDisplay_SelectCurrentProfile(void)
 		return;
 	}
 
-	MenuDisplay_ProfilesNames = malloc(YHL_PROFILE_NAME_MEMORY_SIZE * EEPROM_Header.NumberOfProfiles);
 	for (uint8_t profile = 0; profile < EEPROM_Header.NumberOfProfiles; profile ++)
 	{
 		char* src = EEPROM_GetProfile(profile).Name;
-		char* dst = MenuDisplay_ProfilesNames + YHL_PROFILE_NAME_MEMORY_SIZE * profile;
+		char* dst = MenuDisplay_ProfilesNames[profile];
 		strncpy(dst, src, YHL_PROFILE_NAME_MEMORY_SIZE);
 	}
 
@@ -482,9 +434,6 @@ void MenuDisplay_SelectCurrentProfile(void)
 
 void MenuDisplay_SelectCurrentProfileCloseHandler(uint8_t profileIndex)
 {
-	free(MenuDisplay_ProfilesNames);
-	MenuDisplay_ProfilesNames = NULL;
-
 	if (profileIndex != EEPROM_Header.ProfileInUse)
 	{
 		EEPROM_SwitchProfile(profileIndex);
@@ -501,17 +450,15 @@ void MenuDisplay_SelectFrequencyRange(void)
 		return;
 	}
 
-	uint8_t rangesCount = 2;
-	MenuDisplay_FrequencyRangesNames = malloc(rangesCount * YHL_MENU_FREQUENCY_RANGE_MEMORY_SIZE);
-	strncpy(MenuDisplay_FrequencyRangesNames, "3.5MHz", YHL_MENU_FREQUENCY_RANGE_MEMORY_SIZE);
-	strncpy(MenuDisplay_FrequencyRangesNames + YHL_MENU_FREQUENCY_RANGE_MEMORY_SIZE, "144MHz", YHL_MENU_FREQUENCY_RANGE_MEMORY_SIZE);
+	strncpy(MenuDisplay_FrequencyRangesNames[0], "3.5MHz", YHL_MENU_FREQUENCY_RANGE_MEMORY_SIZE);
+	strncpy(MenuDisplay_FrequencyRangesNames[1], "144MHz", YHL_MENU_FREQUENCY_RANGE_MEMORY_SIZE);
 
 	uint8_t activeRangeIndex = MenuDisplay_GetFrequencyRangeIndex(EEPROM_CurrentProfile.Frequency.Is144MHz);
 
 	ItemSelectionDisplay_Show("Select range",
 			MenuDisplay_FrequencyRangesNames,
 			YHL_MENU_FREQUENCY_RANGE_MEMORY_SIZE,
-			rangesCount,
+			YHL_MENU_FREQUENCY_RANGES_COUNT,
 			activeRangeIndex,
 			&MenuDisplay_SelectFrequencyRangeCloseHandler,
 			MenuDisplay);
@@ -519,9 +466,6 @@ void MenuDisplay_SelectFrequencyRange(void)
 
 void MenuDisplay_SelectFrequencyRangeCloseHandler(uint8_t rangeIndex)
 {
-	free(MenuDisplay_FrequencyRangesNames);
-	MenuDisplay_FrequencyRangesNames = NULL;
-
 	uint8_t currentRangeIndex = MenuDisplay_GetFrequencyRangeIndex(FoxState.Frequency.Is144MHz);
 	if (currentRangeIndex == rangeIndex)
 	{
@@ -613,12 +557,9 @@ void MenuDisplay_EnterFrequency(void)
 	}
 }
 
-char* MenuDisplay_FormatFrequency(int32_t frequencyHz)
+void MenuDisplay_FormatFrequency(int32_t frequencyHz, char buffer[YHL_NUMBER_INPUT_DISPLAY_FORMATTER_BUFFER_SIZE])
 {
-	char* buffer = malloc(32);
-	snprintf(buffer, 32, "%.3f MHz", frequencyHz / 1000000.0f);
-
-	return buffer;
+	snprintf(buffer, YHL_NUMBER_INPUT_DISPLAY_FORMATTER_BUFFER_SIZE, "%.3f MHz", frequencyHz / 1000000.0f);
 }
 
 void MenuDisplay_EnterFrequencyOnEnterHandler(int32_t frequency)
@@ -637,20 +578,18 @@ void MenuDisplay_SelectCode(void)
 		return;
 	}
 
-	uint8_t codesCount = 7;
-	MenuDisplay_FoxCodesNames = malloc(codesCount * YHL_MENU_FOX_CODES_MEMORY_SIZE);
-	strncpy(MenuDisplay_FoxCodesNames, "Finish (MO)", YHL_MENU_FOX_CODES_MEMORY_SIZE);
-	strncpy(MenuDisplay_FoxCodesNames + YHL_MENU_FOX_CODES_MEMORY_SIZE, "1 (MOE)", YHL_MENU_FOX_CODES_MEMORY_SIZE);
-	strncpy(MenuDisplay_FoxCodesNames + 2 * YHL_MENU_FOX_CODES_MEMORY_SIZE, "2 (MOI)", YHL_MENU_FOX_CODES_MEMORY_SIZE);
-	strncpy(MenuDisplay_FoxCodesNames + 3 * YHL_MENU_FOX_CODES_MEMORY_SIZE, "3 (MOS)", YHL_MENU_FOX_CODES_MEMORY_SIZE);
-	strncpy(MenuDisplay_FoxCodesNames + 4 * YHL_MENU_FOX_CODES_MEMORY_SIZE, "4 (MOH)", YHL_MENU_FOX_CODES_MEMORY_SIZE);
-	strncpy(MenuDisplay_FoxCodesNames + 5 * YHL_MENU_FOX_CODES_MEMORY_SIZE, "5 (MO5)", YHL_MENU_FOX_CODES_MEMORY_SIZE);
-	strncpy(MenuDisplay_FoxCodesNames + 6 * YHL_MENU_FOX_CODES_MEMORY_SIZE, "Beacon (S)", YHL_MENU_FOX_CODES_MEMORY_SIZE);
+	strncpy(MenuDisplay_FoxCodesNames[0], "Finish (MO)", YHL_MENU_FOX_CODES_MEMORY_SIZE);
+	strncpy(MenuDisplay_FoxCodesNames[1], "1 (MOE)", YHL_MENU_FOX_CODES_MEMORY_SIZE);
+	strncpy(MenuDisplay_FoxCodesNames[2], "2 (MOI)", YHL_MENU_FOX_CODES_MEMORY_SIZE);
+	strncpy(MenuDisplay_FoxCodesNames[3], "3 (MOS)", YHL_MENU_FOX_CODES_MEMORY_SIZE);
+	strncpy(MenuDisplay_FoxCodesNames[4], "4 (MOH)", YHL_MENU_FOX_CODES_MEMORY_SIZE);
+	strncpy(MenuDisplay_FoxCodesNames[5], "5 (MO5)", YHL_MENU_FOX_CODES_MEMORY_SIZE);
+	strncpy(MenuDisplay_FoxCodesNames[6], "Beacon (S)", YHL_MENU_FOX_CODES_MEMORY_SIZE);
 
 	ItemSelectionDisplay_Show("Select code",
 			MenuDisplay_FoxCodesNames,
 			YHL_MENU_FOX_CODES_MEMORY_SIZE,
-			codesCount,
+			YHL_MENU_CODES_COUNT,
 			(uint8_t)FoxState.Code,
 			&MenyDisplay_SelectCodeCloseHandler,
 			MenuDisplay);
@@ -659,9 +598,6 @@ void MenuDisplay_SelectCode(void)
 
 void MenyDisplay_SelectCodeCloseHandler(uint8_t codeIndex)
 {
-	free(MenuDisplay_FoxCodesNames);
-	MenuDisplay_FoxCodesNames = NULL;
-
 	FoxState.Code = (FoxCodeEnum)codeIndex;
 	PendingCommandsFlags.NeedToSetCode = true;
 
@@ -677,16 +613,13 @@ void MenuDisplay_SelectFoxSpeed(void)
 		return;
 	}
 
-	uint8_t speedsCount = 2;
-	MenuDisplay_FoxSpeedsNames = malloc(speedsCount * YHL_MENU_FOX_SPEEDS_MEMORY_SIZE);
-	strncpy(MenuDisplay_FoxSpeedsNames, "Slow", YHL_MENU_FOX_SPEEDS_MEMORY_SIZE);
-	strncpy(MenuDisplay_FoxSpeedsNames + YHL_MENU_FOX_SPEEDS_MEMORY_SIZE, "Fast", YHL_MENU_FOX_SPEEDS_MEMORY_SIZE);
-
+	strncpy(MenuDisplay_FoxSpeedsNames[0], "Slow", YHL_MENU_FOX_SPEEDS_MEMORY_SIZE);
+	strncpy(MenuDisplay_FoxSpeedsNames[1], "Fast", YHL_MENU_FOX_SPEEDS_MEMORY_SIZE);
 
 	ItemSelectionDisplay_Show("Select speed",
 			MenuDisplay_FoxSpeedsNames,
 			YHL_MENU_FOX_SPEEDS_MEMORY_SIZE,
-			speedsCount,
+			YHL_MENU_SPEEDS_COUNT,
 			MenuDisplay_FoxSpeedToIndex(FoxState.IsFast),
 			&MenyDisplay_SelectFoxSpeedCloseHandler,
 			MenuDisplay);
@@ -695,9 +628,6 @@ void MenuDisplay_SelectFoxSpeed(void)
 
 void MenyDisplay_SelectFoxSpeedCloseHandler(uint8_t speedIndex)
 {
-	free(MenuDisplay_FoxSpeedsNames);
-	MenuDisplay_FoxSpeedsNames = NULL;
-
 	FoxState.IsFast = MenuDisplay_IndexToFoxSpeed(speedIndex);
 	PendingCommandsFlags.NeedToSetSpeed = true;
 
@@ -739,16 +669,13 @@ void MenuDisplay_SelectIsContinuousCycle(void)
 		return;
 	}
 
-	uint8_t cycleTypesCount = 2;
-	MenuDisplay_CycleTypesNames = malloc(cycleTypesCount * YHL_MENU_CYCLE_TYPE_MEMORY_SIZE);
-	strncpy(MenuDisplay_CycleTypesNames, "Yes", YHL_MENU_CYCLE_TYPE_MEMORY_SIZE);
-	strncpy(MenuDisplay_CycleTypesNames + YHL_MENU_CYCLE_TYPE_MEMORY_SIZE, "No", YHL_MENU_CYCLE_TYPE_MEMORY_SIZE);
-
+	strncpy(MenuDisplay_CycleTypesNames[0], "Yes", YHL_MENU_CYCLE_TYPE_MEMORY_SIZE);
+	strncpy(MenuDisplay_CycleTypesNames[1], "No", YHL_MENU_CYCLE_TYPE_MEMORY_SIZE);
 
 	ItemSelectionDisplay_Show("Is continuous?",
 			MenuDisplay_CycleTypesNames,
 			YHL_MENU_CYCLE_TYPE_MEMORY_SIZE,
-			cycleTypesCount,
+			YHL_MENU_CYCLES_TYPES_COUNT,
 			MenuDisplay_CycleTypeToIndex(FoxState.Cycle.IsContinuous),
 			&MenuDisplay_SelectIsContinuousCycleHandler,
 			MenuDisplay);
@@ -757,9 +684,6 @@ void MenuDisplay_SelectIsContinuousCycle(void)
 
 void MenuDisplay_SelectIsContinuousCycleHandler(uint8_t cycleTypeIndex)
 {
-	free(MenuDisplay_CycleTypesNames);
-	MenuDisplay_CycleTypesNames = NULL;
-
 	FoxState.Cycle.IsContinuous = MenuDisplay_IndexToCycleType(cycleTypeIndex);
 	PendingCommandsFlags.NeedToSetCycle = true;
 
@@ -832,12 +756,9 @@ void MenuDisplay_EnterEndingToneDurationOnEnterHandler(int32_t duration)
 }
 
 
-char* MenuDisplay_FormatEndingToneDuration(int32_t duration)
+void MenuDisplay_FormatEndingToneDuration(int32_t duration, char buffer[YHL_NUMBER_INPUT_DISPLAY_FORMATTER_BUFFER_SIZE])
 {
-	char* buffer = malloc(32);
-	snprintf(buffer, 32, "%ds", duration);
-
-	return buffer;
+	snprintf(buffer, YHL_NUMBER_INPUT_DISPLAY_FORMATTER_BUFFER_SIZE, "%ds", duration);
 }
 
 
@@ -1019,12 +940,9 @@ void MenuDisplay_EnterTxPowerOnEnterHandler(int32_t power)
 }
 
 
-char* MenuDisplay_FormatTxPower(int32_t TxPower)
+void MenuDisplay_FormatTxPower(int32_t TxPower, char buffer[YHL_NUMBER_INPUT_DISPLAY_FORMATTER_BUFFER_SIZE])
 {
-	char* buffer = malloc(8);
-	snprintf(buffer, 8, "%.1f W", TxPower / (float)YHL_MENU_TX_POWER_MULTIPLIER);
-
-	return buffer;
+	snprintf(buffer, YHL_NUMBER_INPUT_DISPLAY_FORMATTER_BUFFER_SIZE, "%.1f W", TxPower / (float)YHL_MENU_TX_POWER_MULTIPLIER);
 }
 
 void MenuDisplay_ShowArmedWarning(void)

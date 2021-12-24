@@ -13,7 +13,7 @@ void NumberInputDisplay_Show(char* title,
 		int32_t maxValue,
 		int32_t initialValue,
 		int32_t step,
-		char* (*formatter)(int32_t valueToFormat),
+		void (*formatter)(int32_t valueToFormat, char buffer[YHL_NUMBER_INPUT_DISPLAY_FORMATTER_BUFFER_SIZE]),
 		void (*onCloseHandler)(int32_t enteredValue),
 		FoxDisplayEnum previousDisplay)
 {
@@ -123,7 +123,8 @@ void NumberInputDisplay_Display(void)
 		usableYSpace = 0;
 	}
 
-	char* valueText = NumberInputDisplay_Formatter(NumberInputDisplay_CurrentValue);
+	char valueText[YHL_NUMBER_INPUT_DISPLAY_FORMATTER_BUFFER_SIZE];
+	NumberInputDisplay_Formatter(NumberInputDisplay_CurrentValue, valueText);
 
 	uint16_t valueWidth;
 	uint16_t valueHeight;
@@ -137,8 +138,6 @@ void NumberInputDisplay_Display(void)
 
 	int32_t valueYShift = ((usableYSpace - valueHeight) / 2) + titleHeight;
 	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, (uint16_t)valueXShift, (uint16_t)valueYShift, NULL, NULL, false, valueText);
-
-	free(valueText);
 
 	/* Buttons */
 	strncpy(LeftButton.Text, "OK", YHL_MAX_BUTTON_TEXT_MEMORY_SIZE);

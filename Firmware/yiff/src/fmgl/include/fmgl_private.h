@@ -57,6 +57,11 @@
 #define FMGL_PRIV_XBM_INACTIVE_COLOR_INDEX 1
 #define FMGL_PRIV_XBM_COLORS_NUMBER 2
 
+/**
+ * Maximal allowed substring length for FMGL_Priv_RenderSubstring()
+ */
+#define FMGL_PRIV_MAX_SUBSTRING_LENGTH 63
+
 
 /**
  * Returns true if pixel at given coordinates is active, false otherwise.

@@ -67,9 +67,7 @@ void InitRTC(void)
 
 	/* We have no listeners initially */
 	RtcOnNewSecondListenersCount = 0;
-	RtcOnNewSecondListeners = malloc(0);
 	RtcDateAndTimeChangeListenersCount = 0;
-	RtcDateAndTimeChangeListeners = malloc(0);
 }
 
 void RTC_CallOnDateOrTimeChangeListeners(void)
@@ -128,28 +126,24 @@ void RTC_Poll(void)
 
 void RTC_AddOnNewSecondListener(void (*listener)(void))
 {
-	if (255 == RtcOnNewSecondListenersCount)
+	if (RtcOnNewSecondListenersCount >= YHL_MAX_ON_NEW_SECOND_LISTENERS)
 	{
 		/* No more, please */
 		SelfDiagnostics_HaltOnFailure(YhlFailureCause_TooMuchSecondChangeListeners);
 	}
 
 	RtcOnNewSecondListenersCount ++;
-	RtcOnNewSecondListeners = realloc(RtcOnNewSecondListeners, RtcOnNewSecondListenersCount * sizeof(void*));
-
 	RtcOnNewSecondListeners[RtcOnNewSecondListenersCount - 1] = listener;
 }
 
 void RTC_AddOnDateOrTimeChangeListener(void (*listener)(void))
 {
-	if (255 == RtcDateAndTimeChangeListenersCount)
+	if (RtcDateAndTimeChangeListenersCount >= YHL_MAX_ON_DATE_AND_TIME_CHANGE_LISTENERS)
 	{
 		SelfDiagnostics_HaltOnFailure(YhlFailureCause_TooMuchDateOrTimeListeners);
 	}
 
 	RtcDateAndTimeChangeListenersCount ++;
-	RtcDateAndTimeChangeListeners = realloc(RtcDateAndTimeChangeListeners, RtcDateAndTimeChangeListenersCount * sizeof(void*));
-
 	RtcDateAndTimeChangeListeners[RtcDateAndTimeChangeListenersCount - 1] = listener;
 }
 

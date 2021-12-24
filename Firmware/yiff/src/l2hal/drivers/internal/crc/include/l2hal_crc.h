@@ -15,6 +15,11 @@
 #include <l2hal_errors.h>
 
 /**
+ * Maximal buffer size
+ */
+#define L2HAL_CRC_MAX_BUFFER_SIZE 128
+
+/**
  * CRC context
  */
 typedef struct

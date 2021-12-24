@@ -26,7 +26,7 @@
 /**
  * Maximal length of item's text
  */
-#define YHL_MENU_MAX_ITEM_TEXT_LENGTH 32
+#define YHL_MENU_MAX_ITEM_TEXT_LENGTH 20
 #define YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE (YHL_MENU_MAX_ITEM_TEXT_LENGTH + 1)
 
 /**
@@ -34,6 +34,16 @@
  */
 #define YHL_MENU_MAX_LEFT_BUTTON_TEXT_LENGTH 8
 #define YHL_MENU_MAX_LEFT_BUTTON_TEXT_MEMORY_SIZE (YHL_MENU_MAX_LEFT_BUTTON_TEXT_LENGTH + 1)
+
+/**
+ * Max nodes count in menu node
+ */
+#define YHL_MENU_MAX_NODES_COUNT 5
+
+/**
+ * Max leaves in menu node
+ */
+#define YHL_MENU_MAX_LEAVES_COUNT 4
 
 
 /**
@@ -109,9 +119,9 @@ typedef struct
 	uint8_t NodesCount;
 
 	/**
-	 * Pointer to nodes array
+	 * Pointers to sub-nodes
 	 */
-	void* Nodes;
+	uintptr_t Nodes[YHL_MENU_MAX_NODES_COUNT];
 
 	/**
 	 * How many leaves this node have
@@ -119,9 +129,9 @@ typedef struct
 	uint8_t LeavesCount;
 
 	/**
-	 * Pointer to pointers to leaves
+	 * Array of pointers to leaves
 	 */
-	const MenuLeaf** Leaves;
+	const MenuLeaf* LeavesPtrs[YHL_MENU_MAX_LEAVES_COUNT];
 }
 MenuNode;
 

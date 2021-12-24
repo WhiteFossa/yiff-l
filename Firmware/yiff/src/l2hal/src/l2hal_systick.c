@@ -39,16 +39,13 @@
 
 void L2HAL_SysTick_Init(void)
 {
-	L2HAL_SysTick_Context.Handlers = malloc(0);
+	L2HAL_SysTick_Context.HandlersCount = 0;
 }
 
 void L2HAL_SysTick_RegisterHandler(void (*handler)(void))
 {
-	/* Allocating memory for new hanlder */
-	L2HAL_SysTick_Context.Handlers = realloc(L2HAL_SysTick_Context.Handlers, (L2HAL_SysTick_Context.HandlersCount + 1) * sizeof(void*));
-	if (NULL == L2HAL_SysTick_Context.Handlers)
+	if (L2HAL_SysTick_Context.HandlersCount >= L2HAL_SYSTICK_MAX_HANDLERS)
 	{
-		/* Realloc failed */
 		L2HAL_Error(Generic);
 	}
 

@@ -16,17 +16,17 @@
 /**
  * Max length + 1 for fox codes names
  */
-#define YHL_MENU_FOX_CODES_MEMORY_SIZE 17U
+#define YHL_MENU_FOX_CODES_MEMORY_SIZE 11U
 
 /**
  * Max length + 1 for fox speeds names
  */
-#define YHL_MENU_FOX_SPEEDS_MEMORY_SIZE 17U
+#define YHL_MENU_FOX_SPEEDS_MEMORY_SIZE 5U
 
 /**
  * Max length + 1 for cycle types names
  */
-#define YHL_MENU_CYCLE_TYPE_MEMORY_SIZE 17U
+#define YHL_MENU_CYCLE_TYPE_MEMORY_SIZE 4U
 
 /**
  * Maximal ending tone duration in seconds
@@ -64,6 +64,31 @@
 #define YHL_MENU_MAX_TX_POWER (YHL_MAX_POWER_80M * YHL_MENU_TX_POWER_MULTIPLIER)
 
 /**
+ * How many frequency ranges do we have
+ */
+#define YHL_MENU_FREQUENCY_RANGES_COUNT 2U
+
+/**
+ * How many codes do we have
+ */
+#define YHL_MENU_CODES_COUNT 7U
+
+/**
+ * How many fox speeds do we have
+ */
+#define YHL_MENU_SPEEDS_COUNT 2U
+
+/**
+ * How many cycle types do we have
+ */
+#define YHL_MENU_CYCLES_TYPES_COUNT 2U
+
+/**
+ * Max possible nodes + leaves
+ */
+#define YHL_MENU_MAX_LINES_COUNT 9U
+
+/**
  * What happened on menu item
  */
 typedef enum
@@ -82,9 +107,54 @@ MenuActionEnum;
 MenuNode MenuDisplay_RootNode;
 
 /**
- * Current menu node
+ * Clock node
  */
-MenuNode MenuDisplay_CurrentNode;
+MenuNode MenuDisplay_ClockNode;
+
+/**
+ * Profile settings node
+ */
+MenuNode MenuDisplay_ProfileSettingsNode;
+
+/**
+ * Edit current profile node
+ */
+MenuNode MenuDisplay_EditCurrentProfileNode;
+
+/**
+ * Frequency settings node
+ */
+MenuNode MenuDisplay_FrequencySettingsNode;
+
+/**
+ * Code and speed settings node
+ */
+MenuNode MenuDisplay_CodeAndSpeedSettingsNode;
+
+/**
+ * Cycle settings node
+ */
+MenuNode MenuDisplay_CycleSettingsNode;
+
+/**
+ * Run times menu node
+ */
+MenuNode MenuDisplay_RunTimesSettingsNode;
+
+/**
+ * Tx power settings menu node
+ */
+MenuNode MenuDisplay_TxPowerSettingsNode;
+
+/**
+ * Arming settings menu node
+ */
+MenuNode MenuDisplay_ArmingSettingsNode;
+
+/**
+ * Pointer to current menu node
+ */
+MenuNode* MenuDisplay_CurrentNodePtr;
 
 /**
  * Index of active line
@@ -98,9 +168,8 @@ uint8_t MenuDisplay_CurrentNodeLinesCount;
 
 /**
  * Current node lines, sub-nodes first, leaves then.
- * MenuDisplay_CurrentNodeLines + lineNumber * YHK_MENU_MAX_ITEM_TEXT_MEMORY_SIZE
  */
-void* MenuDisplay_CurrentNodeLines;
+char MenuDisplay_CurrentNodeLines[YHL_MENU_MAX_LINES_COUNT][YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE];
 
 /**
  * How many lines are currently displayed
@@ -115,27 +184,27 @@ uint8_t MenuDisplay_BaseLine;
 /**
  * Names of fox profiles
  */
-char* MenuDisplay_ProfilesNames;
+char MenuDisplay_ProfilesNames[YHL_MAX_PROFILES_COUNT][YHL_PROFILE_NAME_MEMORY_SIZE];
 
 /**
  * Names of frequency ranges
  */
-char* MenuDisplay_FrequencyRangesNames;
+char MenuDisplay_FrequencyRangesNames[YHL_MENU_FREQUENCY_RANGES_COUNT][YHL_MENU_FREQUENCY_RANGE_MEMORY_SIZE];
 
 /**
  * Names of fox codes
  */
-char* MenuDisplay_FoxCodesNames;
+char MenuDisplay_FoxCodesNames[YHL_MENU_CODES_COUNT][YHL_MENU_FOX_CODES_MEMORY_SIZE];
 
 /**
  * Names of fox speeds
  */
-char* MenuDisplay_FoxSpeedsNames;
+char MenuDisplay_FoxSpeedsNames[YHL_MENU_SPEEDS_COUNT][YHL_MENU_FOX_SPEEDS_MEMORY_SIZE];
 
 /**
  * Names of cycle types
  */
-char* MenuDisplay_CycleTypesNames;
+char MenuDisplay_CycleTypesNames[YHL_MENU_CYCLES_TYPES_COUNT][YHL_MENU_CYCLE_TYPE_MEMORY_SIZE];
 
 /**
  * Draw menu lines with selected line
@@ -239,9 +308,8 @@ void MenuDisplay_EnterFrequencyOnEnterHandler(int32_t frequency);
 
 /**
  * Used to format frequency in frequency input display.
- * Do not forget to free result!
  */
-char* MenuDisplay_FormatFrequency(int32_t frequencyHz);
+void MenuDisplay_FormatFrequency(int32_t frequencyHz, char buffer[YHL_NUMBER_INPUT_DISPLAY_FORMATTER_BUFFER_SIZE]);
 
 /**
  * Call this to select fox code
@@ -305,9 +373,8 @@ void MenuDisplay_EnterEndingToneDurationOnEnterHandler(int32_t duration);
 
 /**
  * Used to format ending tone duration in ending tone duration input display.
- * Do not forget to free result!
  */
-char* MenuDisplay_FormatEndingToneDuration(int32_t duration);
+void MenuDisplay_FormatEndingToneDuration(int32_t duration, char buffer[YHL_NUMBER_INPUT_DISPLAY_FORMATTER_BUFFER_SIZE]);
 
 /**
  * Call this to show "cycle is continuous" warning
@@ -376,9 +443,8 @@ void MenuDisplay_EnterTxPowerOnEnterHandler(int32_t power);
 
 /**
  * Used to format TX power in TX power input display.
- * Do not forget to free result!
  */
-char* MenuDisplay_FormatTxPower(int32_t TxPower);
+void MenuDisplay_FormatTxPower(int32_t TxPower, char buffer[YHL_NUMBER_INPUT_DISPLAY_FORMATTER_BUFFER_SIZE]);
 
 /**
  * Call it to show warning message about armed fox

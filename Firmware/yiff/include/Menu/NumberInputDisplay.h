@@ -23,6 +23,8 @@ extern FoxStateStruct FoxState;
  */
 #define YHL_NUMBER_INPUT_DISPLAY_TITLE_TOP 0
 
+#define YHL_NUMBER_INPUT_DISPLAY_FORMATTER_BUFFER_SIZE 32
+
 
 /**
  * Call it to show number input display
@@ -32,7 +34,7 @@ void NumberInputDisplay_Show(char* title,
 		int32_t maxValue,
 		int32_t initialValue,
 		int32_t step,
-		char* (*formatter)(int32_t valueToFormat),
+		void (*formatter)(int32_t valueToFormat, char buffer[YHL_NUMBER_INPUT_DISPLAY_FORMATTER_BUFFER_SIZE]),
 		void (*onCloseHandler)(int32_t enteredValue),
 		FoxDisplayEnum previousDisplay);
 
