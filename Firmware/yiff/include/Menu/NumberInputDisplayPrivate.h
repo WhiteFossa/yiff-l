@@ -13,7 +13,7 @@
 /**
  * Pointer to function, which will be used to format value to display.
  */
-char* (*NumberInputDisplay_Formatter)(int32_t valueToFormat);
+void (*NumberInputDisplay_Formatter)(int32_t valueToFormat, char buffer[YHL_NUMBER_INPUT_DISPLAY_FORMATTER_BUFFER_SIZE]);
 
 /**
  * Pointer to function, which will be called when display is closed

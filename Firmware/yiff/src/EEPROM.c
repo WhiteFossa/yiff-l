@@ -82,7 +82,7 @@ bool EEPROM_CheckConstantHeader(EEPROMConstantHeaderStruct* constantHeader)
 {
 	uint32_t existingCRC = constantHeader->CRCSum;
 	constantHeader->CRCSum = 0;
-	uint32_t calculatedCRC = L2HAL_CRC_Calculate(&CRC_Context, (uint8_t*)constantHeader, sizeof(EEPROMConstantHeaderStruct));
+	volatile uint32_t calculatedCRC = L2HAL_CRC_Calculate(&CRC_Context, (uint8_t*)constantHeader, sizeof(EEPROMConstantHeaderStruct));
 	bool result = existingCRC == calculatedCRC;
 	constantHeader->CRCSum = existingCRC;
 
@@ -106,7 +106,7 @@ bool EEPROM_CheckHeader(EEPROMHeaderStruct* header)
 {
 	uint32_t existingCRC = header->CRCSum;
 	header->CRCSum = 0;
-	uint32_t calculatedCRC = L2HAL_CRC_Calculate(&CRC_Context, (uint8_t*)header, sizeof(EEPROMHeaderStruct));
+	volatile uint32_t calculatedCRC = L2HAL_CRC_Calculate(&CRC_Context, (uint8_t*)header, sizeof(EEPROMHeaderStruct));
 	bool result = existingCRC == calculatedCRC;
 	header->CRCSum = existingCRC;
 
@@ -194,7 +194,7 @@ bool EEPROM_CheckProfile(EEPROMProfileStruct* profile)
 {
 	uint32_t existingCRC = profile->CRCSum;
 	profile->CRCSum = 0;
-	uint32_t calculatedCRC = L2HAL_CRC_Calculate(&CRC_Context, (uint8_t*)profile, sizeof(EEPROMProfileStruct));
+	volatile uint32_t calculatedCRC = L2HAL_CRC_Calculate(&CRC_Context, (uint8_t*)profile, sizeof(EEPROMProfileStruct));
 	bool result = existingCRC == calculatedCRC;
 	profile->CRCSum = existingCRC;
 

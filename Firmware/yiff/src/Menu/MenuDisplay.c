@@ -97,9 +97,8 @@ void MenuDisplay_InitMenuDisplay(void)
 
 	/* Root menu leaves */
 	MenuDisplay_RootNode.LeavesCount = 0;
+
 	MenuDisplay_ActiveLineIndex = 0;
-	MenuDisplay_CurrentNodeLines = NULL;
-	MenuDisplay_ProfilesNames = NULL;
 
 	MenuDisplay_SwitchNode(&MenuDisplay_RootNode);
 }
@@ -108,19 +107,12 @@ void MenuDisplay_InitMenuDisplay(void)
 void MenuDisplay_SwitchNode(MenuNode* nodePtr)
 {
 	MenuDisplay_CurrentNodePtr = nodePtr;
-
 	MenuDisplay_CurrentNodeLinesCount = MenuDisplay_CurrentNodePtr->NodesCount + MenuDisplay_CurrentNodePtr->LeavesCount;
-	if (MenuDisplay_CurrentNodeLines != NULL)
-	{
-		free(MenuDisplay_CurrentNodeLines);
-	}
-
-	MenuDisplay_CurrentNodeLines = malloc(MenuDisplay_CurrentNodeLinesCount * YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
 
 	/* Nodes first */
 	for (uint8_t nodesCounter = 0; nodesCounter < MenuDisplay_CurrentNodePtr->NodesCount; nodesCounter ++)
 	{
-		char* dst = (char*)(MenuDisplay_CurrentNodeLines + nodesCounter * YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
+		char* dst = MenuDisplay_CurrentNodeLines[nodesCounter];
 		MenuNode* nodePtr = (MenuNode*)MenuDisplay_CurrentNodePtr->Nodes[nodesCounter];
 		const char* src = nodePtr->NamePtr;
 		strncpy(dst, src, YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
@@ -130,7 +122,7 @@ void MenuDisplay_SwitchNode(MenuNode* nodePtr)
 	for (uint8_t leavesCounter = 0; leavesCounter < MenuDisplay_CurrentNodePtr->LeavesCount; leavesCounter ++)
 	{
 		uint8_t baseCount = MenuDisplay_CurrentNodePtr->NodesCount;
-		char* dst = (char*)(MenuDisplay_CurrentNodeLines + (baseCount + leavesCounter) * YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
+		char* dst = MenuDisplay_CurrentNodeLines[baseCount + leavesCounter];
 		const char* src = MenuDisplay_CurrentNodePtr->LeavesPtrs[leavesCounter]->Name;
 		strncpy(dst, src, YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
 	}
@@ -192,7 +184,7 @@ void MenuDisplay_DrawMenuDisplay(void)
 
 	for (uint8_t linesCounter = 0; linesCounter < MenuDisplay_WindowLinesCount; linesCounter ++)
 	{
-		char* src = (char*)(MenuDisplay_CurrentNodeLines + (MenuDisplay_BaseLine + linesCounter) * YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
+		char* src = MenuDisplay_CurrentNodeLines[MenuDisplay_BaseLine + linesCounter];
 		char* dst = window[linesCounter];
 		strncpy(dst, src, YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE);
 	}
@@ -424,11 +416,10 @@ void MenuDisplay_SelectCurrentProfile(void)
 		return;
 	}
 
-	MenuDisplay_ProfilesNames = malloc(YHL_PROFILE_NAME_MEMORY_SIZE * EEPROM_Header.NumberOfProfiles);
 	for (uint8_t profile = 0; profile < EEPROM_Header.NumberOfProfiles; profile ++)
 	{
 		char* src = EEPROM_GetProfile(profile).Name;
-		char* dst = MenuDisplay_ProfilesNames + YHL_PROFILE_NAME_MEMORY_SIZE * profile;
+		char* dst = MenuDisplay_ProfilesNames[profile];
 		strncpy(dst, src, YHL_PROFILE_NAME_MEMORY_SIZE);
 	}
 
@@ -443,9 +434,6 @@ void MenuDisplay_SelectCurrentProfile(void)
 
 void MenuDisplay_SelectCurrentProfileCloseHandler(uint8_t profileIndex)
 {
-	free(MenuDisplay_ProfilesNames);
-	MenuDisplay_ProfilesNames = NULL;
-
 	if (profileIndex != EEPROM_Header.ProfileInUse)
 	{
 		EEPROM_SwitchProfile(profileIndex);
@@ -462,17 +450,15 @@ void MenuDisplay_SelectFrequencyRange(void)
 		return;
 	}
 
-	uint8_t rangesCount = 2;
-	MenuDisplay_FrequencyRangesNames = malloc(rangesCount * YHL_MENU_FREQUENCY_RANGE_MEMORY_SIZE);
-	strncpy(MenuDisplay_FrequencyRangesNames, "3.5MHz", YHL_MENU_FREQUENCY_RANGE_MEMORY_SIZE);
-	strncpy(MenuDisplay_FrequencyRangesNames + YHL_MENU_FREQUENCY_RANGE_MEMORY_SIZE, "144MHz", YHL_MENU_FREQUENCY_RANGE_MEMORY_SIZE);
+	strncpy(MenuDisplay_FrequencyRangesNames[0], "3.5MHz", YHL_MENU_FREQUENCY_RANGE_MEMORY_SIZE);
+	strncpy(MenuDisplay_FrequencyRangesNames[1], "144MHz", YHL_MENU_FREQUENCY_RANGE_MEMORY_SIZE);
 
 	uint8_t activeRangeIndex = MenuDisplay_GetFrequencyRangeIndex(EEPROM_CurrentProfile.Frequency.Is144MHz);
 
 	ItemSelectionDisplay_Show("Select range",
 			MenuDisplay_FrequencyRangesNames,
 			YHL_MENU_FREQUENCY_RANGE_MEMORY_SIZE,
-			rangesCount,
+			YHL_MENU_FREQUENCY_RANGES_COUNT,
 			activeRangeIndex,
 			&MenuDisplay_SelectFrequencyRangeCloseHandler,
 			MenuDisplay);
@@ -480,9 +466,6 @@ void MenuDisplay_SelectFrequencyRange(void)
 
 void MenuDisplay_SelectFrequencyRangeCloseHandler(uint8_t rangeIndex)
 {
-	free(MenuDisplay_FrequencyRangesNames);
-	MenuDisplay_FrequencyRangesNames = NULL;
-
 	uint8_t currentRangeIndex = MenuDisplay_GetFrequencyRangeIndex(FoxState.Frequency.Is144MHz);
 	if (currentRangeIndex == rangeIndex)
 	{
@@ -574,12 +557,9 @@ void MenuDisplay_EnterFrequency(void)
 	}
 }
 
-char* MenuDisplay_FormatFrequency(int32_t frequencyHz)
+void MenuDisplay_FormatFrequency(int32_t frequencyHz, char buffer[YHL_NUMBER_INPUT_DISPLAY_FORMATTER_BUFFER_SIZE])
 {
-	char* buffer = malloc(32);
-	snprintf(buffer, 32, "%.3f MHz", frequencyHz / 1000000.0f);
-
-	return buffer;
+	snprintf(buffer, YHL_NUMBER_INPUT_DISPLAY_FORMATTER_BUFFER_SIZE, "%.3f MHz", frequencyHz / 1000000.0f);
 }
 
 void MenuDisplay_EnterFrequencyOnEnterHandler(int32_t frequency)
@@ -598,20 +578,18 @@ void MenuDisplay_SelectCode(void)
 		return;
 	}
 
-	uint8_t codesCount = 7;
-	MenuDisplay_FoxCodesNames = malloc(codesCount * YHL_MENU_FOX_CODES_MEMORY_SIZE);
-	strncpy(MenuDisplay_FoxCodesNames, "Finish (MO)", YHL_MENU_FOX_CODES_MEMORY_SIZE);
-	strncpy(MenuDisplay_FoxCodesNames + YHL_MENU_FOX_CODES_MEMORY_SIZE, "1 (MOE)", YHL_MENU_FOX_CODES_MEMORY_SIZE);
-	strncpy(MenuDisplay_FoxCodesNames + 2 * YHL_MENU_FOX_CODES_MEMORY_SIZE, "2 (MOI)", YHL_MENU_FOX_CODES_MEMORY_SIZE);
-	strncpy(MenuDisplay_FoxCodesNames + 3 * YHL_MENU_FOX_CODES_MEMORY_SIZE, "3 (MOS)", YHL_MENU_FOX_CODES_MEMORY_SIZE);
-	strncpy(MenuDisplay_FoxCodesNames + 4 * YHL_MENU_FOX_CODES_MEMORY_SIZE, "4 (MOH)", YHL_MENU_FOX_CODES_MEMORY_SIZE);
-	strncpy(MenuDisplay_FoxCodesNames + 5 * YHL_MENU_FOX_CODES_MEMORY_SIZE, "5 (MO5)", YHL_MENU_FOX_CODES_MEMORY_SIZE);
-	strncpy(MenuDisplay_FoxCodesNames + 6 * YHL_MENU_FOX_CODES_MEMORY_SIZE, "Beacon (S)", YHL_MENU_FOX_CODES_MEMORY_SIZE);
+	strncpy(MenuDisplay_FoxCodesNames[0], "Finish (MO)", YHL_MENU_FOX_CODES_MEMORY_SIZE);
+	strncpy(MenuDisplay_FoxCodesNames[1], "1 (MOE)", YHL_MENU_FOX_CODES_MEMORY_SIZE);
+	strncpy(MenuDisplay_FoxCodesNames[2], "2 (MOI)", YHL_MENU_FOX_CODES_MEMORY_SIZE);
+	strncpy(MenuDisplay_FoxCodesNames[3], "3 (MOS)", YHL_MENU_FOX_CODES_MEMORY_SIZE);
+	strncpy(MenuDisplay_FoxCodesNames[4], "4 (MOH)", YHL_MENU_FOX_CODES_MEMORY_SIZE);
+	strncpy(MenuDisplay_FoxCodesNames[5], "5 (MO5)", YHL_MENU_FOX_CODES_MEMORY_SIZE);
+	strncpy(MenuDisplay_FoxCodesNames[6], "Beacon (S)", YHL_MENU_FOX_CODES_MEMORY_SIZE);
 
 	ItemSelectionDisplay_Show("Select code",
 			MenuDisplay_FoxCodesNames,
 			YHL_MENU_FOX_CODES_MEMORY_SIZE,
-			codesCount,
+			YHL_MENU_CODES_COUNT,
 			(uint8_t)FoxState.Code,
 			&MenyDisplay_SelectCodeCloseHandler,
 			MenuDisplay);
@@ -620,9 +598,6 @@ void MenuDisplay_SelectCode(void)
 
 void MenyDisplay_SelectCodeCloseHandler(uint8_t codeIndex)
 {
-	free(MenuDisplay_FoxCodesNames);
-	MenuDisplay_FoxCodesNames = NULL;
-
 	FoxState.Code = (FoxCodeEnum)codeIndex;
 	PendingCommandsFlags.NeedToSetCode = true;
 
@@ -638,16 +613,13 @@ void MenuDisplay_SelectFoxSpeed(void)
 		return;
 	}
 
-	uint8_t speedsCount = 2;
-	MenuDisplay_FoxSpeedsNames = malloc(speedsCount * YHL_MENU_FOX_SPEEDS_MEMORY_SIZE);
-	strncpy(MenuDisplay_FoxSpeedsNames, "Slow", YHL_MENU_FOX_SPEEDS_MEMORY_SIZE);
-	strncpy(MenuDisplay_FoxSpeedsNames + YHL_MENU_FOX_SPEEDS_MEMORY_SIZE, "Fast", YHL_MENU_FOX_SPEEDS_MEMORY_SIZE);
-
+	strncpy(MenuDisplay_FoxSpeedsNames[0], "Slow", YHL_MENU_FOX_SPEEDS_MEMORY_SIZE);
+	strncpy(MenuDisplay_FoxSpeedsNames[1], "Fast", YHL_MENU_FOX_SPEEDS_MEMORY_SIZE);
 
 	ItemSelectionDisplay_Show("Select speed",
 			MenuDisplay_FoxSpeedsNames,
 			YHL_MENU_FOX_SPEEDS_MEMORY_SIZE,
-			speedsCount,
+			YHL_MENU_SPEEDS_COUNT,
 			MenuDisplay_FoxSpeedToIndex(FoxState.IsFast),
 			&MenyDisplay_SelectFoxSpeedCloseHandler,
 			MenuDisplay);
@@ -656,9 +628,6 @@ void MenuDisplay_SelectFoxSpeed(void)
 
 void MenyDisplay_SelectFoxSpeedCloseHandler(uint8_t speedIndex)
 {
-	free(MenuDisplay_FoxSpeedsNames);
-	MenuDisplay_FoxSpeedsNames = NULL;
-
 	FoxState.IsFast = MenuDisplay_IndexToFoxSpeed(speedIndex);
 	PendingCommandsFlags.NeedToSetSpeed = true;
 
@@ -700,16 +669,13 @@ void MenuDisplay_SelectIsContinuousCycle(void)
 		return;
 	}
 
-	uint8_t cycleTypesCount = 2;
-	MenuDisplay_CycleTypesNames = malloc(cycleTypesCount * YHL_MENU_CYCLE_TYPE_MEMORY_SIZE);
-	strncpy(MenuDisplay_CycleTypesNames, "Yes", YHL_MENU_CYCLE_TYPE_MEMORY_SIZE);
-	strncpy(MenuDisplay_CycleTypesNames + YHL_MENU_CYCLE_TYPE_MEMORY_SIZE, "No", YHL_MENU_CYCLE_TYPE_MEMORY_SIZE);
-
+	strncpy(MenuDisplay_CycleTypesNames[0], "Yes", YHL_MENU_CYCLE_TYPE_MEMORY_SIZE);
+	strncpy(MenuDisplay_CycleTypesNames[1], "No", YHL_MENU_CYCLE_TYPE_MEMORY_SIZE);
 
 	ItemSelectionDisplay_Show("Is continuous?",
 			MenuDisplay_CycleTypesNames,
 			YHL_MENU_CYCLE_TYPE_MEMORY_SIZE,
-			cycleTypesCount,
+			YHL_MENU_CYCLES_TYPES_COUNT,
 			MenuDisplay_CycleTypeToIndex(FoxState.Cycle.IsContinuous),
 			&MenuDisplay_SelectIsContinuousCycleHandler,
 			MenuDisplay);
@@ -718,9 +684,6 @@ void MenuDisplay_SelectIsContinuousCycle(void)
 
 void MenuDisplay_SelectIsContinuousCycleHandler(uint8_t cycleTypeIndex)
 {
-	free(MenuDisplay_CycleTypesNames);
-	MenuDisplay_CycleTypesNames = NULL;
-
 	FoxState.Cycle.IsContinuous = MenuDisplay_IndexToCycleType(cycleTypeIndex);
 	PendingCommandsFlags.NeedToSetCycle = true;
 
@@ -793,12 +756,9 @@ void MenuDisplay_EnterEndingToneDurationOnEnterHandler(int32_t duration)
 }
 
 
-char* MenuDisplay_FormatEndingToneDuration(int32_t duration)
+void MenuDisplay_FormatEndingToneDuration(int32_t duration, char buffer[YHL_NUMBER_INPUT_DISPLAY_FORMATTER_BUFFER_SIZE])
 {
-	char* buffer = malloc(32);
-	snprintf(buffer, 32, "%ds", duration);
-
-	return buffer;
+	snprintf(buffer, YHL_NUMBER_INPUT_DISPLAY_FORMATTER_BUFFER_SIZE, "%ds", duration);
 }
 
 
@@ -980,12 +940,9 @@ void MenuDisplay_EnterTxPowerOnEnterHandler(int32_t power)
 }
 
 
-char* MenuDisplay_FormatTxPower(int32_t TxPower)
+void MenuDisplay_FormatTxPower(int32_t TxPower, char buffer[YHL_NUMBER_INPUT_DISPLAY_FORMATTER_BUFFER_SIZE])
 {
-	char* buffer = malloc(8);
-	snprintf(buffer, 8, "%.1f W", TxPower / (float)YHL_MENU_TX_POWER_MULTIPLIER);
-
-	return buffer;
+	snprintf(buffer, YHL_NUMBER_INPUT_DISPLAY_FORMATTER_BUFFER_SIZE, "%.1f W", TxPower / (float)YHL_MENU_TX_POWER_MULTIPLIER);
 }
 
 void MenuDisplay_ShowArmedWarning(void)
