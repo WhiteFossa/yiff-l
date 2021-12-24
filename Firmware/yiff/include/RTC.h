@@ -12,12 +12,22 @@
 #include <stdlib.h>
 #include <SelfDiagnostics.h>
 
+/**
+ * How much new second listeners we can have
+ */
+#define YHL_MAX_ON_NEW_SECOND_LISTENERS 4U
+
+/**
+ * How much date and time change listeners we can have
+ */
+#define YHL_MAX_ON_DATE_AND_TIME_CHANGE_LISTENERS 4U
+
 extern RTC_HandleTypeDef RtcHandle;
 extern uint8_t PreviousSecond;
 extern uint8_t RtcOnNewSecondListenersCount;
-extern void (**RtcOnNewSecondListeners)(void);
+extern void (*RtcOnNewSecondListeners[YHL_MAX_ON_NEW_SECOND_LISTENERS])(void);
 extern uint8_t RtcDateAndTimeChangeListenersCount;
-extern void (**RtcDateAndTimeChangeListeners)(void);
+extern void (*RtcDateAndTimeChangeListeners[YHL_MAX_ON_DATE_AND_TIME_CHANGE_LISTENERS])(void);
 extern RTC_TimeTypeDef CurrentTime;
 extern RTC_DateTypeDef CurrentDate;
 

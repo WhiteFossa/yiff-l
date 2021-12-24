@@ -8,6 +8,7 @@
 #ifndef INCLUDE_RTCPRIVATE_H_
 #define INCLUDE_RTCPRIVATE_H_
 
+#include <RTC.h>
 
 /**
  * RTC handle
@@ -27,7 +28,7 @@ uint8_t RtcOnNewSecondListenersCount;
 /**
  * This functions listens for new second event.
  */
-void (**RtcOnNewSecondListeners)(void);
+void (*RtcOnNewSecondListeners[YHL_MAX_ON_NEW_SECOND_LISTENERS])(void);
 
 /**
  * How many date and time change listeners we have.
@@ -37,7 +38,7 @@ uint8_t RtcDateAndTimeChangeListenersCount;
 /**
  * This functions listens for date and time change.
  */
-void (**RtcDateAndTimeChangeListeners)(void);
+void (*RtcDateAndTimeChangeListeners[YHL_MAX_ON_DATE_AND_TIME_CHANGE_LISTENERS])(void);
 
 
 #endif /* INCLUDE_RTCPRIVATE_H_ */

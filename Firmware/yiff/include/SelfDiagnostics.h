@@ -520,6 +520,11 @@ typedef enum
 	 * Fox is already armed
 	 */
 	YhlFailureCause_AlreadyArmed = 100,
+
+	/**
+	 * Null pointer is given to TimeInputDisplay_CostructTimeFormatString()
+	 */
+	YhlFailureCause_NullPtrInTimeInputDisplayCostructTimeFormatString = 101,
 }
 YhlFailureCausesEnum;
 

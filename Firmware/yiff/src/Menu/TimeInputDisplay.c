@@ -78,10 +78,11 @@ void TimeInputDisplay_Display()
 		usableYSpace = 0;
 	}
 
-	char* formatString = TimeInputDisplay_CostructTimeFormatString(TimeInputDisplay_ActiveValue);
+	char formatString[32];
+	TimeInputDisplay_CostructTimeFormatString(TimeInputDisplay_ActiveValue, formatString);
+
 	char valueText[32];
 	snprintf(valueText, 32, formatString, TimeInputDisplay_HoursValue, TimeInputDisplay_MinutesValue, TimeInputDisplay_SecondsValue);
-	free(formatString);
 
 	uint16_t valueWidth;
 	uint16_t valueHeight;
@@ -105,29 +106,30 @@ void TimeInputDisplay_Display()
 	FMGL_API_PushFramebuffer(&fmglContext);
 }
 
-char* TimeInputDisplay_CostructTimeFormatString(TimeInputDisplay_ActiveValueEnum activeValue)
+void TimeInputDisplay_CostructTimeFormatString(TimeInputDisplay_ActiveValueEnum activeValue, char* resultPtr)
 {
-	char* buffer = malloc(32);
+	if (NULL == resultPtr)
+	{
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_NullPtrInTimeInputDisplayCostructTimeFormatString);
+	}
 
 	switch (activeValue)
 	{
 		case TimeInputDisplay_Hours:
-			strncpy(buffer, "[%02d] : %02d : %02d", 32);
+			strncpy(resultPtr, "[%02d] : %02d : %02d", 32);
 			break;
 
 		case TimeInputDisplay_Minutes:
-			strncpy(buffer, "%02d : [%02d] : %02d", 32);
+			strncpy(resultPtr, "%02d : [%02d] : %02d", 32);
 			break;
 
 		case TimeInputDisplay_Seconds:
-			strncpy(buffer, "%02d : %02d : [%02d]", 32);
+			strncpy(resultPtr, "%02d : %02d : [%02d]", 32);
 			break;
 
 		default:
 			SelfDiagnostics_HaltOnFailure(YhlFailureCause_WrongActiveValueInTimeInputDisplayCostructTimeFormatString);
 	}
-
-	return buffer;
 }
 
 void TimeInputDisplay_LeftClickHandler()

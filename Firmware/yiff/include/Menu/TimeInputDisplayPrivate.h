@@ -103,9 +103,7 @@ void TimeInputDisplay_Close(void);
 
 /**
  * Constructs time formatting string based on currently active value.
- *
- * Do not forget to free the result!
  */
-char* TimeInputDisplay_CostructTimeFormatString(TimeInputDisplay_ActiveValueEnum activeValue);
+void TimeInputDisplay_CostructTimeFormatString(TimeInputDisplay_ActiveValueEnum activeValue, char* resultPtr);
 
 #endif /* INCLUDE_MENU_TIMEINPUTDISPLAYPRIVATE_H_ */
