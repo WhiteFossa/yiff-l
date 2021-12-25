@@ -430,12 +430,62 @@ void L2HAL_SSD1327_SetGrayscaleTable(L2HAL_SSD1327_ContextStruct* context, uint8
 	}
 }
 
-void L2HAL_SSD1327_PushFramebuffer(L2HAL_SSD1327_ContextStruct* context)
-{
-	L2HAL_SSD1327_SetColumnAddress(context, 0x00U, 0x3FU);
-	L2HAL_SSD1327_SetRowAddresses(context, 0x00U, 0x7FU);
-	L2HAL_SSD1327_WriteData(context, context->Framebuffer, L2HAL_SSD1327_FRAMEBUFFER_SIZE);
-}
+#ifdef L2HAL_SSD1327_MONOCHROME_MODE
+	void L2HAL_SSD1327_PushFramebuffer(L2HAL_SSD1327_ContextStruct* context)
+	{
+		L2HAL_SSD1327_SetColumnAddress(context, 0x00U, 0x3FU);
+		L2HAL_SSD1327_SetRowAddresses(context, 0x00U, 0x7FU);
+
+		uint16_t framebufferIndex;
+		uint8_t framebufferBitmask;
+
+		uint8_t linebufferIndex;
+		bool isMostSignificantNibble;
+
+		for (uint8_t y = 0; y < L2HAL_SSD1327_DISPLAY_HEIGHT; y++)
+		{
+			memset(context->lineBuffer, 0x00, L2HAL_SSD1327_DECOMPRESSED_LINE_SIZE);
+
+			for (uint8_t x = 0; x < L2HAL_SSD1327_DISPLAY_WIDTH; x++)
+			{
+				L2HAL_SSD1327_GetPixelAddressMonochrome(x, y, &framebufferIndex, &framebufferBitmask);
+
+				uint8_t isLit;
+				if ((context->Framebuffer[framebufferIndex] & framebufferBitmask) != 0)
+				{
+					isLit = 0xFFU;
+				}
+				else
+				{
+					isLit = 0x00U;
+				}
+
+				linebufferIndex = x / 2U; // Two pixels per byte
+				isMostSignificantNibble = (x % 2U == 0);
+
+				if (isMostSignificantNibble)
+				{
+					context->lineBuffer[linebufferIndex] |= 0xF0U & isLit;
+				}
+				else
+				{
+					context->lineBuffer[linebufferIndex] |= 0x0FU & isLit;
+				}
+			}
+
+			L2HAL_SSD1327_WriteData(context, context->lineBuffer, L2HAL_SSD1327_DECOMPRESSED_LINE_SIZE);
+			HAL_Delay(L2HAL_SSD1327_PARTIAL_UPDATE_DELAY);
+		}
+	}
+#else
+	void L2HAL_SSD1327_PushFramebuffer(L2HAL_SSD1327_ContextStruct* context)
+	{
+		L2HAL_SSD1327_SetColumnAddress(context, 0x00U, 0x3FU);
+		L2HAL_SSD1327_SetRowAddresses(context, 0x00U, 0x7FU);
+		L2HAL_SSD1327_WriteData(context, context->Framebuffer, L2HAL_SSD1327_FRAMEBUFFER_SIZE);
+	}
+#endif
+
 
 bool L2HAL_SSD1327_GetPixelAddress(uint16_t x, uint16_t y, uint16_t* index, bool* isMostSignificantNibble)
 {
@@ -446,8 +496,21 @@ bool L2HAL_SSD1327_GetPixelAddress(uint16_t x, uint16_t y, uint16_t* index, bool
 
 	uint16_t pixelNumber = y * L2HAL_SSD1327_DISPLAY_WIDTH + x;
 
-	*index = pixelNumber / 2;
-	*isMostSignificantNibble = (pixelNumber % 2 == 0);
+	*index = pixelNumber / 2U;
+	*isMostSignificantNibble = (pixelNumber % 2U == 0);
+
+	return true;
+}
+
+bool L2HAL_SSD1327_GetPixelAddressMonochrome(uint16_t x, uint16_t y, uint16_t* index, uint8_t* mask)
+{
+	if (x > L2HAL_SSD1327_DISPLAY_WIDTH || y > L2HAL_SSD1327_DISPLAY_HEIGHT)
+	{
+		return false;
+	}
+
+	*index = y * L2HAL_SSD1327_COMPRESSED_LINE_SIZE + x / L2HAL_SSD1327_PAGE_WIDTH;
+	*mask = 1 << (x % L2HAL_SSD1327_PAGE_WIDTH);
 
 	return true;
 }
@@ -464,59 +527,116 @@ void L2HAL_SSD1327_SetActiveColor(L2HAL_SSD1327_ContextStruct* context, FMGL_API
 	}
 }
 
-void L2HAL_SSD1327_DrawPixel(L2HAL_SSD1327_ContextStruct* context, uint16_t x, uint16_t y)
-{
-	uint16_t index;
-	bool isMostSignificantNibble;
-
-	if (!L2HAL_SSD1327_GetPixelAddress(x, y, &index, &isMostSignificantNibble))
+#ifdef L2HAL_SSD1327_MONOCHROME_MODE
+	void L2HAL_SSD1327_DrawPixel(L2HAL_SSD1327_ContextStruct* context, uint16_t x, uint16_t y)
 	{
-		return;
+		uint16_t index;
+		uint8_t bitmask;
+
+		if (!L2HAL_SSD1327_GetPixelAddressMonochrome(x, y, &index, &bitmask))
+		{
+			return;
+		}
+
+		uint8_t targetColor;
+		if (context->ActiveColor > 0)
+		{
+			// Lit
+			context->Framebuffer[index] |= bitmask;
+		}
+		else
+		{
+			// Shut
+			context->Framebuffer[index] &= ~bitmask;
+		}
 	}
-
-	if (isMostSignificantNibble)
+#else
+	void L2HAL_SSD1327_DrawPixel(L2HAL_SSD1327_ContextStruct* context, uint16_t x, uint16_t y)
 	{
-		context->Framebuffer[index] &= 0x0FU;
-		context->Framebuffer[index] |= (context->ActiveColor & 0x0FU) << 4;
+		uint16_t index;
+		bool isMostSignificantNibble;
+
+		if (!L2HAL_SSD1327_GetPixelAddress(x, y, &index, &isMostSignificantNibble))
+		{
+			return;
+		}
+
+		if (isMostSignificantNibble)
+		{
+			context->Framebuffer[index] &= 0x0FU;
+			context->Framebuffer[index] |= (context->ActiveColor & 0x0FU) << 4;
+		}
+		else
+		{
+			context->Framebuffer[index] &= 0xF0U;
+			context->Framebuffer[index] |= (context->ActiveColor & 0x0FU);
+		}
 	}
-	else
+#endif
+
+
+#ifdef L2HAL_SSD1327_MONOCHROME_MODE
+	FMGL_API_ColorStruct L2HAL_SSD1327_GetPixel(L2HAL_SSD1327_ContextStruct* context, uint16_t x, uint16_t y)
 	{
-		context->Framebuffer[index] &= 0xF0U;
-		context->Framebuffer[index] |= (context->ActiveColor & 0x0FU);
-	}
-}
+		FMGL_API_ColorStruct result;
+		result.R = 0;
+		result.G = 0;
+		result.B = 0;
 
-FMGL_API_ColorStruct L2HAL_SSD1327_GetPixel(L2HAL_SSD1327_ContextStruct* context, uint16_t x, uint16_t y)
-{
-	FMGL_API_ColorStruct result;
-	result.R = 0;
-	result.G = 0;
-	result.B = 0;
+		uint16_t index;
+		uint8_t bitmask;
 
-	uint16_t index;
-	bool isMostSignificantNibble;
+		if (!L2HAL_SSD1327_GetPixelAddressMonochrome(x, y, &index, &bitmask))
+		{
+			return result;
+		}
 
-	if (!L2HAL_SSD1327_GetPixelAddress(x, y, &index, &isMostSignificantNibble))
-	{
+		uint8_t brightness = context->Framebuffer[index] & bitmask;
+
+		if (brightness != 0)
+		{
+			result.R = FMGL_API_MAX_CHANNEL_BRIGHTNESS;
+			result.G = FMGL_API_MAX_CHANNEL_BRIGHTNESS;
+			result.B = FMGL_API_MAX_CHANNEL_BRIGHTNESS;
+		}
+
 		return result;
 	}
-
-	uint8_t brightness;
-	if (isMostSignificantNibble)
+#else
+	FMGL_API_ColorStruct L2HAL_SSD1327_GetPixel(L2HAL_SSD1327_ContextStruct* context, uint16_t x, uint16_t y)
 	{
-		brightness = (context->Framebuffer[index] & 0xF0U) >> 4;
-	}
-	else
-	{
-		brightness = context->Framebuffer[index] & 0x0FU;
-	}
+		FMGL_API_ColorStruct result;
+		result.R = 0;
+		result.G = 0;
+		result.B = 0;
 
-	result.R = brightness * L2HAL_SSD1327_GET_PIXEL_MULTIPLIER;
-	result.G = result.R;
-	result.B = result.R;
+		uint16_t index;
+		bool isMostSignificantNibble;
 
-	return result;
-}
+		if (!L2HAL_SSD1327_GetPixelAddress(x, y, &index, &isMostSignificantNibble))
+		{
+			return result;
+		}
+
+		uint8_t brightness;
+		if (isMostSignificantNibble)
+		{
+			brightness = (context->Framebuffer[index] & 0xF0U) >> 4;
+		}
+		else
+		{
+			brightness = context->Framebuffer[index] & 0x0FU;
+		}
+
+		result.R = brightness * L2HAL_SSD1327_GET_PIXEL_MULTIPLIER;
+		result.G = result.R;
+		result.B = result.R;
+
+		return result;
+	}
+#endif
+
+
 
 uint16_t L2HAL_SSD1327_GetWidth(void)
 {

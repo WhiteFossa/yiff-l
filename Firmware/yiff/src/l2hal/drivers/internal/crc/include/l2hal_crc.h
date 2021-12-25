@@ -17,7 +17,7 @@
 /**
  * Maximal buffer size
  */
-#define L2HAL_CRC_MAX_BUFFER_SIZE 128
+#define L2HAL_CRC_MAX_BUFFER_SIZE 1024
 
 /**
  * CRC context

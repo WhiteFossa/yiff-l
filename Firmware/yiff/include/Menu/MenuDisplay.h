@@ -26,7 +26,7 @@
 /**
  * Maximal length of item's text
  */
-#define YHL_MENU_MAX_ITEM_TEXT_LENGTH 20
+#define YHL_MENU_MAX_ITEM_TEXT_LENGTH 32
 #define YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE (YHL_MENU_MAX_ITEM_TEXT_LENGTH + 1)
 
 /**
@@ -38,12 +38,12 @@
 /**
  * Max nodes count in menu node
  */
-#define YHL_MENU_MAX_NODES_COUNT 5
+#define YHL_MENU_MAX_NODES_COUNT 16
 
 /**
  * Max leaves in menu node
  */
-#define YHL_MENU_MAX_LEAVES_COUNT 4
+#define YHL_MENU_MAX_LEAVES_COUNT 16
 
 
 /**
@@ -57,7 +57,7 @@
 #define YHL_MENU_LINE_VERTICAL_SPACING 2
 
 /**
- * How much menu lines we able to display
+ * How much menu lines we are able to display
  */
 #define YHL_MENU_NUMBER_OF_LINES 8
 
