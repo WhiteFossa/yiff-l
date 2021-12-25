@@ -141,11 +141,11 @@
                                 <Button
                                     Text="Rename fox"
                                     Command="{Binding RenameFoxClickedCommand}"
-                                    IsEnabled="{Binding IsFoxConnected}" />
+                                    IsEnabled="{Binding IsSettingsControlsEnabled}" />
 
                                 <Button
                                     Text="Check for updates"
-                                    IsEnabled="{Binding IsFoxConnected}"/>
+                                    IsEnabled="{Binding IsSettingsControlsEnabled}"/>
                             </StackLayout>
                         </Grid>
                     </StackLayout>
