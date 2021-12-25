@@ -93,7 +93,7 @@
 /**
  * Wait this amount of milliseconds after transmitting a line before sending the next one
  */
-#define L2HAL_SSD1327_INTERLINE_DELAY 1U
+#define L2HAL_SSD1327_INTERLINE_DELAY 2U
 
 /**
  * Causes L2HAL error if display not found.
