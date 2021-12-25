@@ -349,7 +349,7 @@ namespace org.whitefossa.yiffhl.ViewModels
                 _profiles = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(ProfilesCountText));
-                IsAddProfileButtonEnabled = CanWeAddProfiles;
+                OnPropertyChanged(nameof(IsAddProfileButtonEnabled));
             }
         }
 
@@ -384,16 +384,13 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// <summary>
         /// Is add profile button enabled
         /// </summary>
-        private bool _isAddProfileButtonEnabled;
-
         public bool IsAddProfileButtonEnabled
         {
-            get => _isAddProfileButtonEnabled;
-            set
-            {
-                _isAddProfileButtonEnabled = value;
-                OnPropertyChanged();
-            }
+            get => MainModel.IsConnected
+                   &&
+                   !MainModel.StaticFoxStatus.IsFoxArmed
+                   &&
+                   CanWeAddProfiles;
         }
 
         /// <summary>
@@ -568,7 +565,11 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         public bool IsCycleControlsEnabled
         {
-            get => !MainModel.CurrentProfileSettings.CycleSettings.IsContinuous;
+            get => MainModel.IsConnected
+                   &&
+                   !MainModel.StaticFoxStatus.IsFoxArmed
+                   &&
+                   !MainModel.CurrentProfileSettings.CycleSettings.IsContinuous;
         }
 
         /// <summary>
@@ -626,14 +627,6 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// Command to decrease pause duration (big)
         /// </summary>
         public ICommand DecreasePauseDurationBigCommand { get; }
-
-        /// <summary>
-        /// Controls should be disabled when fox executing a command
-        /// </summary>
-        public bool IsControlsEnabled
-        {
-            get => true; // TODO: Change it depending on arming status
-        }
 
         /// <summary>
         /// Command to increase ending tone duration
@@ -731,7 +724,11 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         public bool IsPowerControlsEnabled
         {
-            get => !MainModel.CurrentProfileSettings.FrequencySettings.Is2m;
+            get => MainModel.IsConnected
+                   &&
+                   !MainModel.StaticFoxStatus.IsFoxArmed
+                   &&
+                   !MainModel.CurrentProfileSettings.FrequencySettings.Is2m;
         }
 
         /// <summary>
@@ -767,7 +764,7 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         public bool IsArmButtonEnabled
         {
-            get => !MainModel.StaticFoxStatus.IsFoxArmed;
+            get => MainModel.IsConnected && !MainModel.StaticFoxStatus.IsFoxArmed;
         }
 
         /// <summary>
@@ -775,7 +772,7 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         public bool IsDisarmButtonEnabled
         {
-            get => MainModel.StaticFoxStatus.IsFoxArmed;
+            get => MainModel.IsConnected && MainModel.StaticFoxStatus.IsFoxArmed;
         }
 
         /// <summary>
@@ -787,6 +784,14 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// Disarm fox
         /// </summary>
         public ICommand DisarmFoxCommand { get; }
+
+        /// <summary>
+        /// Is settings controls enabled
+        /// </summary>
+        public bool IsSettingsControlsEnabled
+        {
+            get => MainModel.IsConnected && !MainModel.StaticFoxStatus.IsFoxArmed;
+        }
 
         public MainPageViewModel()
         {
@@ -886,7 +891,6 @@ namespace org.whitefossa.yiffhl.ViewModels
             IsFoxPickerEnabled = true;
             IsConnectRelatedControlsEnabled = true;
             IsBtnDisconnectEnabled = false;
-            IsAddProfileButtonEnabled = false;
 
             ResetFoxRelatedData();
 
@@ -959,6 +963,8 @@ namespace org.whitefossa.yiffhl.ViewModels
 
             IsBtnDisconnectEnabled = true;
 
+            NotifyControlsOnConnectionStatusChange();
+
             // Requesting fox identification
             await _foxIdentificationManager.IdentifyFoxAsync(async (isFox, pVer, hwRev, fwVer, sn)
                 => await OnGetIdentificationDataResponseAsync(isFox, pVer, hwRev, fwVer, sn));
@@ -974,7 +980,22 @@ namespace org.whitefossa.yiffhl.ViewModels
             IsConnectButtonEnabled = true;
             IsFoxPickerEnabled = true;
             IsConnectRelatedControlsEnabled = true;
-            IsAddProfileButtonEnabled = false;
+
+            NotifyControlsOnConnectionStatusChange();
+        }
+
+        private void NotifyControlsOnConnectionStatusChange()
+        {
+            #region Notifying controls
+
+            OnPropertyChanged(nameof(IsArmButtonEnabled));
+            OnPropertyChanged(nameof(IsDisarmButtonEnabled));
+            OnPropertyChanged(nameof(IsSettingsControlsEnabled));
+            OnPropertyChanged(nameof(IsCycleControlsEnabled));
+            OnPropertyChanged(nameof(IsPowerControlsEnabled));
+            OnPropertyChanged(nameof(IsAddProfileButtonEnabled));
+
+            #endregion
         }
 
         private void OnFailedToConnect(Exception exception)
@@ -982,7 +1003,6 @@ namespace org.whitefossa.yiffhl.ViewModels
             IsConnectButtonEnabled = true;
             IsFoxPickerEnabled = true;
             IsConnectRelatedControlsEnabled = true;
-            IsAddProfileButtonEnabled = false;
         }
 
         /// <summary>
@@ -1798,6 +1818,10 @@ Do you want to continue?");
             OnPropertyChanged(nameof(IsFoxArmedFormatted));
             OnPropertyChanged(nameof(IsArmButtonEnabled));
             OnPropertyChanged(nameof(IsDisarmButtonEnabled));
+            OnPropertyChanged(nameof(IsSettingsControlsEnabled));
+            OnPropertyChanged(nameof(IsCycleControlsEnabled));
+            OnPropertyChanged(nameof(IsPowerControlsEnabled));
+            OnPropertyChanged(nameof(IsAddProfileButtonEnabled));
         }
 
         #endregion

@@ -247,7 +247,7 @@
                             Title="Select a profile"
                             ItemsSource="{Binding Profiles}"
                             ItemDisplayBinding="{Binding Name}"
-                            IsEnabled="{Binding IsFoxConnected}"
+                            IsEnabled="{Binding IsSettingsControlsEnabled}"
                             SelectedItem="{Binding SelectedProfile}"
                             SelectedIndexChanged="pkProfile_SelectedIndexChanged">
                         </Picker>
@@ -259,7 +259,7 @@
                             WidthRequest="40"
                             Text="R"
                             Command="{Binding RefreshProfilesListClickedCommand}"
-                            IsEnabled="{Binding IsFoxConnected}" />
+                            IsEnabled="{Binding IsSettingsControlsEnabled}" />
 
                         <Label
                             Text="{Binding ProfilesCountText}"
@@ -281,7 +281,7 @@
                             Grid.ColumnSpan="2"
                             Text="Rename"
                             Command="{Binding RenameProfileClickedCommand}"
-                            IsEnabled="{Binding IsFoxConnected}" />
+                            IsEnabled="{Binding IsSettingsControlsEnabled}" />
                     </Grid>
                 </Frame>
                 <!-- End of profiles -->
@@ -315,14 +315,15 @@
                                         Text="{Binding FoxRangeFormatted}"
                                         FontAttributes="Bold"
                                         VerticalOptions="Center"
-                                        HorizontalOptions="EndAndExpand" />
+                                        HorizontalOptions="EndAndExpand"
+                                        IsEnabled="{Binding IsSettingsControlsEnabled}" />
 
                                     <Button
                                         Text="&lt;--&gt;"
                                         VerticalOptions="Center"
                                         HorizontalOptions="End" 
                                         Command="{Binding ToggleFoxFrequencyRangeCommand}"
-                                        IsEnabled="{Binding IsControlsEnabled}" />
+                                        IsEnabled="{Binding IsSettingsControlsEnabled}" />
 
                                 </StackLayout>
 
@@ -338,21 +339,22 @@
                                         Text="{Binding FrequencyFormatted}"
                                         FontAttributes="Bold"
                                         VerticalOptions="Center"
-                                        HorizontalOptions="EndAndExpand" />
+                                        HorizontalOptions="EndAndExpand" 
+                                        IsEnabled="{Binding IsSettingsControlsEnabled}" />
 
                                     <Button
                                         Text="&lt;"
                                         VerticalOptions="Center"
                                         HorizontalOptions="End"
                                         Command="{Binding DecreaseFoxFrequencyCommand}"
-                                        IsEnabled="{Binding IsControlsEnabled}" />
+                                        IsEnabled="{Binding IsSettingsControlsEnabled}" />
 
                                     <Button
                                         Text="&gt;"
                                         VerticalOptions="Center"
                                         HorizontalOptions="End"
                                         Command="{Binding IncreaseFoxFrequencyCommand}"
-                                        IsEnabled="{Binding IsControlsEnabled}" />
+                                        IsEnabled="{Binding IsSettingsControlsEnabled}" />
                                 </StackLayout>
                             </StackLayout>
                         </Frame>
@@ -381,7 +383,7 @@
                                         VerticalOptions="Center"
                                         HorizontalOptions="EndAndExpand"
                                         SelectedIndexChanged="pkCallsign_SelectedIndexChanged"
-                                        IsEnabled="{Binding IsControlsEnabled}" />
+                                        IsEnabled="{Binding IsSettingsControlsEnabled}" />
 
                                 </StackLayout>
 
@@ -398,14 +400,15 @@
                                         Text="{Binding TxSpeedFormatted}"
                                         FontAttributes="Bold"
                                         VerticalOptions="Center"
-                                        HorizontalOptions="EndAndExpand"/>
+                                        HorizontalOptions="EndAndExpand"
+                                        IsEnabled="{Binding IsSettingsControlsEnabled}" />
 
                                     <Button 
                                         Text="&lt;--&gt;"
                                         VerticalOptions="Center"
                                         HorizontalOptions="End"
                                         Command="{Binding ToggleFoxSpeedCommand}"
-                                        IsEnabled="{Binding IsControlsEnabled}" />
+                                        IsEnabled="{Binding IsSettingsControlsEnabled}" />
 
 
                                 </StackLayout>
@@ -432,14 +435,15 @@
                                         Text="{Binding FoxCycleTypeFormatted}"
                                         FontAttributes="Bold"
                                         VerticalOptions="Center"
-                                        HorizontalOptions="EndAndExpand" />
+                                        HorizontalOptions="EndAndExpand"
+                                        IsEnabled="{Binding IsSettingsControlsEnabled}" />
 
                                     <Button 
                                         Text="&lt;--&gt;"
                                         VerticalOptions="Center"
                                         HorizontalOptions="End"
                                         Command="{Binding ToggleCycleModeCommand}"
-                                        IsEnabled="{Binding IsControlsEnabled}" />
+                                        IsEnabled="{Binding IsSettingsControlsEnabled}" />
                                 </StackLayout>
 
                                 <StackLayout
@@ -598,7 +602,7 @@
                                         HorizontalOptions="EndAndExpand"
                                         Time="{Binding StartTime}"
                                         PropertyChanged="tpStart_PropertyChanged"
-                                        IsEnabled="{Binding IsControlsEnabled}" />
+                                        IsEnabled="{Binding IsSettingsControlsEnabled}" />
 
                                     <Button
                                         Text="&lt;"
@@ -606,7 +610,7 @@
                                         HorizontalOptions="End"
                                         WidthRequest="40"
                                         Command="{Binding DecreaseStartTime}"
-                                        IsEnabled="{Binding IsControlsEnabled}" />
+                                        IsEnabled="{Binding IsSettingsControlsEnabled}" />
 
                                     <Button
                                         Text="&gt;"
@@ -614,7 +618,7 @@
                                         HorizontalOptions="End"
                                         WidthRequest="40"
                                         Command="{Binding IncreaseStartTime}"
-                                        IsEnabled="{Binding IsControlsEnabled}" />
+                                        IsEnabled="{Binding IsSettingsControlsEnabled}" />
 
 
                                 </StackLayout>
@@ -634,7 +638,7 @@
                                         HorizontalOptions="EndAndExpand"
                                         Time="{Binding FinishTime}"
                                         PropertyChanged="tpFinish_PropertyChanged"
-                                        IsEnabled="{Binding IsControlsEnabled}" />
+                                        IsEnabled="{Binding IsSettingsControlsEnabled}" />
 
                                     <Button
                                         Text="&lt;"
@@ -642,7 +646,7 @@
                                         HorizontalOptions="End"
                                         WidthRequest="40"
                                         Command="{Binding DecreaseFinishTime}"
-                                        IsEnabled="{Binding IsControlsEnabled}" />
+                                        IsEnabled="{Binding IsSettingsControlsEnabled}" />
 
                                     <Button
                                         Text="&gt;"
@@ -650,7 +654,7 @@
                                         HorizontalOptions="End"
                                         WidthRequest="40"
                                         Command="{Binding IncreaseFinishTime}"
-                                        IsEnabled="{Binding IsControlsEnabled}" />
+                                        IsEnabled="{Binding IsSettingsControlsEnabled}" />
                                 </StackLayout>
                                 
                             </StackLayout>
@@ -676,7 +680,8 @@
                                         Text="{Binding PowerFormatted}"
                                         FontAttributes="Bold"
                                         HorizontalOptions="EndAndExpand"
-                                        VerticalOptions="Center" />
+                                        VerticalOptions="Center"
+                                        IsEnabled="{Binding IsPowerControlsEnabled}" />
 
                                     <Button
                                         Text="&lt;"
