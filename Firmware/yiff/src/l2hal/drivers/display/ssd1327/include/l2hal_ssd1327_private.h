@@ -81,9 +81,19 @@
 #define L2HAL_SSD1327_PAGE_WIDTH 8
 
 /**
- * Interline delay when making partial update
+ * Wait this amount of milliseconds after transmitting column address before sending a row address
  */
-#define L2HAL_SSD1327_PARTIAL_UPDATE_DELAY 1
+#define L2HAL_SSD1327_COLUMN_ADDRESS_TO_ROW_ADDRESS_DELAY 5U
+
+/**
+ * Wait this amount of milliseconds after transmitting row address before sending the data
+ */
+#define L2HAL_SSD1327_ROW_ADDRESS_TO_DATA_DELAY 5U
+
+/**
+ * Wait this amount of milliseconds after transmitting a line before sending the next one
+ */
+#define L2HAL_SSD1327_INTERLINE_DELAY 1U
 
 /**
  * Causes L2HAL error if display not found.
