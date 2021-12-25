@@ -703,7 +703,14 @@ void Main_InitDisplayAndShowBootScreen(void)
 	FMGL_API_PushFramebuffer(&fmglContext);
 
 	/* Splash screen */
-	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, 0, 0, NULL, NULL, false, "Booting up...");
+	FMGL_API_XBMImage bootLogo;
+	bootLogo.Width = YHL_BOOT_LOGO_WIDTH;
+	bootLogo.Height = YHL_BOOT_LOGO_HEIGHT;
+	bootLogo.Raster = (uint8_t*)boot_logo_bits;
+
+	FMGL_API_RenderXBM(&fmglContext, &bootLogo, 0, 0, 1, 1, OnColor, OffColor, FMGL_XBMTransparencyModeNormal);
+
+//	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, 0, 0, NULL, NULL, false, "Booting up...");
 	FMGL_API_PushFramebuffer(&fmglContext);
 }
 

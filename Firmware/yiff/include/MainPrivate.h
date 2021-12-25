@@ -34,6 +34,7 @@
 #include <SelfDiagnostics.h>
 #include <Sleepmodes.h>
 #include <Random.h>
+#include <Resources/boot_logo.h>
 
 /**
  * EEPROM-related stuff
