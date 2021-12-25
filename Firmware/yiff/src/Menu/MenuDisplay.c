@@ -476,7 +476,7 @@ void MenuDisplay_SelectFrequencyRangeCloseHandler(uint8_t rangeIndex)
 
 	bool is144MHz = MenuDisplay_GetFrequencyRangeByIndex(rangeIndex);
 
-	uint newFrequency;
+	uint32_t newFrequency;
 	if (is144MHz)
 	{
 		newFrequency = YHL_DEFAULT_144M_FREQUENCY;
