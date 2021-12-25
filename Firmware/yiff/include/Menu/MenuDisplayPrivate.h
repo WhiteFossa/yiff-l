@@ -16,17 +16,17 @@
 /**
  * Max length + 1 for fox codes names
  */
-#define YHL_MENU_FOX_CODES_MEMORY_SIZE 11U
+#define YHL_MENU_FOX_CODES_MEMORY_SIZE 17U
 
 /**
  * Max length + 1 for fox speeds names
  */
-#define YHL_MENU_FOX_SPEEDS_MEMORY_SIZE 5U
+#define YHL_MENU_FOX_SPEEDS_MEMORY_SIZE 17U
 
 /**
  * Max length + 1 for cycle types names
  */
-#define YHL_MENU_CYCLE_TYPE_MEMORY_SIZE 4U
+#define YHL_MENU_CYCLE_TYPE_MEMORY_SIZE 17U
 
 /**
  * Maximal ending tone duration in seconds
