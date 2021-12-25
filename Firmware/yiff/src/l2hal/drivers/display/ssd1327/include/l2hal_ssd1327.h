@@ -104,15 +104,31 @@
 #include <fmgl.h>
 
 /**
+ * If defined, then monochrome (instead of grayscale) mode will be used to save memory
+ */
+#define L2HAL_SSD1327_MONOCHROME_MODE
+
+/**
  * Display dimensions.
  */
-#define L2HAL_SSD1327_DISPLAY_WIDTH 128
-#define L2HAL_SSD1327_DISPLAY_HEIGHT 128
+#define L2HAL_SSD1327_DISPLAY_WIDTH 128U
+#define L2HAL_SSD1327_DISPLAY_HEIGHT 128U
 
 /**
  * Framebuffer size.
  */
-#define L2HAL_SSD1327_FRAMEBUFFER_SIZE L2HAL_SSD1327_DISPLAY_WIDTH * L2HAL_SSD1327_DISPLAY_HEIGHT / 2
+#ifdef L2HAL_SSD1327_MONOCHROME_MODE
+	#define L2HAL_SSD1327_FRAMEBUFFER_SIZE L2HAL_SSD1327_DISPLAY_WIDTH * L2HAL_SSD1327_DISPLAY_HEIGHT / 8U
+#else
+	#define L2HAL_SSD1327_FRAMEBUFFER_SIZE L2HAL_SSD1327_DISPLAY_WIDTH * L2HAL_SSD1327_DISPLAY_HEIGHT / 2U
+#endif
+
+/**
+ * One line of display (size in bytes)
+ */
+#define L2HAL_SSD1327_DECOMPRESSED_LINE_SIZE 64U
+
+#define L2HAL_SSD1327_COMPRESSED_LINE_SIZE 16U
 
 typedef struct
 {
@@ -140,6 +156,13 @@ typedef struct
 	 * void L2HAL_SSD1327_PushFramebuffer() for details.
 	 */
 	uint8_t Framebuffer[L2HAL_SSD1327_FRAMEBUFFER_SIZE];
+
+#ifdef L2HAL_SSD1327_MONOCHROME_MODE
+	/**
+	 * Line buffer (only for monochrome mode)
+	 */
+	uint8_t lineBuffer[L2HAL_SSD1327_DECOMPRESSED_LINE_SIZE];
+#endif
 
 	/**
 	 * If true then data transfer in progress.
