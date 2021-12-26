@@ -2,7 +2,7 @@
 
 namespace org.whitefossa.yiffhl.Business.Implementations.Events
 {
-    public class SettingsChangedEvent : ISettingsChangedEvent
+    public class ProfileSettingsChangedEvent : IProfileSettingsChangedEvent
     {
     }
 }

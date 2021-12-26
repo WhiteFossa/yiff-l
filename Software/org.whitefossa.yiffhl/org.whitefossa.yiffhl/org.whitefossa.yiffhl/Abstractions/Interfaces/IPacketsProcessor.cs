@@ -17,7 +17,8 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
     public delegate void OnEnteringSleepmodeEventDelegate(IEnteringSleepmodeEvent enteringSleepmodeEvent);
     public delegate void OnFoxArmingInitiatedEventDelegate(IFoxArmingInitiatedEvent foxArmingInitiatedEvent);
     public delegate void OnFoxDisarmedEventDelegate(IFoxDisarmedEvent foxDisarmedEvent);
-    public delegate void OnSettingsChangedEventDelegate(ISettingsChangedEvent settingsChangedEvent);
+    public delegate void OnProfileSettingsChangedEventDelegate(IProfileSettingsChangedEvent profileSettingsChangedEvent);
+    public delegate void OnProfileSwitchedEventDelegate(IProfileSwitchedEvent profileSwitchedEvent);
 
     #endregion
 
@@ -86,7 +87,8 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
         void RegisterOnEnteringSleepmodeEventHandler(OnEnteringSleepmodeEventDelegate onEnteringSleepmodeEvent);
         void RegisterOnFoxArmingInitiatedEventHandler(OnFoxArmingInitiatedEventDelegate onFoxArmingInitiatedEvent);
         void RegisterOnFoxDisarmedEventHandler(OnFoxDisarmedEventDelegate onFoxDisarmedEvent);
-        void RegisterOnSettingsChangedEventHandler(OnSettingsChangedEventDelegate onSettingsChangedEvent);
+        void RegisterOnProfileSettingsChangedEventHandler(OnProfileSettingsChangedEventDelegate onProfileSettingsChangedEvent);
+        void RegisterOnProfileSwitchedEventHandler(OnProfileSwitchedEventDelegate onProfileSwitchedEvent);
 
         #endregion
     }

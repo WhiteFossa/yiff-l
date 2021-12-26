@@ -15,6 +15,8 @@
 
         Disarmed = 0x05,
 
-        SettingsChanged = 0x06
+        ProfileSettingsChanged = 0x06,
+
+        ProfileSwitched = 0x07
     }
 }

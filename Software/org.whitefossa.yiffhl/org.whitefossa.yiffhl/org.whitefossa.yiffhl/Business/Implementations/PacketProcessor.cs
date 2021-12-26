@@ -78,7 +78,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private OnEnteringSleepmodeEventDelegate _onEnteringSleepmodeEvent;
         private OnFoxArmingInitiatedEventDelegate _onFoxArmingInitiatedEvent;
         private OnFoxDisarmedEventDelegate _onFoxDisarmedEvent;
-        private OnSettingsChangedEventDelegate _onSettingsChangedEvent;
+        private OnProfileSettingsChangedEventDelegate _onProfileSettingsChangedEvent;
+        private OnProfileSwitchedEventDelegate _onProfileSwitchedEvent;
 
         #endregion
 
@@ -530,8 +531,13 @@ namespace org.whitefossa.yiffhl.Business.Implementations
                     break;
 
                 // Settings changed
-                case EventType.SettingsChanged:
-                    OnSettingsChangedEvent(eventPayload);
+                case EventType.ProfileSettingsChanged:
+                    OnProfileSettingsChangedEvent(eventPayload);
+                    break;
+
+                // Profile switched
+                case EventType.ProfileSwitched:
+                    OnProfileSwitchedEvent(eventPayload);
                     break;
 
                 // We've got some junk
@@ -584,11 +590,18 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _onFoxDisarmedEvent(new FoxDisarmedEvent());
         }
 
-        private void OnSettingsChangedEvent(IReadOnlyCollection<byte> payload)
+        private void OnProfileSettingsChangedEvent(IReadOnlyCollection<byte> payload)
         {
-            _ = _onSettingsChangedEvent ?? throw new InvalidOperationException("Handler for Settings Changed even isn't registered");
+            _ = _onProfileSettingsChangedEvent ?? throw new InvalidOperationException("Handler for Profile Settings Changed event isn't registered");
 
-            _onSettingsChangedEvent(new SettingsChangedEvent());
+            _onProfileSettingsChangedEvent(new ProfileSettingsChangedEvent());
+        }
+
+        private void OnProfileSwitchedEvent(IReadOnlyCollection<byte> payload)
+        {
+            _ = _onProfileSwitchedEvent ?? throw new InvalidOperationException("Handler for Profile Switched event isn't registered");
+
+            _onProfileSwitchedEvent(new ProfileSwitchedEvent());
         }
 
         public void SendCommand(CommandType command, IReadOnlyCollection<byte> commandPayload)
@@ -835,9 +848,14 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _onFoxDisarmedEvent = onFoxDisarmedEvent ?? throw new ArgumentNullException(nameof(onFoxDisarmedEvent));
         }
 
-        public void RegisterOnSettingsChangedEventHandler(OnSettingsChangedEventDelegate onSettingsChangedEvent)
+        public void RegisterOnProfileSettingsChangedEventHandler(OnProfileSettingsChangedEventDelegate onProfileSettingsChangedEvent)
         {
-            _onSettingsChangedEvent = onSettingsChangedEvent ?? throw new ArgumentNullException(nameof(onSettingsChangedEvent));
+            _onProfileSettingsChangedEvent = onProfileSettingsChangedEvent ?? throw new ArgumentNullException(nameof(onProfileSettingsChangedEvent));
+        }
+
+        public void RegisterOnProfileSwitchedEventHandler(OnProfileSwitchedEventDelegate onProfileSwitchedEvent)
+        {
+            _onProfileSwitchedEvent = onProfileSwitchedEvent ?? throw new ArgumentNullException(nameof(onProfileSwitchedEvent));
         }
     }
 }

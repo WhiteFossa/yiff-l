@@ -832,14 +832,16 @@ namespace org.whitefossa.yiffhl.ViewModels
             MainModel.OnEnteringSleepmode += OnEnteringSleepmode;
             MainModel.OnFoxArmingInitiated += OnFoxArmingInitiated;
             MainModel.OnFoxDisarmed += async (e) => await OnFoxDisarmedAsync(e);
-            MainModel.OnSettingsChanged += async (e) => await OnFoxSettingsChangedFromMenuAsync(e);
+            MainModel.OnProfileSettingsChanged += async (e) => await OnProfileSettingsChangedFromMenuAsync(e);
+            MainModel.OnProfileSwitched += async (e) => await OnProfileSwitchedFromMenuAsync(e);
 
             _packetsProcessor.RegisterOnFoxArmedEventHandler(MainModel.OnFoxArmed);
             _packetsProcessor.RegisterOnAntennaMatchingMeasurementEventHandler(MainModel.OnAntennaMatchingMeasurement);
             _packetsProcessor.RegisterOnEnteringSleepmodeEventHandler(MainModel.OnEnteringSleepmode);
             _packetsProcessor.RegisterOnFoxArmingInitiatedEventHandler(MainModel.OnFoxArmingInitiated);
             _packetsProcessor.RegisterOnFoxDisarmedEventHandler(MainModel.OnFoxDisarmed);
-            _packetsProcessor.RegisterOnSettingsChangedEventHandler(MainModel.OnSettingsChanged);
+            _packetsProcessor.RegisterOnProfileSettingsChangedEventHandler(MainModel.OnProfileSettingsChanged);
+            _packetsProcessor.RegisterOnProfileSwitchedEventHandler(MainModel.OnProfileSwitched);
 
             // Binding commands to handlers
             SelectedFoxChangedCommand = new Command<PairedFoxDTO>(async (f) => await OnSelectedFoxChangedAsync(f));
@@ -1790,12 +1792,19 @@ Do you want to continue?");
         }
 
         /// <summary>
-        /// Called when fox settings changed from menu on fox
+        /// Called when profile settings changed from menu on fox
         /// </summary>
-        private async Task OnFoxSettingsChangedFromMenuAsync(ISettingsChangedEvent settingsChangedEvent)
+        private async Task OnProfileSettingsChangedFromMenuAsync(IProfileSettingsChangedEvent settingsChangedEvent)
         {
-            await EnumerateProfilesAsync(); // Profile might be changed
-            await LoadProfileSettingsAsync(); // Or profile settings. Or both
+            await LoadProfileSettingsAsync();
+        }
+
+        /// <summary>
+        /// Called when profile settings changed from menu on fox
+        /// </summary>
+        private async Task OnProfileSwitchedFromMenuAsync(IProfileSwitchedEvent profileSwitchedEvent)
+        {
+            await _foxProfilesManager.GetCurrentProfileId(OnGetCurrentProfileIdResponse);
         }
 
         #endregion
