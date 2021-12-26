@@ -13,6 +13,8 @@
 
         ArmingInitiatedEvent = 0x04,
 
-        Disarmed = 0x05
+        Disarmed = 0x05,
+
+        SettingsChanged = 0x06
     }
 }

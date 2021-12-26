@@ -832,12 +832,14 @@ namespace org.whitefossa.yiffhl.ViewModels
             MainModel.OnEnteringSleepmode += OnEnteringSleepmode;
             MainModel.OnFoxArmingInitiated += OnFoxArmingInitiated;
             MainModel.OnFoxDisarmed += async (e) => await OnFoxDisarmedAsync(e);
+            MainModel.OnSettingsChanged += async (e) => await OnFoxSettingsChangedFromMenuAsync(e);
 
             _packetsProcessor.RegisterOnFoxArmedEventHandler(MainModel.OnFoxArmed);
             _packetsProcessor.RegisterOnAntennaMatchingMeasurementEventHandler(MainModel.OnAntennaMatchingMeasurement);
             _packetsProcessor.RegisterOnEnteringSleepmodeEventHandler(MainModel.OnEnteringSleepmode);
             _packetsProcessor.RegisterOnFoxArmingInitiatedEventHandler(MainModel.OnFoxArmingInitiated);
-            _packetsProcessor.RegisterOnFoxDisarmedEventsHandler(MainModel.OnFoxDisarmed);
+            _packetsProcessor.RegisterOnFoxDisarmedEventHandler(MainModel.OnFoxDisarmed);
+            _packetsProcessor.RegisterOnSettingsChangedEventHandler(MainModel.OnSettingsChanged);
 
             // Binding commands to handlers
             SelectedFoxChangedCommand = new Command<PairedFoxDTO>(async (f) => await OnSelectedFoxChangedAsync(f));
@@ -1785,6 +1787,15 @@ Do you want to continue?");
             Debug.WriteLine("Fox disarmed.");
 
             await _staticFoxStatusManager.GetStaticFoxStatusAsync(async (s) => await OnGetStaticFoxStatusAsync_ReloadPathway(s));
+        }
+
+        /// <summary>
+        /// Called when fox settings changed from menu on fox
+        /// </summary>
+        private async Task OnFoxSettingsChangedFromMenuAsync(ISettingsChangedEvent settingsChangedEvent)
+        {
+            await EnumerateProfilesAsync(); // Profile might be changed
+            await LoadProfileSettingsAsync(); // Or profile settings. Or both
         }
 
         #endregion

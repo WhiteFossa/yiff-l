@@ -78,6 +78,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private OnEnteringSleepmodeEventDelegate _onEnteringSleepmodeEvent;
         private OnFoxArmingInitiatedEventDelegate _onFoxArmingInitiatedEvent;
         private OnFoxDisarmedEventDelegate _onFoxDisarmedEvent;
+        private OnSettingsChangedEventDelegate _onSettingsChangedEvent;
 
         #endregion
 
@@ -528,6 +529,11 @@ namespace org.whitefossa.yiffhl.Business.Implementations
                     OnDisarmedEvent(eventPayload);
                     break;
 
+                // Settings changed
+                case EventType.SettingsChanged:
+                    OnSettingsChangedEvent(eventPayload);
+                    break;
+
                 // We've got some junk
                 default:
                     return;
@@ -576,6 +582,13 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _ = _onFoxDisarmedEvent ?? throw new InvalidOperationException("Handler for Fox Disarmed event isn't registered");
 
             _onFoxDisarmedEvent(new FoxDisarmedEvent());
+        }
+
+        private void OnSettingsChangedEvent(IReadOnlyCollection<byte> payload)
+        {
+            _ = _onSettingsChangedEvent ?? throw new InvalidOperationException("Handler for Settings Changed even isn't registered");
+
+            _onSettingsChangedEvent(new SettingsChangedEvent());
         }
 
         public void SendCommand(CommandType command, IReadOnlyCollection<byte> commandPayload)
@@ -817,9 +830,14 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _onFoxArmingInitiatedEvent = onFoxArmingInitiatedEvent ?? throw new ArgumentNullException(nameof(onFoxArmingInitiatedEvent));
         }
 
-        public void RegisterOnFoxDisarmedEventsHandler(OnFoxDisarmedEventDelegate onFoxDisarmedEvent)
+        public void RegisterOnFoxDisarmedEventHandler(OnFoxDisarmedEventDelegate onFoxDisarmedEvent)
         {
             _onFoxDisarmedEvent = onFoxDisarmedEvent ?? throw new ArgumentNullException(nameof(onFoxDisarmedEvent));
+        }
+
+        public void RegisterOnSettingsChangedEventHandler(OnSettingsChangedEventDelegate onSettingsChangedEvent)
+        {
+            _onSettingsChangedEvent = onSettingsChangedEvent ?? throw new ArgumentNullException(nameof(onSettingsChangedEvent));
         }
     }
 }

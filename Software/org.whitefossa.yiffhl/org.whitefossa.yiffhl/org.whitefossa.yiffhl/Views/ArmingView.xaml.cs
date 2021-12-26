@@ -54,7 +54,7 @@ namespace org.whitefossa.yiffhl.Views
             var packetsProcessor = App.Container.Resolve<IPacketsProcessor>();
 
             ViewModel.MainModel.OnFoxDisarmed += async (e) => await OnFoxDisarmedAsync(e);
-            packetsProcessor.RegisterOnFoxDisarmedEventsHandler(ViewModel.MainModel.OnFoxDisarmed);
+            packetsProcessor.RegisterOnFoxDisarmedEventHandler(ViewModel.MainModel.OnFoxDisarmed);
 
             ViewModel.MainModel.OnAntennaMatchingMeasurement += async (e) => await OnAntennaMatchingMeasurementAsync(e);
             packetsProcessor.RegisterOnAntennaMatchingMeasurementEventHandler(ViewModel.MainModel.OnAntennaMatchingMeasurement);

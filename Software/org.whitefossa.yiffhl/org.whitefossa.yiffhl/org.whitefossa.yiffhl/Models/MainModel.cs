@@ -98,6 +98,11 @@ namespace org.whitefossa.yiffhl.Models
         /// </summary>
         public OnFoxDisarmedEventDelegate OnFoxDisarmed { get; set; }
 
+        /// <summary>
+        /// Delegate, called when fox settings changed from fox menu
+        /// </summary>
+        public OnSettingsChangedEventDelegate OnSettingsChanged { get; set; }
+
         #endregion
 
         public MainModel()
