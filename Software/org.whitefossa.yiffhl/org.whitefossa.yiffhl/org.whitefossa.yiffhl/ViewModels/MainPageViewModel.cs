@@ -1108,8 +1108,8 @@ Do you want to continue?");
                         return;
                     }
 
-                    // Only digits and numbers
-                    if (!args.Value.All(char.IsLetterOrDigit))
+                    // Digits, numbers, whitespaces
+                    if (!args.Value.All(c => (char.IsWhiteSpace(c) || char.IsLetterOrDigit(c))))
                     {
                         args.IsValid = false;
                         return;
@@ -1181,8 +1181,8 @@ Do you want to continue?");
                         return;
                     }
 
-                    // Only digits and numbers
-                    if (!args.Value.All(c => (char.IsWhiteSpace(c) || char.IsLetterOrDigit(c))))
+                    // Digits, numbers, whitespaces and dot
+                    if (!args.Value.All(c => (char.IsWhiteSpace(c) || char.IsLetterOrDigit(c) || c == '.')))
                     {
                         args.IsValid = false;
                         return;
@@ -1248,8 +1248,8 @@ Do you want to continue?");
                         return;
                     }
 
-                    // Only digits and numbers
-                    if (!args.Value.All(c => (char.IsWhiteSpace(c) || char.IsLetterOrDigit(c))))
+                    // Digits, numbers, whitespaces and dot
+                    if (!args.Value.All(c => (char.IsWhiteSpace(c) || char.IsLetterOrDigit(c) || c == '.')))
                     {
                         args.IsValid = false;
                         return;
