@@ -1256,8 +1256,7 @@ HAL_StatusTypeDef HAL_UART_Receive_IT(UART_HandleTypeDef *huart, uint8_t *pData,
     }
 
     /* Process Locked */
-/* Hope that lock disabling will help to get rid of hangs*/
-/*    __HAL_LOCK(huart); */
+    __HAL_LOCK(huart);
 
     huart->pRxBuffPtr = pData;
     huart->RxXferSize = Size;
@@ -1267,7 +1266,7 @@ HAL_StatusTypeDef HAL_UART_Receive_IT(UART_HandleTypeDef *huart, uint8_t *pData,
     huart->RxState = HAL_UART_STATE_BUSY_RX;
 
     /* Process Unlocked */
-/*    __HAL_UNLOCK(huart); */
+    __HAL_UNLOCK(huart);
 
     /* Enable the UART Parity Error Interrupt */
     __HAL_UART_ENABLE_IT(huart, UART_IT_PE);

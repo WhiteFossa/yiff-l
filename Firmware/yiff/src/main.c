@@ -247,100 +247,156 @@ void Main_ProcessSetProfileName(void)
 
 void Main_ProcessSetFrequency(void)
 {
-	if (PendingCommandsFlags.NeedToSetFrequency)
+	if (PendingCommandsFlags.NeedToSetFrequency || PendingCommandsFlags.NeedToSetFrequencyByHandpaws)
 	{
 		EEPROM_CurrentProfile.Frequency = FoxState.Frequency;
 		EEPROM_UpdateCurrentProfile();
 
-		uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
-		SendResponse(SetFrequency, 1, &response);
+		if (PendingCommandsFlags.NeedToSetFrequency)
+		{
+			uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
+			SendResponse(SetFrequency, 1, &response);
+			PendingCommandsFlags.NeedToSetFrequency = false;
+		}
 
-		PendingCommandsFlags.NeedToSetFrequency = false;
+		if (PendingCommandsFlags.NeedToSetFrequencyByHandpaws)
+		{
+			EmitFoxSettingsChangedEvent();
+			PendingCommandsFlags.NeedToSetFrequencyByHandpaws = false;
+		}
 	}
 }
 
 void Main_ProcessSetCode(void)
 {
-	if (PendingCommandsFlags.NeedToSetCode)
+	if (PendingCommandsFlags.NeedToSetCode || PendingCommandsFlags.NeedToSetCodeByHandpaws)
 	{
 		EEPROM_CurrentProfile.Code = FoxState.Code;
 		EEPROM_UpdateCurrentProfile();
 
-		uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
-		SendResponse(SetCode, 1, &response);
+		if (PendingCommandsFlags.NeedToSetCode)
+		{
+			uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
+			SendResponse(SetCode, 1, &response);
+			PendingCommandsFlags.NeedToSetCode = false;
+		}
 
-		PendingCommandsFlags.NeedToSetCode = false;
+		if (PendingCommandsFlags.NeedToSetCodeByHandpaws)
+		{
+			EmitFoxSettingsChangedEvent();
+			PendingCommandsFlags.NeedToSetCodeByHandpaws = false;
+		}
 	}
 }
 
 void Main_ProcessSetSpeed(void)
 {
-	if (PendingCommandsFlags.NeedToSetSpeed)
+	if (PendingCommandsFlags.NeedToSetSpeed || PendingCommandsFlags.NeedToSetSpeedByHandpaws)
 	{
 		EEPROM_CurrentProfile.IsFast = FoxState.IsFast;
 		EEPROM_UpdateCurrentProfile();
 
-		uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
-		SendResponse(SetSpeed, 1, &response);
+		if (PendingCommandsFlags.NeedToSetSpeed)
+		{
+			uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
+			SendResponse(SetSpeed, 1, &response);
+			PendingCommandsFlags.NeedToSetSpeed = false;
+		}
 
-		PendingCommandsFlags.NeedToSetSpeed = false;
+		if (PendingCommandsFlags.NeedToSetSpeedByHandpaws)
+		{
+			EmitFoxSettingsChangedEvent();
+			PendingCommandsFlags.NeedToSetSpeedByHandpaws = false;
+		}
 	}
 }
 
 void Main_ProcessSetCycle(void)
 {
-	if (PendingCommandsFlags.NeedToSetCycle)
+	if (PendingCommandsFlags.NeedToSetCycle || PendingCommandsFlags.NeedToSetCycleByHandpaws)
 	{
 		EEPROM_CurrentProfile.Cycle = FoxState.Cycle;
 		EEPROM_UpdateCurrentProfile();
 
-		uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
-		SendResponse(SetCycle, 1, &response);
+		if (PendingCommandsFlags.NeedToSetCycle)
+		{
+			uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
+			SendResponse(SetCycle, 1, &response);
+			PendingCommandsFlags.NeedToSetCycle = false;
+		}
 
-		PendingCommandsFlags.NeedToSetCycle = false;
+		if (PendingCommandsFlags.NeedToSetCycleByHandpaws)
+		{
+			EmitFoxSettingsChangedEvent();
+			PendingCommandsFlags.NeedToSetCycleByHandpaws = false;
+		}
 	}
 }
 
 void Main_ProcessSetEndingToneDuration(void)
 {
-	if (PendingCommandsFlags.NeedToSetEndingToneDuration)
+	if (PendingCommandsFlags.NeedToSetEndingToneDuration || PendingCommandsFlags.NeedToSetEndingToneDurationByHandpaws)
 	{
 		EEPROM_CurrentProfile.EndingToneLength = FoxState.EndingToneLength;
 		EEPROM_UpdateCurrentProfile();
 
-		uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
-		SendResponse(SetEndingToneDuration, 1, &response);
+		if (PendingCommandsFlags.NeedToSetEndingToneDuration)
+		{
+			uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
+			SendResponse(SetEndingToneDuration, 1, &response);
+			PendingCommandsFlags.NeedToSetEndingToneDuration = false;
+		}
 
-		PendingCommandsFlags.NeedToSetEndingToneDuration = false;
+		if (PendingCommandsFlags.NeedToSetEndingToneDurationByHandpaws)
+		{
+			EmitFoxSettingsChangedEvent();
+			PendingCommandsFlags.NeedToSetEndingToneDurationByHandpaws = false;
+		}
 	}
 }
 
 void Main_ProcessSetBeginAndEndTimes(void)
 {
-	if (PendingCommandsFlags.NeedToSetBeginAndEndTimes)
+	if (PendingCommandsFlags.NeedToSetBeginAndEndTimes || PendingCommandsFlags.NeedToSetBeginAndEndTimesByHandpaws)
 	{
 		EEPROM_CurrentProfile.StartTimespan = FoxState.GlobalState.StartTimespan;
 		EEPROM_CurrentProfile.EndTimespan = FoxState.GlobalState.EndTimespan;
 		EEPROM_UpdateCurrentProfile();
 
-		uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
-		SendResponse(SetBeginAndEndTimes, 1, &response);
+		if (PendingCommandsFlags.NeedToSetBeginAndEndTimes)
+		{
+			uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
+			SendResponse(SetBeginAndEndTimes, 1, &response);
+			PendingCommandsFlags.NeedToSetBeginAndEndTimes = false;
+		}
 
-		PendingCommandsFlags.NeedToSetBeginAndEndTimes = false;
+		if (PendingCommandsFlags.NeedToSetBeginAndEndTimesByHandpaws)
+		{
+			EmitFoxSettingsChangedEvent();
+			PendingCommandsFlags.NeedToSetBeginAndEndTimesByHandpaws = false;
+		}
 	}
 }
 
 void Main_ProcessSetPower(void)
 {
-	if (PendingCommandsFlags.NeedToSetPower)
+	if (PendingCommandsFlags.NeedToSetPower || PendingCommandsFlags.NeedToSetPowerByHandpaws)
 	{
 		EEPROM_CurrentProfile.Power = FoxState.Power;
 		EEPROM_UpdateCurrentProfile();
 
-		uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
-		SendResponse(SetFoxPower, 1, &response);
+		if (PendingCommandsFlags.NeedToSetPower)
+		{
+			uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
+			SendResponse(SetFoxPower, 1, &response);
+			PendingCommandsFlags.NeedToSetPower = false;
+		}
 
-		PendingCommandsFlags.NeedToSetPower = false;
+		if (PendingCommandsFlags.NeedToSetPowerByHandpaws)
+		{
+			EmitFoxSettingsChangedEvent();
+			PendingCommandsFlags.NeedToSetPowerByHandpaws = false;
+		}
 	}
 }
 

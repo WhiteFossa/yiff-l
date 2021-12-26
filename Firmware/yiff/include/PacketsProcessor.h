@@ -153,7 +153,9 @@ typedef enum
 
 	ArmingInitiated = 0x04,
 
-	Disarmed = 0x05
+	Disarmed = 0x05,
+
+	SettingsChanged = 0x06
 }
 EventsFromFoxEnum;
 
@@ -387,6 +389,11 @@ void EmitFoxArmingInitiatedEvent(void);
  * Emits "Fox disarmed" event
  */
 void EmitFoxDisarmedEvent(void);
+
+/**
+ * Emits "Fox fox settings changed" event
+ */
+void EmitFoxSettingsChangedEvent(void);
 
 /**
  * Returns 0x00 if false, 0x01 if true

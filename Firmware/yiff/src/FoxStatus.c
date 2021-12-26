@@ -25,13 +25,28 @@ void FoxState_Init(void)
 	PendingCommandsFlags.NeedToAddNewProfile = false;
 	PendingCommandsFlags.NeedToSwitchProfile = false;
 	PendingCommandsFlags.NeedToSetProfileName = false;
+
 	PendingCommandsFlags.NeedToSetFrequency = false;
+	PendingCommandsFlags.NeedToSetFrequencyByHandpaws = false;
+
 	PendingCommandsFlags.NeedToSetCode = false;
+	PendingCommandsFlags.NeedToSetCodeByHandpaws = false;
+
 	PendingCommandsFlags.NeedToSetSpeed = false;
+	PendingCommandsFlags.NeedToSetSpeedByHandpaws = false;
+
 	PendingCommandsFlags.NeedToSetCycle = false;
+	PendingCommandsFlags.NeedToSetCycleByHandpaws = false;
+
 	PendingCommandsFlags.NeedToSetEndingToneDuration = false;
+	PendingCommandsFlags.NeedToSetEndingToneDurationByHandpaws = false;
+
 	PendingCommandsFlags.NeedToSetBeginAndEndTimes = false;
+	PendingCommandsFlags.NeedToSetBeginAndEndTimesByHandpaws = false;
+
 	PendingCommandsFlags.NeedToSetPower = false;
+	PendingCommandsFlags.NeedToSetPowerByHandpaws = false;
+
 	PendingCommandsFlags.NeedToArmFox = false;
 	PendingCommandsFlags.NeedToArmFoxByHandpaws = false;
 

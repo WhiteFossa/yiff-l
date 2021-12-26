@@ -440,6 +440,8 @@ void MenuDisplay_SelectCurrentProfileCloseHandler(uint8_t profileIndex)
 	}
 
 	MenuDisplay_DrawMenuDisplay();
+
+	EmitFoxSettingsChangedEvent();
 }
 
 void MenuDisplay_SelectFrequencyRange(void)
@@ -487,7 +489,7 @@ void MenuDisplay_SelectFrequencyRangeCloseHandler(uint8_t rangeIndex)
 	}
 
 	FoxState_SetFrequency(is144MHz, newFrequency);
-	PendingCommandsFlags.NeedToSetFrequency = true;
+	PendingCommandsFlags.NeedToSetFrequencyByHandpaws = true;
 
 	uint8_t popupBufferSize = 16;
 	char popupBuffer[popupBufferSize];
@@ -565,7 +567,7 @@ void MenuDisplay_FormatFrequency(int32_t frequencyHz, char buffer[YHL_NUMBER_INP
 void MenuDisplay_EnterFrequencyOnEnterHandler(int32_t frequency)
 {
 	FoxState_SetFrequency(FoxState.Frequency.Is144MHz, frequency);
-	PendingCommandsFlags.NeedToSetFrequency = true;
+	PendingCommandsFlags.NeedToSetFrequencyByHandpaws = true;
 
 	MenuDisplay_DrawMenuDisplay();
 }
@@ -599,7 +601,7 @@ void MenuDisplay_SelectCode(void)
 void MenyDisplay_SelectCodeCloseHandler(uint8_t codeIndex)
 {
 	FoxState.Code = (FoxCodeEnum)codeIndex;
-	PendingCommandsFlags.NeedToSetCode = true;
+	PendingCommandsFlags.NeedToSetCodeByHandpaws = true;
 
 	MenuDisplay_DrawMenuDisplay();
 }
@@ -629,7 +631,7 @@ void MenuDisplay_SelectFoxSpeed(void)
 void MenyDisplay_SelectFoxSpeedCloseHandler(uint8_t speedIndex)
 {
 	FoxState.IsFast = MenuDisplay_IndexToFoxSpeed(speedIndex);
-	PendingCommandsFlags.NeedToSetSpeed = true;
+	PendingCommandsFlags.NeedToSetSpeedByHandpaws = true;
 
 	MenuDisplay_DrawMenuDisplay();
 }
@@ -685,7 +687,7 @@ void MenuDisplay_SelectIsContinuousCycle(void)
 void MenuDisplay_SelectIsContinuousCycleHandler(uint8_t cycleTypeIndex)
 {
 	FoxState.Cycle.IsContinuous = MenuDisplay_IndexToCycleType(cycleTypeIndex);
-	PendingCommandsFlags.NeedToSetCycle = true;
+	PendingCommandsFlags.NeedToSetCycleByHandpaws = true;
 
 	MenuDisplay_DrawMenuDisplay();
 }
@@ -750,7 +752,7 @@ void MenuDisplay_ShowCycleIsContinuousWarning(void)
 void MenuDisplay_EnterEndingToneDurationOnEnterHandler(int32_t duration)
 {
 	FoxState_SetEndingtoneDuration((uint8_t)duration);
-	PendingCommandsFlags.NeedToSetEndingToneDuration = true;
+	PendingCommandsFlags.NeedToSetEndingToneDurationByHandpaws = true;
 
 	MenuDisplay_DrawMenuDisplay();
 }
@@ -788,7 +790,7 @@ void MenuDisplay_EnterTxDuration(void)
 void MenuDisplay_EnterTxDurationEnterHandler(uint32_t duration)
 {
 	FoxState_SetCycleDurations(duration, FoxState.Cycle.PauseTime);
-	PendingCommandsFlags.NeedToSetCycle = true;
+	PendingCommandsFlags.NeedToSetCycleByHandpaws = true;
 
 	MenuDisplay_DrawMenuDisplay();
 }
@@ -820,7 +822,7 @@ void MenuDisplay_EnterPauseDuration(void)
 void MenuDisplay_EnterPauseDurationEnterHandler(uint32_t duration)
 {
 	FoxState_SetCycleDurations(FoxState.Cycle.TxTime, duration);
-	PendingCommandsFlags.NeedToSetCycle = true;
+	PendingCommandsFlags.NeedToSetCycleByHandpaws = true;
 
 	MenuDisplay_DrawMenuDisplay();
 }
@@ -846,7 +848,7 @@ void MenuDisplay_EnterStartTime(void)
 void MenuDisplay_EnterStartTimeEnterHandler(uint32_t secondsSinceMidnight)
 {
 	FoxState_SetBeginAndEndTimespans(secondsSinceMidnight, FoxState.GlobalState.EndTimespan);
-	PendingCommandsFlags.NeedToSetBeginAndEndTimes = true;
+	PendingCommandsFlags.NeedToSetBeginAndEndTimesByHandpaws = true;
 
 	MenuDisplay_DrawMenuDisplay();
 }
@@ -872,7 +874,7 @@ void MenuDisplay_EnterFinishTime(void)
 void MenuDisplay_EnterFinishTimeEnterHandler(uint32_t secondsSinceMidnight)
 {
 	FoxState_SetBeginAndEndTimespans(FoxState.GlobalState.StartTimespan, secondsSinceMidnight);
-	PendingCommandsFlags.NeedToSetBeginAndEndTimes = true;
+	PendingCommandsFlags.NeedToSetBeginAndEndTimesByHandpaws = true;
 
 	MenuDisplay_DrawMenuDisplay();
 }
@@ -934,7 +936,7 @@ void MenuDisplay_EnterTxPowerOnEnterHandler(int32_t power)
 	float actualPower = power / (float)YHL_MENU_TX_POWER_MULTIPLIER;
 
 	FoxState_SetPower(actualPower);
-	PendingCommandsFlags.NeedToSetPower = true;
+	PendingCommandsFlags.NeedToSetPowerByHandpaws = true;
 
 	MenuDisplay_DrawMenuDisplay();
 }

@@ -41,9 +41,19 @@ typedef struct
 	bool NeedToSetFrequency;
 
 	/**
+	 * If true, then we need to update frequency (from fox menu)
+	 */
+	bool NeedToSetFrequencyByHandpaws;
+
+	/**
 	 * If true, then we need to update fox code
 	 */
 	bool NeedToSetCode;
+
+	/**
+	 * If true, then we need to update fox code (from fox menu)
+	 */
+	bool NeedToSetCodeByHandpaws;
 
 	/**
 	 * If true, then we need to update fox speed
@@ -51,9 +61,19 @@ typedef struct
 	bool NeedToSetSpeed;
 
 	/**
+	 * If true, then we need to update fox speed (from fox menu)
+	 */
+	bool NeedToSetSpeedByHandpaws;
+
+	/**
 	 * If true, then we need to update fox cycle
 	 */
 	bool NeedToSetCycle;
+
+	/**
+	 * If true, then we need to update fox cycle (from fox menu)
+	 */
+	bool NeedToSetCycleByHandpaws;
 
 	/**
 	 * If true, then we need to update ending tone duration
@@ -61,14 +81,29 @@ typedef struct
 	bool NeedToSetEndingToneDuration;
 
 	/**
+	 * If true, then we need to update ending tone duration (from fox menu)
+	 */
+	bool NeedToSetEndingToneDurationByHandpaws;
+
+	/**
 	 * If true, then we need to update start and end times
 	 */
 	bool NeedToSetBeginAndEndTimes;
 
 	/**
+	 * If true, then we need to update start and end times (from fox menu)
+	 */
+	bool NeedToSetBeginAndEndTimesByHandpaws;
+
+	/**
 	 * If true, then we need to set fox power
 	 */
 	bool NeedToSetPower;
+
+	/**
+	 * If true, then we need to set fox power (from fox menu)
+	 */
+	bool NeedToSetPowerByHandpaws;
 
 	/**
 	 * If true, then we need to arm fox

@@ -1115,6 +1115,11 @@ void EmitFoxDisarmedEvent(void)
 	SendEvent(Disarmed, 0, NULL);
 }
 
+void EmitFoxSettingsChangedEvent(void)
+{
+	SendEvent(SettingsChanged, 0, NULL);
+}
+
 uint8_t FromBool(bool data)
 {
 	if (data)
