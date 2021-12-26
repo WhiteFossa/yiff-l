@@ -441,7 +441,7 @@ void MenuDisplay_SelectCurrentProfileCloseHandler(uint8_t profileIndex)
 
 	MenuDisplay_DrawMenuDisplay();
 
-	EmitFoxSettingsChangedEvent();
+	EmitProfileSwitchedEvent();
 }
 
 void MenuDisplay_SelectFrequencyRange(void)

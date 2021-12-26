@@ -261,7 +261,7 @@ void Main_ProcessSetFrequency(void)
 
 		if (PendingCommandsFlags.NeedToSetFrequencyByHandpaws)
 		{
-			EmitFoxSettingsChangedEvent();
+			EmitProfileSettingsChangedEvent();
 			PendingCommandsFlags.NeedToSetFrequencyByHandpaws = false;
 		}
 	}
@@ -283,7 +283,7 @@ void Main_ProcessSetCode(void)
 
 		if (PendingCommandsFlags.NeedToSetCodeByHandpaws)
 		{
-			EmitFoxSettingsChangedEvent();
+			EmitProfileSettingsChangedEvent();
 			PendingCommandsFlags.NeedToSetCodeByHandpaws = false;
 		}
 	}
@@ -305,7 +305,7 @@ void Main_ProcessSetSpeed(void)
 
 		if (PendingCommandsFlags.NeedToSetSpeedByHandpaws)
 		{
-			EmitFoxSettingsChangedEvent();
+			EmitProfileSettingsChangedEvent();
 			PendingCommandsFlags.NeedToSetSpeedByHandpaws = false;
 		}
 	}
@@ -327,7 +327,7 @@ void Main_ProcessSetCycle(void)
 
 		if (PendingCommandsFlags.NeedToSetCycleByHandpaws)
 		{
-			EmitFoxSettingsChangedEvent();
+			EmitProfileSettingsChangedEvent();
 			PendingCommandsFlags.NeedToSetCycleByHandpaws = false;
 		}
 	}
@@ -349,7 +349,7 @@ void Main_ProcessSetEndingToneDuration(void)
 
 		if (PendingCommandsFlags.NeedToSetEndingToneDurationByHandpaws)
 		{
-			EmitFoxSettingsChangedEvent();
+			EmitProfileSettingsChangedEvent();
 			PendingCommandsFlags.NeedToSetEndingToneDurationByHandpaws = false;
 		}
 	}
@@ -372,7 +372,7 @@ void Main_ProcessSetBeginAndEndTimes(void)
 
 		if (PendingCommandsFlags.NeedToSetBeginAndEndTimesByHandpaws)
 		{
-			EmitFoxSettingsChangedEvent();
+			EmitProfileSettingsChangedEvent();
 			PendingCommandsFlags.NeedToSetBeginAndEndTimesByHandpaws = false;
 		}
 	}
@@ -394,7 +394,7 @@ void Main_ProcessSetPower(void)
 
 		if (PendingCommandsFlags.NeedToSetPowerByHandpaws)
 		{
-			EmitFoxSettingsChangedEvent();
+			EmitProfileSettingsChangedEvent();
 			PendingCommandsFlags.NeedToSetPowerByHandpaws = false;
 		}
 	}

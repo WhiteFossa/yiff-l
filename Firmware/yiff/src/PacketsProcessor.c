@@ -1115,9 +1115,14 @@ void EmitFoxDisarmedEvent(void)
 	SendEvent(Disarmed, 0, NULL);
 }
 
-void EmitFoxSettingsChangedEvent(void)
+void EmitProfileSettingsChangedEvent(void)
 {
-	SendEvent(SettingsChanged, 0, NULL);
+	SendEvent(ProfileSettingsChanged, 0, NULL);
+}
+
+void EmitProfileSwitchedEvent(void)
+{
+	SendEvent(ProfileSwitched, 0, NULL);
 }
 
 uint8_t FromBool(bool data)

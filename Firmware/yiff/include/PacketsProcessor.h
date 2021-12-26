@@ -155,7 +155,9 @@ typedef enum
 
 	Disarmed = 0x05,
 
-	SettingsChanged = 0x06
+	ProfileSettingsChanged = 0x06,
+
+	ProfileSwitched = 0x07
 }
 EventsFromFoxEnum;
 
@@ -391,9 +393,14 @@ void EmitFoxArmingInitiatedEvent(void);
 void EmitFoxDisarmedEvent(void);
 
 /**
- * Emits "Fox fox settings changed" event
+ * Emits "Profile settings changed" event
  */
-void EmitFoxSettingsChangedEvent(void);
+void EmitProfileSettingsChangedEvent(void);
+
+/**
+ * Emits "Profile switched" event
+ */
+void EmitProfileSwitchedEvent(void);
 
 /**
  * Returns 0x00 if false, 0x01 if true
