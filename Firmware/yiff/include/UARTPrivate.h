@@ -14,11 +14,6 @@
 UART_PacketsSMStateEnum UART_PSMState;
 
 /**
- * Transmission buffer (of dynamic size)
- */
-uint8_t* UART_TxBuffer;
-
-/**
  * Rx buffer (we work byte-by-byte, so 1 byte is enough)
  */
 uint8_t UART_RxByteBuffer;
@@ -45,9 +40,18 @@ uint16_t UART_RxTimeoutTimer;
 uint8_t UART_ExpectedPacketLength;
 
 /**
- * Pointer to function, called when new packet received. DO NOT FORGET
- * TO CALL free() ON PACKET AFTER PROCESSING
+ * Received packet, ready to be processed
  */
-void (*UART_OnNewPacket)(uint8_t packetFullLength, uint8_t* packet);
+uint8_t UART_ReceivedPacket[YHL_UART_PACKET_MAX_SIZE];
+
+/**
+ * Full length of received packet
+ */
+uint8_t UART_ReceivedPacketFullLength;
+
+/**
+ * If true then we have packet, ready to be processed.
+ */
+bool UART_IsPacketReady;
 
 #endif /* INCLUDE_UARTPRIVATE_H_ */

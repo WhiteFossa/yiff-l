@@ -61,13 +61,18 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *UartHandle)
 			if (UART_RxPacketBufferIndex == UART_ExpectedPacketLength)
 			{
 				/* We have a new packet */
+				if (UART_IsPacketReady)
+				{
+					/* Previous packet isn't processed yet, dying */
+					SelfDiagnostics_HaltOnFailure(YhlFailureCause_NewPacketWhilePreviousIsNotProcessed);
+				}
+
 				UART_PSMState = Listen;
 				UART_RxPacketBufferIndex = 0;
 
-				uint8_t packet[YHL_UART_PACKET_MAX_SIZE];
-				memcpy(packet, UART_RxPacketBuffer, UART_ExpectedPacketLength);
-
-				(*UART_OnNewPacket)(UART_ExpectedPacketLength, packet);
+				UART_ReceivedPacketFullLength = UART_ExpectedPacketLength;
+				memcpy(UART_ReceivedPacket, UART_RxPacketBuffer, UART_ReceivedPacketFullLength);
+				UART_IsPacketReady = true;
 			}
 
 			UART_AskForNextByte();
@@ -80,13 +85,12 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *UartHandle)
 	}
 }
 
-void UART_StartListen(void (*onNewPacketFunction)(uint8_t packetLength, uint8_t* packet))
+void UART_StartListen(void)
 {
 	UART_PSMState = Listen;
 	UART_RxPacketBufferIndex = 0;
 	UART_ExpectedPacketLength = 0;
 	UART_RxTimeoutTimer = YHL_UART_NON_BLOCKING_RX_TIMEOUT;
-	UART_OnNewPacket = onNewPacketFunction;
 
 	UART_AskForNextByte();
 }
@@ -123,8 +127,8 @@ void UART_ReadBlocking(uint8_t* buffer, uint8_t size)
 
 void UART_Init(void)
 {
-	UART_TxBuffer = NULL;
 	UART_PSMState = BeforeListen;
+	UART_IsPacketReady = false;
 
 	L2HAL_SysTick_RegisterHandler(&UART_Tick);
 }

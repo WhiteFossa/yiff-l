@@ -267,7 +267,11 @@ void HL_Setup80mAntenna(void)
 		DrawMatchingDisplay(FoxState);
 
 		HAL_SetAntennaMatchingValue(amValue);
-		HAL_Delay(YHL_HL_FOX_WAIT_FOR_UANT_DELAY);
+		for (uint32_t delay = 0; delay < YHL_HL_FOX_WAIT_FOR_UANT_DELAY; delay++)
+		{
+			Main_ProcessIncomingPackets();
+			HAL_Delay(1);
+		}
 
 		float measuredSignalLevel = HAL_GetUAntVolts();
 		FoxState.MatchingDisplayData.MatchingLevels[amValue] = measuredSignalLevel;
@@ -329,7 +333,7 @@ void HL_RenameBluetoothDevice(char* newName)
 	L2HAL_HC06_SetPIN(&HC06_Context, YHL_HL_BLUETOOTH_PIN);
 
 	/* We need to restart UART listening after low-level UART commands in Bluetooth initialization code */
-	UART_StartListen(&OnNewRawPacket);
+	UART_StartListen();
 }
 
 void HL_TurnDisplayOn(void)

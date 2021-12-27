@@ -11,6 +11,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <string.h>
+#include <stdio.h>
 #include <stm32f1xx_hal.h>
 #include <l2hal_aux.h>
 #include <l2hal_errors.h>

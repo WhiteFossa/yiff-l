@@ -59,8 +59,10 @@ extern uint8_t UART_RxPacketBuffer[YHL_UART_PACKET_MAX_SIZE];
 extern uint8_t UART_RxPacketBufferIndex;
 extern uint16_t UART_RxTimeoutTimer;
 extern uint8_t UART_ExpectedPacketLength;
-extern void (*UART_OnNewPacket)(uint8_t packetFullLength, uint8_t* packet);
 extern volatile bool UART_TransmissionInProgress;
+extern uint8_t UART_ReceivedPacket[YHL_UART_PACKET_MAX_SIZE];
+extern uint8_t UART_ReceivedPacketFullLength;
+extern bool UART_IsPacketReady;
 
 /**
  * TX completed handler
@@ -78,10 +80,9 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *UartHandle);
 void UART_Init(void);
 
 /**
- * Call it to start to listen for incoming packets. Feed it with packet processing function.
- * DO NOT FORGET TO CALL free() ON PACKET AFTER PROCESSING
+ * Call it to start to listen for incoming packets.
  */
-void UART_StartListen(void (*onNewPacketFunction)(uint8_t packetLength, uint8_t* packet));
+void UART_StartListen(void);
 
 /**
  * Cancels listening

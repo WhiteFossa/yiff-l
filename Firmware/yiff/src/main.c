@@ -128,9 +128,6 @@ int main(int argc, char* argv[])
 	/* Initializing sleepmode timers */
 	Sleepmodes_Init();
 
-	/* Starting to listen for commands */
-	UART_StartListen(&OnNewRawPacket);
-
 	/* Initializing hardware controls */
 	HardwareControlsEvents.IsLeftButtonPressed = false;
 	HardwareControlsEvents.IsRightButtonPressed = false;
@@ -153,8 +150,14 @@ int main(int argc, char* argv[])
 
 	/* Debugging stuff end */
 
+	/* Starting to listen for commands */
+	UART_StartListen();
+
 	while(true)
 	{
+		/* Processing incoming packets */
+		Main_ProcessIncomingPackets();
+
 		/* Preventing sleep if fox is transmitting and so on */
 		Main_ControlSleep();
 
@@ -768,6 +771,15 @@ void Main_InitDisplayAndShowBootScreen(void)
 	FMGL_API_PushFramebuffer(&fmglContext);
 }
 
+void Main_ProcessIncomingPackets(void)
+{
+	if (UART_IsPacketReady)
+	{
+		OnNewRawPacket(UART_ReceivedPacketFullLength, UART_ReceivedPacket);
+
+		UART_IsPacketReady = false;
+	}
+}
 
 #pragma GCC diagnostic pop
 

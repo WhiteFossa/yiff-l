@@ -525,6 +525,11 @@ typedef enum
 	 * Null pointer is given to TimeInputDisplay_CostructTimeFormatString()
 	 */
 	YhlFailureCause_NullPtrInTimeInputDisplayCostructTimeFormatString = 101,
+
+	/**
+	 * New packet came via UART, but previous still not processed yet
+	 */
+	YhlFailureCause_NewPacketWhilePreviousIsNotProcessed = 102,
 }
 YhlFailureCausesEnum;
 
