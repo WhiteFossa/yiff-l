@@ -27,7 +27,7 @@ extern FoxStateStruct FoxState;
  * If defined, then antenna matching will be disabled, and SWD will be kept enabled.
  * Otherwise SWD connection will be dropped when antenna matching starts
  */
-#define HAL_DISABLE_ANTENNA_MATCHING
+/* #define HAL_DISABLE_ANTENNA_MATCHING */
 
 /***************
  * PORT B pins *
@@ -173,12 +173,6 @@ extern FoxStateStruct FoxState;
  * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
  */
 #define HAL_AM_MAX_VALUE 63
-
-/**
- * Pause in milliseconds for transient processes during antenna matching.
- * Logic: carrier is suppressed -> pause -> matching switch -> pause -> carrier restored
- */
-#define HAL_AM_PAUSE 100
 
 /**
  * Left button

@@ -53,15 +53,9 @@ extern L2HAL_HC06_ContextStruct HC06_Context;
 #define YHL_HL_FOX_PREPARATION_TIME 5U
 
 /**
- * Fox must be ready for transmission not later than this amount of seconds after
- * Main_PrepareAndMatchAntenna() call
+ * Fox must be ready for transmission not later than this amount of seconds antenna matching initiation
  */
 #define YHL_HL_FOX_PREPARATION_AND_MATCHING_TIME 120U
-
-/**
- * How long to wait for UAnt measurement after changing in antenna matching (in cycles)
- */
-#define YHL_HL_FOX_WAIT_FOR_UANT_DELAY 400
 
 /**
  * Switch bluetooth power off for this duration when renaming device
@@ -161,19 +155,6 @@ void HL_UnPrepareFoxFromCycle(void);
 bool HL_CheckIsFoxPrepared(void);
 
 /**
- * Setup antenna matching for optimal output signal
- */
-void HL_Setup80mAntenna(void);
-
-/**
- * Prepares for and matches antenna:
- * 1) Prepares fox
- * 2) Waits for U80m lock
- * 3) Matches antenna
- */
-void HL_PrepareAndMatch80m(void);
-
-/**
  * Renames bluetooth device (will lead to bluetooth device power cycling)
  */
 void HL_RenameBluetoothDevice(char* newName);
@@ -197,5 +178,10 @@ void HL_TurnBluetoothOn(void);
  * Powers bluetooth down
  */
 void HL_TurnBluetoothOff(void);
+
+/**
+ * Is U80m locked?
+ */
+bool HL_CheckIfU80mLocked(void);
 
 #endif /* INCLUDE_HARDWARELOGIC_H_ */

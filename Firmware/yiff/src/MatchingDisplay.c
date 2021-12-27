@@ -41,7 +41,7 @@ void DrawMatchingStatusString(uint8_t step)
 {
 	uint8_t bufferSize = 32;
 	char buffer[bufferSize];
-	snprintf(buffer, bufferSize, "Matching: %d/%d", step, HAL_AM_MAX_VALUE);
+	snprintf(buffer, bufferSize, "Matching: %d/%d", step + 1, HAL_AM_MAX_VALUE + 1);
 
 	uint16_t stringWidth;
 	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, 0, 0, &stringWidth, NULL, true, buffer);

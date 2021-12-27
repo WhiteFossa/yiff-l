@@ -530,6 +530,16 @@ typedef enum
 	 * New packet came via UART, but previous still not processed yet
 	 */
 	YhlFailureCause_NewPacketWhilePreviousIsNotProcessed = 102,
+
+	/**
+	 * Wrong antenna matcher state machine state in AMSM_MoveToNextState()
+	 */
+	YhlFailureCause_WrongAMSMStateInAMSMMoveToNextState = 103,
+
+	/**
+	 * Antenna matching already in progress, but new request to match came
+	 */
+	YhlFailureCause_AntennaMatchingAlreadyInProgress = 104,
 }
 YhlFailureCausesEnum;
 

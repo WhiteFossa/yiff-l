@@ -35,6 +35,7 @@
 #include <Sleepmodes.h>
 #include <Random.h>
 #include <Resources/boot_logo.h>
+#include <AntennaMatcher.h>
 
 /**
  * EEPROM-related stuff
@@ -127,11 +128,6 @@ void Main_MeasureBatteryLevel(void);
 void Main_ProcessFoxArming(void);
 
 /**
- * Common code for fox arming both by command and by hands
- */
-void Main_ProcessFoxArmingCommon(void);
-
-/**
  * Left button pressed event
  */
 void Main_OnLeftButtonPressedInterrupt(void);
@@ -173,5 +169,10 @@ void Main_ControlSleep(void);
  * Initialize display and show splash screen
  */
 void Main_InitDisplayAndShowBootScreen(void);
+
+/**
+ * Common code for fox arming by command and by hands
+ */
+void Main_ProcessFoxArmingCommon(void);
 
 #endif /* INCLUDE_MAINPRIVATE_H_ */
