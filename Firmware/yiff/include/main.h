@@ -47,4 +47,9 @@ void Main_PrepareAndMatchAntenna(void);
  */
 void Main_SetDefaultButtonsActions(void);
 
+/**
+ * Checking for new UART packets and processes them
+ */
+void Main_ProcessIncomingPackets(void);
+
 #endif /* __MAIN_H */

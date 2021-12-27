@@ -26,7 +26,7 @@
 /**
  * Firmware version
  */
-#define YHL_VER_SOFTWARE_VERSION 1U
+#define YHL_VER_SOFTWARE_VERSION 2U
 
 /**
  * Default serial number for newly-formatted EERPOM. 0 means "need to be set"

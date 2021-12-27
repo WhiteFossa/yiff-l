@@ -59,9 +59,9 @@ extern L2HAL_HC06_ContextStruct HC06_Context;
 #define YHL_HL_FOX_PREPARATION_AND_MATCHING_TIME 120U
 
 /**
- * How long to wait for UAnt measurement after changing in antenna matching
+ * How long to wait for UAnt measurement after changing in antenna matching (in cycles)
  */
-#define YHL_HL_FOX_WAIT_FOR_UANT_DELAY 500
+#define YHL_HL_FOX_WAIT_FOR_UANT_DELAY 400
 
 /**
  * Switch bluetooth power off for this duration when renaming device

@@ -5,6 +5,7 @@
  *      Author: fossa
  */
 
+#include <HAL.h>
 #include <Random.h>
 
 void Rand_GatherEnthropy(void)

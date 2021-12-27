@@ -174,5 +174,4 @@ void Main_ControlSleep(void);
  */
 void Main_InitDisplayAndShowBootScreen(void);
 
-
 #endif /* INCLUDE_MAINPRIVATE_H_ */

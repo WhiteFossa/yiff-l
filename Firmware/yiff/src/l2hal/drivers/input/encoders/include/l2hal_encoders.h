@@ -42,6 +42,7 @@
 #ifndef L2HAL_DRIVERS_INPUT_ENCODERS_INCLUDE_L2HAL_ENCODERS_H_
 #define L2HAL_DRIVERS_INPUT_ENCODERS_INCLUDE_L2HAL_ENCODERS_H_
 
+#include <stdlib.h>
 #include <l2hal_buttons.h>
 
 /**
