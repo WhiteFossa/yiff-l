@@ -1052,7 +1052,7 @@ Wire Wire Line
 Wire Wire Line
 	14500 1975 14500 2150
 Text Notes 14625 1925 0    25   ~ 0
-200V P-P at antenna equivalent.\nAntenna equivalent is 240 Ohm resistor\nin series with 35pF capacitor.
+200V P-P at antenna equivalent.\nAntenna equivalents:\nShort: 240 Ohm resistor in series with 35pF capacitor. \nLong: 100 Ohm resistor in series with 75pF capacitor.
 Text GLabel 13400 3300 1    50   Input ~ 0
 ANT_3.5
 $Comp
