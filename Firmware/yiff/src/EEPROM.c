@@ -53,7 +53,7 @@ void EEPROM_Format(void)
 	/* Fox version information */
 	defaultHeader.HardwareRevision = YHL_VER_HARDWARE_REVISION;
 	defaultHeader.SoftwareVersion = YHL_VER_SOFTWARE_VERSION;
-	defaultHeader.SerialNumber = YHL_VER_DEFAULT_SERIAL_NUMBER;
+	defaultHeader.SerialNumber = Rand_GetRandom();
 
 	defaultHeader.CRCSum = 0;
 	EEPROM_WriteHeader(&defaultHeader, constantHeader.HeaderAddress);
