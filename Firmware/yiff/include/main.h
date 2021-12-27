@@ -37,10 +37,7 @@
 #ifndef __MAIN_H
 #define __MAIN_H
 
-/**
- * Prepares fox for activation and matches antenna (if needed)
- */
-void Main_PrepareAndMatchAntenna(void);
+#include <stdbool.h>
 
 /**
  * Set default buttons actions
@@ -51,5 +48,10 @@ void Main_SetDefaultButtonsActions(void);
  * Checking for new UART packets and processes them
  */
 void Main_ProcessIncomingPackets(void);
+
+/**
+ * Part of arming procedure
+ */
+void Main_PrepareFoxFoxTransmission(bool isArmFoxAfterMatching);
 
 #endif /* __MAIN_H */

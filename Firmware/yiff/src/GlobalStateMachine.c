@@ -95,7 +95,7 @@ void GSM_PrepareFox(void)
 	if (FoxState.GlobalState.CurrentState != GfsReady)
 	{
 		/* Slow preparation (with antenna matching) */
-		Main_PrepareAndMatchAntenna();
+		Main_PrepareFoxFoxTransmission(false);
 
 		FoxState.GlobalState.CurrentState = GfsReady;
 	}

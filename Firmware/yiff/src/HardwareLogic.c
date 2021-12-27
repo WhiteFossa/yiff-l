@@ -7,6 +7,7 @@
 
 #include <HardwareLogic.h>
 #include <HardwareLogicPrivate.h>
+#include <AntennaMatcher.h>
 
 void HL_Init()
 {
@@ -16,7 +17,6 @@ void HL_Init()
 	HL_U80mLockCounter = 0;
 	HL_U80mLockCallback = NULL;
 	HL_IsFoxPrepared = false;
-	HL_OptimalAntennaMatching = 0;
 	HL_IsU80mLocked = false;
 
 	HAL_SetU80mMeasuredCallback(HL_U80mMeasurementCallback);
@@ -151,7 +151,7 @@ void HL_PrepareFoxFor80mCycle(void)
 	HL_SetupU80m(HAL_GetU80mFromPower(FoxState.Power));
 
 	/* Switching antenna matching */
-	HAL_SetAntennaMatchingValue(HL_OptimalAntennaMatching);
+	HAL_SetAntennaMatchingValue(AMSM_GetOptimalMatching());
 }
 
 void HL_UnPrepareFoxFrom80mCycle(void)
@@ -239,56 +239,6 @@ bool HL_CheckIsFoxPrepared(void)
 	return HL_IsFoxPrepared;
 }
 
-void HL_Setup80mAntenna(void)
-{
-	if (FoxState.Frequency.Is144MHz)
-	{
-		SelfDiagnostics_HaltOnFailure(YhlFailureCause_AttemptToSetup80mAntennaWhile2m);
-	}
-
-	if (!HL_CheckIsFoxPrepared())
-	{
-		SelfDiagnostics_HaltOnFailure(YhlFailureCause_AttemptToSetup80mAntennaWhileFoxIsNotPrepared);
-	}
-
-	FoxState.ForceCarrierOn = true;
-
-	HL_ProcessManipulatorFoxStateChange();
-
-	HL_OptimalAntennaMatching = 0;
-	float signalLevel = 0;
-
-	for (uint8_t amValue = 0; amValue <= HAL_AM_MAX_VALUE; amValue ++)
-	{
-		/* Preventing sleep to completely show matching display */
-		Sleepmodes_PreventSleep();
-
-		FoxState.MatchingDisplayData.MatchingStep = amValue;
-		DrawMatchingDisplay(FoxState);
-
-		HAL_SetAntennaMatchingValue(amValue);
-		for (uint32_t delay = 0; delay < YHL_HL_FOX_WAIT_FOR_UANT_DELAY; delay++)
-		{
-			Main_ProcessIncomingPackets();
-			HAL_Delay(1);
-		}
-
-		float measuredSignalLevel = HAL_GetUAntVolts();
-		FoxState.MatchingDisplayData.MatchingLevels[amValue] = measuredSignalLevel;
-
-		if (measuredSignalLevel > signalLevel)
-		{
-			signalLevel = measuredSignalLevel;
-			HL_OptimalAntennaMatching = amValue;
-		}
-
-		EmitAntennaMatchingMeasurementEvent(amValue, HAL_AM_MAX_VALUE + 1, measuredSignalLevel);
-	}
-
-	FoxState.ForceCarrierOn = false;
-	HL_ProcessManipulatorFoxStateChange();
-}
-
 void HL_OnU80mLock(void)
 {
 	if (HL_IsU80mLocked)
@@ -297,29 +247,6 @@ void HL_OnU80mLock(void)
 	}
 
 	HL_IsU80mLocked = true;
-}
-
-void HL_PrepareAndMatch80m(void)
-{
-	if (FoxState.Frequency.Is144MHz)
-	{
-		SelfDiagnostics_HaltOnFailure(YhlFailureCause_2mOnHLPrepareAndMatch80m);
-	}
-
-	if (HL_CheckIsFoxPrepared())
-	{
-		/* Already prepared somehow, bug is somewhere */
-		SelfDiagnostics_HaltOnFailure(YhlFailureCause_FoxIsPreparedOnHLPrepareAndMatch80m);
-	}
-
-	HL_PrepareFoxForCycle();
-
-	while(!HL_IsU80mLocked)
-	{
-		HAL_Delay(100); /* No need to put it into constants */
-	}
-
-	HL_Setup80mAntenna();
 }
 
 void HL_RenameBluetoothDevice(char* newName)
@@ -403,4 +330,9 @@ void HL_TurnBluetoothOn(void)
 void HL_TurnBluetoothOff(void)
 {
 	HAL_SwitchBluetoothPower(false);
+}
+
+bool HL_CheckIfU80mLocked(void)
+{
+	return HL_IsU80mLocked;
 }

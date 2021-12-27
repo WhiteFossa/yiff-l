@@ -716,12 +716,6 @@ void HAL_SetAntennaMatchingValue(uint8_t value)
 		SelfDiagnostics_HaltOnFailure(YhlFailureCause_WrongAntennaMatchingValue);
 	}
 
-	/* Supressing carrier to decrease switching damage for relays */
-	FoxState.ForceCarrierOff = true;
-	HL_ProcessManipulatorFoxStateChange();
-
-	HAL_Delay(HAL_AM_PAUSE);
-
 	HAL_SwitchAntennaMatchingChannel(YHL_HAL_AM0, (value & 0b1) != 0);
 	HAL_SwitchAntennaMatchingChannel(YHL_HAL_AM1, (value & 0b10) != 0);
 	HAL_SwitchAntennaMatchingChannel(YHL_HAL_AM2, (value & 0b100) != 0);
@@ -729,11 +723,6 @@ void HAL_SetAntennaMatchingValue(uint8_t value)
 	HAL_SwitchAntennaMatchingChannel(YHL_HAL_AM4, (value & 0b10000) != 0);
 	HAL_SwitchAntennaMatchingChannel(YHL_HAL_AM5, (value & 0b100000) != 0);
 
-	HAL_Delay(HAL_AM_PAUSE);
-
-	/* Restoring carrier */
-	FoxState.ForceCarrierOff = false;
-	HL_ProcessManipulatorFoxStateChange();
 }
 
 void HAL_SwitchAntennaMatching(bool isOn)

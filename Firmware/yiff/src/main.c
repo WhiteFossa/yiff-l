@@ -106,6 +106,7 @@ int main(int argc, char* argv[])
 	/* Initializing state machines */
 	GSM_Init();
 	CSM_Init();
+	AMSM_Init();
 
 	/* Loading non-profile-related data from EEPROM into fox state */
 	strncpy(FoxState.Name, EEPROM_Header.Name, YHL_FOX_NAME_BUFFER_LENGTH);
@@ -182,6 +183,9 @@ int main(int argc, char* argv[])
 		Main_CheckRightButtonPressedEvent();
 		Main_CheckEncoderButtonPressedEvent();
 		Main_CheckEncoderRotationEvent();
+
+		/* Processing antenna matching */
+		AMSM_MoveToNextState();
 
 		RTC_Poll();
 	}
@@ -439,40 +443,40 @@ void Main_ProcessFoxArmingCommon(void)
 		SelfDiagnostics_HaltOnFailure(YhlFailureCause_AlreadyArmed);
 	}
 
-	EmitFoxArmingInitiatedEvent();
+	if (FoxState.Frequency.Is144MHz)
+	{
+		EmitFoxArmingInitiatedEvent();
+		GSM_Arm();
+		EmitFoxArmedEvent();
 
-	Main_PrepareAndMatchAntenna();
-	HL_UnPrepareFoxFromCycle();
+		return;
+	}
 
-	GSM_Arm();
-
-	EmitFoxArmedEvent();
+	Main_PrepareFoxFoxTransmission(true);
 }
 
-void Main_PrepareAndMatchAntenna(void)
+void Main_PrepareFoxFoxTransmission(bool isArmFoxAfterMatching)
 {
-	/* Waking fox fully to show matching display */
 	Sleepmodes_PreventSleep();
+
+	if (isArmFoxAfterMatching)
+	{
+		EmitFoxArmingInitiatedEvent();
+	}
 
 	if (FoxState.Frequency.Is144MHz)
 	{
 		HL_PrepareFoxForCycle();
-		return; /* No need to match antenna at 144MHz*/
+		return;
 	}
 
+	/* Arming display */
 	memset(FoxState.MatchingDisplayData.MatchingLevels, 0x00, YHL_MATCHING_LEVELS_COUNT * sizeof(float));
 	FoxState.MatchingDisplayData.MatchingStep = 0;
 	FoxState.GlobalState.IsMatchingInProgress = true;
 	FoxState.CurrentDisplay = AntennaMatchingDisplay;
 
-	HL_PrepareAndMatch80m();
-
-	FoxState.CurrentDisplay = StatusDisplay;
-	Main_SetDefaultButtonsActions();
-	FoxState.GlobalState.IsMatchingInProgress = false;
-
-	FMGL_API_ClearScreen(&fmglContext);
-
+	AMSM_StartMatching(isArmFoxAfterMatching);
 }
 
 void Main_MeasureBatteryLevel(void)
