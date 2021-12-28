@@ -24,7 +24,7 @@ namespace org.whitefossa.yiffhl.ViewModels
 
         public INavigation Navigation;
 
-        private AntennaMatchingStatus _previousMatchingStatus = AntennaMatchingStatus.InProgress;
+        private AntennaMatchingStatus _previousMatchingStatus = AntennaMatchingStatus.NotSet;
 
         private IProgressDialog _progressDialog;
 
@@ -85,40 +85,6 @@ namespace org.whitefossa.yiffhl.ViewModels
             _dynamicFoxStatusManager = App.Container.Resolve<IDynamicFoxStatusManager>();
         }
 
-        //private async Task OnFoxArmingInitiatedAsync(IFoxArmingInitiatedEvent foxArmingInitiatedEvent)
-        //{
-        //    MainModel.ArmingModel.Status = ArmingStatus.Initiated;
-        //    OnPropertyChanged(nameof(ArmingStatusFormatted));
-
-        //    MainModel.ArmingModel.MatchingData.Clear();
-        //    MainModel.ArmingModel.OrderdMatchingData = null;
-        //    MainModel.ArmingModel.BestMatchingPosition = 0;
-        //    MainModel.ArmingModel.BestMatchingPositionVoltage = 0;
-        //}
-
-        //private async Task OnAntennaMatchingMeasurementAsync(IAntennaMatchingMeasurementEvent antennaMatchingMeasurementEvent)
-        //{
-        //    var position = antennaMatchingMeasurementEvent.GetMatchingPosition();
-        //    var voltage = antennaMatchingMeasurementEvent.GetAntennaVoltage();
-
-        //    MainModel.ArmingModel.MatchingData.Add(position, voltage);
-        //    MainModel.ArmingModel.OrderdMatchingData = MainModel.ArmingModel.MatchingData
-        //        .OrderBy(kv => kv.Key);
-
-        //    // Seeking for best matching
-        //    if (voltage > MainModel.ArmingModel.BestMatchingPositionVoltage)
-        //    {
-        //        MainModel.ArmingModel.BestMatchingPositionVoltage = voltage;
-        //        MainModel.ArmingModel.BestMatchingPosition = position;
-        //    }
-
-        //    MainModel.ArmingModel.Status = ArmingStatus.MatchingInProgress;
-
-        //    MainModel.ArmingModel.CurrentMatchingPosition = antennaMatchingMeasurementEvent.GetMatchingPosition() + 1; // Cause counting from 0
-        //    MainModel.ArmingModel.TotalMatchingPositions = antennaMatchingMeasurementEvent.GetTotalMatchingPositionsCount();
-        //    OnPropertyChanged(nameof(ArmingStatusFormatted));
-        //}
-
         public async Task OnMatchingStatusChangedAsync()
         {
             OnPropertyChanged(nameof(MatchingStatusFormatted));
@@ -139,9 +105,7 @@ namespace org.whitefossa.yiffhl.ViewModels
 
             if (_previousMatchingStatus == AntennaMatchingStatus.InProgress
                 &&
-                newMatchingStatus == AntennaMatchingStatus.Completed
-                &&
-                isNewForApp)
+                newMatchingStatus == AntennaMatchingStatus.Completed)
             {
                 // We just completed antenna matching
                 await OnAntennaMatchingCompleted();

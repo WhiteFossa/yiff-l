@@ -6,6 +6,8 @@
 
         InProgress = 1,
 
-        Completed = 2
+        Completed = 2,
+
+        NotSet = int.MaxValue
     }
 }
