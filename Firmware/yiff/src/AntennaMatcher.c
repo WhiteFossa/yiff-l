@@ -90,8 +90,6 @@ void AMSM_MoveToNextState(void)
 
 			DrawMatchingDisplay(FoxState);
 
-			EmitAntennaMatchingMeasurementEvent(FoxState.AntennaMatching.CurrentPosition, HAL_AM_MAX_VALUE + 1, measuredSignalLevel);
-
 			AMSM_Timer = AMSM_OFF_COMMUTATION_DELAY;
 			AMSM_SupressCarrier(true);
 			AMSM_ForceCarrier(false);
