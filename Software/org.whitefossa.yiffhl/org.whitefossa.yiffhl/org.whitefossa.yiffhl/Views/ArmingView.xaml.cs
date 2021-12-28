@@ -55,9 +55,11 @@ namespace org.whitefossa.yiffhl.Views
 
             ViewModel.MainModel.OnFoxDisarmed += async (e) => await OnFoxDisarmedAsync(e);
             packetsProcessor.RegisterOnFoxDisarmedEventHandler(ViewModel.MainModel.OnFoxDisarmed);
+        }
 
-            ViewModel.MainModel.OnAntennaMatchingMeasurement += async (e) => await OnAntennaMatchingMeasurementAsync(e);
-            packetsProcessor.RegisterOnAntennaMatchingMeasurementEventHandler(ViewModel.MainModel.OnAntennaMatchingMeasurement);
+        public void OnMatchingStatusChanged()
+        {
+            ViewModel.OnMatchingStatusChanged();
         }
 
         private void MatchingGraphView_PaintSurface(object sender, SkiaSharp.Views.Forms.SKPaintSurfaceEventArgs e)
@@ -208,7 +210,7 @@ namespace org.whitefossa.yiffhl.Views
 
         protected override bool OnBackButtonPressed()
         {
-            if (ViewModel.MainModel.ArmingModel.Status != ArmingStatus.Completed)
+            if (ViewModel.MainModel.DynamicFoxStatus.AntennaMatchingStatus.Status != AntennaMatchingStatus.Completed)
             {
                 return true; // We can't interrupt arming process
             }
@@ -217,10 +219,10 @@ namespace org.whitefossa.yiffhl.Views
             return true;
         }
 
-        private async Task OnAntennaMatchingMeasurementAsync(IAntennaMatchingMeasurementEvent antennaMatchingMeasurementEvent)
-        {
-            MatchingGraphView.InvalidateSurface();
-        }
+        //private async Task OnAntennaMatchingMeasurementAsync(IAntennaMatchingMeasurementEvent antennaMatchingMeasurementEvent)
+        //{
+        //    MatchingGraphView.InvalidateSurface();
+        //}
 
         private async Task OnFoxDisarmedAsync(IFoxDisarmedEvent foxDisarmedEvent)
         {

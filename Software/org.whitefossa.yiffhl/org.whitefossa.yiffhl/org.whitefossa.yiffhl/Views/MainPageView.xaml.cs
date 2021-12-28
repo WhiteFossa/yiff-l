@@ -18,20 +18,10 @@ namespace org.whitefossa.yiffhl.Views
             set => BindingContext = value;
         }
 
-        /// <summary>
-        /// Arming view
-        /// </summary>
-        private ArmingView _armingView = new ArmingView();
-
         public MainPageView()
         {
             InitializeComponent();
-
-            // Attaching to events
-            var packetsProcessor = App.Container.Resolve<IPacketsProcessor>();
-
-            ViewModel.MainModel.OnFoxArmingInitiated += async (e) => await OnFoxArmingInitiated(e);
-            packetsProcessor.RegisterOnFoxArmingInitiatedEventHandler(ViewModel.MainModel.OnFoxArmingInitiated);
+            ViewModel.Navigation = Navigation;
         }
 
         private void pkFox_SelectedIndexChanged(object sender, EventArgs e)
@@ -75,16 +65,6 @@ namespace org.whitefossa.yiffhl.Views
 
             var finishTime = (sender as TimePicker).Time;
             ViewModel.SetFinishTimeCommand.Execute(finishTime);
-        }
-
-        private async Task OnFoxArmingInitiated(IFoxArmingInitiatedEvent foxArmingInitiatedEvent)
-        {
-            ViewModel.MainModel.ArmingModel.Status = ArmingStatus.Initiated;
-
-            Device.BeginInvokeOnMainThread(async () =>
-            {
-                await Navigation.PushModalAsync(_armingView);
-            });
         }
     }
 }

@@ -53,12 +53,12 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             float currentBestMatchVoltage
         )
         {
-            Debug.WriteLine($"Antenna matching:");
-            Debug.WriteLine($"Status: { status }");
-            Debug.WriteLine($"Time since last initiation: { timeSinceLastInitiation }");
-            Debug.WriteLine($"Total matcher positions: { totalMatcherPositions }");
-            Debug.WriteLine($"Current matcher position: { currentBestMatchPosition }");
-            Debug.WriteLine($"Current best match voltage: { currentBestMatchVoltage }");
+            _statusToLoad.AntennaMatchingStatus.Status = status;
+            _statusToLoad.AntennaMatchingStatus.TimeSinceLastInitiation = timeSinceLastInitiation;
+            _statusToLoad.AntennaMatchingStatus.TotalMatcherPositions = totalMatcherPositions;
+            _statusToLoad.AntennaMatchingStatus.CurrentMatcherPosition = currentMatcherPosition;
+            _statusToLoad.AntennaMatchingStatus.CurrentBestMatchPosition = currentBestMatchPosition;
+            _statusToLoad.AntennaMatchingStatus.CurrentBestMatchVoltage = currentBestMatchVoltage;
 
             _onGetDynamicFoxStatus(_statusToLoad);
         }

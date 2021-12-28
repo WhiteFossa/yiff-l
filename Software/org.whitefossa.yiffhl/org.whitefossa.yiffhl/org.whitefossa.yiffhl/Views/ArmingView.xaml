@@ -18,23 +18,83 @@
                     <StackLayout>
 
                         <Label
-                        Text="Fox arming"
+                        Text="Antenna matching"
                         HorizontalOptions="Center" />
 
                         <StackLayout
-                                HorizontalOptions="FillAndExpand"
-                                Orientation="Horizontal">
+                            HorizontalOptions="FillAndExpand"
+                            Orientation="Horizontal">
+                            
+                            <StackLayout
+                                    HorizontalOptions="FillAndExpand"
+                                    Orientation="Horizontal">
 
-                            <Label
-                                    Text="Arming status:"
-                                    HorizontalOptions="Start"
-                                    VerticalOptions="Center" />
+                                <Label
+                                        Text="Matching status:"
+                                        HorizontalOptions="Start"
+                                        VerticalOptions="Center" />
 
-                            <Label
-                                    Text="{Binding ArmingStatusFormatted}"
-                                    FontAttributes="Bold"
-                                    HorizontalOptions="StartAndExpand"
-                                    VerticalOptions="Center" />
+                                <Label
+                                        Text="{Binding MatchingStatusFormatted}"
+                                        FontAttributes="Bold"
+                                        HorizontalOptions="StartAndExpand"
+                                        VerticalOptions="Center" />
+                            </StackLayout>
+
+                            <StackLayout
+                                    HorizontalOptions="FillAndExpand"
+                                    Orientation="Horizontal">
+
+                                <Label
+                                        Text="Step:"
+                                        HorizontalOptions="Start"
+                                        VerticalOptions="Center" />
+
+                                <Label
+                                        Text="{Binding CurrentMatcherPositionFormatted}"
+                                        FontAttributes="Bold"
+                                        HorizontalOptions="StartAndExpand"
+                                        VerticalOptions="Center" />
+                            </StackLayout>
+
+                        </StackLayout>
+
+                        <StackLayout
+                            HorizontalOptions="FillAndExpand"
+                            Orientation="Horizontal">
+
+                            <StackLayout
+                                    HorizontalOptions="FillAndExpand"
+                                    Orientation="Horizontal">
+
+                                <Label
+                                        Text="Current voltage:"
+                                        HorizontalOptions="Start"
+                                        VerticalOptions="Center" />
+
+                                <Label
+                                        Text="{Binding CurrentVoltageFormatted}"
+                                        FontAttributes="Bold"
+                                        HorizontalOptions="StartAndExpand"
+                                        VerticalOptions="Center" />
+                            </StackLayout>
+
+                            <StackLayout
+                                    HorizontalOptions="FillAndExpand"
+                                    Orientation="Horizontal">
+
+                                <Label
+                                        Text="Maximal voltage:"
+                                        HorizontalOptions="Start"
+                                        VerticalOptions="Center" />
+
+                                <Label
+                                        Text="{Binding MaximalVoltageFormatted}"
+                                        FontAttributes="Bold"
+                                        HorizontalOptions="StartAndExpand"
+                                        VerticalOptions="Center" />
+                            </StackLayout>
+
                         </StackLayout>
                     </StackLayout>
                 </Frame>

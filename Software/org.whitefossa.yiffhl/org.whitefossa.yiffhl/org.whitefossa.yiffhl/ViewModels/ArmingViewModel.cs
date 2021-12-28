@@ -20,22 +20,21 @@ namespace org.whitefossa.yiffhl.ViewModels
         public MainModel MainModel;
 
         /// <summary>
-        /// Arming status, formatted
+        /// Matching status, formatted
         /// </summary>
-        public string ArmingStatusFormatted
+        public string MatchingStatusFormatted
         {
             get
             {
-                switch (MainModel.ArmingModel.Status)
+                switch (MainModel.DynamicFoxStatus.AntennaMatchingStatus.Status)
                 {
-                    case ArmingStatus.Initiated:
-                        return "Initiated";
+                    case AntennaMatchingStatus.NeverInitiated:
+                        return "Not initiated";
 
-                    case ArmingStatus.MatchingInProgress:
-                        return $"Antenna matching: { MainModel.ArmingModel.CurrentMatchingPosition } of " +
-                               $"{ MainModel.ArmingModel.TotalMatchingPositions }";
+                    case AntennaMatchingStatus.InProgress:
+                        return "In progress";
 
-                    case ArmingStatus.Completed:
+                    case AntennaMatchingStatus.Completed:
                         return "Completed";
 
                     default:
@@ -44,59 +43,91 @@ namespace org.whitefossa.yiffhl.ViewModels
             }
         }
 
+        public string CurrentMatcherPositionFormatted
+        {
+            get
+            {
+                return $"{ MainModel.DynamicFoxStatus.AntennaMatchingStatus.CurrentMatcherPosition + 1 } of " +
+                       $"{ MainModel.DynamicFoxStatus.AntennaMatchingStatus.TotalMatcherPositions }";
+            }
+        }
+
+        public string CurrentVoltageFormatted
+        {
+            get
+            {
+                return String.Format("{0:0.0V}", MainModel.DynamicFoxStatus.AntennaMatchingStatus.CurrentBestMatchVoltage);
+            }
+        }
+
+        public string MaximalVoltageFormatted
+        {
+            get
+            {
+                return String.Format("{0:0.0V}", MainModel.DynamicFoxStatus.AntennaMatchingStatus.CurrentBestMatchVoltage);
+            }
+        }
+
         public ArmingViewModel()
         {
             MainModel = App.Container.Resolve<IMainModel>() as MainModel;
 
             MainModel.OnFoxArmed += async (e) => await OnFoxArmedAsync(e);
-            MainModel.OnAntennaMatchingMeasurement += async (e) => await OnAntennaMatchingMeasurementAsync(e);
-            MainModel.OnFoxArmingInitiated += async (e) => await OnFoxArmingInitiatedAsync(e);
+            //MainModel.OnFoxArmingInitiated += async (e) => await OnFoxArmingInitiatedAsync(e);
 
             _packetsProcessor = App.Container.Resolve<IPacketsProcessor>();
 
             _packetsProcessor.RegisterOnFoxArmedEventHandler(MainModel.OnFoxArmed);
-            _packetsProcessor.RegisterOnAntennaMatchingMeasurementEventHandler(MainModel.OnAntennaMatchingMeasurement);
-            _packetsProcessor.RegisterOnFoxArmingInitiatedEventHandler(MainModel.OnFoxArmingInitiated);
+            //_packetsProcessor.RegisterOnFoxArmingInitiatedEventHandler(MainModel.OnFoxArmingInitiated);
         }
 
-        private async Task OnFoxArmingInitiatedAsync(IFoxArmingInitiatedEvent foxArmingInitiatedEvent)
-        {
-            MainModel.ArmingModel.Status = ArmingStatus.Initiated;
-            OnPropertyChanged(nameof(ArmingStatusFormatted));
+        //private async Task OnFoxArmingInitiatedAsync(IFoxArmingInitiatedEvent foxArmingInitiatedEvent)
+        //{
+        //    MainModel.ArmingModel.Status = ArmingStatus.Initiated;
+        //    OnPropertyChanged(nameof(ArmingStatusFormatted));
 
-            MainModel.ArmingModel.MatchingData.Clear();
-            MainModel.ArmingModel.OrderdMatchingData = null;
-            MainModel.ArmingModel.BestMatchingPosition = 0;
-            MainModel.ArmingModel.BestMatchingPositionVoltage = 0;
-        }
+        //    MainModel.ArmingModel.MatchingData.Clear();
+        //    MainModel.ArmingModel.OrderdMatchingData = null;
+        //    MainModel.ArmingModel.BestMatchingPosition = 0;
+        //    MainModel.ArmingModel.BestMatchingPositionVoltage = 0;
+        //}
 
-        private async Task OnAntennaMatchingMeasurementAsync(IAntennaMatchingMeasurementEvent antennaMatchingMeasurementEvent)
-        {
-            var position = antennaMatchingMeasurementEvent.GetMatchingPosition();
-            var voltage = antennaMatchingMeasurementEvent.GetAntennaVoltage();
+        //private async Task OnAntennaMatchingMeasurementAsync(IAntennaMatchingMeasurementEvent antennaMatchingMeasurementEvent)
+        //{
+        //    var position = antennaMatchingMeasurementEvent.GetMatchingPosition();
+        //    var voltage = antennaMatchingMeasurementEvent.GetAntennaVoltage();
 
-            MainModel.ArmingModel.MatchingData.Add(position, voltage);
-            MainModel.ArmingModel.OrderdMatchingData = MainModel.ArmingModel.MatchingData
-                .OrderBy(kv => kv.Key);
+        //    MainModel.ArmingModel.MatchingData.Add(position, voltage);
+        //    MainModel.ArmingModel.OrderdMatchingData = MainModel.ArmingModel.MatchingData
+        //        .OrderBy(kv => kv.Key);
 
-            // Seeking for best matching
-            if (voltage > MainModel.ArmingModel.BestMatchingPositionVoltage)
-            {
-                MainModel.ArmingModel.BestMatchingPositionVoltage = voltage;
-                MainModel.ArmingModel.BestMatchingPosition = position;
-            }
+        //    // Seeking for best matching
+        //    if (voltage > MainModel.ArmingModel.BestMatchingPositionVoltage)
+        //    {
+        //        MainModel.ArmingModel.BestMatchingPositionVoltage = voltage;
+        //        MainModel.ArmingModel.BestMatchingPosition = position;
+        //    }
 
-            MainModel.ArmingModel.Status = ArmingStatus.MatchingInProgress;
+        //    MainModel.ArmingModel.Status = ArmingStatus.MatchingInProgress;
 
-            MainModel.ArmingModel.CurrentMatchingPosition = antennaMatchingMeasurementEvent.GetMatchingPosition() + 1; // Cause counting from 0
-            MainModel.ArmingModel.TotalMatchingPositions = antennaMatchingMeasurementEvent.GetTotalMatchingPositionsCount();
-            OnPropertyChanged(nameof(ArmingStatusFormatted));
-        }
+        //    MainModel.ArmingModel.CurrentMatchingPosition = antennaMatchingMeasurementEvent.GetMatchingPosition() + 1; // Cause counting from 0
+        //    MainModel.ArmingModel.TotalMatchingPositions = antennaMatchingMeasurementEvent.GetTotalMatchingPositionsCount();
+        //    OnPropertyChanged(nameof(ArmingStatusFormatted));
+        //}
 
         private async Task OnFoxArmedAsync(IFoxArmedEvent foxArmedEvent)
         {
             MainModel.ArmingModel.Status = ArmingStatus.Completed;
-            OnPropertyChanged(nameof(ArmingStatusFormatted));
+            OnPropertyChanged(nameof(MatchingStatusFormatted));
+        }
+
+        public void OnMatchingStatusChanged()
+        {
+            OnPropertyChanged(nameof(MatchingStatusFormatted));
+            OnPropertyChanged(nameof(CurrentMatcherPositionFormatted));
+            OnPropertyChanged(nameof(CurrentVoltageFormatted));
+            OnPropertyChanged(nameof(MaximalVoltageFormatted));
+
         }
 
     }

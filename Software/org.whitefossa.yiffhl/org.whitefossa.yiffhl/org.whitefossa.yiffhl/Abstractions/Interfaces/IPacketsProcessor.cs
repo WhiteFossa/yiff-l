@@ -13,7 +13,6 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
     #region Events delegats
 
     public delegate void OnFoxArmedEventDelegate(IFoxArmedEvent foxArmedEvent);
-    public delegate void OnAntennaMatchingMeasurementEventDelegate(IAntennaMatchingMeasurementEvent antennaMatchingMeasurementEvent);
     public delegate void OnEnteringSleepmodeEventDelegate(IEnteringSleepmodeEvent enteringSleepmodeEvent);
     public delegate void OnFoxArmingInitiatedEventDelegate(IFoxArmingInitiatedEvent foxArmingInitiatedEvent);
     public delegate void OnFoxDisarmedEventDelegate(IFoxDisarmedEvent foxDisarmedEvent);
@@ -84,7 +83,6 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
         #region Events handlers registration
 
         void RegisterOnFoxArmedEventHandler(OnFoxArmedEventDelegate onFoxArmedEvent);
-        void RegisterOnAntennaMatchingMeasurementEventHandler(OnAntennaMatchingMeasurementEventDelegate onAntennaMatchingMeasurementEvent);
         void RegisterOnEnteringSleepmodeEventHandler(OnEnteringSleepmodeEventDelegate onEnteringSleepmodeEvent);
         void RegisterOnFoxArmingInitiatedEventHandler(OnFoxArmingInitiatedEventDelegate onFoxArmingInitiatedEvent);
         void RegisterOnFoxDisarmedEventHandler(OnFoxDisarmedEventDelegate onFoxDisarmedEvent);
