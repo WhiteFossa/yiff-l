@@ -19,7 +19,7 @@ void DrawMatchingDisplay(FoxStateStruct foxState)
 		SelfDiagnostics_HaltOnFailure(YhlFailureCause_DrawMatchingDisplayWhenNoMatchingDisplay);
 	}
 
-	if (!foxState.GlobalState.IsMatchingInProgress)
+	if (foxState.AntennaMatching.Status != AntennaMatching_InProgress)
 	{
 		SelfDiagnostics_HaltOnFailure(YhlFailureCause_DrawMatchingDisplayWhenNoMatchingInProgress);
 	}

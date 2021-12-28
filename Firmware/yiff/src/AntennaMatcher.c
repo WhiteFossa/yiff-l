@@ -12,9 +12,15 @@ void AMSM_Init(void)
 {
 	AMSM_State = AMSM_Inactive;
 	AMSM_Timer = 0;
-	AMSM_OptimalAntennaMatching = 0;
+
+	FoxState.AntennaMatching.Status = AntennaMatching_NeverInitiated;
+	FoxState.AntennaMatching.TimeSinceLastMatchingInitiation = 0xFFFFFFFFU;
+	FoxState.AntennaMatching.CurrentPosition = 0;
+	FoxState.AntennaMatching.BestMatchPosition = 0;
+	FoxState.AntennaMatching.BestMatchVoltage = 0;
 
 	L2HAL_SysTick_RegisterHandler(&AMSM_SysTickHandler);
+	RTC_AddOnNewSecondListener(&AMSM_NewSecondHandler);
 }
 
 void AMSM_SysTickHandler(void)
@@ -44,10 +50,6 @@ void AMSM_MoveToNextState(void)
 			}
 
 			/* First position */
-			AMSM_CurrentMatcherPosition = 0;
-			AMSM_CurrentMaximalAntennaVoltage = 0;
-			AMSM_OptimalAntennaMatching = 0;
-
 			AMSM_SupressCarrier(true);
 
 			HAL_SetAntennaMatchingValue(0);
@@ -78,19 +80,19 @@ void AMSM_MoveToNextState(void)
 				return;
 			}
 
-			FoxState.MatchingDisplayData.MatchingStep = AMSM_CurrentMatcherPosition;
+			FoxState.MatchingDisplayData.MatchingStep = FoxState.AntennaMatching.CurrentPosition;
 			float measuredSignalLevel = HAL_GetUAntVolts();
-			FoxState.MatchingDisplayData.MatchingLevels[AMSM_CurrentMatcherPosition] = measuredSignalLevel;
+			FoxState.MatchingDisplayData.MatchingLevels[FoxState.AntennaMatching.CurrentPosition] = measuredSignalLevel;
 
-			if (measuredSignalLevel > AMSM_CurrentMaximalAntennaVoltage)
+			if (measuredSignalLevel > FoxState.AntennaMatching.BestMatchVoltage)
 			{
-				AMSM_CurrentMaximalAntennaVoltage = measuredSignalLevel;
-				AMSM_OptimalAntennaMatching = AMSM_CurrentMatcherPosition;
+				FoxState.AntennaMatching.BestMatchVoltage = measuredSignalLevel;
+				FoxState.AntennaMatching.BestMatchPosition = FoxState.AntennaMatching.CurrentPosition;
 			}
 
 			DrawMatchingDisplay(FoxState);
 
-			EmitAntennaMatchingMeasurementEvent(AMSM_CurrentMatcherPosition, HAL_AM_MAX_VALUE + 1, measuredSignalLevel);
+			EmitAntennaMatchingMeasurementEvent(FoxState.AntennaMatching.CurrentPosition, HAL_AM_MAX_VALUE + 1, measuredSignalLevel);
 
 			AMSM_Timer = AMSM_OFF_COMMUTATION_DELAY;
 			AMSM_SupressCarrier(true);
@@ -107,7 +109,7 @@ void AMSM_MoveToNextState(void)
 			}
 
 			/* Is last measurement? */
-			if (AMSM_CurrentMatcherPosition == HAL_AM_MAX_VALUE)
+			if (FoxState.AntennaMatching.CurrentPosition == HAL_AM_MAX_VALUE)
 			{
 				/* Matching completed */
 				AMSM_State = AMSM_Inactive;
@@ -118,7 +120,7 @@ void AMSM_MoveToNextState(void)
 				HL_UnPrepareFoxFromCycle();
 
 				FoxState.CurrentDisplay = StatusDisplay;
-				FoxState.GlobalState.IsMatchingInProgress = false;
+				FoxState.AntennaMatching.Status = AntennaMatching_Completed;
 
 				FMGL_API_ClearScreen(&fmglContext);
 
@@ -131,11 +133,11 @@ void AMSM_MoveToNextState(void)
 				return;
 			}
 
-			AMSM_CurrentMatcherPosition ++;
+			FoxState.AntennaMatching.CurrentPosition ++;
 
 			AMSM_SupressCarrier(true);
 
-			HAL_SetAntennaMatchingValue(AMSM_CurrentMatcherPosition);
+			HAL_SetAntennaMatchingValue(FoxState.AntennaMatching.CurrentPosition);
 
 			AMSM_Timer = AMSM_ON_MEASUREMENT_DELAY;
 
@@ -168,6 +170,12 @@ void AMSM_StartMatching(bool isArmFoxAfterMatching)
 
 	AMSM_IsArmFoxAfterMatching = isArmFoxAfterMatching;
 
+	FoxState.AntennaMatching.TimeSinceLastMatchingInitiation = 0;
+	FoxState.AntennaMatching.Status = AntennaMatching_InProgress;
+	FoxState.AntennaMatching.CurrentPosition = 0;
+	FoxState.AntennaMatching.BestMatchPosition = 0;
+	FoxState.AntennaMatching.BestMatchVoltage = 0;
+
 	DrawMatchingDisplay(FoxState);
 
 	HL_PrepareFoxForCycle(); /* Turning on voltages, awaiting for voltages lock */
@@ -190,7 +198,10 @@ void AMSM_ForceCarrier(bool isForce)
 }
 
 
-uint8_t AMSM_GetOptimalMatching(void)
+void AMSM_NewSecondHandler(void)
 {
-	return AMSM_OptimalAntennaMatching;
+	if (FoxState.AntennaMatching.Status != AntennaMatching_NeverInitiated)
+	{
+		FoxState.AntennaMatching.TimeSinceLastMatchingInitiation ++;
+	}
 }

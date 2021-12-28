@@ -51,8 +51,6 @@ void FoxState_Init(void)
 	PendingCommandsFlags.NeedToArmFoxByHandpaws = false;
 
 	FoxState.CurrentDisplay = StatusDisplay;
-
-	FoxState.GlobalState.IsMatchingInProgress = false;
 }
 
 void FoxState_CorrectDateTime(void)

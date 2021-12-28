@@ -852,7 +852,7 @@ void OnDisarmFox(uint8_t payloadSize, uint8_t* payload)
 	}
 
 	/* If antenna matching in progress we can't disarm fox */
-	if (FoxState.GlobalState.IsMatchingInProgress)
+	if (AntennaMatching_InProgress == FoxState.AntennaMatching.Status)
 	{
 		canDisarm = false;
 		goto OnDisarmFox_Validate;

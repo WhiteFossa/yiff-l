@@ -165,6 +165,28 @@ typedef enum
 FoxState_SleepModeEnum;
 
 /**
+ * Antenna matching status
+ */
+typedef enum
+{
+	/**
+	 * Matching never was initiated
+	 */
+	AntennaMatching_NeverInitiated = 0,
+
+	/**
+	 * Matching currently in progress
+	 */
+	AntennaMatching_InProgress = 1,
+
+	/**
+	 * Matching completed
+	 */
+	AntennaMatching_Completed = 2
+}
+FoxState_AntennaMatchingStatus;
+
+/**
  * Fox frequency
  */
 typedef struct
@@ -248,7 +270,7 @@ typedef struct
 	/**
 	 * True if antenna matching in progress
 	 */
-	bool IsMatchingInProgress;
+//	bool IsMatchingInProgress;
 }
 GlobalFoxStateStruct;
 
@@ -304,6 +326,38 @@ typedef struct
 	FoxState_SleepModeEnum Mode;
 }
 SleepmodesStruct;
+
+/**
+ * Global structure with antenna matching status
+ */
+typedef struct
+{
+	/**
+	 * Matcher status
+	 */
+	FoxState_AntennaMatchingStatus Status;
+
+	/**
+	 * Time (in seconds) since last matching initiation
+	 */
+	uint32_t TimeSinceLastMatchingInitiation;
+
+	/**
+	 * Current matcher position
+	 */
+	uint8_t CurrentPosition;
+
+	/**
+	 * Best match position (will move during matching)
+	 */
+	uint8_t BestMatchPosition;
+
+	/**
+	 * Antenna voltage at BestMatchPosition
+	 */
+	float BestMatchVoltage;
+}
+MatchingStatusStruct;
 
 /**
  * Fox status
@@ -409,6 +463,11 @@ typedef struct
 	 * Stuff, related to sleepmodes
 	 */
 	SleepmodesStruct Sleepmodes;
+
+	/**
+	 * Stuff, related to antenna matching
+	 */
+	MatchingStatusStruct AntennaMatching;
 }
 FoxStateStruct;
 
