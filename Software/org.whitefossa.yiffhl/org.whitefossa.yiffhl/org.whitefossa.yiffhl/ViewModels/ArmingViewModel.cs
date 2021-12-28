@@ -15,9 +15,11 @@ namespace org.whitefossa.yiffhl.ViewModels
 {
     public class ArmingViewModel : BindableObject
     {
-        private readonly IPacketsProcessor _packetsProcessor;
+        private readonly IDynamicFoxStatusManager _dynamicFoxStatusManager;
 
         public MainModel MainModel;
+
+        public INavigation Navigation;
 
         /// <summary>
         /// Matching status, formatted
@@ -71,14 +73,7 @@ namespace org.whitefossa.yiffhl.ViewModels
         public ArmingViewModel()
         {
             MainModel = App.Container.Resolve<IMainModel>() as MainModel;
-
-            MainModel.OnFoxArmed += async (e) => await OnFoxArmedAsync(e);
-            //MainModel.OnFoxArmingInitiated += async (e) => await OnFoxArmingInitiatedAsync(e);
-
-            _packetsProcessor = App.Container.Resolve<IPacketsProcessor>();
-
-            _packetsProcessor.RegisterOnFoxArmedEventHandler(MainModel.OnFoxArmed);
-            //_packetsProcessor.RegisterOnFoxArmingInitiatedEventHandler(MainModel.OnFoxArmingInitiated);
+            _dynamicFoxStatusManager = App.Container.Resolve<IDynamicFoxStatusManager>();
         }
 
         //private async Task OnFoxArmingInitiatedAsync(IFoxArmingInitiatedEvent foxArmingInitiatedEvent)
@@ -115,19 +110,25 @@ namespace org.whitefossa.yiffhl.ViewModels
         //    OnPropertyChanged(nameof(ArmingStatusFormatted));
         //}
 
-        private async Task OnFoxArmedAsync(IFoxArmedEvent foxArmedEvent)
-        {
-            MainModel.ArmingModel.Status = ArmingStatus.Completed;
-            OnPropertyChanged(nameof(MatchingStatusFormatted));
-        }
-
         public void OnMatchingStatusChanged()
         {
             OnPropertyChanged(nameof(MatchingStatusFormatted));
             OnPropertyChanged(nameof(CurrentMatcherPositionFormatted));
             OnPropertyChanged(nameof(CurrentVoltageFormatted));
             OnPropertyChanged(nameof(MaximalVoltageFormatted));
+        }
 
+        public async Task OnLeavingMatchingDisplayAsync()
+        {
+            await _dynamicFoxStatusManager.MarkAntennaMatchingAsSeen(OnMarkAntennaMatchingAsSeen);
+
+            MainModel.ActiveDisplay = ActiveDisplay.MainDisplay;
+            await Navigation.PopModalAsync();
+        }
+
+        private void OnMarkAntennaMatchingAsSeen()
+        {
+            Debug.WriteLine("Antenna matching data marked as seen");
         }
 
     }

@@ -71,6 +71,7 @@ namespace org.whitefossa.yiffhl.Droid
             App.Container.Register<IArmFoxCommand, ArmFoxCommand>().AsSingleton();
             App.Container.Register<IDisarmFoxCommand, DisarmFoxCommand>().AsSingleton();
             App.Container.Register<IGetAntennaMatchingStatusCommand, GetAntennaMatchingStatusCommand>().AsSingleton();
+            App.Container.Register<IMarkMatchingAsSeenCommand, MarkMatchingAsSeenCommand>().AsSingleton();
 
             #endregion
 

@@ -12,19 +12,23 @@ namespace org.whitefossa.yiffhl.Business.Implementations
     {
         private readonly IGetBatteryLevelCommand _getBatteryLevelCommand;
         private readonly IGetAntennaMatchingStatusCommand _getAntennaMatchingStatusCommand;
+        private readonly IMarkMatchingAsSeenCommand _markMatchingAsSeenCommand;
 
         private OnGetDynamicFoxStatus _onGetDynamicFoxStatus;
+        private OnMarkAntennaMatchingAsSeen _onMarkAntennaMatchingAsSeen;
 
         private DynamicFoxStatus _statusToLoad = new DynamicFoxStatus();
 
         public DynamicFoxStatusManager
             (
                 IGetBatteryLevelCommand getBatteryLevelCommand,
-                IGetAntennaMatchingStatusCommand getAntennaMatchingStatusCommand
+                IGetAntennaMatchingStatusCommand getAntennaMatchingStatusCommand,
+                IMarkMatchingAsSeenCommand markMatchingAsSeenCommand
             )
         {
             _getBatteryLevelCommand = getBatteryLevelCommand;
             _getAntennaMatchingStatusCommand = getAntennaMatchingStatusCommand;
+            _markMatchingAsSeenCommand = markMatchingAsSeenCommand;
         }
 
         public async Task GetDynamicFoxStatusAsync(OnGetDynamicFoxStatus onGetDynamicFoxStatus)
@@ -46,7 +50,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private void OnGetAntennaMatchingStatus
         (
             AntennaMatchingStatus status,
-            TimeSpan timeSinceLastInitiation,
+            bool isNewForApp,
             int totalMatcherPositions,
             int currentMatcherPosition,
             int currentBestMatchPosition,
@@ -54,13 +58,26 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         )
         {
             _statusToLoad.AntennaMatchingStatus.Status = status;
-            _statusToLoad.AntennaMatchingStatus.TimeSinceLastInitiation = timeSinceLastInitiation;
+            _statusToLoad.AntennaMatchingStatus.IsNewForApp = isNewForApp;
             _statusToLoad.AntennaMatchingStatus.TotalMatcherPositions = totalMatcherPositions;
             _statusToLoad.AntennaMatchingStatus.CurrentMatcherPosition = currentMatcherPosition;
             _statusToLoad.AntennaMatchingStatus.CurrentBestMatchPosition = currentBestMatchPosition;
             _statusToLoad.AntennaMatchingStatus.CurrentBestMatchVoltage = currentBestMatchVoltage;
 
             _onGetDynamicFoxStatus(_statusToLoad);
+        }
+
+        public async Task MarkAntennaMatchingAsSeen(OnMarkAntennaMatchingAsSeen onMarkAntennaMatchingAsSeen)
+        {
+            _onMarkAntennaMatchingAsSeen = onMarkAntennaMatchingAsSeen;
+
+            _markMatchingAsSeenCommand.SetResponseDelegate(OnMarkAntennaMatchingAsSeen);
+            _markMatchingAsSeenCommand.SendMarkMatchingAsSeenCommand();
+        }
+
+        private void OnMarkAntennaMatchingAsSeen()
+        {
+            _onMarkAntennaMatchingAsSeen();
         }
     }
 }

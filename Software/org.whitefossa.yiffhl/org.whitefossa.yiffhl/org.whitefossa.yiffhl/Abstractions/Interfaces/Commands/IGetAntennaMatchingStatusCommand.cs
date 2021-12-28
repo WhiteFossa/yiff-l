@@ -6,7 +6,7 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces.Commands
     public delegate void OnGetAntennaMatchingStatusResponseDelegate
         (
             AntennaMatchingStatus status,
-            TimeSpan timeSinceLastInitiation,
+            bool isNewForApp,
             int totalMatcherPositions,
             int currentMatcherPosition,
             int currentBestMatchPosition,

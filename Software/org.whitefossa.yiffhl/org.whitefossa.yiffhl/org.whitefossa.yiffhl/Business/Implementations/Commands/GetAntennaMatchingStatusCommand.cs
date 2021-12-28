@@ -1,6 +1,7 @@
 ﻿using org.whitefossa.yiffhl.Abstractions.Enums;
 using org.whitefossa.yiffhl.Abstractions.Interfaces;
 using org.whitefossa.yiffhl.Abstractions.Interfaces.Commands;
+using org.whitefossa.yiffhl.Business.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,42 +36,24 @@ namespace org.whitefossa.yiffhl.Business.Implementations.Commands
                 return;
             }
 
-            if (payload.Count != 12)
+            if (payload.Count != 9)
             {
                 return;
             }
 
-            var status = (AntennaMatchingStatus)(payload
-                .ToList()
-                .GetRange(0, 1)
-                .First());
+            var status = (AntennaMatchingStatus)(payload.ElementAt(0));
 
-            var timeSinceLastInitiationBytes = payload
-                .ToList()
-                .GetRange(1, 4)
-                .ToArray();
+            var isNewForApp = CommandsHelper.ToBool(payload.ElementAt(1));
 
-            // Overflow must never happen
-            var timeSinceLastInitiation = new TimeSpan(0, 0, (Int32)BitConverter.ToUInt32(timeSinceLastInitiationBytes, 0));
+            var totalMatcherPositions = payload.ElementAt(2);
 
-            var totalMatcherPositions = payload
-                .ToList()
-                .GetRange(5, 1)
-                .First();
+            var currentMatcherPosition = payload.ElementAt(3);
 
-            var currentMatcherPosition = payload
-                .ToList()
-                .GetRange(6, 1)
-                .First();
-
-            var currentBestMatchPosition = payload
-                .ToList()
-                .GetRange(7, 1)
-                .First();
+            var currentBestMatchPosition = payload.ElementAt(4);
 
             var currentBestMatchVoltageBytes = payload
                 .ToList()
-                .GetRange(8, 4)
+                .GetRange(5, 4)
                 .ToArray();
 
             var currentBestMatchVoltage = BitConverter.ToSingle(currentBestMatchVoltageBytes, 0);
@@ -78,7 +61,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations.Commands
             _onGetAntennaMatchingStatusResponse
             (
                 status,
-                timeSinceLastInitiation,
+                isNewForApp,
                 totalMatcherPositions,
                 currentMatcherPosition,
                 currentBestMatchPosition,

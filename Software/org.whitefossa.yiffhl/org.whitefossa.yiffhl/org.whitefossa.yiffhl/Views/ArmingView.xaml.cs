@@ -50,6 +50,8 @@ namespace org.whitefossa.yiffhl.Views
 
             InitializeComponent();
 
+            ViewModel.Navigation = Navigation;
+
             // Attaching to events
             var packetsProcessor = App.Container.Resolve<IPacketsProcessor>();
 
@@ -215,7 +217,8 @@ namespace org.whitefossa.yiffhl.Views
                 return true; // We can't interrupt arming process
             }
 
-            Navigation.PopModalAsync();
+            ViewModel.OnLeavingMatchingDisplayAsync();
+
             return true;
         }
 

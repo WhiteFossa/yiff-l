@@ -75,6 +75,10 @@
 
         GetIdentificationData = 0x22,
 
-        GetAntennaMatchingStatus = 0x23
+        GetAntennaMatchingStatus = 0x23,
+
+
+
+        MarkMatchingAsSeen = 0x25
     }
 }

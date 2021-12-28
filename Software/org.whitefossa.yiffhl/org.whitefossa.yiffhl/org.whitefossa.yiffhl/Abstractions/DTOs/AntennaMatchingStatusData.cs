@@ -11,9 +11,9 @@ namespace org.whitefossa.yiffhl.Abstractions.DTOs
         public AntennaMatchingStatus Status { get; set; }
 
         /// <summary>
-        /// Time since last initiation
+        /// Do we see this matching data?
         /// </summary>
-        public TimeSpan TimeSinceLastInitiation { get; set; }
+        public bool IsNewForApp { get; set; }
 
         /// <summary>
         /// Total matcher positions

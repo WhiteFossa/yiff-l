@@ -1777,7 +1777,7 @@ Do you want to continue?");
                     MainModel.DynamicFoxStatus.AntennaMatchingStatus.Status == AntennaMatchingStatus.Completed
                 )
                 &&
-                MainModel.DynamicFoxStatus.AntennaMatchingStatus.TimeSinceLastInitiation <= new TimeSpan(0, 3, 0)) // TODO: Move to constants
+                MainModel.DynamicFoxStatus.AntennaMatchingStatus.IsNewForApp)
             {
                 // Showing matching display
                 NavigateToMatchingPage();
