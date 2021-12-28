@@ -234,6 +234,11 @@ void OnNewCommandToFox(uint8_t payloadSize, uint8_t* payload)
 			OnGetAntennaMatchingStatus(payloadSize, payload);
 			break;
 
+		case GetAntennaMatchingData:
+			/* Get antenna matching data */
+			OnGetAntennaMatchingData(payloadSize, payload);
+			break;
+
 		case MarkMatchingAsSeen:
 			/* Mark antenna matching data as seen */
 			OnMarkMatchingAsSeen(payloadSize, payload);
@@ -1125,6 +1130,40 @@ void OnGetAntennaMatchingStatus(uint8_t payloadSize, uint8_t* payload)
 	memcpy(&response[9], &FoxState.AntennaMatching.BestMatchVoltage, 4);
 
 	SendResponse(GetAntennaMatchingStatus, 13, response);
+}
+
+void OnGetAntennaMatchingData(uint8_t payloadSize, uint8_t* payload)
+{
+	bool isValid = true;
+
+	if (payloadSize != 2)
+	{
+		isValid = false;
+		goto OnGetAntennaMatchingData_Validate;
+	}
+
+	uint8_t matcherPosition = payload[1];
+
+	if (matcherPosition > HAL_AM_MAX_VALUE)
+	{
+		isValid = false;
+		goto OnGetAntennaMatchingData_Validate;
+	}
+
+	OnGetAntennaMatchingData_Validate:
+	if (!isValid)
+	{
+		uint8_t response[5];
+		memset(response, 0x00, 5);
+		response[0] = YHL_PACKET_PROCESSOR_FAILURE;
+		SendResponse(GetAntennaMatchingData, 5, response);
+		return;
+	}
+
+	uint8_t response[5];
+	response[0] = YHL_PACKET_PROCESSOR_SUCCESS;
+	memcpy(&response[1], &FoxState.AntennaMatching.MatchingVoltages[matcherPosition], 4);
+	SendResponse(GetAntennaMatchingData, 5, response);
 }
 
 void OnMarkMatchingAsSeen(uint8_t payloadSize, uint8_t* payload)
