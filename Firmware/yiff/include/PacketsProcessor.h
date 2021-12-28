@@ -138,7 +138,9 @@ typedef enum
 
 	GetIdentificationData = 0x22,
 
-	GetAntennaMatchingStatus = 0x23
+	GetAntennaMatchingStatus = 0x23,
+
+	MarkMatchingAsSeen = 0x25
 }
 CommandToFoxEnum;
 
@@ -371,6 +373,11 @@ void OnGetIdentificationData(uint8_t payloadSize, uint8_t* payload);
  * Called when "Get antenna matching status" command comes
  */
 void OnGetAntennaMatchingStatus(uint8_t payloadSize, uint8_t* payload);
+
+/**
+ * Called when "MarkMatchingAsSeen" command comes
+ */
+void OnMarkMatchingAsSeen(uint8_t payloadSize, uint8_t* payload);
 
 /**
  * Emits "FoxArmed" event

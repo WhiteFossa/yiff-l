@@ -321,9 +321,9 @@ typedef struct
 	FoxState_AntennaMatchingStatus Status;
 
 	/**
-	 * Time (in seconds) since last matching initiation
+	 * True if matching data is new for app
 	 */
-	uint32_t TimeSinceLastMatchingInitiation;
+	bool IsNewForApp;
 
 	/**
 	 * Current matcher position

@@ -233,6 +233,11 @@ void OnNewCommandToFox(uint8_t payloadSize, uint8_t* payload)
 			/* Get antenna matching status */
 			OnGetAntennaMatchingStatus(payloadSize, payload);
 			break;
+
+		case MarkMatchingAsSeen:
+			/* Mark antenna matching data as seen */
+			OnMarkMatchingAsSeen(payloadSize, payload);
+			break;
 	}
 }
 
@@ -1096,27 +1101,39 @@ void OnGetAntennaMatchingStatus(uint8_t payloadSize, uint8_t* payload)
 		return;
 	}
 
-	uint8_t response[12];
+	uint8_t response[9];
 
 	/* Status */
 	response[0] = (uint8_t)FoxState.AntennaMatching.Status;
 
-	/* Time since last initiation */
-	memcpy(&response[1], &FoxState.AntennaMatching.TimeSinceLastMatchingInitiation, 4);
+	/* Is matching new for app */
+	response[1] = FromBool(FoxState.AntennaMatching.IsNewForApp);
 
 	/* Total matcher positions */
-	response[5] = HAL_AM_MAX_VALUE + 1;
+	response[2] = HAL_AM_MAX_VALUE + 1;
 
 	/* Current matcher position */
-	response[6] = FoxState.AntennaMatching.CurrentPosition;
+	response[3] = FoxState.AntennaMatching.CurrentPosition;
 
 	/* Current best position */
-	response[7] = FoxState.AntennaMatching.BestMatchPosition;
+	response[4] = FoxState.AntennaMatching.BestMatchPosition;
 
 	/* Current best voltage*/
-	memcpy(&response[8], &FoxState.AntennaMatching.BestMatchVoltage, 4);
+	memcpy(&response[5], &FoxState.AntennaMatching.BestMatchVoltage, 4);
 
-	SendResponse(GetAntennaMatchingStatus, 12, response);
+	SendResponse(GetAntennaMatchingStatus, 9, response);
+}
+
+void OnMarkMatchingAsSeen(uint8_t payloadSize, uint8_t* payload)
+{
+	if (payloadSize != 1)
+	{
+		return;
+	}
+
+	FoxState.AntennaMatching.IsNewForApp = false;
+
+	SendResponse(MarkMatchingAsSeen, 0, NULL);
 }
 
 void EmitFoxArmedEvent(void)

@@ -14,12 +14,11 @@ void AMSM_Init(void)
 	AMSM_Timer = 0;
 
 	FoxState.AntennaMatching.Status = AntennaMatching_NeverInitiated;
-	FoxState.AntennaMatching.TimeSinceLastMatchingInitiation = 0xFFFFFFFFU;
+	FoxState.AntennaMatching.IsNewForApp = false;
 
 	AMSM_ResetValues();
 
 	L2HAL_SysTick_RegisterHandler(&AMSM_SysTickHandler);
-	RTC_AddOnNewSecondListener(&AMSM_NewSecondHandler);
 }
 
 void AMSM_SysTickHandler(void)
@@ -166,7 +165,7 @@ void AMSM_StartMatching(bool isArmFoxAfterMatching)
 
 	AMSM_IsArmFoxAfterMatching = isArmFoxAfterMatching;
 
-	FoxState.AntennaMatching.TimeSinceLastMatchingInitiation = 0;
+	FoxState.AntennaMatching.IsNewForApp = true;
 	FoxState.AntennaMatching.Status = AntennaMatching_InProgress;
 
 	AMSM_ResetValues();
@@ -193,14 +192,6 @@ void AMSM_ForceCarrier(bool isForce)
 	HL_ProcessManipulatorFoxStateChange();
 }
 
-
-void AMSM_NewSecondHandler(void)
-{
-	if (FoxState.AntennaMatching.Status != AntennaMatching_NeverInitiated)
-	{
-		FoxState.AntennaMatching.TimeSinceLastMatchingInitiation ++;
-	}
-}
 
 void AMSM_ResetValues(void)
 {

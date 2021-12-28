@@ -11,7 +11,6 @@
 #include <SelfDiagnostics.h>
 #include <HardwareLogic.h>
 #include <PacketsProcessor.h>
-#include <RTC.h>
 
 /**
  * How long to wait between switching relays and turning on carrier
@@ -81,10 +80,5 @@ void AMSM_StartMatching(bool isArmFoxAfterMatching);
  * Call it each SysTick
  */
 void AMSM_SysTickHandler(void);
-
-/**
- * Call it each second
- */
-void AMSM_NewSecondHandler(void);
 
 #endif /* INCLUDE_ANTENNAMATCHER_H_ */
