@@ -294,23 +294,6 @@ typedef struct
 CycleStateStruct;
 
 /**
- * Matching display data. Meaningless if Globalstate.IsMatchingInProgress == false
- */
-typedef struct
-{
-	/**
-	 * Matching step
-	 */
-	uint8_t MatchingStep;
-
-	/**
-	 * Matching levels
-	 */
-	float MatchingLevels[YHL_MATCHING_LEVELS_COUNT];
-}
-MatchingDisplayStruct;
-
-/**
  * Stuff, related to sleep modes
  */
 typedef struct
@@ -356,6 +339,11 @@ typedef struct
 	 * Antenna voltage at BestMatchPosition
 	 */
 	float BestMatchVoltage;
+
+	/**
+	 * Matching voltages for last matching
+	 */
+	float MatchingVoltages[YHL_MATCHING_LEVELS_COUNT];
 }
 MatchingStatusStruct;
 
@@ -443,11 +431,6 @@ typedef struct
 	 * Current fox display
 	 */
 	FoxDisplayEnum CurrentDisplay;
-
-	/**
-	 * Data for matching display
-	 */
-	MatchingDisplayStruct MatchingDisplayData;
 
 	/**
 	 * True if EEPROM headers is initialized and self-diagnostics can write data to EEPROM

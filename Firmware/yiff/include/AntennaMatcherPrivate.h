@@ -35,4 +35,9 @@ void AMSM_SupressCarrier(bool isSupress);
  */
 void AMSM_ForceCarrier(bool isForce);
 
+/**
+ * Reset matcher values
+ */
+void AMSM_ResetValues(void);
+
 #endif /* INCLUDE_ANTENNAMATCHERPRIVATE_H_ */

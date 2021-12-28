@@ -34,6 +34,6 @@ void DrawMatchingStatusString(uint8_t step);
 /**
  * Draw antenna matching graph
  */
-void DrawMatchingGraph(MatchingDisplayStruct matchingData);
+void DrawMatchingGraph(MatchingStatusStruct matchingData);
 
 #endif /* INCLUDE_MATCHINGDISPLAY_H_ */

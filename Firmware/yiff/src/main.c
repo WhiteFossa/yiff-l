@@ -470,11 +470,6 @@ void Main_PrepareFoxFoxTransmission(bool isArmFoxAfterMatching)
 		return;
 	}
 
-	/* Arming display */
-	memset(FoxState.MatchingDisplayData.MatchingLevels, 0x00, YHL_MATCHING_LEVELS_COUNT * sizeof(float));
-	FoxState.MatchingDisplayData.MatchingStep = 0;
-	FoxState.CurrentDisplay = AntennaMatchingDisplay;
-
 	AMSM_StartMatching(isArmFoxAfterMatching);
 }
 
