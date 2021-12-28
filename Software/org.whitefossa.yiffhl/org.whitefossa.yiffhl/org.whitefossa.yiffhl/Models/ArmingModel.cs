@@ -1,13 +1,14 @@
-﻿using org.whitefossa.yiffhl.Abstractions.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace org.whitefossa.yiffhl.Models
 {
     public class ArmingModel
     {
+        /// <summary>
+        /// Matching positions count
+        /// </summary>
+        public int MatchingPositionsCount { get; set; }
+
         /// <summary>
         /// Antenna matching data
         /// </summary>

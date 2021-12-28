@@ -77,6 +77,7 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
         void SetOnGetIdentificationDataResponse(OnResponseDelegate onGetIdentificationDataResponse);
         void SetOnGetAntennaMatchingStatusResponse(OnResponseDelegate onGetAntennaMatchingStatusResponse);
         void SetOnMarkMatchingAsSeenResponse(OnResponseDelegate onMarkMatchingAsSeenResponse);
+        void SetOnGetAntennaMatchingDataResponse(OnResponseDelegate onGetAntennaMatchingDataResponse);
 
 
         #endregion

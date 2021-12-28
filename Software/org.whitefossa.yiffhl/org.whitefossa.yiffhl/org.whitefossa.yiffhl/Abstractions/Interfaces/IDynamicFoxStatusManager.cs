@@ -7,10 +7,14 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
 
     public delegate void OnMarkAntennaMatchingAsSeen();
 
+    public delegate void OnGetAntennaMatchingData(int matcherPosition, float antennaVoltage);
+
     public interface IDynamicFoxStatusManager
     {
         Task GetDynamicFoxStatusAsync(OnGetDynamicFoxStatus onGetDynamicFoxStatus);
 
-        Task MarkAntennaMatchingAsSeen(OnMarkAntennaMatchingAsSeen onMarkAntennaMatchingAsSeen);
+        Task MarkAntennaMatchingAsSeenAsync(OnMarkAntennaMatchingAsSeen onMarkAntennaMatchingAsSeen);
+
+        Task GetAntennaMatchingDataAsync(int matcherPosition, OnGetAntennaMatchingData onGetAntennaMatchingData);
     }
 }

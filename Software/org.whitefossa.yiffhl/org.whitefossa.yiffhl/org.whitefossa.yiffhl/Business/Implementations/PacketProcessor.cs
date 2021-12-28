@@ -70,6 +70,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private OnResponseDelegate onGetIdentificationDataResponse;
         private OnResponseDelegate onGetAntennaMatchingStatusResponse;
         private OnResponseDelegate onMarkMatchingAsSeenResponse;
+        private OnResponseDelegate onGetAntennaMatchingDataResponse;
 
         #endregion
 
@@ -489,6 +490,13 @@ namespace org.whitefossa.yiffhl.Business.Implementations
                     onGetAntennaMatchingStatusResponse(responsePayload);
                     break;
 
+                // Get antenna matching data
+                case CommandType.GetAntennaMatchingData:
+                    CheckOnResponseDelegate(onGetAntennaMatchingDataResponse);
+
+                    onGetAntennaMatchingDataResponse(responsePayload);
+                    break;
+
                 // Mark matching as seen
                 case CommandType.MarkMatchingAsSeen:
                     CheckOnResponseDelegate(onMarkMatchingAsSeenResponse);
@@ -857,6 +865,12 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         {
             this.onMarkMatchingAsSeenResponse = onMarkMatchingAsSeenResponse
                 ?? throw new ArgumentNullException(nameof(onMarkMatchingAsSeenResponse));
+        }
+
+        public void SetOnGetAntennaMatchingDataResponse(OnResponseDelegate onGetAntennaMatchingDataResponse)
+        {
+            this.onGetAntennaMatchingDataResponse = onGetAntennaMatchingDataResponse
+                ?? throw new ArgumentNullException(nameof(onGetAntennaMatchingDataResponse));
         }
     }
 }

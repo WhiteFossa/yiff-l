@@ -152,7 +152,7 @@ namespace org.whitefossa.yiffhl.ViewModels
 
         public async Task OnLeavingMatchingDisplayAsync()
         {
-            await _dynamicFoxStatusManager.MarkAntennaMatchingAsSeen(OnMarkAntennaMatchingAsSeen);
+            await _dynamicFoxStatusManager.MarkAntennaMatchingAsSeenAsync(OnMarkAntennaMatchingAsSeen);
 
             MainModel.ActiveDisplay = ActiveDisplay.MainDisplay;
             await Navigation.PopModalAsync();
@@ -175,23 +175,28 @@ namespace org.whitefossa.yiffhl.ViewModels
         private async Task OnAntennaMatchingCompleted()
         {
             // Making snapshot to arming model
+            MainModel.ArmingModel.MatchingPositionsCount = MainModel.DynamicFoxStatus.AntennaMatchingStatus.TotalMatcherPositions;
             MainModel.ArmingModel.BestMatchingPosition = MainModel.DynamicFoxStatus.AntennaMatchingStatus.CurrentBestMatchPosition;
             MainModel.ArmingModel.BestMatchingPositionVoltage = MainModel.DynamicFoxStatus.AntennaMatchingStatus.CurrentBestMatchVoltage;
-
-            // Loading voltages
-            var positionsCount = MainModel.DynamicFoxStatus.AntennaMatchingStatus.TotalMatcherPositions;
-
             MainModel.ArmingModel.MatchingData.Clear();
 
+            // Loading first voltage
             _progressDialog = UserDialogs.Instance.Progress("Loading matching data...", null, null, true, MaskType.Clear);
+            await _dynamicFoxStatusManager.GetAntennaMatchingDataAsync(0, async (p, v) => await OnGetAntennaMatchingDataAsync(p, v));
+        }
 
-            for (var position = 0; position < positionsCount; position ++)
+        private async Task OnGetAntennaMatchingDataAsync(int matcherPosition, float antennaVoltage)
+        {
+            MainModel.ArmingModel.MatchingData.Add(antennaVoltage);
+
+            if (matcherPosition < MainModel.ArmingModel.MatchingPositionsCount - 1)
             {
-                _progressDialog.PercentComplete = (int)Math.Round(100 * position / (double)positionsCount);
+                _progressDialog.PercentComplete = (int)Math.Round(100 * matcherPosition / (double)MainModel.ArmingModel.MatchingPositionsCount);
+                await _dynamicFoxStatusManager.GetAntennaMatchingDataAsync(matcherPosition + 1, async (p, v) => await OnGetAntennaMatchingDataAsync(p, v));
+                return;
             }
 
             _progressDialog.Dispose();
-
             RedrawMatchingGraph();
         }
 

@@ -77,7 +77,7 @@
 
         GetAntennaMatchingStatus = 0x23,
 
-
+        GetAntennaMatchingData = 0x24,
 
         MarkMatchingAsSeen = 0x25
     }

@@ -17,11 +17,6 @@ namespace org.whitefossa.yiffhl.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ArmingView : ContentPage
     {
-        /// <summary>
-        /// How many matching positions do we have
-        /// </summary>
-        private const int NumberOfMatchingPositions = 64;
-
         private const int BordersSpan = 10;
 
         private const int MatchingPointRadius = 5;
@@ -120,7 +115,7 @@ namespace org.whitefossa.yiffhl.Views
             canvas.DrawRect(bordersRect, mainPaint);
 
             // Vertical (matching) lines
-            for (var matchingPosition = 0; matchingPosition < NumberOfMatchingPositions; matchingPosition ++)
+            for (var matchingPosition = 0; matchingPosition < ViewModel.MainModel.ArmingModel.MatchingPositionsCount; matchingPosition ++)
             {
                 var x = MatcherPositionToX(bordersRect, matchingPosition);
                 canvas.DrawLine(x, bordersRect.Bottom, x, bordersRect.Top, secondaryPaint);
@@ -188,7 +183,7 @@ namespace org.whitefossa.yiffhl.Views
 
         private float CalculateCellWidth(SKRect borders)
         {
-            return borders.Width / (NumberOfMatchingPositions - 1);
+            return borders.Width / (ViewModel.MainModel.ArmingModel.MatchingPositionsCount - 1);
         }
 
         private float MatcherPositionToX(SKRect borders, int position)

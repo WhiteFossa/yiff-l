@@ -13,9 +13,11 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private readonly IGetBatteryLevelCommand _getBatteryLevelCommand;
         private readonly IGetAntennaMatchingStatusCommand _getAntennaMatchingStatusCommand;
         private readonly IMarkMatchingAsSeenCommand _markMatchingAsSeenCommand;
+        private readonly IGetAntennaMatchingDataCommand _getAntennaMatchingDataCommand;
 
         private OnGetDynamicFoxStatus _onGetDynamicFoxStatus;
         private OnMarkAntennaMatchingAsSeen _onMarkAntennaMatchingAsSeen;
+        private OnGetAntennaMatchingData _onGetAntennaMatchingData;
 
         private DynamicFoxStatus _statusToLoad = new DynamicFoxStatus();
 
@@ -23,12 +25,14 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             (
                 IGetBatteryLevelCommand getBatteryLevelCommand,
                 IGetAntennaMatchingStatusCommand getAntennaMatchingStatusCommand,
-                IMarkMatchingAsSeenCommand markMatchingAsSeenCommand
+                IMarkMatchingAsSeenCommand markMatchingAsSeenCommand,
+                IGetAntennaMatchingDataCommand getAntennaMatchingDataCommand
             )
         {
             _getBatteryLevelCommand = getBatteryLevelCommand;
             _getAntennaMatchingStatusCommand = getAntennaMatchingStatusCommand;
             _markMatchingAsSeenCommand = markMatchingAsSeenCommand;
+            _getAntennaMatchingDataCommand = getAntennaMatchingDataCommand;
         }
 
         public async Task GetDynamicFoxStatusAsync(OnGetDynamicFoxStatus onGetDynamicFoxStatus)
@@ -69,9 +73,9 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _onGetDynamicFoxStatus(_statusToLoad);
         }
 
-        public async Task MarkAntennaMatchingAsSeen(OnMarkAntennaMatchingAsSeen onMarkAntennaMatchingAsSeen)
+        public async Task MarkAntennaMatchingAsSeenAsync(OnMarkAntennaMatchingAsSeen onMarkAntennaMatchingAsSeen)
         {
-            _onMarkAntennaMatchingAsSeen = onMarkAntennaMatchingAsSeen;
+            _onMarkAntennaMatchingAsSeen = onMarkAntennaMatchingAsSeen ?? throw new ArgumentNullException(nameof(onMarkAntennaMatchingAsSeen));
 
             _markMatchingAsSeenCommand.SetResponseDelegate(OnMarkAntennaMatchingAsSeen);
             _markMatchingAsSeenCommand.SendMarkMatchingAsSeenCommand();
@@ -80,6 +84,29 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private void OnMarkAntennaMatchingAsSeen()
         {
             _onMarkAntennaMatchingAsSeen();
+        }
+
+        public async Task GetAntennaMatchingDataAsync(int matcherPosition, OnGetAntennaMatchingData onGetAntennaMatchingData)
+        {
+            _onGetAntennaMatchingData = onGetAntennaMatchingData ?? throw new ArgumentNullException(nameof(onGetAntennaMatchingData));
+
+            _getAntennaMatchingDataCommand.SetResponseDelegate(OnGetAntennaMatchingData);
+            _getAntennaMatchingDataCommand.SendGetAntennaMatchingDataCommand(matcherPosition);
+        }
+
+        private void OnGetAntennaMatchingData
+        (
+            bool isSuccessfull,
+            int matcherPosition,
+            float antennaVoltage
+        )
+        {
+            if (!isSuccessfull)
+            {
+                throw new InvalidOperationException("Failed to get antenna matching data");
+            }
+
+            _onGetAntennaMatchingData(matcherPosition, antennaVoltage);
         }
     }
 }
