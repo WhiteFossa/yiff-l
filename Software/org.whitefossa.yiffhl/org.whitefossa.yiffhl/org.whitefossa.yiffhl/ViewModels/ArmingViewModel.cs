@@ -58,7 +58,7 @@ namespace org.whitefossa.yiffhl.ViewModels
         {
             get
             {
-                return String.Format("{0:0.0V}", MainModel.DynamicFoxStatus.AntennaMatchingStatus.CurrentBestMatchVoltage);
+                return String.Format("{0:0.0V}", MainModel.DynamicFoxStatus.AntennaMatchingStatus.CurrentVoltage);
             }
         }
 

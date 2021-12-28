@@ -36,7 +36,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations.Commands
                 return;
             }
 
-            if (payload.Count != 9)
+            if (payload.Count != 13)
             {
                 return;
             }
@@ -49,11 +49,18 @@ namespace org.whitefossa.yiffhl.Business.Implementations.Commands
 
             var currentMatcherPosition = payload.ElementAt(3);
 
-            var currentBestMatchPosition = payload.ElementAt(4);
+            var currentAntennaVoltageBytes = payload
+                .ToList()
+                .GetRange(4, 4)
+                .ToArray();
+
+            var currentAntennaVoltage = BitConverter.ToSingle(currentAntennaVoltageBytes, 0); ;
+
+            var currentBestMatchPosition = payload.ElementAt(8);
 
             var currentBestMatchVoltageBytes = payload
                 .ToList()
-                .GetRange(5, 4)
+                .GetRange(9, 4)
                 .ToArray();
 
             var currentBestMatchVoltage = BitConverter.ToSingle(currentBestMatchVoltageBytes, 0);
@@ -64,6 +71,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations.Commands
                 isNewForApp,
                 totalMatcherPositions,
                 currentMatcherPosition,
+                currentAntennaVoltage,
                 currentBestMatchPosition,
                 currentBestMatchVoltage
             );

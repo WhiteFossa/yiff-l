@@ -9,6 +9,7 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces.Commands
             bool isNewForApp,
             int totalMatcherPositions,
             int currentMatcherPosition,
+            float currentAntennaVoltage,
             int currentBestMatchPosition,
             float currentBestMatchVoltage
         );

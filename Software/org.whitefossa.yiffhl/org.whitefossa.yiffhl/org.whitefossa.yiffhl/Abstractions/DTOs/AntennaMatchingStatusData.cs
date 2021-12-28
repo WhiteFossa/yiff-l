@@ -26,6 +26,11 @@ namespace org.whitefossa.yiffhl.Abstractions.DTOs
         public int CurrentMatcherPosition { get; set; }
 
         /// <summary>
+        /// Current antenna voltage
+        /// </summary>
+        public float CurrentVoltage { get; set; }
+
+        /// <summary>
         /// Current best matcher position (counted from 0)
         /// </summary>
         public int CurrentBestMatchPosition { get; set; }

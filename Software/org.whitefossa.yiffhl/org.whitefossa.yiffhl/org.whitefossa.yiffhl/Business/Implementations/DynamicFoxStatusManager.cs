@@ -53,6 +53,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             bool isNewForApp,
             int totalMatcherPositions,
             int currentMatcherPosition,
+            float currentAntennaVoltage,
             int currentBestMatchPosition,
             float currentBestMatchVoltage
         )
@@ -61,6 +62,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _statusToLoad.AntennaMatchingStatus.IsNewForApp = isNewForApp;
             _statusToLoad.AntennaMatchingStatus.TotalMatcherPositions = totalMatcherPositions;
             _statusToLoad.AntennaMatchingStatus.CurrentMatcherPosition = currentMatcherPosition;
+            _statusToLoad.AntennaMatchingStatus.CurrentVoltage = currentAntennaVoltage;
             _statusToLoad.AntennaMatchingStatus.CurrentBestMatchPosition = currentBestMatchPosition;
             _statusToLoad.AntennaMatchingStatus.CurrentBestMatchVoltage = currentBestMatchVoltage;
 
