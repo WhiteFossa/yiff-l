@@ -1115,6 +1115,8 @@ void OnGetAntennaMatchingStatus(uint8_t payloadSize, uint8_t* payload)
 
 	/* Current best voltage*/
 	memcpy(&response[8], &FoxState.AntennaMatching.BestMatchVoltage, 4);
+
+	SendResponse(GetAntennaMatchingStatus, 12, response);
 }
 
 void EmitFoxArmedEvent(void)
