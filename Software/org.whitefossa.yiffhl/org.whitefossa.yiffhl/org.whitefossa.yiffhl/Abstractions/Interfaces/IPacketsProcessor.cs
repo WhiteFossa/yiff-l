@@ -76,6 +76,7 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
         void SetOnGetLastFailureCodeResponse(OnResponseDelegate onGetLastFailureCodeResponse);
         void SetOnNoOperationResponse(OnResponseDelegate onNoOperationResponse);
         void SetOnGetIdentificationDataResponse(OnResponseDelegate onGetIdentificationDataResponse);
+        void SetOnGetAntennaMatchingStatusResponse(OnResponseDelegate onGetAntennaMatchingStatusResponse);
 
 
         #endregion

@@ -68,6 +68,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private OnResponseDelegate onGetLastFailureCodeResponse;
         private OnResponseDelegate onNoOperationResponse;
         private OnResponseDelegate onGetIdentificationDataResponse;
+        private OnResponseDelegate onGetAntennaMatchingStatusResponse;
 
         #endregion
 
@@ -481,6 +482,13 @@ namespace org.whitefossa.yiffhl.Business.Implementations
                     onGetIdentificationDataResponse(responsePayload);
                     break;
 
+                // Get antenna matching status
+                case CommandType.GetAntennaMatchingStatus:
+                    CheckOnResponseDelegate(onGetAntennaMatchingStatusResponse);
+
+                    onGetAntennaMatchingStatusResponse(responsePayload);
+                    break;
+
                 default:
                     return; // We've got some junk
             }
@@ -856,6 +864,12 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         public void RegisterOnProfileSwitchedEventHandler(OnProfileSwitchedEventDelegate onProfileSwitchedEvent)
         {
             _onProfileSwitchedEvent = onProfileSwitchedEvent ?? throw new ArgumentNullException(nameof(onProfileSwitchedEvent));
+        }
+
+        public void SetOnGetAntennaMatchingStatusResponse(OnResponseDelegate onGetAntennaMatchingStatusResponse)
+        {
+            this.onGetAntennaMatchingStatusResponse = onGetAntennaMatchingStatusResponse
+                ?? throw new ArgumentNullException(nameof(onGetAntennaMatchingStatusResponse));
         }
     }
 }
