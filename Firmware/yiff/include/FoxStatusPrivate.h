@@ -331,6 +331,11 @@ typedef struct
 	uint8_t CurrentPosition;
 
 	/**
+	 * Current antenna voltage
+	 */
+	float CurrentVoltage;
+
+	/**
 	 * Best match position (will move during matching)
 	 */
 	uint8_t BestMatchPosition;

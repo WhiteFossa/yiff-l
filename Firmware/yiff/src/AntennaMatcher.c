@@ -78,12 +78,12 @@ void AMSM_MoveToNextState(void)
 				return;
 			}
 
-			float measuredSignalLevel = HAL_GetUAntVolts();
-			FoxState.AntennaMatching.MatchingVoltages[FoxState.AntennaMatching.CurrentPosition] = measuredSignalLevel;
+			FoxState.AntennaMatching.CurrentVoltage = HAL_GetUAntVolts();
+			FoxState.AntennaMatching.MatchingVoltages[FoxState.AntennaMatching.CurrentPosition] = FoxState.AntennaMatching.CurrentVoltage;
 
-			if (measuredSignalLevel > FoxState.AntennaMatching.BestMatchVoltage)
+			if (FoxState.AntennaMatching.CurrentVoltage > FoxState.AntennaMatching.BestMatchVoltage)
 			{
-				FoxState.AntennaMatching.BestMatchVoltage = measuredSignalLevel;
+				FoxState.AntennaMatching.BestMatchVoltage = FoxState.AntennaMatching.CurrentVoltage;
 				FoxState.AntennaMatching.BestMatchPosition = FoxState.AntennaMatching.CurrentPosition;
 			}
 
@@ -196,6 +196,7 @@ void AMSM_ForceCarrier(bool isForce)
 void AMSM_ResetValues(void)
 {
 	FoxState.AntennaMatching.CurrentPosition = 0;
+	FoxState.AntennaMatching.CurrentVoltage = 0;
 	FoxState.AntennaMatching.BestMatchPosition = 0;
 	FoxState.AntennaMatching.BestMatchVoltage = 0;
 	memset(FoxState.AntennaMatching.MatchingVoltages, 0x00, YHL_MATCHING_LEVELS_COUNT * sizeof(float));

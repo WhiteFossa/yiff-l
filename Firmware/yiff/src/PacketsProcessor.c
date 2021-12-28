@@ -1101,7 +1101,7 @@ void OnGetAntennaMatchingStatus(uint8_t payloadSize, uint8_t* payload)
 		return;
 	}
 
-	uint8_t response[9];
+	uint8_t response[13];
 
 	/* Status */
 	response[0] = (uint8_t)FoxState.AntennaMatching.Status;
@@ -1115,13 +1115,16 @@ void OnGetAntennaMatchingStatus(uint8_t payloadSize, uint8_t* payload)
 	/* Current matcher position */
 	response[3] = FoxState.AntennaMatching.CurrentPosition;
 
+	/* Current antenna voltage */
+	memcpy(&response[4], &FoxState.AntennaMatching.CurrentVoltage, 4);
+
 	/* Current best position */
-	response[4] = FoxState.AntennaMatching.BestMatchPosition;
+	response[8] = FoxState.AntennaMatching.BestMatchPosition;
 
 	/* Current best voltage*/
-	memcpy(&response[5], &FoxState.AntennaMatching.BestMatchVoltage, 4);
+	memcpy(&response[9], &FoxState.AntennaMatching.BestMatchVoltage, 4);
 
-	SendResponse(GetAntennaMatchingStatus, 9, response);
+	SendResponse(GetAntennaMatchingStatus, 13, response);
 }
 
 void OnMarkMatchingAsSeen(uint8_t payloadSize, uint8_t* payload)
