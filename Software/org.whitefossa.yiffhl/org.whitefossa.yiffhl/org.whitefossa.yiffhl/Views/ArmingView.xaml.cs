@@ -51,17 +51,12 @@ namespace org.whitefossa.yiffhl.Views
             InitializeComponent();
 
             ViewModel.Navigation = Navigation;
-
-            // Attaching to events
-            var packetsProcessor = App.Container.Resolve<IPacketsProcessor>();
-
-            ViewModel.MainModel.OnFoxDisarmed += async (e) => await OnFoxDisarmedAsync(e);
-            packetsProcessor.RegisterOnFoxDisarmedEventHandler(ViewModel.MainModel.OnFoxDisarmed);
+            ViewModel.RedrawMatchingGraph += async() => await RedrawMatchingGraph();
         }
 
-        public void OnMatchingStatusChanged()
+        public async Task OnMatchingStatusChangedAsync()
         {
-            ViewModel.OnMatchingStatusChanged();
+            await ViewModel.OnMatchingStatusChangedAsync();
         }
 
         private void MatchingGraphView_PaintSurface(object sender, SkiaSharp.Views.Forms.SKPaintSurfaceEventArgs e)
@@ -132,10 +127,9 @@ namespace org.whitefossa.yiffhl.Views
             }
 
             // Matching points
-            if (ViewModel.MainModel.ArmingModel.OrderdMatchingData != null)
+            if (ViewModel.MainModel.ArmingModel.MatchingData != null)
             {
-                var maxValue = ViewModel.MainModel.ArmingModel.OrderdMatchingData
-                    .Max(kv => kv.Value);
+                var maxValue = ViewModel.MainModel.ArmingModel.BestMatchingPositionVoltage;
 
                 if (maxValue == 0)
                 {
@@ -144,25 +138,22 @@ namespace org.whitefossa.yiffhl.Views
 
                 var yScale = bordersRect.Height * AutoScaleMaxVoltageGraphHeight / maxValue;
 
-                KeyValuePair<int, float> previousPoint;
-                foreach (var currentPoint in ViewModel.MainModel.ArmingModel.OrderdMatchingData)
+                for (var position = 0; position < ViewModel.MainModel.ArmingModel.MatchingData.Count(); position++)
                 {
                     // Point itself
-                    var x = MatcherPositionToX(bordersRect, currentPoint.Key);
-                    var y = AntennaVoltageToY(bordersRect, yScale, currentPoint.Value);
+                    var x = MatcherPositionToX(bordersRect, position);
+                    var y = AntennaVoltageToY(bordersRect, yScale, ViewModel.MainModel.ArmingModel.MatchingData[position]);
 
                     canvas.DrawCircle(x, y, MatchingPointRadius, matchingPointsPaint);
 
                     // Connecting line
-                    if (currentPoint.Key != ViewModel.MainModel.ArmingModel.OrderdMatchingData.First().Key)
+                    if (position != 0)
                     {
-                        var previousX = MatcherPositionToX(bordersRect, previousPoint.Key);
-                        var previousY = AntennaVoltageToY(bordersRect, yScale, previousPoint.Value);
+                        var previousX = MatcherPositionToX(bordersRect, position - 1);
+                        var previousY = AntennaVoltageToY(bordersRect, yScale, ViewModel.MainModel.ArmingModel.MatchingData[position - 1]);
 
                         canvas.DrawLine(x, y, previousX, previousY, matchingPointsLinesPaint);
                     }
-
-                    previousPoint = currentPoint;
                 }
 
                 // Best matching
@@ -222,14 +213,9 @@ namespace org.whitefossa.yiffhl.Views
             return true;
         }
 
-        //private async Task OnAntennaMatchingMeasurementAsync(IAntennaMatchingMeasurementEvent antennaMatchingMeasurementEvent)
-        //{
-        //    MatchingGraphView.InvalidateSurface();
-        //}
-
-        private async Task OnFoxDisarmedAsync(IFoxDisarmedEvent foxDisarmedEvent)
+        private async Task RedrawMatchingGraph()
         {
-            await Navigation.PopModalAsync();
+            MatchingGraphView.InvalidateSurface();
         }
     }
 }

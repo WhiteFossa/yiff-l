@@ -1,4 +1,5 @@
-﻿using org.whitefossa.yiffhl.Abstractions.Enums;
+﻿using Acr.UserDialogs;
+using org.whitefossa.yiffhl.Abstractions.Enums;
 using org.whitefossa.yiffhl.Abstractions.Interfaces;
 using org.whitefossa.yiffhl.Abstractions.Interfaces.Events;
 using org.whitefossa.yiffhl.Abstractions.Interfaces.Models;
@@ -15,11 +16,19 @@ namespace org.whitefossa.yiffhl.ViewModels
 {
     public class ArmingViewModel : BindableObject
     {
+        public delegate void RedrawMatchingGraphDelegate();
+
         private readonly IDynamicFoxStatusManager _dynamicFoxStatusManager;
 
         public MainModel MainModel;
 
         public INavigation Navigation;
+
+        private AntennaMatchingStatus _previousMatchingStatus = AntennaMatchingStatus.InProgress;
+
+        private IProgressDialog _progressDialog;
+
+        public RedrawMatchingGraphDelegate RedrawMatchingGraph { get; set; }
 
         /// <summary>
         /// Matching status, formatted
@@ -110,12 +119,35 @@ namespace org.whitefossa.yiffhl.ViewModels
         //    OnPropertyChanged(nameof(ArmingStatusFormatted));
         //}
 
-        public void OnMatchingStatusChanged()
+        public async Task OnMatchingStatusChangedAsync()
         {
             OnPropertyChanged(nameof(MatchingStatusFormatted));
             OnPropertyChanged(nameof(CurrentMatcherPositionFormatted));
             OnPropertyChanged(nameof(CurrentVoltageFormatted));
             OnPropertyChanged(nameof(MaximalVoltageFormatted));
+
+            var newMatchingStatus = MainModel.DynamicFoxStatus.AntennaMatchingStatus.Status;
+            var isNewForApp = MainModel.DynamicFoxStatus.AntennaMatchingStatus.IsNewForApp;
+
+            if (_previousMatchingStatus != AntennaMatchingStatus.InProgress
+                &&
+                newMatchingStatus == AntennaMatchingStatus.InProgress)
+            {
+                // Matching just initiated
+                await OnMatchingInitiated();
+            }
+
+            if (_previousMatchingStatus == AntennaMatchingStatus.InProgress
+                &&
+                newMatchingStatus == AntennaMatchingStatus.Completed
+                &&
+                isNewForApp)
+            {
+                // We just completed antenna matching
+                await OnAntennaMatchingCompleted();
+            }
+
+            _previousMatchingStatus = newMatchingStatus;
         }
 
         public async Task OnLeavingMatchingDisplayAsync()
@@ -129,6 +161,38 @@ namespace org.whitefossa.yiffhl.ViewModels
         private void OnMarkAntennaMatchingAsSeen()
         {
             Debug.WriteLine("Antenna matching data marked as seen");
+        }
+
+        private async Task OnMatchingInitiated()
+        {
+            MainModel.ArmingModel.BestMatchingPosition = 0;
+            MainModel.ArmingModel.BestMatchingPositionVoltage = 0;
+            MainModel.ArmingModel.MatchingData.Clear();
+
+            RedrawMatchingGraph();
+        }
+
+        private async Task OnAntennaMatchingCompleted()
+        {
+            // Making snapshot to arming model
+            MainModel.ArmingModel.BestMatchingPosition = MainModel.DynamicFoxStatus.AntennaMatchingStatus.CurrentBestMatchPosition;
+            MainModel.ArmingModel.BestMatchingPositionVoltage = MainModel.DynamicFoxStatus.AntennaMatchingStatus.CurrentBestMatchVoltage;
+
+            // Loading voltages
+            var positionsCount = MainModel.DynamicFoxStatus.AntennaMatchingStatus.TotalMatcherPositions;
+
+            MainModel.ArmingModel.MatchingData.Clear();
+
+            _progressDialog = UserDialogs.Instance.Progress("Loading matching data...", null, null, true, MaskType.Clear);
+
+            for (var position = 0; position < positionsCount; position ++)
+            {
+                _progressDialog.PercentComplete = (int)Math.Round(100 * position / (double)positionsCount);
+            }
+
+            _progressDialog.Dispose();
+
+            RedrawMatchingGraph();
         }
 
     }

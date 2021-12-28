@@ -1761,10 +1761,10 @@ Do you want to continue?");
                 return;
             }
 
-            await _dynamicFoxStatusManager.GetDynamicFoxStatusAsync(OnGetDynamicFoxStatus);
+            await _dynamicFoxStatusManager.GetDynamicFoxStatusAsync(async (s) => await OnGetDynamicFoxStatusAsync(s));
         }
 
-        private void OnGetDynamicFoxStatus(DynamicFoxStatus status)
+        private async Task OnGetDynamicFoxStatusAsync(DynamicFoxStatus status)
         {
             MainModel.DynamicFoxStatus = status;
             OnPropertyChanged(nameof(BatteryLevelFormatted));
@@ -1784,7 +1784,7 @@ Do you want to continue?");
             }
 
             // Matching display status update
-            _armingView.OnMatchingStatusChanged();
+            await _armingView.OnMatchingStatusChangedAsync();
         }
 
         #endregion
