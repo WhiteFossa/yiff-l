@@ -3,7 +3,6 @@ using org.whitefossa.yiffhl.Abstractions.Enums;
 using org.whitefossa.yiffhl.Abstractions.Interfaces;
 using org.whitefossa.yiffhl.Abstractions.Interfaces.Commands;
 using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace org.whitefossa.yiffhl.Business.Implementations
@@ -11,44 +10,35 @@ namespace org.whitefossa.yiffhl.Business.Implementations
     public class DynamicFoxStatusManager : IDynamicFoxStatusManager
     {
         private readonly IGetBatteryLevelCommand _getBatteryLevelCommand;
-        private readonly IGetAntennaMatchingStatusCommand _getAntennaMatchingStatusCommand;
-        private readonly IMarkMatchingAsSeenCommand _markMatchingAsSeenCommand;
-        private readonly IGetAntennaMatchingDataCommand _getAntennaMatchingDataCommand;
+        private readonly IAntennaMatchingManager _antennaMatchingManager;
 
         private OnGetDynamicFoxStatus _onGetDynamicFoxStatus;
-        private OnMarkAntennaMatchingAsSeen _onMarkAntennaMatchingAsSeen;
-        private OnGetAntennaMatchingData _onGetAntennaMatchingData;
 
         private DynamicFoxStatus _statusToLoad = new DynamicFoxStatus();
 
         public DynamicFoxStatusManager
             (
                 IGetBatteryLevelCommand getBatteryLevelCommand,
-                IGetAntennaMatchingStatusCommand getAntennaMatchingStatusCommand,
-                IMarkMatchingAsSeenCommand markMatchingAsSeenCommand,
-                IGetAntennaMatchingDataCommand getAntennaMatchingDataCommand
+                IAntennaMatchingManager antennaMatchingManager
             )
         {
             _getBatteryLevelCommand = getBatteryLevelCommand;
-            _getAntennaMatchingStatusCommand = getAntennaMatchingStatusCommand;
-            _markMatchingAsSeenCommand = markMatchingAsSeenCommand;
-            _getAntennaMatchingDataCommand = getAntennaMatchingDataCommand;
+            _antennaMatchingManager = antennaMatchingManager;
         }
 
         public async Task GetDynamicFoxStatusAsync(OnGetDynamicFoxStatus onGetDynamicFoxStatus)
         {
             _onGetDynamicFoxStatus = onGetDynamicFoxStatus ?? throw new ArgumentNullException(nameof(onGetDynamicFoxStatus));
 
-            _getBatteryLevelCommand.SetResponseDelegate(OnGetBatteryLevelResponse);
+            _getBatteryLevelCommand.SetResponseDelegate(async (l) => await OnGetBatteryLevelResponseAsync(l));
             _getBatteryLevelCommand.SendGetBatteryLevelCommand();
         }
 
-        private void OnGetBatteryLevelResponse(float level)
+        private async Task OnGetBatteryLevelResponseAsync(float level)
         {
             _statusToLoad.BatteryLevel = level;
 
-            _getAntennaMatchingStatusCommand.SetResponseDelegate(OnGetAntennaMatchingStatus);
-            _getAntennaMatchingStatusCommand.SendGetAntennaMatchingStatusCommand();
+            await _antennaMatchingManager.GetAntennaMatchingStatusAsync(OnGetAntennaMatchingStatus);
         }
 
         private void OnGetAntennaMatchingStatus
@@ -71,42 +61,6 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _statusToLoad.AntennaMatchingStatus.CurrentBestMatchVoltage = currentBestMatchVoltage;
 
             _onGetDynamicFoxStatus(_statusToLoad);
-        }
-
-        public async Task MarkAntennaMatchingAsSeenAsync(OnMarkAntennaMatchingAsSeen onMarkAntennaMatchingAsSeen)
-        {
-            _onMarkAntennaMatchingAsSeen = onMarkAntennaMatchingAsSeen ?? throw new ArgumentNullException(nameof(onMarkAntennaMatchingAsSeen));
-
-            _markMatchingAsSeenCommand.SetResponseDelegate(OnMarkAntennaMatchingAsSeen);
-            _markMatchingAsSeenCommand.SendMarkMatchingAsSeenCommand();
-        }
-
-        private void OnMarkAntennaMatchingAsSeen()
-        {
-            _onMarkAntennaMatchingAsSeen();
-        }
-
-        public async Task GetAntennaMatchingDataAsync(int matcherPosition, OnGetAntennaMatchingData onGetAntennaMatchingData)
-        {
-            _onGetAntennaMatchingData = onGetAntennaMatchingData ?? throw new ArgumentNullException(nameof(onGetAntennaMatchingData));
-
-            _getAntennaMatchingDataCommand.SetResponseDelegate(OnGetAntennaMatchingData);
-            _getAntennaMatchingDataCommand.SendGetAntennaMatchingDataCommand(matcherPosition);
-        }
-
-        private void OnGetAntennaMatchingData
-        (
-            bool isSuccessfull,
-            int matcherPosition,
-            float antennaVoltage
-        )
-        {
-            if (!isSuccessfull)
-            {
-                throw new InvalidOperationException("Failed to get antenna matching data");
-            }
-
-            _onGetAntennaMatchingData(matcherPosition, antennaVoltage);
         }
     }
 }

@@ -40,6 +40,7 @@ namespace org.whitefossa.yiffhl.Droid
             App.Container.Register<IDynamicFoxStatusManager, DynamicFoxStatusManager>().AsSingleton();
             App.Container.Register<IStaticFoxStatusManager, StaticFoxStatusManager>().AsSingleton();
             App.Container.Register<IColorsFactory, ColorsFactory>().AsSingleton();
+            App.Container.Register<IAntennaMatchingManager, AntennaMatchingManager>().AsSingleton();
 
             #region Commands
 
