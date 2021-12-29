@@ -10,6 +10,7 @@ using org.whitefossa.yiffhl.Abstractions.Interfaces.Commands;
 using org.whitefossa.yiffhl.Abstractions.Interfaces.Models;
 using org.whitefossa.yiffhl.Business.Implementations;
 using org.whitefossa.yiffhl.Business.Implementations.Commands;
+using org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor;
 using org.whitefossa.yiffhl.Droid.Business.Implementations;
 using org.whitefossa.yiffhl.Models;
 

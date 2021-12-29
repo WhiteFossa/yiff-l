@@ -133,7 +133,7 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// <summary>
         /// Interval in milliseconds to poll fox status
         /// </summary>
-        private const int PollFoxStatusInterval = 1000;
+        private const int PollFoxStatusInterval = 2000;
 
         private readonly IFoxConnector _foxConnector;
         private readonly IPairedFoxesEnumerator _pairedFoxesEnumerator;
