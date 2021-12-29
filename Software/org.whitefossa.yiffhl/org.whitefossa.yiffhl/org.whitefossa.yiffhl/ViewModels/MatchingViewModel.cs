@@ -15,6 +15,7 @@ namespace org.whitefossa.yiffhl.ViewModels
         public delegate void RedrawMatchingGraphDelegate();
 
         private readonly IDynamicFoxStatusManager _dynamicFoxStatusManager;
+        private readonly IAntennaMatchingManager _antennaMatchingManager;
 
         public MainModel MainModel;
 
@@ -79,6 +80,7 @@ namespace org.whitefossa.yiffhl.ViewModels
         {
             MainModel = App.Container.Resolve<IMainModel>() as MainModel;
             _dynamicFoxStatusManager = App.Container.Resolve<IDynamicFoxStatusManager>();
+            _antennaMatchingManager = App.Container.Resolve<IAntennaMatchingManager>();
         }
 
         public async Task OnMatchingStatusChangedAsync()
@@ -112,7 +114,7 @@ namespace org.whitefossa.yiffhl.ViewModels
 
         public async Task OnLeavingMatchingDisplayAsync()
         {
-            await _dynamicFoxStatusManager.MarkAntennaMatchingAsSeenAsync(OnMarkAntennaMatchingAsSeen);
+            await _antennaMatchingManager.MarkAntennaMatchingAsSeenAsync(OnMarkAntennaMatchingAsSeen);
 
             MainModel.ActiveDisplay = ActiveDisplay.MainDisplay;
             await Navigation.PopModalAsync();
@@ -143,7 +145,7 @@ namespace org.whitefossa.yiffhl.ViewModels
 
             // Loading first voltage
             _progressDialog = UserDialogs.Instance.Progress("Loading matching data...", null, null, true, MaskType.Clear);
-            await _dynamicFoxStatusManager.GetAntennaMatchingDataAsync(0, async (p, v) => await OnGetAntennaMatchingDataAsync(p, v));
+            await _antennaMatchingManager.GetAntennaMatchingDataAsync(0, async (p, v) => await OnGetAntennaMatchingDataAsync(p, v));
         }
 
         private async Task OnGetAntennaMatchingDataAsync(int matcherPosition, float antennaVoltage)
@@ -153,7 +155,7 @@ namespace org.whitefossa.yiffhl.ViewModels
             if (matcherPosition < MainModel.ArmingModel.MatchingPositionsCount - 1)
             {
                 _progressDialog.PercentComplete = (int)Math.Round(100 * matcherPosition / (double)MainModel.ArmingModel.MatchingPositionsCount);
-                await _dynamicFoxStatusManager.GetAntennaMatchingDataAsync(matcherPosition + 1, async (p, v) => await OnGetAntennaMatchingDataAsync(p, v));
+                await _antennaMatchingManager.GetAntennaMatchingDataAsync(matcherPosition + 1, async (p, v) => await OnGetAntennaMatchingDataAsync(p, v));
                 return;
             }
 
