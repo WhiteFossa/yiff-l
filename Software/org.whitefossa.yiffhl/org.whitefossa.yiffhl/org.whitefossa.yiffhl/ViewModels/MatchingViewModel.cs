@@ -1,20 +1,16 @@
 ﻿using Acr.UserDialogs;
 using org.whitefossa.yiffhl.Abstractions.Enums;
 using org.whitefossa.yiffhl.Abstractions.Interfaces;
-using org.whitefossa.yiffhl.Abstractions.Interfaces.Events;
 using org.whitefossa.yiffhl.Abstractions.Interfaces.Models;
 using org.whitefossa.yiffhl.Models;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace org.whitefossa.yiffhl.ViewModels
 {
-    public class ArmingViewModel : BindableObject
+    public class MatchingViewModel : BindableObject
     {
         public delegate void RedrawMatchingGraphDelegate();
 
@@ -79,7 +75,7 @@ namespace org.whitefossa.yiffhl.ViewModels
             }
         }
 
-        public ArmingViewModel()
+        public MatchingViewModel()
         {
             MainModel = App.Container.Resolve<IMainModel>() as MainModel;
             _dynamicFoxStatusManager = App.Container.Resolve<IDynamicFoxStatusManager>();
@@ -129,6 +125,7 @@ namespace org.whitefossa.yiffhl.ViewModels
 
         private async Task OnMatchingInitiated()
         {
+            MainModel.ArmingModel.MatchingPositionsCount = 0;
             MainModel.ArmingModel.BestMatchingPosition = 0;
             MainModel.ArmingModel.BestMatchingPositionVoltage = 0;
             MainModel.ArmingModel.MatchingData.Clear();

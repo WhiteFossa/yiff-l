@@ -33,9 +33,9 @@ namespace org.whitefossa.yiffhl.Views
 
         private IColorsFactory _colorsFactory;
 
-        private ArmingViewModel ViewModel
+        private MatchingViewModel ViewModel
         {
-            get => BindingContext as ArmingViewModel;
+            get => BindingContext as MatchingViewModel;
             set => BindingContext = value;
         }
 

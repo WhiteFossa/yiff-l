@@ -6,7 +6,7 @@
              xmlns:skia="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms">
 
     <ContentPage.BindingContext>
-        <viewModels:ArmingViewModel />
+        <viewModels:MatchingViewModel />
     </ContentPage.BindingContext>
 
     <ContentPage.Content>
@@ -14,9 +14,11 @@
             <StackLayout
                 VerticalOptions="FillAndExpand">
                 <Frame
-                    Style="{StaticResource FramesStyle}">
-                    <StackLayout>
+                    Style="{StaticResource FramesStyle}"
+                    VerticalOptions="FillAndExpand">
 
+                    <StackLayout>
+                        
                         <Label
                         Text="Antenna matching"
                         HorizontalOptions="Center" />
@@ -96,20 +98,6 @@
                             </StackLayout>
 
                         </StackLayout>
-                    </StackLayout>
-                </Frame>
-
-                <Frame
-                    Style="{StaticResource FramesStyle}"
-                    VerticalOptions="FillAndExpand">
-
-                    <StackLayout
-                        VerticalOptions="FillAndExpand">
-
-                        <Label
-                        Text="Antenna matching"
-                        HorizontalOptions="Center"
-                        VerticalOptions="Start" />
 
                         <StackLayout
                             VerticalOptions="FillAndExpand">
