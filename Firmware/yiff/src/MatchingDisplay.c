@@ -19,7 +19,7 @@ void DrawMatchingDisplay(FoxStateStruct foxState)
 		SelfDiagnostics_HaltOnFailure(YhlFailureCause_DrawMatchingDisplayWhenNoMatchingDisplay);
 	}
 
-	if (!foxState.GlobalState.IsMatchingInProgress)
+	if (foxState.AntennaMatching.Status != AntennaMatching_InProgress)
 	{
 		SelfDiagnostics_HaltOnFailure(YhlFailureCause_DrawMatchingDisplayWhenNoMatchingInProgress);
 	}
@@ -29,10 +29,10 @@ void DrawMatchingDisplay(FoxStateStruct foxState)
 	FMGL_API_ClearScreen(&fmglContext);
 
 	/* Matching graph */
-	DrawMatchingGraph(foxState.MatchingDisplayData);
+	DrawMatchingGraph(foxState.AntennaMatching);
 
 	/* Bottomline - matching step*/
-	DrawMatchingStatusString(foxState.MatchingDisplayData.MatchingStep);
+	DrawMatchingStatusString(foxState.AntennaMatching.CurrentPosition);
 
 	FMGL_API_PushFramebuffer(&fmglContext);
 }
@@ -55,14 +55,14 @@ void DrawMatchingStatusString(uint8_t step)
 	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, (uint16_t)spacing, YHL_ANTENNA_MATCHING_PROGRESS_TOP, NULL, NULL, false, buffer);
 }
 
-void DrawMatchingGraph(MatchingDisplayStruct matchingData)
+void DrawMatchingGraph(MatchingStatusStruct matchingData)
 {
 	float maxValue = 0;
 	for (uint8_t step = 0; step < HAL_AM_MAX_VALUE; step++)
 	{
-		if (matchingData.MatchingLevels[step] > maxValue)
+		if (matchingData.MatchingVoltages[step] > maxValue)
 		{
-			maxValue = matchingData.MatchingLevels[step];
+			maxValue = matchingData.MatchingVoltages[step];
 		}
 	}
 
@@ -77,7 +77,7 @@ void DrawMatchingGraph(MatchingDisplayStruct matchingData)
 	for (uint8_t step = 0; step < HAL_AM_MAX_VALUE; step++)
 	{
 		uint16_t x = (uint16_t)step * 2U;
-		int32_t y = YHL_ANTENNA_MATCHING_GRAPH_BOTTOM - floor(matchingData.MatchingLevels[step] * scalingFactor + 0.5f);
+		int32_t y = YHL_ANTENNA_MATCHING_GRAPH_BOTTOM - floor(matchingData.MatchingVoltages[step] * scalingFactor + 0.5f);
 		if (y < 0)
 		{
 			y = 0;

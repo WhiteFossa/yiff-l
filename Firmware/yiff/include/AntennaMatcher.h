@@ -81,10 +81,4 @@ void AMSM_StartMatching(bool isArmFoxAfterMatching);
  */
 void AMSM_SysTickHandler(void);
 
-/**
- * Returns optimal matcher position
- */
-uint8_t AMSM_GetOptimalMatching(void);
-
-
 #endif /* INCLUDE_ANTENNAMATCHER_H_ */

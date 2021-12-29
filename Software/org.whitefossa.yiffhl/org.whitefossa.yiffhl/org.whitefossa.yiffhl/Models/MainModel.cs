@@ -1,4 +1,5 @@
 ﻿using org.whitefossa.yiffhl.Abstractions.DTOs;
+using org.whitefossa.yiffhl.Abstractions.Enums;
 using org.whitefossa.yiffhl.Abstractions.Interfaces;
 using org.whitefossa.yiffhl.Abstractions.Interfaces.Models;
 
@@ -71,17 +72,17 @@ namespace org.whitefossa.yiffhl.Models
 
         public ArmingModel ArmingModel { get; set; } = new ArmingModel();
 
+        /// <summary>
+        /// Current app display
+        /// </summary>
+        public ActiveDisplay ActiveDisplay { get; set; }
+
         #region Fox events
 
         /// <summary>
         /// Delegate, called when fox is armed
         /// </summary>
         public OnFoxArmedEventDelegate OnFoxArmed { get; set; }
-
-        /// <summary>
-        /// Delegate, called when new antenna matching measurement event arrives
-        /// </summary>
-        public OnAntennaMatchingMeasurementEventDelegate OnAntennaMatchingMeasurement { get; set; }
 
         /// <summary>
         /// Delegate, called when fox going to sleepmode
@@ -122,10 +123,11 @@ namespace org.whitefossa.yiffhl.Models
             OnFoxConnectorFailedToConnect = null;
 
             OnFoxArmed = null;
-            OnAntennaMatchingMeasurement = null;
             OnEnteringSleepmode = null;
             OnFoxArmingInitiated = null;
             OnFoxDisarmed = null;
+
+            ActiveDisplay = ActiveDisplay.MainDisplay;
         }
     }
 }

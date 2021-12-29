@@ -13,7 +13,6 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
     #region Events delegats
 
     public delegate void OnFoxArmedEventDelegate(IFoxArmedEvent foxArmedEvent);
-    public delegate void OnAntennaMatchingMeasurementEventDelegate(IAntennaMatchingMeasurementEvent antennaMatchingMeasurementEvent);
     public delegate void OnEnteringSleepmodeEventDelegate(IEnteringSleepmodeEvent enteringSleepmodeEvent);
     public delegate void OnFoxArmingInitiatedEventDelegate(IFoxArmingInitiatedEvent foxArmingInitiatedEvent);
     public delegate void OnFoxDisarmedEventDelegate(IFoxDisarmedEvent foxDisarmedEvent);
@@ -76,6 +75,9 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
         void SetOnGetLastFailureCodeResponse(OnResponseDelegate onGetLastFailureCodeResponse);
         void SetOnNoOperationResponse(OnResponseDelegate onNoOperationResponse);
         void SetOnGetIdentificationDataResponse(OnResponseDelegate onGetIdentificationDataResponse);
+        void SetOnGetAntennaMatchingStatusResponse(OnResponseDelegate onGetAntennaMatchingStatusResponse);
+        void SetOnMarkMatchingAsSeenResponse(OnResponseDelegate onMarkMatchingAsSeenResponse);
+        void SetOnGetAntennaMatchingDataResponse(OnResponseDelegate onGetAntennaMatchingDataResponse);
 
 
         #endregion
@@ -83,7 +85,6 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
         #region Events handlers registration
 
         void RegisterOnFoxArmedEventHandler(OnFoxArmedEventDelegate onFoxArmedEvent);
-        void RegisterOnAntennaMatchingMeasurementEventHandler(OnAntennaMatchingMeasurementEventDelegate onAntennaMatchingMeasurementEvent);
         void RegisterOnEnteringSleepmodeEventHandler(OnEnteringSleepmodeEventDelegate onEnteringSleepmodeEvent);
         void RegisterOnFoxArmingInitiatedEventHandler(OnFoxArmingInitiatedEventDelegate onFoxArmingInitiatedEvent);
         void RegisterOnFoxDisarmedEventHandler(OnFoxDisarmedEventDelegate onFoxDisarmedEvent);

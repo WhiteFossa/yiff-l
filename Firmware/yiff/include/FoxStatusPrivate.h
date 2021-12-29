@@ -165,6 +165,28 @@ typedef enum
 FoxState_SleepModeEnum;
 
 /**
+ * Antenna matching status
+ */
+typedef enum
+{
+	/**
+	 * Matching never was initiated
+	 */
+	AntennaMatching_NeverInitiated = 0,
+
+	/**
+	 * Matching currently in progress
+	 */
+	AntennaMatching_InProgress = 1,
+
+	/**
+	 * Matching completed
+	 */
+	AntennaMatching_Completed = 2
+}
+FoxState_AntennaMatchingStatus;
+
+/**
  * Fox frequency
  */
 typedef struct
@@ -248,7 +270,7 @@ typedef struct
 	/**
 	 * True if antenna matching in progress
 	 */
-	bool IsMatchingInProgress;
+//	bool IsMatchingInProgress;
 }
 GlobalFoxStateStruct;
 
@@ -272,23 +294,6 @@ typedef struct
 CycleStateStruct;
 
 /**
- * Matching display data. Meaningless if Globalstate.IsMatchingInProgress == false
- */
-typedef struct
-{
-	/**
-	 * Matching step
-	 */
-	uint8_t MatchingStep;
-
-	/**
-	 * Matching levels
-	 */
-	float MatchingLevels[YHL_MATCHING_LEVELS_COUNT];
-}
-MatchingDisplayStruct;
-
-/**
  * Stuff, related to sleep modes
  */
 typedef struct
@@ -304,6 +309,48 @@ typedef struct
 	FoxState_SleepModeEnum Mode;
 }
 SleepmodesStruct;
+
+/**
+ * Global structure with antenna matching status
+ */
+typedef struct
+{
+	/**
+	 * Matcher status
+	 */
+	FoxState_AntennaMatchingStatus Status;
+
+	/**
+	 * True if matching data is new for app
+	 */
+	bool IsNewForApp;
+
+	/**
+	 * Current matcher position
+	 */
+	uint8_t CurrentPosition;
+
+	/**
+	 * Current antenna voltage
+	 */
+	float CurrentVoltage;
+
+	/**
+	 * Best match position (will move during matching)
+	 */
+	uint8_t BestMatchPosition;
+
+	/**
+	 * Antenna voltage at BestMatchPosition
+	 */
+	float BestMatchVoltage;
+
+	/**
+	 * Matching voltages for last matching
+	 */
+	float MatchingVoltages[YHL_MATCHING_LEVELS_COUNT];
+}
+MatchingStatusStruct;
 
 /**
  * Fox status
@@ -391,11 +438,6 @@ typedef struct
 	FoxDisplayEnum CurrentDisplay;
 
 	/**
-	 * Data for matching display
-	 */
-	MatchingDisplayStruct MatchingDisplayData;
-
-	/**
 	 * True if EEPROM headers is initialized and self-diagnostics can write data to EEPROM
 	 */
 	bool IsEEPROMHeadersInitialized;
@@ -409,6 +451,11 @@ typedef struct
 	 * Stuff, related to sleepmodes
 	 */
 	SleepmodesStruct Sleepmodes;
+
+	/**
+	 * Stuff, related to antenna matching
+	 */
+	MatchingStatusStruct AntennaMatching;
 }
 FoxStateStruct;
 

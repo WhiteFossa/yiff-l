@@ -136,7 +136,13 @@ typedef enum
 
 	NoOperation = 0x21,
 
-	GetIdentificationData = 0x22
+	GetIdentificationData = 0x22,
+
+	GetAntennaMatchingStatus = 0x23,
+
+	GetAntennaMatchingData = 0x24,
+
+	MarkMatchingAsSeen = 0x25
 }
 CommandToFoxEnum;
 
@@ -146,8 +152,6 @@ CommandToFoxEnum;
 typedef enum
 {
 	Armed = 0x01,
-
-	AntennaMatchingMeasurement = 0x02,
 
 	EnteringSleepmode = 0x03,
 
@@ -363,19 +367,29 @@ void OnGetLastFailureCode(uint8_t payloadSize, uint8_t* payload);
 void OnNoOperation(uint8_t payloadSize, uint8_t* payload);
 
 /**
- * Called when "Get identification data"
+ * Called when "Get identification data" command comes
  */
 void OnGetIdentificationData(uint8_t payloadSize, uint8_t* payload);
+
+/**
+ * Called when "Get antenna matching status" command comes
+ */
+void OnGetAntennaMatchingStatus(uint8_t payloadSize, uint8_t* payload);
+
+/**
+ * Called when "Get antenna matching data" command comes
+ */
+void OnGetAntennaMatchingData(uint8_t payloadSize, uint8_t* payload);
+
+/**
+ * Called when "MarkMatchingAsSeen" command comes
+ */
+void OnMarkMatchingAsSeen(uint8_t payloadSize, uint8_t* payload);
 
 /**
  * Emits "FoxArmed" event
  */
 void EmitFoxArmedEvent(void);
-
-/**
- * Emits "Antenna matching measurement" event
- */
-void EmitAntennaMatchingMeasurementEvent(uint8_t matchingPosition, uint8_t totalPositions, float uAnt);
 
 /**
  * Emits "Entering sleepmode" event

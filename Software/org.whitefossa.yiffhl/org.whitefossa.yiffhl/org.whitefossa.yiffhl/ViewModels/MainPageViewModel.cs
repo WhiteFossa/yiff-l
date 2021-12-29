@@ -1,9 +1,11 @@
 ﻿using org.whitefossa.yiffhl.Abstractions.DTOs;
+using org.whitefossa.yiffhl.Abstractions.Enums;
 using org.whitefossa.yiffhl.Abstractions.Interfaces;
 using org.whitefossa.yiffhl.Abstractions.Interfaces.Events;
 using org.whitefossa.yiffhl.Abstractions.Interfaces.Models;
 using org.whitefossa.yiffhl.Business.Implementations.Commands;
 using org.whitefossa.yiffhl.Models;
+using org.whitefossa.yiffhl.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -131,7 +133,7 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// <summary>
         /// Interval in milliseconds to poll fox status
         /// </summary>
-        private const int PollFoxStatusInterval = 1000;
+        private const int PollFoxStatusInterval = 2000;
 
         private readonly IFoxConnector _foxConnector;
         private readonly IPairedFoxesEnumerator _pairedFoxesEnumerator;
@@ -148,10 +150,24 @@ namespace org.whitefossa.yiffhl.ViewModels
         private readonly IDynamicFoxStatusManager _dynamicFoxStatusManager;
         private readonly IStaticFoxStatusManager _staticFoxStatusManager;
 
+        #region Views
+
+        /// <summary>
+        /// Arming view
+        /// </summary>
+        private ArmingView _armingView = new ArmingView();
+
+        #endregion
+
         /// <summary>
         /// Main model
         /// </summary>
         public MainModel MainModel;
+
+        /// <summary>
+        /// We use it for navigation
+        /// </summary>
+        public INavigation Navigation { get; set; }
 
         /// <summary>
         /// List of foxes, paired to a phone
@@ -828,7 +844,6 @@ namespace org.whitefossa.yiffhl.ViewModels
 
             // Setting up fox events delegates
             MainModel.OnFoxArmed += async (e) => await OnFoxArmedAsync(e);
-            MainModel.OnAntennaMatchingMeasurement += OnAntennaMatchingMeasurement;
             MainModel.OnEnteringSleepmode += OnEnteringSleepmode;
             MainModel.OnFoxArmingInitiated += OnFoxArmingInitiated;
             MainModel.OnFoxDisarmed += async (e) => await OnFoxDisarmedAsync(e);
@@ -836,7 +851,6 @@ namespace org.whitefossa.yiffhl.ViewModels
             MainModel.OnProfileSwitched += async (e) => await OnProfileSwitchedFromMenuAsync(e);
 
             _packetsProcessor.RegisterOnFoxArmedEventHandler(MainModel.OnFoxArmed);
-            _packetsProcessor.RegisterOnAntennaMatchingMeasurementEventHandler(MainModel.OnAntennaMatchingMeasurement);
             _packetsProcessor.RegisterOnEnteringSleepmodeEventHandler(MainModel.OnEnteringSleepmode);
             _packetsProcessor.RegisterOnFoxArmingInitiatedEventHandler(MainModel.OnFoxArmingInitiated);
             _packetsProcessor.RegisterOnFoxDisarmedEventHandler(MainModel.OnFoxDisarmed);
@@ -1747,13 +1761,30 @@ Do you want to continue?");
                 return;
             }
 
-            await _dynamicFoxStatusManager.GetDynamicFoxStatusAsync(OnGetDynamicFoxStatus);
+            await _dynamicFoxStatusManager.GetDynamicFoxStatusAsync(async (s) => await OnGetDynamicFoxStatusAsync(s));
         }
 
-        private void OnGetDynamicFoxStatus(DynamicFoxStatus status)
+        private async Task OnGetDynamicFoxStatusAsync(DynamicFoxStatus status)
         {
             MainModel.DynamicFoxStatus = status;
             OnPropertyChanged(nameof(BatteryLevelFormatted));
+
+            if (MainModel.ActiveDisplay != Abstractions.Enums.ActiveDisplay.MatchingDisplay
+                &&
+                (
+                    MainModel.DynamicFoxStatus.AntennaMatchingStatus.Status == AntennaMatchingStatus.InProgress
+                    ||
+                    MainModel.DynamicFoxStatus.AntennaMatchingStatus.Status == AntennaMatchingStatus.Completed
+                )
+                &&
+                MainModel.DynamicFoxStatus.AntennaMatchingStatus.IsNewForApp)
+            {
+                // Showing matching display
+                NavigateToMatchingPage();
+            }
+
+            // Matching display status update
+            await _armingView.OnMatchingStatusChangedAsync();
         }
 
         #endregion
@@ -1763,13 +1794,6 @@ Do you want to continue?");
         private void OnFoxArmingInitiated(IFoxArmingInitiatedEvent foxArmingInitiatedEvent)
         {
             Debug.WriteLine("Fox arming initiated");
-        }
-
-        private void OnAntennaMatchingMeasurement(IAntennaMatchingMeasurementEvent antennaMatchingMeasurementEvent)
-        {
-            Debug.WriteLine($"Tuner position: { antennaMatchingMeasurementEvent.GetMatchingPosition() }, " +
-                $"total positions: {antennaMatchingMeasurementEvent.GetTotalMatchingPositionsCount() }, " +
-                $"voltage: { antennaMatchingMeasurementEvent.GetAntennaVoltage() }");
         }
 
         private async Task OnFoxArmedAsync(IFoxArmedEvent foxArmedEvent)
@@ -1870,6 +1894,20 @@ Do you want to continue?");
         private async Task OnDisarmFoxResponseAsync()
         {
             await _staticFoxStatusManager.GetStaticFoxStatusAsync(async (s) => await OnGetStaticFoxStatusAsync_ReloadPathway(s));
+        }
+
+        #endregion
+
+        #region Navigation
+
+        private void NavigateToMatchingPage()
+        {
+            MainModel.ActiveDisplay = ActiveDisplay.MatchingDisplay;
+
+            Device.BeginInvokeOnMainThread(async () =>
+            {
+                await Navigation.PushModalAsync(_armingView);
+            });
         }
 
         #endregion

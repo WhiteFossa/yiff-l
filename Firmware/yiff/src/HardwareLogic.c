@@ -151,7 +151,7 @@ void HL_PrepareFoxFor80mCycle(void)
 	HL_SetupU80m(HAL_GetU80mFromPower(FoxState.Power));
 
 	/* Switching antenna matching */
-	HAL_SetAntennaMatchingValue(AMSM_GetOptimalMatching());
+	HAL_SetAntennaMatchingValue(FoxState.AntennaMatching.BestMatchPosition);
 }
 
 void HL_UnPrepareFoxFrom80mCycle(void)

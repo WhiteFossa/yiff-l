@@ -10,6 +10,7 @@ using org.whitefossa.yiffhl.Abstractions.Interfaces.Commands;
 using org.whitefossa.yiffhl.Abstractions.Interfaces.Models;
 using org.whitefossa.yiffhl.Business.Implementations;
 using org.whitefossa.yiffhl.Business.Implementations.Commands;
+using org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor;
 using org.whitefossa.yiffhl.Droid.Business.Implementations;
 using org.whitefossa.yiffhl.Models;
 
@@ -70,6 +71,9 @@ namespace org.whitefossa.yiffhl.Droid
             App.Container.Register<IIsFoxArmedCommand, IsFoxArmedCommand>().AsSingleton();
             App.Container.Register<IArmFoxCommand, ArmFoxCommand>().AsSingleton();
             App.Container.Register<IDisarmFoxCommand, DisarmFoxCommand>().AsSingleton();
+            App.Container.Register<IGetAntennaMatchingStatusCommand, GetAntennaMatchingStatusCommand>().AsSingleton();
+            App.Container.Register<IMarkMatchingAsSeenCommand, MarkMatchingAsSeenCommand>().AsSingleton();
+            App.Container.Register<IGetAntennaMatchingDataCommand, GetAntennaMatchingDataCommand>().AsSingleton();
 
             #endregion
 
