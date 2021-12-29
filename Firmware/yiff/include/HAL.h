@@ -27,7 +27,7 @@ extern FoxStateStruct FoxState;
  * If defined, then antenna matching will be disabled, and SWD will be kept enabled.
  * Otherwise SWD connection will be dropped when antenna matching starts
  */
-#define HAL_DISABLE_ANTENNA_MATCHING
+/* #define HAL_DISABLE_ANTENNA_MATCHING */
 
 /***************
  * PORT B pins *
