@@ -78,7 +78,6 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
 
         private OnEnteringSleepmodeEventDelegate _onEnteringSleepmodeEvent;
         private OnProfileSettingsChangedEventDelegate _onProfileSettingsChangedEvent;
-        private OnProfileSwitchedEventDelegate _onProfileSwitchedEvent;
 
         #endregion
 
@@ -544,11 +543,6 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
                     OnProfileSettingsChangedEvent(eventPayload);
                     break;
 
-                // Profile switched
-                case EventType.ProfileSwitched:
-                    OnProfileSwitchedEvent(eventPayload);
-                    break;
-
                 // We've got some junk
                 default:
                     return;
@@ -567,13 +561,6 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
             _ = _onProfileSettingsChangedEvent ?? throw new InvalidOperationException("Handler for Profile Settings Changed event isn't registered");
 
             _onProfileSettingsChangedEvent(new ProfileSettingsChangedEvent());
-        }
-
-        private void OnProfileSwitchedEvent(IReadOnlyCollection<byte> payload)
-        {
-            _ = _onProfileSwitchedEvent ?? throw new InvalidOperationException("Handler for Profile Switched event isn't registered");
-
-            _onProfileSwitchedEvent(new ProfileSwitchedEvent());
         }
 
         #region Commands queue
@@ -838,11 +825,6 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
         public void RegisterOnProfileSettingsChangedEventHandler(OnProfileSettingsChangedEventDelegate onProfileSettingsChangedEvent)
         {
             _onProfileSettingsChangedEvent = onProfileSettingsChangedEvent ?? throw new ArgumentNullException(nameof(onProfileSettingsChangedEvent));
-        }
-
-        public void RegisterOnProfileSwitchedEventHandler(OnProfileSwitchedEventDelegate onProfileSwitchedEvent)
-        {
-            _onProfileSwitchedEvent = onProfileSwitchedEvent ?? throw new ArgumentNullException(nameof(onProfileSwitchedEvent));
         }
 
         public void SetOnGetAntennaMatchingStatusResponse(OnResponseDelegate onGetAntennaMatchingStatusResponse)

@@ -9,6 +9,8 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
 
     public delegate void OnFoxDisarmedDelegate();
 
+    public delegate void OnProfileChangedDelegate(int newProfileId);
+
     /// <summary>
     /// Generates events based on fox status changes
     /// </summary>
@@ -21,5 +23,7 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
         void RegisterOnFoxArmedHandler(OnFoxArmedDelegate onFoxArmed);
 
         void RegisterOnFoxDisarmedHandler(OnFoxDisarmedDelegate onFoxDisarmed);
+
+        void RegisterOnProfileChangedHandler(OnProfileChangedDelegate onProfileChanged);
     }
 }

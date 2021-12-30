@@ -12,6 +12,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private readonly IGetBatteryLevelCommand _getBatteryLevelCommand;
         private readonly IAntennaMatchingManager _antennaMatchingManager;
         private readonly IIsFoxArmedCommand _isFoxArmedCommand;
+        private readonly IGetCurrentProfileIdCommand _getCurrentProfileIdCommand;
 
         private OnGetDynamicFoxStatus _onGetDynamicFoxStatus;
 
@@ -21,12 +22,14 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             (
                 IGetBatteryLevelCommand getBatteryLevelCommand,
                 IAntennaMatchingManager antennaMatchingManager,
-                IIsFoxArmedCommand isFoxArmedCommand
+                IIsFoxArmedCommand isFoxArmedCommand,
+                IGetCurrentProfileIdCommand getCurrentProfileIdCommand
             )
         {
             _getBatteryLevelCommand = getBatteryLevelCommand;
             _antennaMatchingManager = antennaMatchingManager;
             _isFoxArmedCommand = isFoxArmedCommand;
+            _getCurrentProfileIdCommand = getCurrentProfileIdCommand;
         }
 
         public async Task GetDynamicFoxStatusAsync(OnGetDynamicFoxStatus onGetDynamicFoxStatus)
@@ -90,6 +93,14 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private async Task OnIsFoxArmedResponseAsync(bool isArmed)
         {
             _statusToLoad.IsFoxArmed = isArmed;
+
+            _getCurrentProfileIdCommand.SetResponseDelegate(async (p) => await OnGetCurrentProfileIdResponseAsync(p));
+            _getCurrentProfileIdCommand.SendGetCurrentProfileIdCommand();
+        }
+
+        private async Task OnGetCurrentProfileIdResponseAsync(int profileId)
+        {
+            _statusToLoad.CurrentProfileId = profileId;
 
             _onGetDynamicFoxStatus(_statusToLoad);
         }

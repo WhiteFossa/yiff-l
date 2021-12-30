@@ -13,14 +13,21 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private OnShowMatchingDisplayDelegate _onShowMatchingDisplay;
         private OnFoxArmedDelegate _onFoxArmed;
         private OnFoxDisarmedDelegate _onFoxDisarmed;
+        private OnProfileChangedDelegate _onProfileChanged;
 
         private bool? _isFoxArmedOld = null;
+        private int? _currentProfileIdOld = null;
 
         public async Task GenerateEventsAsync(MainModel model)
         {
             if (!_isFoxArmedOld.HasValue)
             {
                 _isFoxArmedOld = model.DynamicFoxStatus.IsFoxArmed;
+            }
+
+            if (!_currentProfileIdOld.HasValue)
+            {
+                _currentProfileIdOld = model.DynamicFoxStatus.CurrentProfileId;
             }
 
             #region Show matching display
@@ -71,7 +78,20 @@ namespace org.whitefossa.yiffhl.Business.Implementations
 
             #endregion
 
+            #region Profile changed
+
+            if (model.DynamicFoxStatus.CurrentProfileId != _currentProfileIdOld.Value)
+            {
+                if (_onProfileChanged != null)
+                {
+                    _onProfileChanged(model.DynamicFoxStatus.CurrentProfileId);
+                }
+            }
+
+            #endregion
+
             _isFoxArmedOld = model.DynamicFoxStatus.IsFoxArmed;
+            _currentProfileIdOld = model.DynamicFoxStatus.CurrentProfileId;
         }
 
         public void RegisterOnFoxArmedHandler(OnFoxArmedDelegate onFoxArmed)
@@ -82,6 +102,11 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         public void RegisterOnFoxDisarmedHandler(OnFoxDisarmedDelegate onFoxDisarmed)
         {
             _onFoxDisarmed = onFoxDisarmed ?? throw new ArgumentNullException(nameof(onFoxDisarmed));
+        }
+
+        public void RegisterOnProfileChangedHandler(OnProfileChangedDelegate onProfileChanged)
+        {
+            _onProfileChanged = onProfileChanged ?? throw new ArgumentNullException(nameof(onProfileChanged));
         }
 
         public void RegisterOnShowMatchingDisplayHandler(OnShowMatchingDisplayDelegate onShowMatchingDisplay)

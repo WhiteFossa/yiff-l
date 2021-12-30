@@ -8,7 +8,5 @@
         EnteringSleepmode = 0x03,
 
         ProfileSettingsChanged = 0x06,
-
-        ProfileSwitched = 0x07
     }
 }

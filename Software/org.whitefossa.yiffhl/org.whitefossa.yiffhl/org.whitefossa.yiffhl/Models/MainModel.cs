@@ -100,9 +100,9 @@ namespace org.whitefossa.yiffhl.Models
         public OnProfileSettingsChangedEventDelegate OnProfileSettingsChanged { get; set; }
 
         /// <summary>
-        /// Delegate, called when profile switched from fox menu
+        /// Delegate, called when profile changed
         /// </summary>
-        public OnProfileSwitchedEventDelegate OnProfileSwitched { get; set; }
+        public OnProfileChangedDelegate OnProfileChanged { get; set; }
 
         #endregion
 
@@ -120,6 +120,7 @@ namespace org.whitefossa.yiffhl.Models
             OnFoxArmed = null;
             OnEnteringSleepmode = null;
             OnFoxDisarmed = null;
+            OnProfileChanged = null;
 
             ActiveDisplay = ActiveDisplay.MainDisplay;
         }

@@ -849,11 +849,9 @@ namespace org.whitefossa.yiffhl.ViewModels
 
             
             MainModel.OnProfileSettingsChanged += async (e) => await OnProfileSettingsChangedFromMenuAsync(e);
-            MainModel.OnProfileSwitched += async (e) => await OnProfileSwitchedFromMenuAsync(e);
 
             _packetsProcessor.RegisterOnEnteringSleepmodeEventHandler(MainModel.OnEnteringSleepmode);
             _packetsProcessor.RegisterOnProfileSettingsChangedEventHandler(MainModel.OnProfileSettingsChanged);
-            _packetsProcessor.RegisterOnProfileSwitchedEventHandler(MainModel.OnProfileSwitched);
 
             // Setting up events generato events handlers
             _eventsGenerator.RegisterOnShowMatchingDisplayHandler(NavigateToMatchingPage);
@@ -863,6 +861,9 @@ namespace org.whitefossa.yiffhl.ViewModels
 
             MainModel.OnFoxDisarmed += async () => await OnFoxDisarmedAsync();
             _eventsGenerator.RegisterOnFoxDisarmedHandler(MainModel.OnFoxDisarmed);
+
+            MainModel.OnProfileChanged += async (np) => await OnProfileChangedAsync(np);
+            _eventsGenerator.RegisterOnProfileChangedHandler(MainModel.OnProfileChanged);
 
             // Binding commands to handlers
             SelectedFoxChangedCommand = new Command<PairedFoxDTO>(async (f) => await OnSelectedFoxChangedAsync(f));
@@ -1815,11 +1816,14 @@ Do you want to continue?");
         }
 
         /// <summary>
-        /// Called when profile settings changed from menu on fox
+        /// Called when profile changed
         /// </summary>
-        private async Task OnProfileSwitchedFromMenuAsync(IProfileSwitchedEvent profileSwitchedEvent)
+        private async Task OnProfileChangedAsync(int newProfileId)
         {
-            await _foxProfilesManager.GetCurrentProfileId(OnGetCurrentProfileIdResponse);
+            if (newProfileId != MainModel.CurrentProfile.Id)
+            {
+                await _foxProfilesManager.GetCurrentProfileId(OnGetCurrentProfileIdResponse);
+            }
         }
 
         #endregion
@@ -1870,7 +1874,7 @@ Do you want to continue?");
 
         private async Task OnArmFoxResponseAsync()
         {
-            // Do nothing, armed status will change in corresponding event
+            // TODO: Switch buttons (it's not easy)
         }
 
         #endregion
