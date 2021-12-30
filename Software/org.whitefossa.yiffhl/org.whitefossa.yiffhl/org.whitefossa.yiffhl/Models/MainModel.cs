@@ -90,11 +90,6 @@ namespace org.whitefossa.yiffhl.Models
         public OnEnteringSleepmodeEventDelegate OnEnteringSleepmode { get; set; }
 
         /// <summary>
-        /// Delegate, called when fox arming is initiated
-        /// </summary>
-        public OnFoxArmingInitiatedEventDelegate OnFoxArmingInitiated { get; set; }
-
-        /// <summary>
         /// Delegate, called when fox is disarmed
         /// </summary>
         public OnFoxDisarmedDelegate OnFoxDisarmed { get; set; }
@@ -124,7 +119,6 @@ namespace org.whitefossa.yiffhl.Models
 
             OnFoxArmed = null;
             OnEnteringSleepmode = null;
-            OnFoxArmingInitiated = null;
             OnFoxDisarmed = null;
 
             ActiveDisplay = ActiveDisplay.MainDisplay;

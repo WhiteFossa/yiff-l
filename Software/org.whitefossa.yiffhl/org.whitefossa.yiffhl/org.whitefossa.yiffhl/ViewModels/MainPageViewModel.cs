@@ -846,13 +846,12 @@ namespace org.whitefossa.yiffhl.ViewModels
 
             // Setting up fox events delegates
             MainModel.OnEnteringSleepmode += OnEnteringSleepmode;
-            MainModel.OnFoxArmingInitiated += OnFoxArmingInitiated;
+
             
             MainModel.OnProfileSettingsChanged += async (e) => await OnProfileSettingsChangedFromMenuAsync(e);
             MainModel.OnProfileSwitched += async (e) => await OnProfileSwitchedFromMenuAsync(e);
 
             _packetsProcessor.RegisterOnEnteringSleepmodeEventHandler(MainModel.OnEnteringSleepmode);
-            _packetsProcessor.RegisterOnFoxArmingInitiatedEventHandler(MainModel.OnFoxArmingInitiated);
             _packetsProcessor.RegisterOnProfileSettingsChangedEventHandler(MainModel.OnProfileSettingsChanged);
             _packetsProcessor.RegisterOnProfileSwitchedEventHandler(MainModel.OnProfileSwitched);
 
@@ -1786,11 +1785,6 @@ Do you want to continue?");
 
         #region Fox-generated events
 
-        private void OnFoxArmingInitiated(IFoxArmingInitiatedEvent foxArmingInitiatedEvent)
-        {
-            Debug.WriteLine("Fox arming initiated");
-        }
-
         private async Task OnFoxArmedAsync()
         {
             Debug.WriteLine("Fox armed.");
@@ -1806,6 +1800,8 @@ Do you want to continue?");
         private async Task OnFoxDisarmedAsync()
         {
             Debug.WriteLine("Fox disarmed.");
+
+            await _matchingView.LeaveMatchingDisplayAsync();
 
             await _staticFoxStatusManager.GetStaticFoxStatusAsync(async (s) => await OnGetStaticFoxStatusAsync_ReloadPathway(s));
         }

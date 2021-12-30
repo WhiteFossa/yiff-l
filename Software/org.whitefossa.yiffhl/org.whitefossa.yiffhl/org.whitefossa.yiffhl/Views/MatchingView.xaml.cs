@@ -208,6 +208,14 @@ namespace org.whitefossa.yiffhl.Views
             return true;
         }
 
+        public async Task LeaveMatchingDisplayAsync()
+        {
+            if (ViewModel.MainModel.ActiveDisplay == ActiveDisplay.MatchingDisplay)
+            {
+                await ViewModel.OnLeavingMatchingDisplayAsync();
+            }
+        }
+
         private async Task RedrawMatchingGraph()
         {
             MatchingGraphView.InvalidateSurface();

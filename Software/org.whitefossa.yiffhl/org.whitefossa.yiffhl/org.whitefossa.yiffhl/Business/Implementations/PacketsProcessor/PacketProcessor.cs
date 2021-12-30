@@ -77,7 +77,6 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
         #region Events
 
         private OnEnteringSleepmodeEventDelegate _onEnteringSleepmodeEvent;
-        private OnFoxArmingInitiatedEventDelegate _onFoxArmingInitiatedEvent;
         private OnProfileSettingsChangedEventDelegate _onProfileSettingsChangedEvent;
         private OnProfileSwitchedEventDelegate _onProfileSwitchedEvent;
 
@@ -540,11 +539,6 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
                     OnEnteringSleepmodeEvent(eventPayload);
                     break;
 
-                // Arming initiated
-                case EventType.ArmingInitiatedEvent:
-                    OnArmingInitiatedEvent(eventPayload);
-                    break;
-
                 // Settings changed
                 case EventType.ProfileSettingsChanged:
                     OnProfileSettingsChangedEvent(eventPayload);
@@ -566,13 +560,6 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
             _ = _onEnteringSleepmodeEvent ?? throw new InvalidOperationException("Handler for Entring Sleepmode event isn't registered");
 
             _onEnteringSleepmodeEvent(new EnteringSleepmodeEvent());
-        }
-
-        private void OnArmingInitiatedEvent(IReadOnlyCollection<byte> payload)
-        {
-            _ = _onFoxArmingInitiatedEvent ?? throw new InvalidOperationException("Handler for Fox Arming Initiated event isn't registered");
-
-            _onFoxArmingInitiatedEvent(new FoxArmingInitiatedEvent());
         }
 
         private void OnProfileSettingsChangedEvent(IReadOnlyCollection<byte> payload)
@@ -846,11 +833,6 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
         public void SetOnGetIdentificationDataResponse(OnResponseDelegate onGetIdentificationDataResponse)
         {
             _onGetIdentificationDataResponse = onGetIdentificationDataResponse ?? throw new ArgumentNullException(nameof(onGetIdentificationDataResponse));
-        }
-
-        public void RegisterOnFoxArmingInitiatedEventHandler(OnFoxArmingInitiatedEventDelegate onFoxArmingInitiatedEvent)
-        {
-            _onFoxArmingInitiatedEvent = onFoxArmingInitiatedEvent ?? throw new ArgumentNullException(nameof(onFoxArmingInitiatedEvent));
         }
 
         public void RegisterOnProfileSettingsChangedEventHandler(OnProfileSettingsChangedEventDelegate onProfileSettingsChangedEvent)
