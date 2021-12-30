@@ -78,7 +78,6 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
 
         private OnEnteringSleepmodeEventDelegate _onEnteringSleepmodeEvent;
         private OnFoxArmingInitiatedEventDelegate _onFoxArmingInitiatedEvent;
-        private OnFoxDisarmedEventDelegate _onFoxDisarmedEvent;
         private OnProfileSettingsChangedEventDelegate _onProfileSettingsChangedEvent;
         private OnProfileSwitchedEventDelegate _onProfileSwitchedEvent;
 
@@ -546,11 +545,6 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
                     OnArmingInitiatedEvent(eventPayload);
                     break;
 
-                // Disarmed
-                case EventType.Disarmed:
-                    OnDisarmedEvent(eventPayload);
-                    break;
-
                 // Settings changed
                 case EventType.ProfileSettingsChanged:
                     OnProfileSettingsChangedEvent(eventPayload);
@@ -579,13 +573,6 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
             _ = _onFoxArmingInitiatedEvent ?? throw new InvalidOperationException("Handler for Fox Arming Initiated event isn't registered");
 
             _onFoxArmingInitiatedEvent(new FoxArmingInitiatedEvent());
-        }
-
-        private void OnDisarmedEvent(IReadOnlyCollection<byte> payload)
-        {
-            _ = _onFoxDisarmedEvent ?? throw new InvalidOperationException("Handler for Fox Disarmed event isn't registered");
-
-            _onFoxDisarmedEvent(new FoxDisarmedEvent());
         }
 
         private void OnProfileSettingsChangedEvent(IReadOnlyCollection<byte> payload)
@@ -864,11 +851,6 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
         public void RegisterOnFoxArmingInitiatedEventHandler(OnFoxArmingInitiatedEventDelegate onFoxArmingInitiatedEvent)
         {
             _onFoxArmingInitiatedEvent = onFoxArmingInitiatedEvent ?? throw new ArgumentNullException(nameof(onFoxArmingInitiatedEvent));
-        }
-
-        public void RegisterOnFoxDisarmedEventHandler(OnFoxDisarmedEventDelegate onFoxDisarmedEvent)
-        {
-            _onFoxDisarmedEvent = onFoxDisarmedEvent ?? throw new ArgumentNullException(nameof(onFoxDisarmedEvent));
         }
 
         public void RegisterOnProfileSettingsChangedEventHandler(OnProfileSettingsChangedEventDelegate onProfileSettingsChangedEvent)

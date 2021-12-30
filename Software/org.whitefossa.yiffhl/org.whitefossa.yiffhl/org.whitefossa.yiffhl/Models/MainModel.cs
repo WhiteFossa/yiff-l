@@ -97,7 +97,7 @@ namespace org.whitefossa.yiffhl.Models
         /// <summary>
         /// Delegate, called when fox is disarmed
         /// </summary>
-        public OnFoxDisarmedEventDelegate OnFoxDisarmed { get; set; }
+        public OnFoxDisarmedDelegate OnFoxDisarmed { get; set; }
 
         /// <summary>
         /// Delegate, called when profile settings changed from fox menu

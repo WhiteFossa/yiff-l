@@ -12,6 +12,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
     {
         private OnShowMatchingDisplayDelegate _onShowMatchingDisplay;
         private OnFoxArmedDelegate _onFoxArmed;
+        private OnFoxDisarmedDelegate _onFoxDisarmed;
 
         private bool? _isFoxArmedOld = null;
 
@@ -58,12 +59,29 @@ namespace org.whitefossa.yiffhl.Business.Implementations
 
             #endregion
 
+            #region Fox is disarmed
+
+            if (!model.DynamicFoxStatus.IsFoxArmed && _isFoxArmedOld.Value)
+            {
+                if (_onFoxDisarmed != null)
+                {
+                    _onFoxDisarmed();
+                }
+            }
+
+            #endregion
+
             _isFoxArmedOld = model.DynamicFoxStatus.IsFoxArmed;
         }
 
         public void RegisterOnFoxArmedHandler(OnFoxArmedDelegate onFoxArmed)
         {
             _onFoxArmed = onFoxArmed ?? throw new ArgumentNullException(nameof(onFoxArmed));
+        }
+
+        public void RegisterOnFoxDisarmedHandler(OnFoxDisarmedDelegate onFoxDisarmed)
+        {
+            _onFoxDisarmed = onFoxDisarmed ?? throw new ArgumentNullException(nameof(onFoxDisarmed));
         }
 
         public void RegisterOnShowMatchingDisplayHandler(OnShowMatchingDisplayDelegate onShowMatchingDisplay)

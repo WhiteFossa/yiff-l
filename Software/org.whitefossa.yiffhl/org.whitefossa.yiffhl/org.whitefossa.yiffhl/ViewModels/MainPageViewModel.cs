@@ -847,13 +847,12 @@ namespace org.whitefossa.yiffhl.ViewModels
             // Setting up fox events delegates
             MainModel.OnEnteringSleepmode += OnEnteringSleepmode;
             MainModel.OnFoxArmingInitiated += OnFoxArmingInitiated;
-            MainModel.OnFoxDisarmed += async (e) => await OnFoxDisarmedAsync(e);
+            
             MainModel.OnProfileSettingsChanged += async (e) => await OnProfileSettingsChangedFromMenuAsync(e);
             MainModel.OnProfileSwitched += async (e) => await OnProfileSwitchedFromMenuAsync(e);
 
             _packetsProcessor.RegisterOnEnteringSleepmodeEventHandler(MainModel.OnEnteringSleepmode);
             _packetsProcessor.RegisterOnFoxArmingInitiatedEventHandler(MainModel.OnFoxArmingInitiated);
-            _packetsProcessor.RegisterOnFoxDisarmedEventHandler(MainModel.OnFoxDisarmed);
             _packetsProcessor.RegisterOnProfileSettingsChangedEventHandler(MainModel.OnProfileSettingsChanged);
             _packetsProcessor.RegisterOnProfileSwitchedEventHandler(MainModel.OnProfileSwitched);
 
@@ -862,6 +861,9 @@ namespace org.whitefossa.yiffhl.ViewModels
 
             MainModel.OnFoxArmed += async () => await OnFoxArmedAsync();
             _eventsGenerator.RegisterOnFoxArmedHandler(MainModel.OnFoxArmed);
+
+            MainModel.OnFoxDisarmed += async () => await OnFoxDisarmedAsync();
+            _eventsGenerator.RegisterOnFoxDisarmedHandler(MainModel.OnFoxDisarmed);
 
             // Binding commands to handlers
             SelectedFoxChangedCommand = new Command<PairedFoxDTO>(async (f) => await OnSelectedFoxChangedAsync(f));
@@ -1801,7 +1803,7 @@ Do you want to continue?");
             Debug.WriteLine("Entering sleepmode");
         }
 
-        private async Task OnFoxDisarmedAsync(IFoxDisarmedEvent foxDisarmedEvent)
+        private async Task OnFoxDisarmedAsync()
         {
             Debug.WriteLine("Fox disarmed.");
 

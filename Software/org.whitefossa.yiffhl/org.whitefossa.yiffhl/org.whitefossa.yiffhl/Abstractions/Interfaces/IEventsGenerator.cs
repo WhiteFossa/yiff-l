@@ -7,6 +7,8 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
 
     public delegate void OnFoxArmedDelegate();
 
+    public delegate void OnFoxDisarmedDelegate();
+
     /// <summary>
     /// Generates events based on fox status changes
     /// </summary>
@@ -17,5 +19,7 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
         void RegisterOnShowMatchingDisplayHandler(OnShowMatchingDisplayDelegate onShowMatchingDisplay);
 
         void RegisterOnFoxArmedHandler(OnFoxArmedDelegate onFoxArmed);
+
+        void RegisterOnFoxDisarmedHandler(OnFoxDisarmedDelegate onFoxDisarmed);
     }
 }
