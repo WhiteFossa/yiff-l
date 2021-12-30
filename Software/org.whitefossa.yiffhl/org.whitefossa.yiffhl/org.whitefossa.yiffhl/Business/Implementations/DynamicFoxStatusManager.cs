@@ -11,6 +11,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
     {
         private readonly IGetBatteryLevelCommand _getBatteryLevelCommand;
         private readonly IAntennaMatchingManager _antennaMatchingManager;
+        private readonly IIsFoxArmedCommand _isFoxArmedCommand;
 
         private OnGetDynamicFoxStatus _onGetDynamicFoxStatus;
 
@@ -19,11 +20,13 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         public DynamicFoxStatusManager
             (
                 IGetBatteryLevelCommand getBatteryLevelCommand,
-                IAntennaMatchingManager antennaMatchingManager
+                IAntennaMatchingManager antennaMatchingManager,
+                IIsFoxArmedCommand isFoxArmedCommand
             )
         {
             _getBatteryLevelCommand = getBatteryLevelCommand;
             _antennaMatchingManager = antennaMatchingManager;
+            _isFoxArmedCommand = isFoxArmedCommand;
         }
 
         public async Task GetDynamicFoxStatusAsync(OnGetDynamicFoxStatus onGetDynamicFoxStatus)
@@ -38,10 +41,30 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         {
             _statusToLoad.BatteryLevel = level;
 
-            await _antennaMatchingManager.GetAntennaMatchingStatusAsync(OnGetAntennaMatchingStatus);
+            await _antennaMatchingManager.GetAntennaMatchingStatusAsync(
+                async
+                (
+                    status,
+                    isNewForApp,
+                    totalMatcherPositions,
+                    currentMatcherPosition,
+                    currentAntennaVoltage,
+                    currentBestMatchPosition,
+                    currentBestMatchVoltage
+                )
+                => await OnGetAntennaMatchingStatusAsync
+                (
+                    status,
+                    isNewForApp,
+                    totalMatcherPositions,
+                    currentMatcherPosition,
+                    currentAntennaVoltage,
+                    currentBestMatchPosition,
+                    currentBestMatchVoltage
+                ));
         }
 
-        private void OnGetAntennaMatchingStatus
+        private async Task OnGetAntennaMatchingStatusAsync
         (
             AntennaMatchingStatus status,
             bool isNewForApp,
@@ -59,6 +82,14 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _statusToLoad.AntennaMatchingStatus.CurrentVoltage = currentAntennaVoltage;
             _statusToLoad.AntennaMatchingStatus.CurrentBestMatchPosition = currentBestMatchPosition;
             _statusToLoad.AntennaMatchingStatus.CurrentBestMatchVoltage = currentBestMatchVoltage;
+
+            _isFoxArmedCommand.SetResponseDelegate(async (ia) => await OnIsFoxArmedResponseAsync(ia));
+            _isFoxArmedCommand.SendIsFoxArmedCommand();
+        }
+
+        private async Task OnIsFoxArmedResponseAsync(bool isArmed)
+        {
+            _statusToLoad.IsFoxArmed = isArmed;
 
             _onGetDynamicFoxStatus(_statusToLoad);
         }

@@ -14,5 +14,10 @@
         /// Antenna matching status data
         /// </summary>
         public AntennaMatchingStatusData AntennaMatchingStatus { get; set; } = new AntennaMatchingStatusData();
+
+        /// <summary>
+        /// If true then fox is on countdown/on the run
+        /// </summary>
+        public bool IsFoxArmed { get; set; }
     }
 }

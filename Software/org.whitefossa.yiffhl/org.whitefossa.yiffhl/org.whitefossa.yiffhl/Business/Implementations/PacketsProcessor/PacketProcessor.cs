@@ -76,7 +76,6 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
 
         #region Events
 
-        private OnFoxArmedEventDelegate _onFoxArmedEvent;
         private OnEnteringSleepmodeEventDelegate _onEnteringSleepmodeEvent;
         private OnFoxArmingInitiatedEventDelegate _onFoxArmingInitiatedEvent;
         private OnFoxDisarmedEventDelegate _onFoxDisarmedEvent;
@@ -537,11 +536,6 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
 
             switch (eventType)
             {
-                // Fox is armed
-                case EventType.Armed:
-                    OnFoxIsArmedEvent(eventPayload);
-                    break;
-
                 // Entering sleepmode
                 case EventType.EnteringSleepmode:
                     OnEnteringSleepmodeEvent(eventPayload);
@@ -571,13 +565,6 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
                 default:
                     return;
             }
-        }
-
-        private void OnFoxIsArmedEvent(IReadOnlyCollection<byte> payload)
-        {
-            _ = _onFoxArmedEvent ?? throw new InvalidOperationException("Handler for Fox Is Armed event isn't registered");
-
-            _onFoxArmedEvent(new FoxArmedEvent());
         }
 
         private void OnEnteringSleepmodeEvent(IReadOnlyCollection<byte> payload)
@@ -857,11 +844,6 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
         public void SetOnGetLastFailureCodeResponse(OnResponseDelegate onGetLastFailureCodeResponse)
         {
             _onGetLastFailureCodeResponse = onGetLastFailureCodeResponse ?? throw new ArgumentNullException(nameof(onGetLastFailureCodeResponse));
-        }
-
-        public void RegisterOnFoxArmedEventHandler(OnFoxArmedEventDelegate onFoxArmedEvent)
-        {
-            _onFoxArmedEvent = onFoxArmedEvent ?? throw new ArgumentNullException(nameof(onFoxArmedEvent));
         }
 
         public void RegisterOnEnteringSleepmodeEventHandler(OnEnteringSleepmodeEventDelegate onEnteringSleepmodeEvent)

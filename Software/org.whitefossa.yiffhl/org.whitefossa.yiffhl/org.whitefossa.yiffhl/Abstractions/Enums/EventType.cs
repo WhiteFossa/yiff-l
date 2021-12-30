@@ -5,8 +5,6 @@
     /// </summary>
     public enum EventType
     {
-        Armed = 0x01,
-
         EnteringSleepmode = 0x03,
 
         ArmingInitiatedEvent = 0x04,

@@ -82,7 +82,7 @@ namespace org.whitefossa.yiffhl.Models
         /// <summary>
         /// Delegate, called when fox is armed
         /// </summary>
-        public OnFoxArmedEventDelegate OnFoxArmed { get; set; }
+        public OnFoxArmedDelegate OnFoxArmed { get; set; }
 
         /// <summary>
         /// Delegate, called when fox going to sleepmode
