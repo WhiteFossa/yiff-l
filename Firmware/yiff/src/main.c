@@ -445,9 +445,7 @@ void Main_ProcessFoxArmingCommon(void)
 
 	if (FoxState.Frequency.Is144MHz)
 	{
-		EmitFoxArmingInitiatedEvent();
 		GSM_Arm();
-		EmitFoxArmedEvent();
 
 		return;
 	}
@@ -458,11 +456,6 @@ void Main_ProcessFoxArmingCommon(void)
 void Main_PrepareFoxFoxTransmission(bool isArmFoxAfterMatching)
 {
 	Sleepmodes_PreventSleep();
-
-	if (isArmFoxAfterMatching)
-	{
-		EmitFoxArmingInitiatedEvent();
-	}
 
 	if (FoxState.Frequency.Is144MHz)
 	{
