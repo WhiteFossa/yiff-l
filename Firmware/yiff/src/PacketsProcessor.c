@@ -1189,6 +1189,9 @@ void OnCheckForProfileSettingsChanges(uint8_t payloadSize, uint8_t* payload)
 	}
 
 	uint8_t response = FromBool(FoxState.IsNotReportedManualProfileChanges);
+
+	FoxState.IsNotReportedManualProfileChanges = false;
+
 	SendResponse(CheckForProfileSettingsChanges, 1, &response);
 }
 
