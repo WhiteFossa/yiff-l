@@ -82,7 +82,7 @@ namespace org.whitefossa.yiffhl.Models
         /// <summary>
         /// Delegate, called when fox is armed
         /// </summary>
-        public OnFoxArmedEventDelegate OnFoxArmed { get; set; }
+        public OnFoxArmedDelegate OnFoxArmed { get; set; }
 
         /// <summary>
         /// Delegate, called when fox going to sleepmode
@@ -90,24 +90,19 @@ namespace org.whitefossa.yiffhl.Models
         public OnEnteringSleepmodeEventDelegate OnEnteringSleepmode { get; set; }
 
         /// <summary>
-        /// Delegate, called when fox arming is initiated
-        /// </summary>
-        public OnFoxArmingInitiatedEventDelegate OnFoxArmingInitiated { get; set; }
-
-        /// <summary>
         /// Delegate, called when fox is disarmed
         /// </summary>
-        public OnFoxDisarmedEventDelegate OnFoxDisarmed { get; set; }
+        public OnFoxDisarmedDelegate OnFoxDisarmed { get; set; }
 
         /// <summary>
         /// Delegate, called when profile settings changed from fox menu
         /// </summary>
-        public OnProfileSettingsChangedEventDelegate OnProfileSettingsChanged { get; set; }
+        public OnProfileSettingsChangedDelegate OnProfileSettingsChanged { get; set; }
 
         /// <summary>
-        /// Delegate, called when profile switched from fox menu
+        /// Delegate, called when profile changed
         /// </summary>
-        public OnProfileSwitchedEventDelegate OnProfileSwitched { get; set; }
+        public OnProfileChangedDelegate OnProfileChanged { get; set; }
 
         #endregion
 
@@ -124,8 +119,8 @@ namespace org.whitefossa.yiffhl.Models
 
             OnFoxArmed = null;
             OnEnteringSleepmode = null;
-            OnFoxArmingInitiated = null;
             OnFoxDisarmed = null;
+            OnProfileChanged = null;
 
             ActiveDisplay = ActiveDisplay.MainDisplay;
         }

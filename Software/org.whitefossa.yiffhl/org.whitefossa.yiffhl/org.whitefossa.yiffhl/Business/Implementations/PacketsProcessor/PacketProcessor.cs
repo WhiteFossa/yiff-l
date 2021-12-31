@@ -71,17 +71,13 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
         private OnResponseDelegate _onGetAntennaMatchingStatusResponse;
         private OnResponseDelegate _onMarkMatchingAsSeenResponse;
         private OnResponseDelegate _onGetAntennaMatchingDataResponse;
+        private OnResponseDelegate _onCheckForProfileSettingsChangesResponse;
 
         #endregion
 
         #region Events
 
-        private OnFoxArmedEventDelegate _onFoxArmedEvent;
         private OnEnteringSleepmodeEventDelegate _onEnteringSleepmodeEvent;
-        private OnFoxArmingInitiatedEventDelegate _onFoxArmingInitiatedEvent;
-        private OnFoxDisarmedEventDelegate _onFoxDisarmedEvent;
-        private OnProfileSettingsChangedEventDelegate _onProfileSettingsChangedEvent;
-        private OnProfileSwitchedEventDelegate _onProfileSwitchedEvent;
 
         #endregion
 
@@ -510,6 +506,13 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
                         _onMarkMatchingAsSeenResponse(responsePayload);
                         break;
 
+                    // Check for profile settings changes
+                    case CommandType.CheckForProfileSettingsChanges:
+                        CheckOnResponseDelegate(_onCheckForProfileSettingsChangesResponse);
+
+                        _onCheckForProfileSettingsChangesResponse(responsePayload);
+                        break;
+
                     default:
                         return; // We've got some junk
                 }
@@ -537,34 +540,9 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
 
             switch (eventType)
             {
-                // Fox is armed
-                case EventType.Armed:
-                    OnFoxIsArmedEvent(eventPayload);
-                    break;
-
                 // Entering sleepmode
                 case EventType.EnteringSleepmode:
                     OnEnteringSleepmodeEvent(eventPayload);
-                    break;
-
-                // Arming initiated
-                case EventType.ArmingInitiatedEvent:
-                    OnArmingInitiatedEvent(eventPayload);
-                    break;
-
-                // Disarmed
-                case EventType.Disarmed:
-                    OnDisarmedEvent(eventPayload);
-                    break;
-
-                // Settings changed
-                case EventType.ProfileSettingsChanged:
-                    OnProfileSettingsChangedEvent(eventPayload);
-                    break;
-
-                // Profile switched
-                case EventType.ProfileSwitched:
-                    OnProfileSwitchedEvent(eventPayload);
                     break;
 
                 // We've got some junk
@@ -573,46 +551,11 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
             }
         }
 
-        private void OnFoxIsArmedEvent(IReadOnlyCollection<byte> payload)
-        {
-            _ = _onFoxArmedEvent ?? throw new InvalidOperationException("Handler for Fox Is Armed event isn't registered");
-
-            _onFoxArmedEvent(new FoxArmedEvent());
-        }
-
         private void OnEnteringSleepmodeEvent(IReadOnlyCollection<byte> payload)
         {
             _ = _onEnteringSleepmodeEvent ?? throw new InvalidOperationException("Handler for Entring Sleepmode event isn't registered");
 
             _onEnteringSleepmodeEvent(new EnteringSleepmodeEvent());
-        }
-
-        private void OnArmingInitiatedEvent(IReadOnlyCollection<byte> payload)
-        {
-            _ = _onFoxArmingInitiatedEvent ?? throw new InvalidOperationException("Handler for Fox Arming Initiated event isn't registered");
-
-            _onFoxArmingInitiatedEvent(new FoxArmingInitiatedEvent());
-        }
-
-        private void OnDisarmedEvent(IReadOnlyCollection<byte> payload)
-        {
-            _ = _onFoxDisarmedEvent ?? throw new InvalidOperationException("Handler for Fox Disarmed event isn't registered");
-
-            _onFoxDisarmedEvent(new FoxDisarmedEvent());
-        }
-
-        private void OnProfileSettingsChangedEvent(IReadOnlyCollection<byte> payload)
-        {
-            _ = _onProfileSettingsChangedEvent ?? throw new InvalidOperationException("Handler for Profile Settings Changed event isn't registered");
-
-            _onProfileSettingsChangedEvent(new ProfileSettingsChangedEvent());
-        }
-
-        private void OnProfileSwitchedEvent(IReadOnlyCollection<byte> payload)
-        {
-            _ = _onProfileSwitchedEvent ?? throw new InvalidOperationException("Handler for Profile Switched event isn't registered");
-
-            _onProfileSwitchedEvent(new ProfileSwitchedEvent());
         }
 
         #region Commands queue
@@ -859,11 +802,6 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
             _onGetLastFailureCodeResponse = onGetLastFailureCodeResponse ?? throw new ArgumentNullException(nameof(onGetLastFailureCodeResponse));
         }
 
-        public void RegisterOnFoxArmedEventHandler(OnFoxArmedEventDelegate onFoxArmedEvent)
-        {
-            _onFoxArmedEvent = onFoxArmedEvent ?? throw new ArgumentNullException(nameof(onFoxArmedEvent));
-        }
-
         public void RegisterOnEnteringSleepmodeEventHandler(OnEnteringSleepmodeEventDelegate onEnteringSleepmodeEvent)
         {
             _onEnteringSleepmodeEvent = onEnteringSleepmodeEvent ?? throw new ArgumentNullException(nameof(onEnteringSleepmodeEvent));
@@ -877,26 +815,6 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
         public void SetOnGetIdentificationDataResponse(OnResponseDelegate onGetIdentificationDataResponse)
         {
             _onGetIdentificationDataResponse = onGetIdentificationDataResponse ?? throw new ArgumentNullException(nameof(onGetIdentificationDataResponse));
-        }
-
-        public void RegisterOnFoxArmingInitiatedEventHandler(OnFoxArmingInitiatedEventDelegate onFoxArmingInitiatedEvent)
-        {
-            _onFoxArmingInitiatedEvent = onFoxArmingInitiatedEvent ?? throw new ArgumentNullException(nameof(onFoxArmingInitiatedEvent));
-        }
-
-        public void RegisterOnFoxDisarmedEventHandler(OnFoxDisarmedEventDelegate onFoxDisarmedEvent)
-        {
-            _onFoxDisarmedEvent = onFoxDisarmedEvent ?? throw new ArgumentNullException(nameof(onFoxDisarmedEvent));
-        }
-
-        public void RegisterOnProfileSettingsChangedEventHandler(OnProfileSettingsChangedEventDelegate onProfileSettingsChangedEvent)
-        {
-            _onProfileSettingsChangedEvent = onProfileSettingsChangedEvent ?? throw new ArgumentNullException(nameof(onProfileSettingsChangedEvent));
-        }
-
-        public void RegisterOnProfileSwitchedEventHandler(OnProfileSwitchedEventDelegate onProfileSwitchedEvent)
-        {
-            _onProfileSwitchedEvent = onProfileSwitchedEvent ?? throw new ArgumentNullException(nameof(onProfileSwitchedEvent));
         }
 
         public void SetOnGetAntennaMatchingStatusResponse(OnResponseDelegate onGetAntennaMatchingStatusResponse)
@@ -915,6 +833,12 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
         {
             _onGetAntennaMatchingDataResponse = onGetAntennaMatchingDataResponse
                 ?? throw new ArgumentNullException(nameof(onGetAntennaMatchingDataResponse));
+        }
+
+        public void SetOnCheckForProfileSettingsChangesResponse(OnResponseDelegate onCheckForProfileSettingsChanges)
+        {
+            _onCheckForProfileSettingsChangesResponse = onCheckForProfileSettingsChanges
+                ?? throw new ArgumentNullException(nameof(onCheckForProfileSettingsChanges));
         }
     }
 }

@@ -440,8 +440,6 @@ void MenuDisplay_SelectCurrentProfileCloseHandler(uint8_t profileIndex)
 	}
 
 	MenuDisplay_DrawMenuDisplay();
-
-	EmitProfileSwitchedEvent();
 }
 
 void MenuDisplay_SelectFrequencyRange(void)
@@ -899,8 +897,6 @@ void MenuDisplay_Disarm(void)
 		return;
 	}
 	GSM_Disarm();
-
-	EmitFoxDisarmedEvent();
 
 	InformationPopup_Show("Disarmed!", "Fox disarmed.", MenuDisplay);
 }

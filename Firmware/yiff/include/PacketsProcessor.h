@@ -142,7 +142,9 @@ typedef enum
 
 	GetAntennaMatchingData = 0x24,
 
-	MarkMatchingAsSeen = 0x25
+	MarkMatchingAsSeen = 0x25,
+
+	CheckForProfileSettingsChanges = 0x26
 }
 CommandToFoxEnum;
 
@@ -151,17 +153,7 @@ CommandToFoxEnum;
  */
 typedef enum
 {
-	Armed = 0x01,
-
-	EnteringSleepmode = 0x03,
-
-	ArmingInitiated = 0x04,
-
-	Disarmed = 0x05,
-
-	ProfileSettingsChanged = 0x06,
-
-	ProfileSwitched = 0x07
+	EnteringSleepmode = 0x01,
 }
 EventsFromFoxEnum;
 
@@ -382,39 +374,19 @@ void OnGetAntennaMatchingStatus(uint8_t payloadSize, uint8_t* payload);
 void OnGetAntennaMatchingData(uint8_t payloadSize, uint8_t* payload);
 
 /**
- * Called when "MarkMatchingAsSeen" command comes
+ * Called when "Mark matching data as seen" command comes
  */
 void OnMarkMatchingAsSeen(uint8_t payloadSize, uint8_t* payload);
 
 /**
- * Emits "FoxArmed" event
+ * Called when "Check for profile settings changes" comes
  */
-void EmitFoxArmedEvent(void);
+void OnCheckForProfileSettingsChanges(uint8_t payloadSize, uint8_t* payload);
 
 /**
  * Emits "Entering sleepmode" event
  */
 void EmitEnteringSleepmodeEvent(void);
-
-/**
- * Emits "Fox arming initiated" event
- */
-void EmitFoxArmingInitiatedEvent(void);
-
-/**
- * Emits "Fox disarmed" event
- */
-void EmitFoxDisarmedEvent(void);
-
-/**
- * Emits "Profile settings changed" event
- */
-void EmitProfileSettingsChangedEvent(void);
-
-/**
- * Emits "Profile switched" event
- */
-void EmitProfileSwitchedEvent(void);
 
 /**
  * Returns 0x00 if false, 0x01 if true

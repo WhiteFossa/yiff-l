@@ -11,6 +11,9 @@ namespace org.whitefossa.yiffhl.Business.Implementations
     {
         private readonly IGetBatteryLevelCommand _getBatteryLevelCommand;
         private readonly IAntennaMatchingManager _antennaMatchingManager;
+        private readonly IIsFoxArmedCommand _isFoxArmedCommand;
+        private readonly IGetCurrentProfileIdCommand _getCurrentProfileIdCommand;
+        private readonly ICheckForProfileSettingsChangesCommand _checkForProfileSettingsChangesCommand;
 
         private OnGetDynamicFoxStatus _onGetDynamicFoxStatus;
 
@@ -19,11 +22,17 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         public DynamicFoxStatusManager
             (
                 IGetBatteryLevelCommand getBatteryLevelCommand,
-                IAntennaMatchingManager antennaMatchingManager
+                IAntennaMatchingManager antennaMatchingManager,
+                IIsFoxArmedCommand isFoxArmedCommand,
+                IGetCurrentProfileIdCommand getCurrentProfileIdCommand,
+                ICheckForProfileSettingsChangesCommand checkForProfileSettingsChangesCommand
             )
         {
             _getBatteryLevelCommand = getBatteryLevelCommand;
             _antennaMatchingManager = antennaMatchingManager;
+            _isFoxArmedCommand = isFoxArmedCommand;
+            _getCurrentProfileIdCommand = getCurrentProfileIdCommand;
+            _checkForProfileSettingsChangesCommand = checkForProfileSettingsChangesCommand;
         }
 
         public async Task GetDynamicFoxStatusAsync(OnGetDynamicFoxStatus onGetDynamicFoxStatus)
@@ -38,10 +47,30 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         {
             _statusToLoad.BatteryLevel = level;
 
-            await _antennaMatchingManager.GetAntennaMatchingStatusAsync(OnGetAntennaMatchingStatus);
+            await _antennaMatchingManager.GetAntennaMatchingStatusAsync(
+                async
+                (
+                    status,
+                    isNewForApp,
+                    totalMatcherPositions,
+                    currentMatcherPosition,
+                    currentAntennaVoltage,
+                    currentBestMatchPosition,
+                    currentBestMatchVoltage
+                )
+                => await OnGetAntennaMatchingStatusAsync
+                (
+                    status,
+                    isNewForApp,
+                    totalMatcherPositions,
+                    currentMatcherPosition,
+                    currentAntennaVoltage,
+                    currentBestMatchPosition,
+                    currentBestMatchVoltage
+                ));
         }
 
-        private void OnGetAntennaMatchingStatus
+        private async Task OnGetAntennaMatchingStatusAsync
         (
             AntennaMatchingStatus status,
             bool isNewForApp,
@@ -59,6 +88,30 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _statusToLoad.AntennaMatchingStatus.CurrentVoltage = currentAntennaVoltage;
             _statusToLoad.AntennaMatchingStatus.CurrentBestMatchPosition = currentBestMatchPosition;
             _statusToLoad.AntennaMatchingStatus.CurrentBestMatchVoltage = currentBestMatchVoltage;
+
+            _isFoxArmedCommand.SetResponseDelegate(async (ia) => await OnIsFoxArmedResponseAsync(ia));
+            _isFoxArmedCommand.SendIsFoxArmedCommand();
+        }
+
+        private async Task OnIsFoxArmedResponseAsync(bool isArmed)
+        {
+            _statusToLoad.IsFoxArmed = isArmed;
+
+            _getCurrentProfileIdCommand.SetResponseDelegate(async (p) => await OnGetCurrentProfileIdResponseAsync(p));
+            _getCurrentProfileIdCommand.SendGetCurrentProfileIdCommand();
+        }
+
+        private async Task OnGetCurrentProfileIdResponseAsync(int profileId)
+        {
+            _statusToLoad.CurrentProfileId = profileId;
+
+            _checkForProfileSettingsChangesCommand.SetResponseDelegate(async (c) => await OnCheckForProfileSettingsChangesResponseAsync(c));
+            _checkForProfileSettingsChangesCommand.SendCheckForProfileSettingsChangesCommand();
+        }
+
+        private async Task OnCheckForProfileSettingsChangesResponseAsync(bool isNewChanges)
+        {
+            _statusToLoad.IsManualProfileChangesExist = isNewChanges;
 
             _onGetDynamicFoxStatus(_statusToLoad);
         }

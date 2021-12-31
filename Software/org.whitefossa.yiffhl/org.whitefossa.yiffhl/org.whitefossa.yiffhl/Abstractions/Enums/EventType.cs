@@ -5,16 +5,6 @@
     /// </summary>
     public enum EventType
     {
-        Armed = 0x01,
-
-        EnteringSleepmode = 0x03,
-
-        ArmingInitiatedEvent = 0x04,
-
-        Disarmed = 0x05,
-
-        ProfileSettingsChanged = 0x06,
-
-        ProfileSwitched = 0x07
+        EnteringSleepmode = 0x01
     }
 }

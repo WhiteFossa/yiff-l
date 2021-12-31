@@ -266,11 +266,6 @@ typedef struct
 	 * When state will be changed to next state.
 	 */
 	uint32_t StateChangeTime;
-
-	/**
-	 * True if antenna matching in progress
-	 */
-//	bool IsMatchingInProgress;
 }
 GlobalFoxStateStruct;
 
@@ -456,6 +451,11 @@ typedef struct
 	 * Stuff, related to antenna matching
 	 */
 	MatchingStatusStruct AntennaMatching;
+
+	/**
+	 * If not reported to phone manual profile changes exist
+	 */
+	bool IsNotReportedManualProfileChanges;
 }
 FoxStateStruct;
 

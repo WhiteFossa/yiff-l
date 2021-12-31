@@ -149,13 +149,14 @@ namespace org.whitefossa.yiffhl.ViewModels
         private readonly IProfileSettingsManager _profileSettingsManager;
         private readonly IDynamicFoxStatusManager _dynamicFoxStatusManager;
         private readonly IStaticFoxStatusManager _staticFoxStatusManager;
+        private readonly IEventsGenerator _eventsGenerator;
 
         #region Views
 
         /// <summary>
         /// Arming view
         /// </summary>
-        private ArmingView _armingView = new ArmingView();
+        private ArmingView _matchingView = new ArmingView();
 
         #endregion
 
@@ -827,6 +828,7 @@ namespace org.whitefossa.yiffhl.ViewModels
             _profileSettingsManager = App.Container.Resolve<IProfileSettingsManager>();
             _dynamicFoxStatusManager = App.Container.Resolve<IDynamicFoxStatusManager>();
             _staticFoxStatusManager = App.Container.Resolve<IStaticFoxStatusManager>();
+            _eventsGenerator = App.Container.Resolve<IEventsGenerator>();
 
             // Setting up fox connector delegates
             MainModel.OnFoxConnectorNewByteRead += OnNewByteRead;
@@ -843,19 +845,24 @@ namespace org.whitefossa.yiffhl.ViewModels
             );
 
             // Setting up fox events delegates
-            MainModel.OnFoxArmed += async (e) => await OnFoxArmedAsync(e);
             MainModel.OnEnteringSleepmode += OnEnteringSleepmode;
-            MainModel.OnFoxArmingInitiated += OnFoxArmingInitiated;
-            MainModel.OnFoxDisarmed += async (e) => await OnFoxDisarmedAsync(e);
-            MainModel.OnProfileSettingsChanged += async (e) => await OnProfileSettingsChangedFromMenuAsync(e);
-            MainModel.OnProfileSwitched += async (e) => await OnProfileSwitchedFromMenuAsync(e);
 
-            _packetsProcessor.RegisterOnFoxArmedEventHandler(MainModel.OnFoxArmed);
             _packetsProcessor.RegisterOnEnteringSleepmodeEventHandler(MainModel.OnEnteringSleepmode);
-            _packetsProcessor.RegisterOnFoxArmingInitiatedEventHandler(MainModel.OnFoxArmingInitiated);
-            _packetsProcessor.RegisterOnFoxDisarmedEventHandler(MainModel.OnFoxDisarmed);
-            _packetsProcessor.RegisterOnProfileSettingsChangedEventHandler(MainModel.OnProfileSettingsChanged);
-            _packetsProcessor.RegisterOnProfileSwitchedEventHandler(MainModel.OnProfileSwitched);
+
+            // Setting up events generato events handlers
+            _eventsGenerator.RegisterOnShowMatchingDisplayHandler(NavigateToMatchingPage);
+
+            MainModel.OnFoxArmed += async () => await OnFoxArmedAsync();
+            _eventsGenerator.RegisterOnFoxArmedHandler(MainModel.OnFoxArmed);
+
+            MainModel.OnFoxDisarmed += async () => await OnFoxDisarmedAsync();
+            _eventsGenerator.RegisterOnFoxDisarmedHandler(MainModel.OnFoxDisarmed);
+
+            MainModel.OnProfileChanged += async (np) => await OnProfileChangedAsync(np);
+            _eventsGenerator.RegisterOnProfileChangedHandler(MainModel.OnProfileChanged);
+
+            MainModel.OnProfileSettingsChanged += async () => await OnProfileSettingsChangedFromMenuAsync();
+            _eventsGenerator.RegisterOnProfileSettingsChangedHandler(MainModel.OnProfileSettingsChanged);
 
             // Binding commands to handlers
             SelectedFoxChangedCommand = new Command<PairedFoxDTO>(async (f) => await OnSelectedFoxChangedAsync(f));
@@ -1767,36 +1774,18 @@ Do you want to continue?");
         private async Task OnGetDynamicFoxStatusAsync(DynamicFoxStatus status)
         {
             MainModel.DynamicFoxStatus = status;
+
+            await _eventsGenerator.GenerateEventsAsync(MainModel);
+
             OnPropertyChanged(nameof(BatteryLevelFormatted));
-
-            if (MainModel.ActiveDisplay != Abstractions.Enums.ActiveDisplay.MatchingDisplay
-                &&
-                (
-                    MainModel.DynamicFoxStatus.AntennaMatchingStatus.Status == AntennaMatchingStatus.InProgress
-                    ||
-                    MainModel.DynamicFoxStatus.AntennaMatchingStatus.Status == AntennaMatchingStatus.Completed
-                )
-                &&
-                MainModel.DynamicFoxStatus.AntennaMatchingStatus.IsNewForApp)
-            {
-                // Showing matching display
-                NavigateToMatchingPage();
-            }
-
-            // Matching display status update
-            await _armingView.OnMatchingStatusChangedAsync();
+            await _matchingView.OnMatchingStatusChangedAsync();
         }
 
         #endregion
 
         #region Fox-generated events
 
-        private void OnFoxArmingInitiated(IFoxArmingInitiatedEvent foxArmingInitiatedEvent)
-        {
-            Debug.WriteLine("Fox arming initiated");
-        }
-
-        private async Task OnFoxArmedAsync(IFoxArmedEvent foxArmedEvent)
+        private async Task OnFoxArmedAsync()
         {
             Debug.WriteLine("Fox armed.");
 
@@ -1808,9 +1797,11 @@ Do you want to continue?");
             Debug.WriteLine("Entering sleepmode");
         }
 
-        private async Task OnFoxDisarmedAsync(IFoxDisarmedEvent foxDisarmedEvent)
+        private async Task OnFoxDisarmedAsync()
         {
             Debug.WriteLine("Fox disarmed.");
+
+            await _matchingView.LeaveMatchingDisplayAsync();
 
             await _staticFoxStatusManager.GetStaticFoxStatusAsync(async (s) => await OnGetStaticFoxStatusAsync_ReloadPathway(s));
         }
@@ -1818,17 +1809,20 @@ Do you want to continue?");
         /// <summary>
         /// Called when profile settings changed from menu on fox
         /// </summary>
-        private async Task OnProfileSettingsChangedFromMenuAsync(IProfileSettingsChangedEvent settingsChangedEvent)
+        private async Task OnProfileSettingsChangedFromMenuAsync()
         {
             await LoadProfileSettingsAsync();
         }
 
         /// <summary>
-        /// Called when profile settings changed from menu on fox
+        /// Called when profile changed
         /// </summary>
-        private async Task OnProfileSwitchedFromMenuAsync(IProfileSwitchedEvent profileSwitchedEvent)
+        private async Task OnProfileChangedAsync(int newProfileId)
         {
-            await _foxProfilesManager.GetCurrentProfileId(OnGetCurrentProfileIdResponse);
+            if (newProfileId != MainModel.CurrentProfile.Id)
+            {
+                await _foxProfilesManager.GetCurrentProfileId(OnGetCurrentProfileIdResponse);
+            }
         }
 
         #endregion
@@ -1879,7 +1873,7 @@ Do you want to continue?");
 
         private async Task OnArmFoxResponseAsync()
         {
-            // Do nothing, armed status will change in corresponding event
+            // TODO: Switch buttons (it's not easy)
         }
 
         #endregion
@@ -1906,7 +1900,7 @@ Do you want to continue?");
 
             Device.BeginInvokeOnMainThread(async () =>
             {
-                await Navigation.PushModalAsync(_armingView);
+                await Navigation.PushModalAsync(_matchingView);
             });
         }
 

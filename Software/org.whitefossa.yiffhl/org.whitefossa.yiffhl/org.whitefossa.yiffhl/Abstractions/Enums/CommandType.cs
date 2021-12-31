@@ -79,6 +79,8 @@
 
         GetAntennaMatchingData = 0x24,
 
-        MarkMatchingAsSeen = 0x25
+        MarkMatchingAsSeen = 0x25,
+
+        CheckForProfileSettingsChanges = 0x26
     }
 }

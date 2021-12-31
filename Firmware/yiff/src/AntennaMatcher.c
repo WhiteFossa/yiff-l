@@ -122,7 +122,6 @@ void AMSM_MoveToNextState(void)
 				if (AMSM_IsArmFoxAfterMatching)
 				{
 					GSM_Arm();
-					EmitFoxArmedEvent();
 				}
 
 				return;

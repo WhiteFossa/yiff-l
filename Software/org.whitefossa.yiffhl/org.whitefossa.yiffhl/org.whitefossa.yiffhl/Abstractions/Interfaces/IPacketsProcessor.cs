@@ -12,12 +12,7 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
 
     #region Events delegats
 
-    public delegate void OnFoxArmedEventDelegate(IFoxArmedEvent foxArmedEvent);
     public delegate void OnEnteringSleepmodeEventDelegate(IEnteringSleepmodeEvent enteringSleepmodeEvent);
-    public delegate void OnFoxArmingInitiatedEventDelegate(IFoxArmingInitiatedEvent foxArmingInitiatedEvent);
-    public delegate void OnFoxDisarmedEventDelegate(IFoxDisarmedEvent foxDisarmedEvent);
-    public delegate void OnProfileSettingsChangedEventDelegate(IProfileSettingsChangedEvent profileSettingsChangedEvent);
-    public delegate void OnProfileSwitchedEventDelegate(IProfileSwitchedEvent profileSwitchedEvent);
 
     #endregion
 
@@ -78,18 +73,14 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
         void SetOnGetAntennaMatchingStatusResponse(OnResponseDelegate onGetAntennaMatchingStatusResponse);
         void SetOnMarkMatchingAsSeenResponse(OnResponseDelegate onMarkMatchingAsSeenResponse);
         void SetOnGetAntennaMatchingDataResponse(OnResponseDelegate onGetAntennaMatchingDataResponse);
+        void SetOnCheckForProfileSettingsChangesResponse(OnResponseDelegate onCheckForProfileSettingsChanges);
 
 
         #endregion
 
         #region Events handlers registration
 
-        void RegisterOnFoxArmedEventHandler(OnFoxArmedEventDelegate onFoxArmedEvent);
         void RegisterOnEnteringSleepmodeEventHandler(OnEnteringSleepmodeEventDelegate onEnteringSleepmodeEvent);
-        void RegisterOnFoxArmingInitiatedEventHandler(OnFoxArmingInitiatedEventDelegate onFoxArmingInitiatedEvent);
-        void RegisterOnFoxDisarmedEventHandler(OnFoxDisarmedEventDelegate onFoxDisarmedEvent);
-        void RegisterOnProfileSettingsChangedEventHandler(OnProfileSettingsChangedEventDelegate onProfileSettingsChangedEvent);
-        void RegisterOnProfileSwitchedEventHandler(OnProfileSwitchedEventDelegate onProfileSwitchedEvent);
 
         #endregion
     }

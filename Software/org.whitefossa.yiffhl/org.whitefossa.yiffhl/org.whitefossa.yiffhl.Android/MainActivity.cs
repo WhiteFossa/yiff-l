@@ -41,6 +41,7 @@ namespace org.whitefossa.yiffhl.Droid
             App.Container.Register<IStaticFoxStatusManager, StaticFoxStatusManager>().AsSingleton();
             App.Container.Register<IColorsFactory, ColorsFactory>().AsSingleton();
             App.Container.Register<IAntennaMatchingManager, AntennaMatchingManager>().AsSingleton();
+            App.Container.Register<IEventsGenerator, EventsGenerator>().AsSingleton();
 
             #region Commands
 
@@ -75,6 +76,7 @@ namespace org.whitefossa.yiffhl.Droid
             App.Container.Register<IGetAntennaMatchingStatusCommand, GetAntennaMatchingStatusCommand>().AsSingleton();
             App.Container.Register<IMarkMatchingAsSeenCommand, MarkMatchingAsSeenCommand>().AsSingleton();
             App.Container.Register<IGetAntennaMatchingDataCommand, GetAntennaMatchingDataCommand>().AsSingleton();
+            App.Container.Register<ICheckForProfileSettingsChangesCommand, CheckForProfileSettingsChangesCommand>().AsSingleton();
 
             #endregion
 

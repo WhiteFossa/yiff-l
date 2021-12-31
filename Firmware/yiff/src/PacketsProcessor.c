@@ -243,6 +243,11 @@ void OnNewCommandToFox(uint8_t payloadSize, uint8_t* payload)
 			/* Mark antenna matching data as seen */
 			OnMarkMatchingAsSeen(payloadSize, payload);
 			break;
+
+		case CheckForProfileSettingsChanges:
+			/* Check for profile settings changes */
+			OnCheckForProfileSettingsChanges(payloadSize, payload);
+			break;
 	}
 }
 
@@ -885,8 +890,6 @@ OnDisarmFox_Validate:
 
 	uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
 	SendResponse(DisarmFox, 1, &response);
-
-	EmitFoxDisarmedEvent();
 }
 
 void OnSetBeginAndEndTimes(uint8_t payloadSize, uint8_t* payload)
@@ -1178,34 +1181,23 @@ void OnMarkMatchingAsSeen(uint8_t payloadSize, uint8_t* payload)
 	SendResponse(MarkMatchingAsSeen, 0, NULL);
 }
 
-void EmitFoxArmedEvent(void)
+void OnCheckForProfileSettingsChanges(uint8_t payloadSize, uint8_t* payload)
 {
-	SendEvent(Armed, 0, NULL);
+	if (payloadSize != 1)
+	{
+		return;
+	}
+
+	uint8_t response = FromBool(FoxState.IsNotReportedManualProfileChanges);
+
+	FoxState.IsNotReportedManualProfileChanges = false;
+
+	SendResponse(CheckForProfileSettingsChanges, 1, &response);
 }
 
 void EmitEnteringSleepmodeEvent(void)
 {
 	SendEvent(EnteringSleepmode, 0, NULL);
-}
-
-void EmitFoxArmingInitiatedEvent(void)
-{
-	SendEvent(ArmingInitiated, 0, NULL);
-}
-
-void EmitFoxDisarmedEvent(void)
-{
-	SendEvent(Disarmed, 0, NULL);
-}
-
-void EmitProfileSettingsChangedEvent(void)
-{
-	SendEvent(ProfileSettingsChanged, 0, NULL);
-}
-
-void EmitProfileSwitchedEvent(void)
-{
-	SendEvent(ProfileSwitched, 0, NULL);
 }
 
 uint8_t FromBool(bool data)
