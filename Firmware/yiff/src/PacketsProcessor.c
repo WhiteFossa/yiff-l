@@ -243,6 +243,11 @@ void OnNewCommandToFox(uint8_t payloadSize, uint8_t* payload)
 			/* Mark antenna matching data as seen */
 			OnMarkMatchingAsSeen(payloadSize, payload);
 			break;
+
+		case CheckForProfileSettingsChanges:
+			/* Check for profile settings changes */
+			OnCheckForProfileSettingsChanges(payloadSize, payload);
+			break;
 	}
 }
 
@@ -1176,14 +1181,20 @@ void OnMarkMatchingAsSeen(uint8_t payloadSize, uint8_t* payload)
 	SendResponse(MarkMatchingAsSeen, 0, NULL);
 }
 
+void OnCheckForProfileSettingsChanges(uint8_t payloadSize, uint8_t* payload)
+{
+	if (payloadSize != 1)
+	{
+		return;
+	}
+
+	uint8_t response = FromBool(FoxState.IsNotReportedManualProfileChanges);
+	SendResponse(CheckForProfileSettingsChanges, 1, &response);
+}
+
 void EmitEnteringSleepmodeEvent(void)
 {
 	SendEvent(EnteringSleepmode, 0, NULL);
-}
-
-void EmitProfileSettingsChangedEvent(void)
-{
-	SendEvent(ProfileSettingsChanged, 0, NULL);
 }
 
 uint8_t FromBool(bool data)

@@ -20,6 +20,7 @@ void FoxState_Init(void)
 	FoxState.SupressDrawing = true; /* Display is not initialized yet */
 	FoxState.ForceCarrierOff = false;
 	FoxState.ForceCarrierOn = false;
+	FoxState.IsNotReportedManualProfileChanges = false;
 
 	PendingCommandsFlags.FoxStateNameChanged = false;
 	PendingCommandsFlags.NeedToAddNewProfile = false;
