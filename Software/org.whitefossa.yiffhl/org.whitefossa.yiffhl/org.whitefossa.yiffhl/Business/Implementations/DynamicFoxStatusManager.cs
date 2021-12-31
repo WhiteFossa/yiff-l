@@ -13,6 +13,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private readonly IAntennaMatchingManager _antennaMatchingManager;
         private readonly IIsFoxArmedCommand _isFoxArmedCommand;
         private readonly IGetCurrentProfileIdCommand _getCurrentProfileIdCommand;
+        private readonly ICheckForProfileSettingsChangesCommand _checkForProfileSettingsChangesCommand;
 
         private OnGetDynamicFoxStatus _onGetDynamicFoxStatus;
 
@@ -23,13 +24,15 @@ namespace org.whitefossa.yiffhl.Business.Implementations
                 IGetBatteryLevelCommand getBatteryLevelCommand,
                 IAntennaMatchingManager antennaMatchingManager,
                 IIsFoxArmedCommand isFoxArmedCommand,
-                IGetCurrentProfileIdCommand getCurrentProfileIdCommand
+                IGetCurrentProfileIdCommand getCurrentProfileIdCommand,
+                ICheckForProfileSettingsChangesCommand checkForProfileSettingsChangesCommand
             )
         {
             _getBatteryLevelCommand = getBatteryLevelCommand;
             _antennaMatchingManager = antennaMatchingManager;
             _isFoxArmedCommand = isFoxArmedCommand;
             _getCurrentProfileIdCommand = getCurrentProfileIdCommand;
+            _checkForProfileSettingsChangesCommand = checkForProfileSettingsChangesCommand;
         }
 
         public async Task GetDynamicFoxStatusAsync(OnGetDynamicFoxStatus onGetDynamicFoxStatus)
@@ -101,6 +104,14 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private async Task OnGetCurrentProfileIdResponseAsync(int profileId)
         {
             _statusToLoad.CurrentProfileId = profileId;
+
+            _checkForProfileSettingsChangesCommand.SetResponseDelegate(async (c) => await OnCheckForProfileSettingsChangesResponseAsync(c));
+            _checkForProfileSettingsChangesCommand.SendCheckForProfileSettingsChangesCommand();
+        }
+
+        private async Task OnCheckForProfileSettingsChangesResponseAsync(bool isNewChanges)
+        {
+            _statusToLoad.IsManualProfileChangesExist = isNewChanges;
 
             _onGetDynamicFoxStatus(_statusToLoad);
         }

@@ -13,7 +13,6 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
     #region Events delegats
 
     public delegate void OnEnteringSleepmodeEventDelegate(IEnteringSleepmodeEvent enteringSleepmodeEvent);
-    public delegate void OnProfileSettingsChangedEventDelegate(IProfileSettingsChangedEvent profileSettingsChangedEvent);
 
     #endregion
 
@@ -74,6 +73,7 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
         void SetOnGetAntennaMatchingStatusResponse(OnResponseDelegate onGetAntennaMatchingStatusResponse);
         void SetOnMarkMatchingAsSeenResponse(OnResponseDelegate onMarkMatchingAsSeenResponse);
         void SetOnGetAntennaMatchingDataResponse(OnResponseDelegate onGetAntennaMatchingDataResponse);
+        void SetOnCheckForProfileSettingsChangesResponse(OnResponseDelegate onCheckForProfileSettingsChanges);
 
 
         #endregion
@@ -81,7 +81,6 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
         #region Events handlers registration
 
         void RegisterOnEnteringSleepmodeEventHandler(OnEnteringSleepmodeEventDelegate onEnteringSleepmodeEvent);
-        void RegisterOnProfileSettingsChangedEventHandler(OnProfileSettingsChangedEventDelegate onProfileSettingsChangedEvent);
 
         #endregion
     }

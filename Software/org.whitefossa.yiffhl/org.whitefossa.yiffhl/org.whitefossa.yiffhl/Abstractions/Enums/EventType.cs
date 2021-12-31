@@ -5,8 +5,6 @@
     /// </summary>
     public enum EventType
     {
-        EnteringSleepmode = 0x03,
-
-        ProfileSettingsChanged = 0x06,
+        EnteringSleepmode = 0x01
     }
 }

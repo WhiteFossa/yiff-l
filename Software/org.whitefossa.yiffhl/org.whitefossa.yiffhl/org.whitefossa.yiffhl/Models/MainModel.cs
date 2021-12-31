@@ -97,7 +97,7 @@ namespace org.whitefossa.yiffhl.Models
         /// <summary>
         /// Delegate, called when profile settings changed from fox menu
         /// </summary>
-        public OnProfileSettingsChangedEventDelegate OnProfileSettingsChanged { get; set; }
+        public OnProfileSettingsChangedDelegate OnProfileSettingsChanged { get; set; }
 
         /// <summary>
         /// Delegate, called when profile changed

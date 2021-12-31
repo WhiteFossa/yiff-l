@@ -71,13 +71,13 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
         private OnResponseDelegate _onGetAntennaMatchingStatusResponse;
         private OnResponseDelegate _onMarkMatchingAsSeenResponse;
         private OnResponseDelegate _onGetAntennaMatchingDataResponse;
+        private OnResponseDelegate _onCheckForProfileSettingsChangesResponse;
 
         #endregion
 
         #region Events
 
         private OnEnteringSleepmodeEventDelegate _onEnteringSleepmodeEvent;
-        private OnProfileSettingsChangedEventDelegate _onProfileSettingsChangedEvent;
 
         #endregion
 
@@ -506,6 +506,13 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
                         _onMarkMatchingAsSeenResponse(responsePayload);
                         break;
 
+                    // Check for profile settings changes
+                    case CommandType.CheckForProfileSettingsChanges:
+                        CheckOnResponseDelegate(_onCheckForProfileSettingsChangesResponse);
+
+                        _onCheckForProfileSettingsChangesResponse(responsePayload);
+                        break;
+
                     default:
                         return; // We've got some junk
                 }
@@ -538,11 +545,6 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
                     OnEnteringSleepmodeEvent(eventPayload);
                     break;
 
-                // Settings changed
-                case EventType.ProfileSettingsChanged:
-                    OnProfileSettingsChangedEvent(eventPayload);
-                    break;
-
                 // We've got some junk
                 default:
                     return;
@@ -554,13 +556,6 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
             _ = _onEnteringSleepmodeEvent ?? throw new InvalidOperationException("Handler for Entring Sleepmode event isn't registered");
 
             _onEnteringSleepmodeEvent(new EnteringSleepmodeEvent());
-        }
-
-        private void OnProfileSettingsChangedEvent(IReadOnlyCollection<byte> payload)
-        {
-            _ = _onProfileSettingsChangedEvent ?? throw new InvalidOperationException("Handler for Profile Settings Changed event isn't registered");
-
-            _onProfileSettingsChangedEvent(new ProfileSettingsChangedEvent());
         }
 
         #region Commands queue
@@ -822,11 +817,6 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
             _onGetIdentificationDataResponse = onGetIdentificationDataResponse ?? throw new ArgumentNullException(nameof(onGetIdentificationDataResponse));
         }
 
-        public void RegisterOnProfileSettingsChangedEventHandler(OnProfileSettingsChangedEventDelegate onProfileSettingsChangedEvent)
-        {
-            _onProfileSettingsChangedEvent = onProfileSettingsChangedEvent ?? throw new ArgumentNullException(nameof(onProfileSettingsChangedEvent));
-        }
-
         public void SetOnGetAntennaMatchingStatusResponse(OnResponseDelegate onGetAntennaMatchingStatusResponse)
         {
             _onGetAntennaMatchingStatusResponse = onGetAntennaMatchingStatusResponse
@@ -843,6 +833,12 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
         {
             _onGetAntennaMatchingDataResponse = onGetAntennaMatchingDataResponse
                 ?? throw new ArgumentNullException(nameof(onGetAntennaMatchingDataResponse));
+        }
+
+        public void SetOnCheckForProfileSettingsChangesResponse(OnResponseDelegate onCheckForProfileSettingsChanges)
+        {
+            _onCheckForProfileSettingsChangesResponse = onCheckForProfileSettingsChanges
+                ?? throw new ArgumentNullException(nameof(onCheckForProfileSettingsChanges));
         }
     }
 }

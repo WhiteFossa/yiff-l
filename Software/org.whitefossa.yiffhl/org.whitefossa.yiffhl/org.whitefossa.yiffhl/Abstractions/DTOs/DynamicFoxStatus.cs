@@ -24,5 +24,10 @@
         /// Current profile ID (we use it to detect profile change)
         /// </summary>
         public int CurrentProfileId { get; set; }
+
+        /// <summary>
+        /// True if some changes made in fox profile by user via the fox controls
+        /// </summary>
+        public bool IsManualProfileChangesExist { get; set; }
     }
 }

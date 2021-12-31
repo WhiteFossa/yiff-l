@@ -14,6 +14,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private OnFoxArmedDelegate _onFoxArmed;
         private OnFoxDisarmedDelegate _onFoxDisarmed;
         private OnProfileChangedDelegate _onProfileChanged;
+        private OnProfileSettingsChangedDelegate _onProfileSettingsChanged;
 
         private bool? _isFoxArmedOld = null;
         private int? _currentProfileIdOld = null;
@@ -107,6 +108,11 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         public void RegisterOnProfileChangedHandler(OnProfileChangedDelegate onProfileChanged)
         {
             _onProfileChanged = onProfileChanged ?? throw new ArgumentNullException(nameof(onProfileChanged));
+        }
+
+        public void RegisterOnProfileSettingsChangedHandler(OnProfileSettingsChangedDelegate onProfileSettingsChanged)
+        {
+            _onProfileSettingsChanged = onProfileSettingsChanged ?? throw new ArgumentNullException(nameof(onProfileSettingsChanged));
         }
 
         public void RegisterOnShowMatchingDisplayHandler(OnShowMatchingDisplayDelegate onShowMatchingDisplay)

@@ -847,11 +847,7 @@ namespace org.whitefossa.yiffhl.ViewModels
             // Setting up fox events delegates
             MainModel.OnEnteringSleepmode += OnEnteringSleepmode;
 
-            
-            MainModel.OnProfileSettingsChanged += async (e) => await OnProfileSettingsChangedFromMenuAsync(e);
-
             _packetsProcessor.RegisterOnEnteringSleepmodeEventHandler(MainModel.OnEnteringSleepmode);
-            _packetsProcessor.RegisterOnProfileSettingsChangedEventHandler(MainModel.OnProfileSettingsChanged);
 
             // Setting up events generato events handlers
             _eventsGenerator.RegisterOnShowMatchingDisplayHandler(NavigateToMatchingPage);
@@ -864,6 +860,9 @@ namespace org.whitefossa.yiffhl.ViewModels
 
             MainModel.OnProfileChanged += async (np) => await OnProfileChangedAsync(np);
             _eventsGenerator.RegisterOnProfileChangedHandler(MainModel.OnProfileChanged);
+
+            MainModel.OnProfileSettingsChanged += async () => await OnProfileSettingsChangedFromMenuAsync();
+            _eventsGenerator.RegisterOnProfileSettingsChangedHandler(MainModel.OnProfileSettingsChanged);
 
             // Binding commands to handlers
             SelectedFoxChangedCommand = new Command<PairedFoxDTO>(async (f) => await OnSelectedFoxChangedAsync(f));
@@ -1810,7 +1809,7 @@ Do you want to continue?");
         /// <summary>
         /// Called when profile settings changed from menu on fox
         /// </summary>
-        private async Task OnProfileSettingsChangedFromMenuAsync(IProfileSettingsChangedEvent settingsChangedEvent)
+        private async Task OnProfileSettingsChangedFromMenuAsync()
         {
             await LoadProfileSettingsAsync();
         }
