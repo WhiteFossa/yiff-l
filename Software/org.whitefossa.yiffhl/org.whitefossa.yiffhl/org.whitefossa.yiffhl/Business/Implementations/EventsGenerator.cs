@@ -91,6 +91,18 @@ namespace org.whitefossa.yiffhl.Business.Implementations
 
             #endregion
 
+            #region Profile settings changed
+
+            if (model.DynamicFoxStatus.IsManualProfileChangesExist)
+            {
+                if (_onProfileSettingsChanged != null)
+                {
+                    _onProfileSettingsChanged();
+                }
+            }
+
+            #endregion
+
             _isFoxArmedOld = model.DynamicFoxStatus.IsFoxArmed;
             _currentProfileIdOld = model.DynamicFoxStatus.CurrentProfileId;
         }
