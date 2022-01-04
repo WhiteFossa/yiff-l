@@ -833,7 +833,7 @@ namespace org.whitefossa.yiffhl.ViewModels
             // Setting up fox connector delegates
             MainModel.OnFoxConnectorNewByteRead += OnNewByteRead;
             MainModel.OnFoxConnectorConnected += OnConnectedAsync;
-            MainModel.OnFoxConnectorDisconnected += OnDisconnected;
+            MainModel.OnFoxConnectorDisconnected += OnDisconnect;
             MainModel.OnFoxConnectorFailedToConnect += OnFailedToConnect;
 
             _foxConnector.SetupDelegates
@@ -997,7 +997,7 @@ namespace org.whitefossa.yiffhl.ViewModels
             _packetsProcessor.NewByteReceived(data);
         }
 
-        private void OnDisconnected()
+        private void OnDisconnect()
         {
             _packetsProcessor.OnDisconnect();
 

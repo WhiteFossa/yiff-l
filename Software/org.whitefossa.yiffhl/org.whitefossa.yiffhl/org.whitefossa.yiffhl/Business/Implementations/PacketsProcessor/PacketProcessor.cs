@@ -123,6 +123,11 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
 
         public void OnDisconnect()
         {
+            if (_commandsSenderThread == null)
+            {
+                throw new InvalidOperationException("Already disconnected");
+            }
+
             if (_commandsSenderThread != null)
             {
                 _commandsSenderThread.Abort();

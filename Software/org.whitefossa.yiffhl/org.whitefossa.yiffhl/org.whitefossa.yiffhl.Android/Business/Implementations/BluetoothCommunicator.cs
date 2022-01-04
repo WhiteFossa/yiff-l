@@ -104,9 +104,8 @@ namespace org.whitefossa.yiffhl.Droid.Business.Implementations
             if (_socket != null && _socket.IsConnected)
             {
                 _socket.Close();
+                _onBTCommunicatorDisconnect();
             }
-
-            _onBTCommunicatorDisconnect();
         }
 
         public void SendMessage(IReadOnlyCollection<byte> message)
