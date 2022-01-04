@@ -102,36 +102,45 @@
                                     Orientation="Horizontal">
                                     <Label
                                         Text="Name:" />
+                                    
                                     <Label
                                         FontAttributes="Bold"
-                                        Text="{Binding FoxName}"/>
+                                        Text="{Binding FoxName}"
+                                        IsEnabled="{Binding IsSettingsControlsEnabled}" />
                                 </StackLayout>
 
                                 <StackLayout
                                     Orientation="Horizontal">
                                     <Label
                                         Text="Hardware revision:" />
+                                    
                                     <Label
                                         FontAttributes="Bold"
-                                        Text="{Binding FoxHardwareRevision}" />
+                                        Text="{Binding FoxHardwareRevision}"
+                                        IsEnabled="{Binding IsSettingsControlsEnabled}" />
+                                    
                                 </StackLayout>
 
                                 <StackLayout
                                     Orientation="Horizontal">
                                     <Label
                                         Text="Firmware verison:" />
+                                    
                                     <Label
                                         FontAttributes="Bold"
-                                        Text="{Binding FoxFirmwareVersion}" />
+                                        Text="{Binding FoxFirmwareVersion}"
+                                        IsEnabled="{Binding IsSettingsControlsEnabled}" />
                                 </StackLayout>
 
                                 <StackLayout
                                     Orientation="Horizontal">
                                     <Label
                                         Text="Serial number:" />
+                                    
                                     <Label
                                         FontAttributes="Bold"
-                                        Text="{Binding FoxSerialNumber}"/>
+                                        Text="{Binding FoxSerialNumber}"
+                                        IsEnabled="{Binding IsSettingsControlsEnabled}" />
                                 </StackLayout>
                             </StackLayout>
 
@@ -176,7 +185,8 @@
                                 Text="{Binding BatteryLevelFormatted}"
                                 FontAttributes="Bold"
                                 HorizontalOptions="StartAndExpand"
-                                VerticalOptions="Center" />
+                                VerticalOptions="Center"
+                                IsEnabled="{Binding IsSettingsControlsEnabled}" />
                         </StackLayout>
 
                         <StackLayout
@@ -192,7 +202,8 @@
                                 Text="{Binding IsFoxArmedFormatted}"
                                 FontAttributes="Bold"
                                 HorizontalOptions="StartAndExpand"
-                                VerticalOptions="Center" />
+                                VerticalOptions="Center"
+                                IsEnabled="{Binding IsSettingsControlsEnabled}" />
 
                             <Button
                                 Text="Arm"
@@ -266,7 +277,8 @@
                             Grid.Row="2"
                             Grid.Column="0"
                             HorizontalOptions="CenterAndExpand"
-                            VerticalOptions="CenterAndExpand" />
+                            VerticalOptions="CenterAndExpand"
+                            IsEnabled="{Binding IsSettingsControlsEnabled}" />
 
                         <Button
                             Grid.Row="2"

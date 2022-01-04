@@ -97,16 +97,42 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
 
         private Queue<CommandQueueElement> _commandsQueue = new Queue<CommandQueueElement>();
 
-        private Thread _commandsSenderThread;
+        private Thread _commandsSenderThread = null;
 
         private Object _commandQueueLock = new Object();
 
         public PacketsProcessor(IBluetoothCommunicator bluetoothCommunicator)
         {
             _bluetoothCommunicator = bluetoothCommunicator;
+        }
+
+        public void OnConnect()
+        {
+            if (_commandsSenderThread != null)
+            {
+                throw new InvalidOperationException("Already connected");
+            }
+
+            _receiverState = ReceiverState.WaitingForFirstByte;
+            StopWaitingForResponse();
+            _commandsQueue.Clear();
 
             _commandsSenderThread = new Thread(() => CommandsSenderThreadEntryPoint());
             _commandsSenderThread.Start();
+        }
+
+        public void OnDisconnect()
+        {
+            if (_commandsSenderThread == null)
+            {
+                throw new InvalidOperationException("Already disconnected");
+            }
+
+            if (_commandsSenderThread != null)
+            {
+                _commandsSenderThread.Abort();
+                _commandsSenderThread = null;
+            }
         }
 
         public void NewByteReceived(byte data)

@@ -833,7 +833,7 @@ namespace org.whitefossa.yiffhl.ViewModels
             // Setting up fox connector delegates
             MainModel.OnFoxConnectorNewByteRead += OnNewByteRead;
             MainModel.OnFoxConnectorConnected += OnConnectedAsync;
-            MainModel.OnFoxConnectorDisconnected += OnDisconnected;
+            MainModel.OnFoxConnectorDisconnected += OnDisconnect;
             MainModel.OnFoxConnectorFailedToConnect += OnFailedToConnect;
 
             _foxConnector.SetupDelegates
@@ -845,7 +845,7 @@ namespace org.whitefossa.yiffhl.ViewModels
             );
 
             // Setting up fox events delegates
-            MainModel.OnEnteringSleepmode += OnEnteringSleepmode;
+            MainModel.OnEnteringSleepmode += async (e) => await OnEnteringSleepmodeAsync(e);
 
             _packetsProcessor.RegisterOnEnteringSleepmodeEventHandler(MainModel.OnEnteringSleepmode);
 
@@ -954,6 +954,11 @@ namespace org.whitefossa.yiffhl.ViewModels
 
         public async Task OnDisconnectButtonClickedAsync()
         {
+            await InitiateDisconnectionAsync();
+        }
+
+        private async Task InitiateDisconnectionAsync()
+        {
             IsBtnDisconnectEnabled = false;
 
             await _foxConnector.DisconnectAsync();
@@ -976,13 +981,10 @@ namespace org.whitefossa.yiffhl.ViewModels
             }
         }
 
-        private void OnNewByteRead(byte data)
-        {
-            _packetsProcessor.NewByteReceived(data);
-        }
-
         private async void OnConnectedAsync(PairedFoxDTO connectedFox)
         {
+            _packetsProcessor.OnConnect();
+
             MainModel.ConnectedFox = connectedFox;
             IsFoxConnected = true;
 
@@ -995,14 +997,23 @@ namespace org.whitefossa.yiffhl.ViewModels
                 => await OnGetIdentificationDataResponseAsync(isFox, pVer, hwRev, fwVer, sn));
         }
 
-        private void OnDisconnected()
+        private void OnNewByteRead(byte data)
         {
+            _packetsProcessor.NewByteReceived(data);
+        }
+
+        private void OnDisconnect()
+        {
+            _packetsProcessor.OnDisconnect();
+
             IsFoxConnected = false;
             MainModel.ConnectedFox = null;
 
             ResetFoxRelatedData();
 
             IsConnectButtonEnabled = true;
+            IsBtnDisconnectEnabled = false;
+
             IsFoxPickerEnabled = true;
             IsConnectRelatedControlsEnabled = true;
 
@@ -1792,9 +1803,14 @@ Do you want to continue?");
             await _staticFoxStatusManager.GetStaticFoxStatusAsync(async (s) => await OnGetStaticFoxStatusAsync_ReloadPathway(s));
         }
 
-        private void OnEnteringSleepmode(IEnteringSleepmodeEvent enteringSleepmodeEvent)
+        private async Task OnEnteringSleepmodeAsync(IEnteringSleepmodeEvent enteringSleepmodeEvent)
         {
-            Debug.WriteLine("Entering sleepmode");
+            await InitiateDisconnectionAsync();
+
+            Device.BeginInvokeOnMainThread(async () =>
+            {
+                await _userNotifier.ShowNotificationMessageAsync("Sleepmode", "Fox went to sleep, connection шы dropped.");
+            });
         }
 
         private async Task OnFoxDisarmedAsync()
