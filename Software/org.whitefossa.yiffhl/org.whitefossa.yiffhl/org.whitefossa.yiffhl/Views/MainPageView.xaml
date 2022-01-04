@@ -220,6 +220,18 @@
                                 IsEnabled="{Binding IsDisarmButtonEnabled}" />
                         </StackLayout>
 
+                        <StackLayout
+                            HorizontalOptions="FillAndExpand"
+                            Orientation="Horizontal">
+
+                            <Button
+                                Text="Show last antenna matching data"
+                                VerticalOptions="Center"
+                                HorizontalOptions="CenterAndExpand"
+                                Command="{Binding ShowMatchingDataCommand}"
+                                IsEnabled="{Binding IsSettingsControlsEnabled}" />
+                        </StackLayout>
+
                     </StackLayout>
                     
                 </Frame>
