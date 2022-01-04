@@ -845,7 +845,7 @@ namespace org.whitefossa.yiffhl.ViewModels
             );
 
             // Setting up fox events delegates
-            MainModel.OnEnteringSleepmode += OnEnteringSleepmode;
+            MainModel.OnEnteringSleepmode += async (e) => await OnEnteringSleepmodeAsync(e);
 
             _packetsProcessor.RegisterOnEnteringSleepmodeEventHandler(MainModel.OnEnteringSleepmode);
 
@@ -953,6 +953,11 @@ namespace org.whitefossa.yiffhl.ViewModels
         }
 
         public async Task OnDisconnectButtonClickedAsync()
+        {
+            await InitiateDisconnectionAsync();
+        }
+
+        private async Task InitiateDisconnectionAsync()
         {
             IsBtnDisconnectEnabled = false;
 
@@ -1798,9 +1803,14 @@ Do you want to continue?");
             await _staticFoxStatusManager.GetStaticFoxStatusAsync(async (s) => await OnGetStaticFoxStatusAsync_ReloadPathway(s));
         }
 
-        private void OnEnteringSleepmode(IEnteringSleepmodeEvent enteringSleepmodeEvent)
+        private async Task OnEnteringSleepmodeAsync(IEnteringSleepmodeEvent enteringSleepmodeEvent)
         {
-            Debug.WriteLine("Entering sleepmode");
+            await InitiateDisconnectionAsync();
+
+            Device.BeginInvokeOnMainThread(async () =>
+            {
+                await _userNotifier.ShowNotificationMessageAsync("Sleepmode", "Fox went to sleep, connection шы dropped.");
+            });
         }
 
         private async Task OnFoxDisarmedAsync()
