@@ -101,7 +101,7 @@ namespace org.whitefossa.yiffhl.ViewModels
                 await OnMatchingInitiated();
             }
 
-            if (_previousMatchingStatus == AntennaMatchingStatus.InProgress
+            if ((_previousMatchingStatus == AntennaMatchingStatus.NotSet || _previousMatchingStatus == AntennaMatchingStatus.InProgress)
                 &&
                 newMatchingStatus == AntennaMatchingStatus.Completed)
             {
