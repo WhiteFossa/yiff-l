@@ -810,6 +810,11 @@ namespace org.whitefossa.yiffhl.ViewModels
             get => MainModel.IsConnected && !MainModel.StaticFoxStatus.IsFoxArmed;
         }
 
+        /// <summary>
+        /// Force show last antenna matching status
+        /// </summary>
+        public ICommand ShowMatchingDataCommand { get; }
+
         public MainPageViewModel()
         {
             MainModel = App.Container.Resolve<IMainModel>() as MainModel;
@@ -910,6 +915,8 @@ namespace org.whitefossa.yiffhl.ViewModels
 
             ArmFoxCommand = new Command(async () => await OnArmFoxAsync());
             DisarmFoxCommand = new Command(async () => await OnDisarmFoxAsync());
+
+            ShowMatchingDataCommand = new Command(async () => await OnShowMatchingDataAsync());
 
             // Initial state
             IsConnectButtonEnabled = false;
@@ -1918,6 +1925,22 @@ Do you want to continue?");
             {
                 await Navigation.PushModalAsync(_matchingView);
             });
+        }
+
+        #endregion
+
+        #region Force show matching data
+
+        private async Task OnShowMatchingDataAsync()
+        {
+            if (MainModel.DynamicFoxStatus.AntennaMatchingStatus.Status == AntennaMatchingStatus.NeverInitiated)
+            {
+                await _userNotifier.ShowNotificationMessageAsync("Matching status", "Matching was never initiated.");
+                return;
+            }
+
+            _matchingView.ViewModel.ForceReloadMatchingData = true;
+            NavigateToMatchingPage();
         }
 
         #endregion

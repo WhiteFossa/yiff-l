@@ -27,6 +27,8 @@ namespace org.whitefossa.yiffhl.ViewModels
 
         public RedrawMatchingGraphDelegate RedrawMatchingGraph { get; set; }
 
+        public bool ForceReloadMatchingData { get; set; }
+
         /// <summary>
         /// Matching status, formatted
         /// </summary>
@@ -95,7 +97,9 @@ namespace org.whitefossa.yiffhl.ViewModels
 
             if (_previousMatchingStatus != AntennaMatchingStatus.InProgress
                 &&
-                newMatchingStatus == AntennaMatchingStatus.InProgress)
+                newMatchingStatus == AntennaMatchingStatus.InProgress
+                &&
+                MainModel.ActiveDisplay == ActiveDisplay.MatchingDisplay)
             {
                 // Matching just initiated
                 await OnMatchingInitiated();
@@ -103,8 +107,14 @@ namespace org.whitefossa.yiffhl.ViewModels
 
             if ((_previousMatchingStatus == AntennaMatchingStatus.NotSet || _previousMatchingStatus == AntennaMatchingStatus.InProgress)
                 &&
-                newMatchingStatus == AntennaMatchingStatus.Completed)
+                newMatchingStatus == AntennaMatchingStatus.Completed
+                &&
+                MainModel.ActiveDisplay == ActiveDisplay.MatchingDisplay
+                ||
+                ForceReloadMatchingData)
             {
+                ForceReloadMatchingData = false;
+
                 // We just completed antenna matching
                 await OnAntennaMatchingCompleted();
             }
