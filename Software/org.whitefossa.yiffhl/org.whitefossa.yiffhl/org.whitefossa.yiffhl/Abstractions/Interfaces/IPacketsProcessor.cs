@@ -33,6 +33,16 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
         /// </summary>
         void NewByteReceived(byte data);
 
+        /// <summary>
+        /// Call this when connection with fox is estabilished
+        /// </summary>
+        void OnConnect();
+
+        /// <summary>
+        /// Call this if connection lost
+        /// </summary>
+        void OnDisconnect();
+
         #region Responses to commands
 
         void SetOnSetDateAndTimeResponse(OnResponseDelegate onSetDateAndTimeResponse);
@@ -74,7 +84,6 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
         void SetOnMarkMatchingAsSeenResponse(OnResponseDelegate onMarkMatchingAsSeenResponse);
         void SetOnGetAntennaMatchingDataResponse(OnResponseDelegate onGetAntennaMatchingDataResponse);
         void SetOnCheckForProfileSettingsChangesResponse(OnResponseDelegate onCheckForProfileSettingsChanges);
-
 
         #endregion
 

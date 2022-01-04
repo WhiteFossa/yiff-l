@@ -976,13 +976,10 @@ namespace org.whitefossa.yiffhl.ViewModels
             }
         }
 
-        private void OnNewByteRead(byte data)
-        {
-            _packetsProcessor.NewByteReceived(data);
-        }
-
         private async void OnConnectedAsync(PairedFoxDTO connectedFox)
         {
+            _packetsProcessor.OnConnect();
+
             MainModel.ConnectedFox = connectedFox;
             IsFoxConnected = true;
 
@@ -995,14 +992,23 @@ namespace org.whitefossa.yiffhl.ViewModels
                 => await OnGetIdentificationDataResponseAsync(isFox, pVer, hwRev, fwVer, sn));
         }
 
+        private void OnNewByteRead(byte data)
+        {
+            _packetsProcessor.NewByteReceived(data);
+        }
+
         private void OnDisconnected()
         {
+            _packetsProcessor.OnDisconnect();
+
             IsFoxConnected = false;
             MainModel.ConnectedFox = null;
 
             ResetFoxRelatedData();
 
             IsConnectButtonEnabled = true;
+            IsBtnDisconnectEnabled = false;
+
             IsFoxPickerEnabled = true;
             IsConnectRelatedControlsEnabled = true;
 
