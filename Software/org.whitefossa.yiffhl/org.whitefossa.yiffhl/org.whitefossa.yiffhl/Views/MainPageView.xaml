@@ -732,6 +732,23 @@
                 </Frame>
                 <!-- End of profile settings -->
 
+                <!-- Service settings -->
+                <Frame
+                    Style="{StaticResource FramesStyle}">
+
+                    <StackLayout>
+                        <Label
+                        Text="Service settings"
+                        HorizontalOptions="Center" />
+
+                        <Button
+                            Text="Service settings"
+                            Command="{Binding OpenServiceSettingsCommand}"
+                            IsEnabled="{Binding IsSettingsControlsEnabled}"/>
+                    </StackLayout>
+                </Frame>
+                <!-- End of service settings -->
+
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>

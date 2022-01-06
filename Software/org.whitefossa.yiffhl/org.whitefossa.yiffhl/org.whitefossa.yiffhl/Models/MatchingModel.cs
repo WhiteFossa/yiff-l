@@ -2,7 +2,7 @@
 
 namespace org.whitefossa.yiffhl.Models
 {
-    public class ArmingModel
+    public class MatchingModel
     {
         /// <summary>
         /// Matching positions count

@@ -70,7 +70,15 @@ namespace org.whitefossa.yiffhl.Models
         /// </summary>
         public StaticFoxStatus StaticFoxStatus { get; set; } = new StaticFoxStatus();
 
-        public ArmingModel ArmingModel { get; set; } = new ArmingModel();
+        /// <summary>
+        /// Antenna matching model
+        /// </summary>
+        public MatchingModel MatchingModel { get; set; } = new MatchingModel();
+
+        /// <summary>
+        /// Service settings model
+        /// </summary>
+        public ServiceSettingsModel ServiceSettingsModel { get; set; } = new ServiceSettingsModel();
 
         /// <summary>
         /// Current app display

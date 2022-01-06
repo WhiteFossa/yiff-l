@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:org.whitefossa.yiffhl.ViewModels"
+             x:Class="org.whitefossa.yiffhl.Views.ServicePageView">
+
+    <ContentPage.BindingContext>
+        <viewModels:ServicePageViewModel />
+    </ContentPage.BindingContext>
+
+    <ContentPage.Content>
+        <ScrollView>
+            <StackLayout>
+
+                <!-- Last error code -->
+                <Frame
+                    Style="{StaticResource FramesStyle}">
+
+                    <StackLayout>
+                        <Label
+                            Text="Last error code"
+                            HorizontalOptions="Center" />
+
+                        <StackLayout
+                            Orientation="Horizontal">
+
+                            <Label
+                                Text="Last error code:"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                            <Label
+                                Text="{Binding LastErrorCodeFormatted}"
+                                FontAttributes="Bold"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                            <Button
+                                Text="Get"
+                                VerticalOptions="Center"
+                                HorizontalOptions="End" />
+
+                        </StackLayout>
+                        
+                    </StackLayout>
+                </Frame>
+                <!-- End of last error code -->
+
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

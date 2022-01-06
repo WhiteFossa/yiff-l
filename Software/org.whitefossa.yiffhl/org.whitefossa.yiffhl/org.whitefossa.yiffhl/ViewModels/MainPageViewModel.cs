@@ -154,9 +154,14 @@ namespace org.whitefossa.yiffhl.ViewModels
         #region Views
 
         /// <summary>
-        /// Arming view
+        /// Matching view
         /// </summary>
-        private ArmingView _matchingView = new ArmingView();
+        private MatchingPageView _matchingPageView = new MatchingPageView();
+
+        /// <summary>
+        /// Service page view
+        /// </summary>
+        private ServicePageView _servicePageView = new ServicePageView();
 
         #endregion
 
@@ -815,6 +820,11 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         public ICommand ShowMatchingDataCommand { get; }
 
+        /// <summary>
+        /// Open service settings
+        /// </summary>
+        public ICommand OpenServiceSettingsCommand { get; }
+
         public MainPageViewModel()
         {
             MainModel = App.Container.Resolve<IMainModel>() as MainModel;
@@ -917,6 +927,8 @@ namespace org.whitefossa.yiffhl.ViewModels
             DisarmFoxCommand = new Command(async () => await OnDisarmFoxAsync());
 
             ShowMatchingDataCommand = new Command(async () => await OnShowMatchingDataAsync());
+
+            OpenServiceSettingsCommand = new Command(async () => await OnOpenServiceSettingsAsync());
 
             // Initial state
             IsConnectButtonEnabled = false;
@@ -1796,7 +1808,7 @@ Do you want to continue?");
             await _eventsGenerator.GenerateEventsAsync(MainModel);
 
             OnPropertyChanged(nameof(BatteryLevelFormatted));
-            await _matchingView.OnMatchingStatusChangedAsync();
+            await _matchingPageView.OnMatchingStatusChangedAsync();
         }
 
         #endregion
@@ -1824,7 +1836,7 @@ Do you want to continue?");
         {
             Debug.WriteLine("Fox disarmed.");
 
-            await _matchingView.LeaveMatchingDisplayAsync();
+            await _matchingPageView.LeaveMatchingDisplayAsync();
 
             await _staticFoxStatusManager.GetStaticFoxStatusAsync(async (s) => await OnGetStaticFoxStatusAsync_ReloadPathway(s));
         }
@@ -1923,7 +1935,17 @@ Do you want to continue?");
 
             Device.BeginInvokeOnMainThread(async () =>
             {
-                await Navigation.PushModalAsync(_matchingView);
+                await Navigation.PushModalAsync(_matchingPageView);
+            });
+        }
+
+        private void NavigateToServicePage()
+        {
+            MainModel.ActiveDisplay = ActiveDisplay.ServiceDisplay;
+
+            Device.BeginInvokeOnMainThread(async () =>
+            {
+                await Navigation.PushModalAsync(_servicePageView);
             });
         }
 
@@ -1939,8 +1961,26 @@ Do you want to continue?");
                 return;
             }
 
-            _matchingView.ViewModel.ForceReloadMatchingData = true;
+            _matchingPageView.ViewModel.ForceReloadMatchingData = true;
             NavigateToMatchingPage();
+        }
+
+        #endregion
+
+        #region Service settings
+
+        private async Task OnOpenServiceSettingsAsync()
+        {
+            var isConfirmed = await _userNotifier.ShowYesNoRequestAsync("Confirmation",
+                @"Please take into account that service settings are not intended for day-to-day fox usage. They can be useful for troubleshooting,
+but wrong actions there can cause permanent fox malfunction. Do you want to open serivce settings?");
+
+            if (!isConfirmed)
+            {
+                return;
+            }
+
+            NavigateToServicePage();
         }
 
         #endregion
