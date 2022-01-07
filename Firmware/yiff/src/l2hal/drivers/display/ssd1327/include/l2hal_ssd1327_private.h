@@ -91,11 +91,6 @@
 #define L2HAL_SSD1327_ROW_ADDRESS_TO_DATA_DELAY 5U
 
 /**
- * Wait this amount of milliseconds after transmitting a line before sending the next one
- */
-#define L2HAL_SSD1327_INTERLINE_DELAY 2U
-
-/**
  * Causes L2HAL error if display not found.
  * @param context Pointer to driver context.
  */
