@@ -14,7 +14,7 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L Fossa_library:AD9835 U3
+L Full-schematic-rescue:AD9835-Fossa_library U3
 U 1 1 5FDCFB3A
 P 5675 2525
 F 0 "U3" H 5675 2706 50  0000 C CNN
@@ -771,7 +771,7 @@ F 3 "~" H 10275 3250 50  0001 C CNN
 $EndComp
 Connection ~ 8675 3725
 $Comp
-L Fossa_library:AD825 DA1
+L Full-schematic-rescue:AD825-Fossa_library DA1
 U 1 1 5FE6E843
 P 11825 2400
 F 0 "DA1" H 11600 2650 60  0000 L CNN
@@ -1214,7 +1214,7 @@ Text Notes 14750 3675 0    50   ~ 0
 Wire Wire Line
 	15175 2375 15175 2250
 $Comp
-L Fossa_library:EDR101A0500 K1
+L Full-schematic-rescue:EDR101A0500-Fossa_library K1
 U 1 1 5FF371A8
 P 16950 3700
 F 0 "K1" H 17100 3450 50  0000 R CNN
@@ -1240,7 +1240,7 @@ $EndComp
 Wire Wire Line
 	16750 4075 16750 4000
 $Comp
-L Fossa_library:EDR101A0500 K2
+L Full-schematic-rescue:EDR101A0500-Fossa_library K2
 U 1 1 5FF59BA9
 P 17950 3700
 F 0 "K2" H 18100 3450 50  0000 R CNN
@@ -1264,7 +1264,7 @@ $EndComp
 Wire Wire Line
 	17750 4075 17750 4000
 $Comp
-L Fossa_library:EDR101A0500 K3
+L Full-schematic-rescue:EDR101A0500-Fossa_library K3
 U 1 1 5FF7E77F
 P 18950 3700
 F 0 "K3" H 19100 3450 50  0000 R CNN
@@ -1288,7 +1288,7 @@ $EndComp
 Wire Wire Line
 	18750 4075 18750 4000
 $Comp
-L Fossa_library:EDR101A0500 K4
+L Full-schematic-rescue:EDR101A0500-Fossa_library K4
 U 1 1 5FF87815
 P 19950 3700
 F 0 "K4" H 20100 3450 50  0000 R CNN
@@ -1312,7 +1312,7 @@ $EndComp
 Wire Wire Line
 	19750 4075 19750 4000
 $Comp
-L Fossa_library:EDR101A0500 K5
+L Full-schematic-rescue:EDR101A0500-Fossa_library K5
 U 1 1 5FF91775
 P 20950 3700
 F 0 "K5" H 21100 3450 50  0000 R CNN
@@ -2139,7 +2139,7 @@ Connection ~ 11250 3675
 Wire Wire Line
 	11250 3675 11250 2650
 $Comp
-L Fossa_library:EDR101A0500 K6
+L Full-schematic-rescue:EDR101A0500-Fossa_library K6
 U 1 1 6017CDFB
 P 21950 3700
 F 0 "K6" H 22100 3450 50  0000 R CNN
@@ -2304,7 +2304,7 @@ F 3 "~" H 9925 7375 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Fossa_library:ICS501 U10
+L Full-schematic-rescue:ICS501-Fossa_library U10
 U 1 1 60193519
 P 13825 7075
 F 0 "U10" H 13825 7006 50  0000 C CNN
@@ -5653,7 +5653,7 @@ F 3 "" H 11075 12800 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Fossa_library:AD5245 U9
+L Full-schematic-rescue:AD5245-Fossa_library U9
 U 1 1 610BB3C9
 P 11525 12150
 F 0 "U9" H 11450 12150 50  0000 C CNN
