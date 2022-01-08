@@ -48,6 +48,9 @@
 
 int main(int argc, char* argv[])
 {
+	/* Mandatory for STM32 HAL*/
+	HAL_Init();
+
 	/* Initializing variables */
 	FoxState_Init();
 
@@ -67,6 +70,18 @@ int main(int argc, char* argv[])
 
 	/* Connecting to display and showing boot screen */
 	Main_InitDisplayAndShowBootScreen();
+
+
+	L2HAL_ERROR_CLOCK_SIGNAL_PORT();
+
+	GPIO_InitTypeDef GPIO_InitStruct;
+
+	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+
+	GPIO_InitStruct.Pin = L2HAL_ERROR_SIGNAL_PIN;
+	HAL_GPIO_Init(L2HAL_ERROR_SIGNAL_PORT, &GPIO_InitStruct);
 
 	/* HAL need SysTick calls */
 	L2HAL_SysTick_RegisterHandler(&HAL_OnTick);

@@ -86,6 +86,11 @@
 #define L2HAL_SSD1327_COLUMN_ADDRESS_TO_ROW_ADDRESS_DELAY 5U
 
 /**
+ * Wait this amount of milliseconds after transmitting a line before sending the next one
+ */
+#define L2HAL_SSD1327_INTERLINE_DELAY 2U
+
+/**
  * Wait this amount of milliseconds after transmitting row address before sending the data
  */
 #define L2HAL_SSD1327_ROW_ADDRESS_TO_DATA_DELAY 5U

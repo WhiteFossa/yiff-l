@@ -435,6 +435,7 @@ void L2HAL_SSD1327_SetGrayscaleTable(L2HAL_SSD1327_ContextStruct* context, uint8
 	{
 		L2HAL_SSD1327_SetColumnAddress(context, 0x00U, 0x3FU);
 		HAL_Delay(L2HAL_SSD1327_COLUMN_ADDRESS_TO_ROW_ADDRESS_DELAY);
+
 		L2HAL_SSD1327_SetRowAddresses(context, 0x00U, 0x7FU);
 		HAL_Delay(L2HAL_SSD1327_ROW_ADDRESS_TO_DATA_DELAY);
 
@@ -476,6 +477,7 @@ void L2HAL_SSD1327_SetGrayscaleTable(L2HAL_SSD1327_ContextStruct* context, uint8
 			}
 
 			L2HAL_SSD1327_WriteData(context, context->lineBuffer, L2HAL_SSD1327_DECOMPRESSED_LINE_SIZE);
+			HAL_Delay(L2HAL_SSD1327_INTERLINE_DELAY);
 		}
 	}
 #else
