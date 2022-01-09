@@ -10,10 +10,8 @@
 
 void HAL_IntiHardware(void)
 {
-	/* We need to be able to log failures even from interrupt, it requires EEPROM write and HAL_Delay(), so SysTick
-	 * IRQ must have maximal priority.
-	 */
 	NVIC_SetPriority(SysTick_IRQn, 0);
+	NVIC_SetPriority(USART1_IRQn, 0);
 
 	/* Interrupts from stm32f103xb.h */
 	NVIC_SetPriority(WWDG_IRQn, 1);
@@ -53,7 +51,6 @@ void HAL_IntiHardware(void)
 	NVIC_SetPriority(I2C2_ER_IRQn, 1);
 	NVIC_SetPriority(SPI1_IRQn, 1);
 	NVIC_SetPriority(SPI2_IRQn, 1);
-	NVIC_SetPriority(USART1_IRQn, 1);
 	NVIC_SetPriority(USART2_IRQn, 1);
 	NVIC_SetPriority(USART3_IRQn, 1);
 	NVIC_SetPriority(EXTI15_10_IRQn, 1);
@@ -1136,16 +1133,6 @@ void HAL_DeSetUpHighPriorityTasksTimer(void)
 
 void HAL_SetupHighPriorityTasksTimerFullspeed(void)
 {
-	/* Remove me, debug */
-	GPIO_InitTypeDef GPIO_InitStruct;
-
-	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-	GPIO_InitStruct.Pull = GPIO_NOPULL;
-	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-
-	GPIO_InitStruct.Pin = L2HAL_ERROR_SIGNAL_PIN;
-	HAL_GPIO_Init(L2HAL_ERROR_SIGNAL_PORT, &GPIO_InitStruct);
-
 	/* Clearing from previous state */
 	HAL_DeSetUpHighPriorityTasksTimer();
 
