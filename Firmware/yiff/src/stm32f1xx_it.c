@@ -214,4 +214,10 @@ void EXTI15_10_IRQHandler(void)
 	}
 }
 
+void TIM2_IRQHandler(void)
+{
+	HAL_TIM_IRQHandler(&HighPriorityTasksTimerHandle);
+
+}
+
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

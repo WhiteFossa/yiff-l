@@ -334,7 +334,6 @@ void HAL_TIM_OC_MspDeInit(TIM_HandleTypeDef* htim)
 	if (htim->Instance == TIM3)
 	{
 		/* Returning PB0 to normal output mode (it's used as manipulator for 3.5MHz tract) */
-
 		GPIO_InitTypeDef GPIO_InitStruct;
 		GPIO_InitStruct.Pin = GPIO_PIN_0;
 		GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
@@ -342,6 +341,24 @@ void HAL_TIM_OC_MspDeInit(TIM_HandleTypeDef* htim)
 		GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
 
 		HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+	}
+}
+
+void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim)
+{
+	if (TIM2 == htim->Instance)
+	{
+		__HAL_RCC_TIM2_CLK_ENABLE();
+		//HAL_NVIC_EnableIRQ(TIM2_IRQn);
+	}
+}
+
+void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim)
+{
+	if (TIM2 == htim->Instance)
+	{
+		//HAL_NVIC_DisableIRQ(TIM2_IRQn);
+		__HAL_RCC_TIM2_CLK_DISABLE();
 	}
 }
 

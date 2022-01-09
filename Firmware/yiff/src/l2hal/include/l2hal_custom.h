@@ -172,5 +172,10 @@ void L2HAL_SetupSPI(void);
 volatile void HAL_TIM_OC_MspInit(TIM_HandleTypeDef* htim);
 volatile void HAL_TIM_OC_MspDeInit(TIM_HandleTypeDef* htim);
 
+/**
+ * Timer 2 (high priority events generation) related stuff
+ */
+volatile void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim);
+volatile void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim);
 
 #endif /* L2HAL_INCLUDE_L2HAL_CUSTOM_H_ */
