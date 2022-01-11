@@ -186,8 +186,6 @@ int main(int argc, char* argv[])
 
 void Main_ProcessHighPriorityEvents(void)
 {
-	HAL_GPIO_WritePin(L2HAL_ERROR_SIGNAL_PORT, L2HAL_ERROR_SIGNAL_PIN, GPIO_PIN_SET);
-
 	/* Processing incoming packets */
 	Main_ProcessIncomingPackets();
 
@@ -204,8 +202,6 @@ void Main_ProcessHighPriorityEvents(void)
 	Main_ProcessSetBeginAndEndTimes();
 	Main_ProcessSetPower();
 	Main_ProcessFoxArming();
-
-	HAL_GPIO_WritePin(L2HAL_ERROR_SIGNAL_PORT, L2HAL_ERROR_SIGNAL_PIN, GPIO_PIN_RESET);
 }
 
 void Main_ProcessFoxNameChange(void)

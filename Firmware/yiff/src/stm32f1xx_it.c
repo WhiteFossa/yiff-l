@@ -155,8 +155,8 @@ void PendSV_Handler(void)
   */
 void SysTick_Handler(void)
 {
-  HAL_IncTick();
-  L2HAL_SysTick_Callback();
+	HAL_IncTick();
+	L2HAL_SysTick_Callback();
 }
 
 /******************************************************************************/
@@ -217,7 +217,6 @@ void EXTI15_10_IRQHandler(void)
 void TIM2_IRQHandler(void)
 {
 	HAL_TIM_IRQHandler(&HighPriorityTasksTimerHandle);
-
 }
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

@@ -10,53 +10,6 @@
 
 void HAL_IntiHardware(void)
 {
-	NVIC_SetPriority(SysTick_IRQn, 0);
-	NVIC_SetPriority(USART1_IRQn, 0);
-
-	/* Interrupts from stm32f103xb.h */
-	NVIC_SetPriority(WWDG_IRQn, 1);
-	NVIC_SetPriority(PVD_IRQn, 1);
-	NVIC_SetPriority(TAMPER_IRQn, 1);
-	NVIC_SetPriority(RTC_IRQn, 1);
-	NVIC_SetPriority(FLASH_IRQn, 1);
-	NVIC_SetPriority(RCC_IRQn, 1);
-	NVIC_SetPriority(EXTI0_IRQn, 1);
-	NVIC_SetPriority(EXTI1_IRQn, 1);
-	NVIC_SetPriority(EXTI2_IRQn, 1);
-	NVIC_SetPriority(EXTI3_IRQn, 1);
-	NVIC_SetPriority(EXTI4_IRQn, 1);
-	NVIC_SetPriority(DMA1_Channel1_IRQn, 1);
-	NVIC_SetPriority(DMA1_Channel2_IRQn, 1);
-	NVIC_SetPriority(DMA1_Channel3_IRQn, 1);
-	NVIC_SetPriority(DMA1_Channel4_IRQn, 1);
-	NVIC_SetPriority(DMA1_Channel5_IRQn, 1);
-	NVIC_SetPriority(DMA1_Channel6_IRQn, 1);
-	NVIC_SetPriority(DMA1_Channel7_IRQn, 1);
-	NVIC_SetPriority(ADC1_2_IRQn, 1);
-	NVIC_SetPriority(USB_HP_CAN1_TX_IRQn, 1);
-	NVIC_SetPriority(USB_LP_CAN1_RX0_IRQn, 1);
-	NVIC_SetPriority(CAN1_RX1_IRQn, 1);
-	NVIC_SetPriority(CAN1_SCE_IRQn, 1);
-	NVIC_SetPriority(EXTI9_5_IRQn, 1);
-	NVIC_SetPriority(TIM1_BRK_IRQn, 1);
-	NVIC_SetPriority(TIM1_UP_IRQn, 1);
-	NVIC_SetPriority(TIM1_TRG_COM_IRQn, 1);
-	NVIC_SetPriority(TIM1_CC_IRQn, 1);
-	NVIC_SetPriority(TIM2_IRQn, 1);
-	NVIC_SetPriority(TIM3_IRQn, 1);
-	NVIC_SetPriority(TIM4_IRQn, 1);
-	NVIC_SetPriority(I2C1_EV_IRQn, 1);
-	NVIC_SetPriority(I2C1_ER_IRQn, 1);
-	NVIC_SetPriority(I2C2_EV_IRQn, 1);
-	NVIC_SetPriority(I2C2_ER_IRQn, 1);
-	NVIC_SetPriority(SPI1_IRQn, 1);
-	NVIC_SetPriority(SPI2_IRQn, 1);
-	NVIC_SetPriority(USART2_IRQn, 1);
-	NVIC_SetPriority(USART3_IRQn, 1);
-	NVIC_SetPriority(EXTI15_10_IRQn, 1);
-	NVIC_SetPriority(RTC_Alarm_IRQn, 1);
-	NVIC_SetPriority(USBWakeUp_IRQn, 1);
-
 	/**********
 	 * PORT B *
 	 **********/
@@ -1002,7 +955,7 @@ void HAL_EnterEconomyMode(void)
 	clkinitstruct.APB1CLKDivider = RCC_HCLK_DIV1;
 	clkinitstruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
-	if (HAL_RCC_ClockConfig(&clkinitstruct, FLASH_LATENCY_2)!= HAL_OK)
+	if (L2HAL_RCC_ClockConfigWithSysTickHighPriority(&clkinitstruct, FLASH_LATENCY_2, HAL_SYSTICK_PRELOAD_VALUE_SLEEP)!= HAL_OK)
 	{
 		SelfDiagnostics_HaltOnFailure(YhlFailureCause_EconomyModeFailedToSwitchToHSI);
 	}
@@ -1058,7 +1011,7 @@ void HAL_ExitEconomyMode(void)
 	clkinitstruct.APB1CLKDivider = RCC_HCLK_DIV2; /* APB1 at 36 MHz*/
 	clkinitstruct.APB2CLKDivider = RCC_HCLK_DIV1; /* APB2 at 72 MHz */
 
-	if (HAL_RCC_ClockConfig(&clkinitstruct, FLASH_LATENCY_2)!= HAL_OK)
+	if (L2HAL_RCC_ClockConfigWithSysTickHighPriority(&clkinitstruct, FLASH_LATENCY_2, HAL_SYSTICK_PRELOAD_VALUE_FULLSPEED)!= HAL_OK)
 	{
 		SelfDiagnostics_HaltOnFailure(YhlFailureCause_EconomyModeFailedToSwitchToPLL);
 	}

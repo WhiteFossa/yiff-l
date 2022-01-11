@@ -265,6 +265,16 @@ extern FoxStateStruct FoxState;
  */
 #define HAL_BLUETOOTH_UART_BAUDRATE 115200
 
+/**
+ * SysTick preload value for full speed
+ */
+#define HAL_SYSTICK_PRELOAD_VALUE_FULLSPEED 72000
+
+/**
+ * SysTick preload value for sleep
+ */
+#define HAL_SYSTICK_PRELOAD_VALUE_SLEEP 500
+
 
 extern ADC_HandleTypeDef ADC_Handle;
 extern L2HAL_AD5245_ContextStruct U80mRegulatorContext;

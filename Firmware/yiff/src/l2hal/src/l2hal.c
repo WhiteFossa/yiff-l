@@ -73,10 +73,34 @@ void L2HAL_SetupClocks(void)
 	clkinitstruct.APB1CLKDivider = RCC_HCLK_DIV2; /* APB1 at 36 MHz*/
 	clkinitstruct.APB2CLKDivider = RCC_HCLK_DIV1; /* APB2 at 72 MHz */
 
-	if (HAL_RCC_ClockConfig(&clkinitstruct, FLASH_LATENCY_2)!= HAL_OK)
+	if (L2HAL_RCC_ClockConfigWithSysTickHighPriority(&clkinitstruct, FLASH_LATENCY_2, L2HAL_DEFAULT_SYSTICK_TICKS_COUNT) != HAL_OK)
 	{
 		/* Initialization Error */
 		L2HAL_Error(Generic);
 	}
+}
+
+uint32_t L2HAL_ConfigSysTickWithHighPriority(uint32_t ticksNumber)
+{
+	__disable_irq(); /* To be atomic */
+	uint32_t result = HAL_SYSTICK_Config (ticksNumber);
+	HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
+	__enable_irq();
+
+	return result;
+}
+
+HAL_StatusTypeDef L2HAL_RCC_ClockConfigWithSysTickHighPriority(RCC_ClkInitTypeDef* RCC_ClkInitStruct, uint32_t FLatency, uint32_t ticksNumber)
+{
+	__disable_irq(); /* To be atomic */
+	HAL_StatusTypeDef result = HAL_RCC_ClockConfig(RCC_ClkInitStruct, FLatency);
+
+	if (L2HAL_ConfigSysTickWithHighPriority(ticksNumber) != 0)
+	{
+		L2HAL_Error(Generic);
+	}
+	__enable_irq();
+
+	return result;
 }
 

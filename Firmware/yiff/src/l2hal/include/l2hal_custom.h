@@ -95,20 +95,26 @@ extern SPI_HandleTypeDef SPIHandle;
 /**
  * I2C1 interrupt priorities.
  */
-#define I2C1_ER_IRQN_PRIORITY 0
-#define I2C1_ER_IRQN_SUBPRIORITY 1
+#define I2C1_ER_IRQN_PRIORITY 2
+#define I2C1_ER_IRQN_SUBPRIORITY 0
 
-#define I2C1_EV_IRQN_PRIORITY 0
-#define I2C1_EV_IRQN_SUBPRIORITY 2
+#define I2C1_EV_IRQN_PRIORITY 2
+#define I2C1_EV_IRQN_SUBPRIORITY 0
 
 /**
  * I2C2 interrupt priorities.
  */
-#define I2C2_ER_IRQN_PRIORITY 0
-#define I2C2_ER_IRQN_SUBPRIORITY 1
+#define I2C2_ER_IRQN_PRIORITY 15
+#define I2C2_ER_IRQN_SUBPRIORITY 0
 
-#define I2C2_EV_IRQN_PRIORITY 0
-#define I2C2_EV_IRQN_SUBPRIORITY 2
+#define I2C2_EV_IRQN_PRIORITY 15
+#define I2C2_EV_IRQN_SUBPRIORITY 0
+
+/**
+ * UART1 interrupt priorities
+ */
+#define USART1_IRQN_PRIORITY 1
+#define USART1_IRQN_SUBPRIORITY 0
 
 /**
  * Put custom hardware initialization stuff here,

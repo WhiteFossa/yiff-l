@@ -204,7 +204,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart)
 		GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
 		HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-		HAL_NVIC_SetPriority(USART1_IRQn, 0, 1);
+		HAL_NVIC_SetPriority(USART1_IRQn, USART1_IRQN_PRIORITY, USART1_IRQN_SUBPRIORITY);
 		HAL_NVIC_EnableIRQ(USART1_IRQn);
 	}
 }
@@ -246,7 +246,7 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef *hadc)
 	gpioInit.Pull = GPIO_NOPULL;
 	HAL_GPIO_Init(GPIOA, &gpioInit);
 
-	HAL_NVIC_SetPriority(ADC1_IRQn, 1, 0);
+	HAL_NVIC_SetPriority(ADC1_IRQn, 15, 0);
 	HAL_NVIC_EnableIRQ(ADC1_IRQn);
 }
 
@@ -349,7 +349,7 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim)
 	if (TIM2 == htim->Instance)
 	{
 		__HAL_RCC_TIM2_CLK_ENABLE();
-		//HAL_NVIC_EnableIRQ(TIM2_IRQn);
+		HAL_NVIC_SetPriority(TIM2_IRQn, 15, 0);
 	}
 }
 
@@ -357,8 +357,8 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim)
 {
 	if (TIM2 == htim->Instance)
 	{
-		//HAL_NVIC_DisableIRQ(TIM2_IRQn);
 		__HAL_RCC_TIM2_CLK_DISABLE();
+		HAL_NVIC_SetPriority(TIM2_IRQn, 15, 0);
 	}
 }
 
