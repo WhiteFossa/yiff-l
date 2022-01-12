@@ -202,6 +202,7 @@ void Main_ProcessHighPriorityEvents(void)
 	Main_ProcessSetBeginAndEndTimes();
 	Main_ProcessSetPower();
 	Main_ProcessFoxArming();
+	Main_ProcessResetLastFailureCode();
 }
 
 void Main_ProcessFoxNameChange(void)
@@ -475,6 +476,20 @@ void Main_PrepareFoxFoxTransmission(bool isArmFoxAfterMatching)
 	}
 
 	AMSM_StartMatching(isArmFoxAfterMatching);
+}
+
+void Main_ProcessResetLastFailureCode(void)
+{
+	if (PendingCommandsFlags.NeedToResetLastFailureCode)
+	{
+		EEPROM_Header.LastFailure = YhlFailureCause_OK;
+		EEPROM_UpdateHeader();
+
+		uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
+		SendResponse(ResetLastFailureCode, 1, &response);
+
+		PendingCommandsFlags.NeedToResetLastFailureCode = false;
+	}
 }
 
 void Main_MeasureBatteryLevel(void)

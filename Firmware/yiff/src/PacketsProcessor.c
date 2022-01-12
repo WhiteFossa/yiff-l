@@ -248,6 +248,11 @@ void OnNewCommandToFox(uint8_t payloadSize, uint8_t* payload)
 			/* Check for profile settings changes */
 			OnCheckForProfileSettingsChanges(payloadSize, payload);
 			break;
+
+		case ResetLastFailureCode:
+			/* Reset last failure code */
+			OnResetLastFailureCode(payloadSize, payload);
+			break;
 	}
 }
 
@@ -1193,6 +1198,16 @@ void OnCheckForProfileSettingsChanges(uint8_t payloadSize, uint8_t* payload)
 	FoxState.IsNotReportedManualProfileChanges = false;
 
 	SendResponse(CheckForProfileSettingsChanges, 1, &response);
+}
+
+void OnResetLastFailureCode(uint8_t payloadSize, uint8_t* payload)
+{
+	if (payloadSize != 1)
+	{
+		return;
+	}
+
+	PendingCommandsFlags.NeedToResetLastFailureCode = true;
 }
 
 void EmitEnteringSleepmodeEvent(void)

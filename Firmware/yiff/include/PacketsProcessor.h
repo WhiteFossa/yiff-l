@@ -144,7 +144,9 @@ typedef enum
 
 	MarkMatchingAsSeen = 0x25,
 
-	CheckForProfileSettingsChanges = 0x26
+	CheckForProfileSettingsChanges = 0x26,
+
+	ResetLastFailureCode = 0x27
 }
 CommandToFoxEnum;
 
@@ -379,9 +381,14 @@ void OnGetAntennaMatchingData(uint8_t payloadSize, uint8_t* payload);
 void OnMarkMatchingAsSeen(uint8_t payloadSize, uint8_t* payload);
 
 /**
- * Called when "Check for profile settings changes" comes
+ * Called when "Check for profile settings changes" command comes
  */
 void OnCheckForProfileSettingsChanges(uint8_t payloadSize, uint8_t* payload);
+
+/**
+ * Called when "Reset last failure code" command comes
+ */
+void OnResetLastFailureCode(uint8_t payloadSize, uint8_t* payload);
 
 /**
  * Emits "Entering sleepmode" event

@@ -114,6 +114,11 @@ typedef struct
 	 * If true, then we need to arm fox manually
 	 */
 	bool NeedToArmFoxByHandpaws;
+
+	/**
+	 * If true, then we need to reset last faiulre code to OK
+	 */
+	bool NeedToResetLastFailureCode;
 }
 PendingCommandsFlagsStruct;
 

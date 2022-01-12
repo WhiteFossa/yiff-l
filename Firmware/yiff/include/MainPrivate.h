@@ -176,6 +176,11 @@ void Main_InitDisplayAndShowBootScreen(void);
 void Main_ProcessFoxArmingCommon(void);
 
 /**
+ * Resets last failure code if needed
+ */
+void Main_ProcessResetLastFailureCode(void);
+
+/**
  * As it name states, processes high priority events.
  */
 void Main_ProcessHighPriorityEvents(void);
