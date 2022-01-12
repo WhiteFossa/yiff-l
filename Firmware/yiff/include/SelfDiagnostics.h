@@ -540,6 +540,41 @@ typedef enum
 	 * Antenna matching already in progress, but new request to match came
 	 */
 	YhlFailureCause_AntennaMatchingAlreadyInProgress = 104,
+
+	/**
+	 * Failed to init high priority events timer in fullspeed mode
+	 */
+	YhlFailureCause_FailedToInitHighPriorityEventsTimerInFullspeedMode = 105,
+
+	/**
+	 * Failed to start high priority events timer in fullspeed mode
+	 */
+	YhlFailureCause_FailedToStartHighPriorityEventsTimerInFullspeedMode = 106,
+
+	/**
+	 * Failed to stop high priority events timer
+	 */
+	YhlFailureCause_FailedToStopHighPriorityEventsTimer = 107,
+
+	/**
+	 * Failed to de-init high priority events timer
+	 */
+	YhlFailureCause_FailedToDeInitHighPriorityEventsTimer = 108,
+
+	/**
+	 * Failed to init high priority events timer in sleepmode
+	 */
+	YhlFailureCause_FailedToInitHighPriorityEventsTimerInSleepmode = 109,
+
+	/**
+	 * Failed to start high priority events timer in sleepmode
+	 */
+	YhlFailureCause_FailedToStartHighPriorityEventsTimerInSleepmode = 110,
+
+	/**
+	 * Null is passed to HAL_RegisterHighPriorityEventCallback
+	 */
+	YhlFailureCause_NullPassedToHALRegisterHighPriorityEventCallback = 111,
 }
 YhlFailureCausesEnum;
 

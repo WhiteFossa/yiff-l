@@ -387,11 +387,11 @@ X A 2 150 0 100 L 50 50 1 1 P
 ENDDRAW
 ENDDEF
 #
-# Fossa_library_AD5245
+# Full-schematic-rescue_AD5245-Fossa_library
 #
-DEF Fossa_library_AD5245 U 0 40 Y Y 1 F N
+DEF Full-schematic-rescue_AD5245-Fossa_library U 0 40 Y Y 1 F N
 F0 "U" 50 0 50 H V C CNN
-F1 "Fossa_library_AD5245" 0 -300 50 H V C CNN
+F1 "Full-schematic-rescue_AD5245-Fossa_library" 0 -300 50 H V C CNN
 F2 "" 0 0 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 DRAW
@@ -407,11 +407,11 @@ X A 8 450 -150 100 L 50 50 1 1 I
 ENDDRAW
 ENDDEF
 #
-# Fossa_library_AD825
+# Full-schematic-rescue_AD825-Fossa_library
 #
-DEF Fossa_library_AD825 DA 0 40 Y Y 1 F N
+DEF Full-schematic-rescue_AD825-Fossa_library DA 0 40 Y Y 1 F N
 F0 "DA" -150 250 60 H V C CNN
-F1 "Fossa_library_AD825" 225 250 60 H V C CNN
+F1 "Full-schematic-rescue_AD825-Fossa_library" 225 250 60 H V C CNN
 F2 "" 0 375 60 H I C CNN
 F3 "" 0 375 60 H I C CNN
 DRAW
@@ -424,11 +424,11 @@ X +VS 7 25 275 200 D 50 50 1 1 W
 ENDDRAW
 ENDDEF
 #
-# Fossa_library_AD9835
+# Full-schematic-rescue_AD9835-Fossa_library
 #
-DEF Fossa_library_AD9835 U 0 40 Y Y 1 F N
+DEF Full-schematic-rescue_AD9835-Fossa_library U 0 40 Y Y 1 F N
 F0 "U" 0 -50 50 H V C CNN
-F1 "Fossa_library_AD9835" 0 -550 50 H V C CNN
+F1 "Full-schematic-rescue_AD9835-Fossa_library" 0 -550 50 H V C CNN
 F2 "" 0 0 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 DRAW
@@ -452,11 +452,11 @@ X FSYNC 9 -550 -400 100 R 50 50 1 1 I
 ENDDRAW
 ENDDEF
 #
-# Fossa_library_EDR101A0500
+# Full-schematic-rescue_EDR101A0500-Fossa_library
 #
-DEF Fossa_library_EDR101A0500 K 0 20 Y Y 1 F N
+DEF Full-schematic-rescue_EDR101A0500-Fossa_library K 0 20 Y Y 1 F N
 F0 "K" 350 150 50 H V L CNN
-F1 "Fossa_library_EDR101A0500" 350 50 50 H V L CNN
+F1 "Full-schematic-rescue_EDR101A0500-Fossa_library" 350 50 50 H V L CNN
 F2 "Relay_THT:Relay_SPST_StandexMeder_SIL_Form1A" 350 -50 50 H I L CNN
 F3 "" 0 0 50 H I C CNN
 $FPLIST
@@ -483,11 +483,11 @@ X ~ 7 200 300 100 D 50 50 1 1 P
 ENDDRAW
 ENDDEF
 #
-# Fossa_library_ICS501
+# Full-schematic-rescue_ICS501-Fossa_library
 #
-DEF Fossa_library_ICS501 U 0 40 Y Y 1 F N
+DEF Full-schematic-rescue_ICS501-Fossa_library U 0 40 Y Y 1 F N
 F0 "U" 0 -50 50 H V C CNN
-F1 "Fossa_library_ICS501" 0 -600 50 H V C CNN
+F1 "Full-schematic-rescue_ICS501-Fossa_library" 0 -600 50 H V C CNN
 F2 "" 0 0 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 DRAW

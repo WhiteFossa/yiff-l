@@ -175,4 +175,9 @@ void Main_InitDisplayAndShowBootScreen(void);
  */
 void Main_ProcessFoxArmingCommon(void);
 
+/**
+ * As it name states, processes high priority events.
+ */
+void Main_ProcessHighPriorityEvents(void);
+
 #endif /* INCLUDE_MAINPRIVATE_H_ */

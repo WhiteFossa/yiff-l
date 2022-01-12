@@ -95,20 +95,26 @@ extern SPI_HandleTypeDef SPIHandle;
 /**
  * I2C1 interrupt priorities.
  */
-#define I2C1_ER_IRQN_PRIORITY 0
-#define I2C1_ER_IRQN_SUBPRIORITY 1
+#define I2C1_ER_IRQN_PRIORITY 2
+#define I2C1_ER_IRQN_SUBPRIORITY 0
 
-#define I2C1_EV_IRQN_PRIORITY 0
-#define I2C1_EV_IRQN_SUBPRIORITY 2
+#define I2C1_EV_IRQN_PRIORITY 2
+#define I2C1_EV_IRQN_SUBPRIORITY 0
 
 /**
  * I2C2 interrupt priorities.
  */
-#define I2C2_ER_IRQN_PRIORITY 0
-#define I2C2_ER_IRQN_SUBPRIORITY 1
+#define I2C2_ER_IRQN_PRIORITY 15
+#define I2C2_ER_IRQN_SUBPRIORITY 0
 
-#define I2C2_EV_IRQN_PRIORITY 0
-#define I2C2_EV_IRQN_SUBPRIORITY 2
+#define I2C2_EV_IRQN_PRIORITY 15
+#define I2C2_EV_IRQN_SUBPRIORITY 0
+
+/**
+ * UART1 interrupt priorities
+ */
+#define USART1_IRQN_PRIORITY 1
+#define USART1_IRQN_SUBPRIORITY 0
 
 /**
  * Put custom hardware initialization stuff here,
@@ -172,5 +178,10 @@ void L2HAL_SetupSPI(void);
 volatile void HAL_TIM_OC_MspInit(TIM_HandleTypeDef* htim);
 volatile void HAL_TIM_OC_MspDeInit(TIM_HandleTypeDef* htim);
 
+/**
+ * Timer 2 (high priority events generation) related stuff
+ */
+volatile void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim);
+volatile void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim);
 
 #endif /* L2HAL_INCLUDE_L2HAL_CUSTOM_H_ */

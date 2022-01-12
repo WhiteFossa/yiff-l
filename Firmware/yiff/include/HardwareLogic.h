@@ -85,12 +85,12 @@ extern L2HAL_HC06_ContextStruct HC06_Context;
 /**
  * Time to spin bluettoth power regulator up
  */
-#define YHL_HL_BLUETOOTH_REGULATOR_SPINUP_TIME 1000
+#define YHL_HL_BLUETOOTH_REGULATOR_SPINUP_TIME 2000
 
 /**
  * How long to wait between powering bluetooth down and powering it up again when renaming device
  */
-#define YHL_HL_BLUETOOTH_RENAME_POWERDOWN_TIME 1000
+#define YHL_HL_BLUETOOTH_RENAME_POWERDOWN_TIME 2000
 
 /**
  * Initialize hardware logic

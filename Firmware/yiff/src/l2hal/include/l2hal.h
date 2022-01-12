@@ -59,6 +59,11 @@
 #include <l2hal_systick.h>
 #include <l2hal_mcu.h>
 
+/**
+ * Default ticks count for SysTick (will give 1KHz)
+ */
+#define L2HAL_DEFAULT_SYSTICK_TICKS_COUNT 72000
+
 
 /**
  * Call it to setup hardware.
@@ -69,5 +74,17 @@ void L2HAL_Init(void);
  * Set up MCU clocks. Being called from L2HAL_Init() automatically.
  */
 void L2HAL_SetupClocks(void);
+
+/**
+ * As HAL_SYSTICK_Config() function, but sets highest priority for
+ * SysTick timer interrupt. Please note that SysTick timer is clocked from
+ * AHB, not from core itself.
+ */
+uint32_t L2HAL_ConfigSysTickWithHighPriority(uint32_t ticksNumber);
+
+/**
+ * As HAL_RCC_ClockConfig(), but after configuring clocks re-setups SysTick timer with high priority
+ */
+HAL_StatusTypeDef L2HAL_RCC_ClockConfigWithSysTickHighPriority(RCC_ClkInitTypeDef* RCC_ClkInitStruct, uint32_t FLatency, uint32_t ticksNumber);
 
 #endif /* L2HAL_INCLUDE_L2HAL_H_ */

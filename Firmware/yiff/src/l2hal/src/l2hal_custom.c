@@ -204,7 +204,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart)
 		GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
 		HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-		HAL_NVIC_SetPriority(USART1_IRQn, 0, 1);
+		HAL_NVIC_SetPriority(USART1_IRQn, USART1_IRQN_PRIORITY, USART1_IRQN_SUBPRIORITY);
 		HAL_NVIC_EnableIRQ(USART1_IRQn);
 	}
 }
@@ -246,7 +246,7 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef *hadc)
 	gpioInit.Pull = GPIO_NOPULL;
 	HAL_GPIO_Init(GPIOA, &gpioInit);
 
-	HAL_NVIC_SetPriority(ADC1_IRQn, 1, 0);
+	HAL_NVIC_SetPriority(ADC1_IRQn, 15, 0);
 	HAL_NVIC_EnableIRQ(ADC1_IRQn);
 }
 
@@ -334,7 +334,6 @@ void HAL_TIM_OC_MspDeInit(TIM_HandleTypeDef* htim)
 	if (htim->Instance == TIM3)
 	{
 		/* Returning PB0 to normal output mode (it's used as manipulator for 3.5MHz tract) */
-
 		GPIO_InitTypeDef GPIO_InitStruct;
 		GPIO_InitStruct.Pin = GPIO_PIN_0;
 		GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
@@ -342,6 +341,24 @@ void HAL_TIM_OC_MspDeInit(TIM_HandleTypeDef* htim)
 		GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
 
 		HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+	}
+}
+
+void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim)
+{
+	if (TIM2 == htim->Instance)
+	{
+		__HAL_RCC_TIM2_CLK_ENABLE();
+		HAL_NVIC_SetPriority(TIM2_IRQn, 15, 0);
+	}
+}
+
+void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim)
+{
+	if (TIM2 == htim->Instance)
+	{
+		__HAL_RCC_TIM2_CLK_DISABLE();
+		HAL_NVIC_SetPriority(TIM2_IRQn, 15, 0);
 	}
 }
 

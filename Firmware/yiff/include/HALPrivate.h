@@ -101,6 +101,11 @@ bool HAL_IsInEconomyMode;
 bool HAL_IsUBattCheckOn;
 
 /**
+ * High priority event callback
+ */
+void (*HAL_HighPriorityEventCallback)(void);
+
+/**
  * Call from ADC interrupt handler to add measurement
  */
 void HAL_AddNewADCMeasurement(uint16_t measurement);
@@ -124,5 +129,10 @@ void HAL_OnEncoderButtonPressed(void);
  * Called when encoder turned
  */
 void HAL_OnEncoderTurned(void);
+
+/**
+ * De set-up high priority tasks timer. Call it inside setup functions
+ */
+void HAL_DeSetUpHighPriorityTasksTimer(void);
 
 #endif /* INCLUDE_HALPRIVATE_H_ */

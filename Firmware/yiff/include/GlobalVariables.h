@@ -97,6 +97,11 @@ L2HAL_AD9835_ContextStruct SynthesizerContext;
  */
 TIM_HandleTypeDef ToneTimerHandle;
 
+/**
+ * High priority tasks timer handle
+ */
+TIM_HandleTypeDef HighPriorityTasksTimerHandle;
+
 /****************************
 * Graphics stuff goes below *
 *****************************/

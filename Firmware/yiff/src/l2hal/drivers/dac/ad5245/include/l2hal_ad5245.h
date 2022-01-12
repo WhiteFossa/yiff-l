@@ -89,7 +89,7 @@
 /**
  * IIC bus timeout for device operations
  */
-#define L2HAL_AD5245_BUS_TIMEOUT 100
+#define L2HAL_AD5245_BUS_TIMEOUT 200U
 
 /**
  * AD5245 context

@@ -133,11 +133,16 @@ extern FoxStateStruct FoxState;
 #define HAL_SYNTHESIZER_FSYNC_PORT GPIOA
 #define HAL_SYNTHESIZER_FSYNC_PIN GPIO_PIN_8
 
+/**
+ * Tone timer. During normal operations it is clocked at 72 MHz,
+ * during deep sleep it is clocked at 500 KHz
+ */
+#define HAL_TONE_TIMER TIM3
 
 /**
  * Timer clock is 12MHz
  */
-#define HAL_TONE_TIMER_PRESCALER (uint32_t)((SystemCoreClock / 12000000) - 1);
+#define HAL_TONE_TIMER_PRESCALER (uint32_t)(SystemCoreClock / 12000000);
 
 /**
  * Period is 6KHz, so compares happens at 2KHz frequency, which leads to 1KHz tone (because of TIM_OCMODE_TOGGLE)
@@ -145,14 +150,34 @@ extern FoxStateStruct FoxState;
 #define HAL_TONE_TIMER_PERIOD 6000 - 1;
 
 /**
- * Timer itself
- */
-#define HAL_TONE_TIMER TIM3
-
-/**
  * Tone timer channel
  */
 #define HAL_TONE_TIMER_CHANNEL TIM_CHANNEL_3
+
+
+/**
+ * Timer to process high priority tasks. During normal operations it is clocked at 72 MHz,
+ * during deep sleep it is clocked at 500 KHz
+ */
+#define HAL_HIGH_PRIORITY_TASKS_TIMER TIM2
+
+/**
+ * Required timer clock is 10 KHz
+ */
+#define HAL_HIGH_PRIORITY_TASKS_TIMER_PRESCALER_FULLSPEED (uint32_t)(72000000 / 10000);
+
+#define HAL_HIGH_PRIORITY_TASKS_TIMER_PRESCALER_SLEEPMODE (uint32_t)(500000 / 10000);
+
+/**
+ * 1 KHz events rate (9 i.e. counting from 0) for fullspeed mode
+ */
+#define HAL_HIGH_PRIORITY_TASKS_TIMER_PERIOD_FULLSPEED 9U
+
+/**
+ * 100 Hz events rage for sleepmode
+ */
+#define HAL_HIGH_PRIORITY_TASKS_TIMER_PERIOD_SLEEPMODE 99U
+
 
 /**
  * 3.5 MHz antenna matching stuff
@@ -240,6 +265,16 @@ extern FoxStateStruct FoxState;
  */
 #define HAL_BLUETOOTH_UART_BAUDRATE 115200
 
+/**
+ * SysTick preload value for full speed
+ */
+#define HAL_SYSTICK_PRELOAD_VALUE_FULLSPEED 72000
+
+/**
+ * SysTick preload value for sleep
+ */
+#define HAL_SYSTICK_PRELOAD_VALUE_SLEEP 500
+
 
 extern ADC_HandleTypeDef ADC_Handle;
 extern L2HAL_AD5245_ContextStruct U80mRegulatorContext;
@@ -247,6 +282,7 @@ extern I2C_HandleTypeDef I2C_Other;
 extern L2HAL_AD9835_ContextStruct SynthesizerContext;
 extern SPI_HandleTypeDef SPIHandle;
 extern TIM_HandleTypeDef ToneTimerHandle;
+extern TIM_HandleTypeDef HighPriorityTasksTimerHandle;
 
 /**
  * ADC channel in use
@@ -526,5 +562,30 @@ void HAL_EnableUART(void);
  * Disables UART
  */
 void HAL_DisableUART(void);
+
+/**
+ * Set-ups high priority tasks timer for the case when CPU is at full speed
+ */
+void HAL_SetupHighPriorityTasksTimerFullspeed(void);
+
+/**
+ * Set-ups high priority tasks timer for the case when CPU is in sleepmode
+ */
+void HAL_SetupHighPriorityTasksTimerSleepmode(void);
+
+/**
+ * Feed this with a pointer to a high priority event handler
+ */
+void HAL_RegisterHighPriorityEventCallback(void (*handler)(void));
+
+/**
+ * Start high priority events processing.
+ */
+void HAL_StartHightPriorityEventsProcessing(void);
+
+/**
+ * Stop high priority events processing
+ */
+void HAL_StopHighPriorityEventsProcessing(void);
 
 #endif /* INCLUDE_HAL_H_ */

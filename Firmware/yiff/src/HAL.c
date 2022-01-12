@@ -10,56 +10,6 @@
 
 void HAL_IntiHardware(void)
 {
-	/* We need to be able to log failures even from interrupt, it requires EEPROM write and HAL_Delay(), so SysTick
-	 * IRQ must have maximal priority.
-	 */
-	NVIC_SetPriority(SysTick_IRQn, 0);
-
-	/* Interrupts from stm32f103xb.h */
-	NVIC_SetPriority(WWDG_IRQn, 1);
-	NVIC_SetPriority(PVD_IRQn, 1);
-	NVIC_SetPriority(TAMPER_IRQn, 1);
-	NVIC_SetPriority(RTC_IRQn, 1);
-	NVIC_SetPriority(FLASH_IRQn, 1);
-	NVIC_SetPriority(RCC_IRQn, 1);
-	NVIC_SetPriority(EXTI0_IRQn, 1);
-	NVIC_SetPriority(EXTI1_IRQn, 1);
-	NVIC_SetPriority(EXTI2_IRQn, 1);
-	NVIC_SetPriority(EXTI3_IRQn, 1);
-	NVIC_SetPriority(EXTI4_IRQn, 1);
-	NVIC_SetPriority(DMA1_Channel1_IRQn, 1);
-	NVIC_SetPriority(DMA1_Channel2_IRQn, 1);
-	NVIC_SetPriority(DMA1_Channel3_IRQn, 1);
-	NVIC_SetPriority(DMA1_Channel4_IRQn, 1);
-	NVIC_SetPriority(DMA1_Channel5_IRQn, 1);
-	NVIC_SetPriority(DMA1_Channel6_IRQn, 1);
-	NVIC_SetPriority(DMA1_Channel7_IRQn, 1);
-	NVIC_SetPriority(ADC1_2_IRQn, 1);
-	NVIC_SetPriority(USB_HP_CAN1_TX_IRQn, 1);
-	NVIC_SetPriority(USB_LP_CAN1_RX0_IRQn, 1);
-	NVIC_SetPriority(CAN1_RX1_IRQn, 1);
-	NVIC_SetPriority(CAN1_SCE_IRQn, 1);
-	NVIC_SetPriority(EXTI9_5_IRQn, 1);
-	NVIC_SetPriority(TIM1_BRK_IRQn, 1);
-	NVIC_SetPriority(TIM1_UP_IRQn, 1);
-	NVIC_SetPriority(TIM1_TRG_COM_IRQn, 1);
-	NVIC_SetPriority(TIM1_CC_IRQn, 1);
-	NVIC_SetPriority(TIM2_IRQn, 1);
-	NVIC_SetPriority(TIM3_IRQn, 1);
-	NVIC_SetPriority(TIM4_IRQn, 1);
-	NVIC_SetPriority(I2C1_EV_IRQn, 1);
-	NVIC_SetPriority(I2C1_ER_IRQn, 1);
-	NVIC_SetPriority(I2C2_EV_IRQn, 1);
-	NVIC_SetPriority(I2C2_ER_IRQn, 1);
-	NVIC_SetPriority(SPI1_IRQn, 1);
-	NVIC_SetPriority(SPI2_IRQn, 1);
-	NVIC_SetPriority(USART1_IRQn, 1);
-	NVIC_SetPriority(USART2_IRQn, 1);
-	NVIC_SetPriority(USART3_IRQn, 1);
-	NVIC_SetPriority(EXTI15_10_IRQn, 1);
-	NVIC_SetPriority(RTC_Alarm_IRQn, 1);
-	NVIC_SetPriority(USBWakeUp_IRQn, 1);
-
 	/**********
 	 * PORT B *
 	 **********/
@@ -212,6 +162,8 @@ void HAL_IntiHardware(void)
 	HAL_IsInEconomyMode = false;
 
 	HAL_IsUBattCheckOn = false;
+
+	HAL_HighPriorityEventCallback = NULL;
 
 	/* Launching ADC conversions */
 	HAL_SetupADCGeneric();
@@ -900,6 +852,10 @@ void HAL_EmergencyShutdown(void)
 	HAL_SwitchBluetoothPower(false); /* From 5V regulator */
 	HAL_ActivateFox(false); /* 5V regulator shutdown */
 	HAL_SwitchDisplayPower(false); /* 4V regulator shutdown */
+
+	HAL_EnterEconomyMode();
+
+	HAL_StopHighPriorityEventsProcessing();
 }
 
 void HAL_DeInitializeDisplayBus(void)
@@ -980,6 +936,8 @@ void HAL_EnterEconomyMode(void)
 	/* Disabling ADC */
 	HAL_DisableADC();
 
+	HAL_StopHighPriorityEventsProcessing();
+
 	/* Starting HSI */
 	RCC_OscInitTypeDef oscinitstruct = {0};
 	oscinitstruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
@@ -993,11 +951,11 @@ void HAL_EnterEconomyMode(void)
 	RCC_ClkInitTypeDef clkinitstruct = {0};
 	clkinitstruct.ClockType = (RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2);
 	clkinitstruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI; /* 8 MHz */
-	clkinitstruct.AHBCLKDivider = HAL_AHB_DIVIDER_FOR_ECONOMY_MODE;
+	clkinitstruct.AHBCLKDivider = HAL_AHB_DIVIDER_FOR_ECONOMY_MODE; /* 500 KHz*/
 	clkinitstruct.APB1CLKDivider = RCC_HCLK_DIV1;
 	clkinitstruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
-	if (HAL_RCC_ClockConfig(&clkinitstruct, FLASH_LATENCY_2)!= HAL_OK)
+	if (L2HAL_RCC_ClockConfigWithSysTickHighPriority(&clkinitstruct, FLASH_LATENCY_2, HAL_SYSTICK_PRELOAD_VALUE_SLEEP)!= HAL_OK)
 	{
 		SelfDiagnostics_HaltOnFailure(YhlFailureCause_EconomyModeFailedToSwitchToHSI);
 	}
@@ -1014,6 +972,10 @@ void HAL_EnterEconomyMode(void)
 		SelfDiagnostics_HaltOnFailure(YhlFailureCause_EconomyModeFailedToDisableHSEAndPLL);
 	}
 
+	/* Switching high-priority events timer to sleepmode speed (actually adjusting to the same events rate for new CPU speed) */
+	HAL_SetupHighPriorityTasksTimerSleepmode();
+	HAL_StartHightPriorityEventsProcessing();
+
 	HAL_IsInEconomyMode = true;
 }
 
@@ -1023,6 +985,10 @@ void HAL_ExitEconomyMode(void)
 	{
 		SelfDiagnostics_HaltOnFailure(YhlFailureCause_NotInEconomyMode);
 	}
+
+	/* Switching high-priority events timer to full speed (actually adjusting to the same events rate for new CPU speed) */
+	HAL_StopHighPriorityEventsProcessing();
+	HAL_SetupHighPriorityTasksTimerFullspeed();
 
 	/* Starting HSE and switching to PLL */
 	RCC_OscInitTypeDef oscinitstruct = {0};
@@ -1045,10 +1011,12 @@ void HAL_ExitEconomyMode(void)
 	clkinitstruct.APB1CLKDivider = RCC_HCLK_DIV2; /* APB1 at 36 MHz*/
 	clkinitstruct.APB2CLKDivider = RCC_HCLK_DIV1; /* APB2 at 72 MHz */
 
-	if (HAL_RCC_ClockConfig(&clkinitstruct, FLASH_LATENCY_2)!= HAL_OK)
+	if (L2HAL_RCC_ClockConfigWithSysTickHighPriority(&clkinitstruct, FLASH_LATENCY_2, HAL_SYSTICK_PRELOAD_VALUE_FULLSPEED)!= HAL_OK)
 	{
 		SelfDiagnostics_HaltOnFailure(YhlFailureCause_EconomyModeFailedToSwitchToPLL);
 	}
+
+	HAL_StartHightPriorityEventsProcessing();
 
 	/* Restoring ADC operations */
 	HAL_SetupADCGeneric();
@@ -1099,4 +1067,104 @@ void HAL_DisableUART(void)
 	{
 		SelfDiagnostics_HaltOnFailure(YhlFailureCause_FailedToDeinitializeBluetoothUARTInHALDisableUART);
 	}
+}
+
+void HAL_DeSetUpHighPriorityTasksTimer(void)
+{
+	HighPriorityTasksTimerHandle.Instance = HAL_HIGH_PRIORITY_TASKS_TIMER;
+
+	if (HAL_TIM_Base_Stop_IT(&HighPriorityTasksTimerHandle) != HAL_OK)
+	{
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_FailedToStopHighPriorityEventsTimer);
+	}
+
+	if (HAL_TIM_Base_DeInit(&HighPriorityTasksTimerHandle) != HAL_OK)
+	{
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_FailedToDeInitHighPriorityEventsTimer);
+	}
+}
+
+void HAL_SetupHighPriorityTasksTimerFullspeed(void)
+{
+	/* Clearing from previous state */
+	HAL_DeSetUpHighPriorityTasksTimer();
+
+	/* Setting up timer */
+	HighPriorityTasksTimerHandle.Instance = HAL_HIGH_PRIORITY_TASKS_TIMER;
+	HighPriorityTasksTimerHandle.Init.Prescaler = HAL_HIGH_PRIORITY_TASKS_TIMER_PRESCALER_FULLSPEED;
+	HighPriorityTasksTimerHandle.Init.Period = HAL_HIGH_PRIORITY_TASKS_TIMER_PERIOD_FULLSPEED;
+	HighPriorityTasksTimerHandle.Init.ClockDivision = 0;
+	HighPriorityTasksTimerHandle.Init.CounterMode = TIM_COUNTERMODE_UP;
+	HighPriorityTasksTimerHandle.Init.RepetitionCounter = 0;
+	HighPriorityTasksTimerHandle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+
+	if (HAL_TIM_Base_Init(&HighPriorityTasksTimerHandle) != HAL_OK)
+	{
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_FailedToInitHighPriorityEventsTimerInFullspeedMode);
+	}
+
+	/* Starting interrupts generation */
+	if (HAL_TIM_Base_Start_IT(&HighPriorityTasksTimerHandle) != HAL_OK)
+	{
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_FailedToStartHighPriorityEventsTimerInFullspeedMode);
+	}
+}
+
+void HAL_SetupHighPriorityTasksTimerSleepmode(void)
+{
+	/* Clearing from previous state */
+	HAL_DeSetUpHighPriorityTasksTimer();
+
+	/* Setting up timer */
+	HighPriorityTasksTimerHandle.Instance = HAL_HIGH_PRIORITY_TASKS_TIMER;
+	HighPriorityTasksTimerHandle.Init.Prescaler = HAL_HIGH_PRIORITY_TASKS_TIMER_PRESCALER_SLEEPMODE;
+	HighPriorityTasksTimerHandle.Init.Period = HAL_HIGH_PRIORITY_TASKS_TIMER_PERIOD_SLEEPMODE;
+	HighPriorityTasksTimerHandle.Init.ClockDivision = 0;
+	HighPriorityTasksTimerHandle.Init.CounterMode = TIM_COUNTERMODE_UP;
+	HighPriorityTasksTimerHandle.Init.RepetitionCounter = 0;
+	HighPriorityTasksTimerHandle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+
+	if (HAL_TIM_Base_Init(&HighPriorityTasksTimerHandle) != HAL_OK)
+	{
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_FailedToInitHighPriorityEventsTimerInSleepmode);
+	}
+
+	/* Starting interrupts generation */
+	if (HAL_TIM_Base_Start_IT(&HighPriorityTasksTimerHandle) != HAL_OK)
+	{
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_FailedToStartHighPriorityEventsTimerInSleepmode);
+	}
+}
+
+HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
+{
+	if (HAL_HIGH_PRIORITY_TASKS_TIMER == htim->Instance)
+	{
+		if (HAL_HighPriorityEventCallback != NULL)
+		{
+			HAL_HighPriorityEventCallback();
+		}
+	}
+}
+
+void HAL_RegisterHighPriorityEventCallback(void (*handler)(void))
+{
+	if (NULL == handler)
+	{
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_NullPassedToHALRegisterHighPriorityEventCallback);
+	}
+
+	HAL_HighPriorityEventCallback = handler;
+}
+
+
+void HAL_StartHightPriorityEventsProcessing(void)
+{
+	HAL_NVIC_EnableIRQ(TIM2_IRQn);
+}
+
+
+void HAL_StopHighPriorityEventsProcessing(void)
+{
+	HAL_NVIC_DisableIRQ(TIM2_IRQn);
 }

@@ -26,7 +26,7 @@
 /**
  * Firmware version
  */
-#define YHL_VER_SOFTWARE_VERSION 3U
+#define YHL_VER_SOFTWARE_VERSION 5U
 
 
 #endif /* INCLUDE_VERSION_H_ */

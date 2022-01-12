@@ -48,6 +48,9 @@
 
 int main(int argc, char* argv[])
 {
+	/* Mandatory for STM32 HAL*/
+	HAL_Init();
+
 	/* Initializing variables */
 	FoxState_Init();
 
@@ -147,36 +150,24 @@ int main(int argc, char* argv[])
 	FMGL_API_ClearScreen(&fmglContext);
 	FMGL_API_PushFramebuffer(&fmglContext);
 
-	/* Debugging stuff begin */
-
-	/* Debugging stuff end */
+	/* Starting to process high-priority events */
+	HAL_RegisterHighPriorityEventCallback(&Main_ProcessHighPriorityEvents);
+	HAL_SetupHighPriorityTasksTimerFullspeed();
+	HAL_StartHightPriorityEventsProcessing();
 
 	/* Starting to listen for commands */
 	UART_StartListen();
 
+	/* Debugging stuff begin */
+
+	/* Debugging stuff end */
+
 	while(true)
 	{
-		/* Processing incoming packets */
-		Main_ProcessIncomingPackets();
-
 		/* Preventing sleep if fox is transmitting and so on */
 		Main_ControlSleep();
 
 		Main_MeasureBatteryLevel();
-
-		/* Processing possible updates from smartphone */
-		Main_ProcessFoxNameChange();
-		Main_ProcessNewProfileAdd();
-		Main_ProcessProfileSwitch();
-		Main_ProcessSetProfileName();
-		Main_ProcessSetFrequency();
-		Main_ProcessSetCode();
-		Main_ProcessSetSpeed();
-		Main_ProcessSetCycle();
-		Main_ProcessSetEndingToneDuration();
-		Main_ProcessSetBeginAndEndTimes();
-		Main_ProcessSetPower();
-		Main_ProcessFoxArming();
 
 		/* Hardware controls events */
 		Main_CheckLeftButtonPressedEvent();
@@ -191,6 +182,26 @@ int main(int argc, char* argv[])
 	}
 
 	return 0;
+}
+
+void Main_ProcessHighPriorityEvents(void)
+{
+	/* Processing incoming packets */
+	Main_ProcessIncomingPackets();
+
+	/* Processing possible updates from smartphone */
+	Main_ProcessFoxNameChange();
+	Main_ProcessNewProfileAdd();
+	Main_ProcessProfileSwitch();
+	Main_ProcessSetProfileName();
+	Main_ProcessSetFrequency();
+	Main_ProcessSetCode();
+	Main_ProcessSetSpeed();
+	Main_ProcessSetCycle();
+	Main_ProcessSetEndingToneDuration();
+	Main_ProcessSetBeginAndEndTimes();
+	Main_ProcessSetPower();
+	Main_ProcessFoxArming();
 }
 
 void Main_ProcessFoxNameChange(void)
