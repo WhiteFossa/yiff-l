@@ -229,7 +229,7 @@
                                 VerticalOptions="Center"
                                 HorizontalOptions="CenterAndExpand"
                                 Command="{Binding ShowMatchingDataCommand}"
-                                IsEnabled="{Binding IsSettingsControlsEnabled}" />
+                                IsEnabled="{Binding IsShowLastAntennaMatchingButtonEnabled}" />
                         </StackLayout>
 
                     </StackLayout>

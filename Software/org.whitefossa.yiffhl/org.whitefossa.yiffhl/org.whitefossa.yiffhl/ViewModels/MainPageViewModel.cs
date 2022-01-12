@@ -825,6 +825,14 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         public ICommand OpenServiceSettingsCommand { get; }
 
+        /// <summary>
+        /// Is "Show last antenna matching data" button enabled
+        /// </summary>
+        public bool IsShowLastAntennaMatchingButtonEnabled
+        {
+            get => MainModel.IsConnected;
+        }
+
         public MainPageViewModel()
         {
             MainModel = App.Container.Resolve<IMainModel>() as MainModel;
@@ -1049,6 +1057,7 @@ namespace org.whitefossa.yiffhl.ViewModels
             OnPropertyChanged(nameof(IsCycleControlsEnabled));
             OnPropertyChanged(nameof(IsPowerControlsEnabled));
             OnPropertyChanged(nameof(IsAddProfileButtonEnabled));
+            OnPropertyChanged(nameof(IsShowLastAntennaMatchingButtonEnabled));
 
             #endregion
         }
@@ -1828,7 +1837,7 @@ Do you want to continue?");
 
             Device.BeginInvokeOnMainThread(async () =>
             {
-                await _userNotifier.ShowNotificationMessageAsync("Sleepmode", "Fox went to sleep, connection шы dropped.");
+                await _userNotifier.ShowNotificationMessageAsync("Sleepmode", "Fox went to sleep, connection dropped.");
             });
         }
 
@@ -1888,13 +1897,7 @@ Do you want to continue?");
         private void OnGetStaticFoxStatus_Common(StaticFoxStatus status)
         {
             MainModel.StaticFoxStatus = status;
-            OnPropertyChanged(nameof(IsFoxArmedFormatted));
-            OnPropertyChanged(nameof(IsArmButtonEnabled));
-            OnPropertyChanged(nameof(IsDisarmButtonEnabled));
-            OnPropertyChanged(nameof(IsSettingsControlsEnabled));
-            OnPropertyChanged(nameof(IsCycleControlsEnabled));
-            OnPropertyChanged(nameof(IsPowerControlsEnabled));
-            OnPropertyChanged(nameof(IsAddProfileButtonEnabled));
+            NotifyControlsOnConnectionStatusChange();
         }
 
         #endregion

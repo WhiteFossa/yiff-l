@@ -38,7 +38,8 @@
                             <Button
                                 Text="Get"
                                 VerticalOptions="Center"
-                                HorizontalOptions="End" />
+                                HorizontalOptions="End"
+                                Command="{Binding GetLastErrorCodeCommand}"/>
 
                         </StackLayout>
                         

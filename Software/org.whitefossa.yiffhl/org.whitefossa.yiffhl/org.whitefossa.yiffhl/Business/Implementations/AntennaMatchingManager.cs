@@ -12,9 +12,9 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private readonly IGetAntennaMatchingDataCommand _getAntennaMatchingDataCommand;
         private readonly IGetAntennaMatchingStatusCommand _getAntennaMatchingStatusCommand;
 
-        private OnMarkAntennaMatchingAsSeen _onMarkAntennaMatchingAsSeen;
-        private OnGetAntennaMatchingData _onGetAntennaMatchingData;
-        private OnGetAntennaMatchingStatus _onGetAntennaMatchingStatus;
+        private OnMarkAntennaMatchingAsSeenDelegate _onMarkAntennaMatchingAsSeen;
+        private OnGetAntennaMatchingDataDelegate _onGetAntennaMatchingData;
+        private OnGetAntennaMatchingStatusDelegate _onGetAntennaMatchingStatus;
 
         public AntennaMatchingManager
         (
@@ -30,7 +30,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
 
         #region Mark antenna matching as seen
 
-        public async Task MarkAntennaMatchingAsSeenAsync(OnMarkAntennaMatchingAsSeen onMarkAntennaMatchingAsSeen)
+        public async Task MarkAntennaMatchingAsSeenAsync(OnMarkAntennaMatchingAsSeenDelegate onMarkAntennaMatchingAsSeen)
         {
             _onMarkAntennaMatchingAsSeen = onMarkAntennaMatchingAsSeen ?? throw new ArgumentNullException(nameof(onMarkAntennaMatchingAsSeen));
 
@@ -47,7 +47,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
 
         #region Get antenna matching data
 
-        public async Task GetAntennaMatchingDataAsync(int matcherPosition, OnGetAntennaMatchingData onGetAntennaMatchingData)
+        public async Task GetAntennaMatchingDataAsync(int matcherPosition, OnGetAntennaMatchingDataDelegate onGetAntennaMatchingData)
         {
             _onGetAntennaMatchingData = onGetAntennaMatchingData ?? throw new ArgumentNullException(nameof(onGetAntennaMatchingData));
 
@@ -75,7 +75,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
 
         #region Get antenna matching status
 
-        public async Task GetAntennaMatchingStatusAsync(OnGetAntennaMatchingStatus onGetAntennaMatchingStatus)
+        public async Task GetAntennaMatchingStatusAsync(OnGetAntennaMatchingStatusDelegate onGetAntennaMatchingStatus)
         {
             _onGetAntennaMatchingStatus = onGetAntennaMatchingStatus ?? throw new ArgumentNullException(nameof(onGetAntennaMatchingStatus));
 

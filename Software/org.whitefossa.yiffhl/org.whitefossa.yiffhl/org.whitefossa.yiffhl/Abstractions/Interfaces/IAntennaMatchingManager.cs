@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace org.whitefossa.yiffhl.Abstractions.Interfaces
 {
-    public delegate void OnGetAntennaMatchingStatus
+    public delegate void OnGetAntennaMatchingStatusDelegate
     (
         AntennaMatchingStatus status,
         bool isNewForApp,
@@ -14,16 +14,16 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
         float currentBestMatchVoltage
     );
 
-    public delegate void OnMarkAntennaMatchingAsSeen();
+    public delegate void OnMarkAntennaMatchingAsSeenDelegate();
 
-    public delegate void OnGetAntennaMatchingData(int matcherPosition, float antennaVoltage);
+    public delegate void OnGetAntennaMatchingDataDelegate(int matcherPosition, float antennaVoltage);
 
     public interface IAntennaMatchingManager
     {
-        Task GetAntennaMatchingStatusAsync(OnGetAntennaMatchingStatus onGetAntennaMatchingStatus);
+        Task GetAntennaMatchingStatusAsync(OnGetAntennaMatchingStatusDelegate onGetAntennaMatchingStatus);
 
-        Task MarkAntennaMatchingAsSeenAsync(OnMarkAntennaMatchingAsSeen onMarkAntennaMatchingAsSeen);
+        Task MarkAntennaMatchingAsSeenAsync(OnMarkAntennaMatchingAsSeenDelegate onMarkAntennaMatchingAsSeen);
 
-        Task GetAntennaMatchingDataAsync(int matcherPosition, OnGetAntennaMatchingData onGetAntennaMatchingData);
+        Task GetAntennaMatchingDataAsync(int matcherPosition, OnGetAntennaMatchingDataDelegate onGetAntennaMatchingData);
     }
 }
