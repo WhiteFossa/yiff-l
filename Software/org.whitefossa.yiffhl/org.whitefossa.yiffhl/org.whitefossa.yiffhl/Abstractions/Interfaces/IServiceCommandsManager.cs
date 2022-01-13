@@ -2,10 +2,14 @@
 
 namespace org.whitefossa.yiffhl.Abstractions.Interfaces
 {
-    public delegate void OnGetLastErrorCodeResultDelegate(uint lastErrorCode);
+    public delegate void OnGetLastErrorCodeDelegate(uint lastErrorCode);
+
+    public delegate void OnResetLastErrorCodeDelegate();
 
     public interface IServiceCommandsManager
     {
-        Task GetLastErrorCode(OnGetLastErrorCodeResultDelegate onGetLastErrorCode);
+        Task GetLastErrorCode(OnGetLastErrorCodeDelegate onGetLastErrorCode);
+
+        Task ResetLastErrorCode(OnResetLastErrorCodeDelegate onResetLastErrorCode);
     }
 }

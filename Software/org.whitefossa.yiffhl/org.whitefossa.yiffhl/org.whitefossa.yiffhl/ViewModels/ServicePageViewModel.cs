@@ -42,12 +42,18 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         public ICommand GetLastErrorCodeCommand { get; }
 
+        /// <summary>
+        /// Reset last error code command
+        /// </summary>
+        public ICommand ResetLastErrorCodeCommand { get; }
+
         public ServicePageViewModel()
         {
             MainModel = App.Container.Resolve<IMainModel>() as MainModel;
             _serviceCommandsManager = App.Container.Resolve<IServiceCommandsManager>();
 
             GetLastErrorCodeCommand = new Command(async () => await OnGetLastErrorAsync());
+            ResetLastErrorCodeCommand = new Command(async () => await OnResetLastErrorCodeAsync());
         }
 
         public async Task OnLeavingServiceDisplayAsync()
@@ -67,6 +73,21 @@ namespace org.whitefossa.yiffhl.ViewModels
         {
             MainModel.ServiceSettingsModel.LastErrorCode = errorCode;
             OnPropertyChanged(nameof(LastErrorCodeFormatted));
+        }
+
+        #endregion
+
+        #region Reset last error
+
+        private async Task OnResetLastErrorCodeAsync()
+        {
+            await _serviceCommandsManager.ResetLastErrorCode(async () => await OnResetLastErrorCodeResponse());
+        }
+
+        private async Task OnResetLastErrorCodeResponse()
+        {
+            // Reloading last error code
+            await OnGetLastErrorAsync();
         }
 
         #endregion

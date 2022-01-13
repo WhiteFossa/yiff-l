@@ -81,6 +81,8 @@
 
         MarkMatchingAsSeen = 0x25,
 
-        CheckForProfileSettingsChanges = 0x26
+        CheckForProfileSettingsChanges = 0x26,
+
+        ResetLastFailureCode = 0x27
     }
 }

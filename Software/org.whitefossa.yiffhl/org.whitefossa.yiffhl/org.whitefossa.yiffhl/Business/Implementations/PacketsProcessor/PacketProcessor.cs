@@ -72,6 +72,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
         private OnResponseDelegate _onMarkMatchingAsSeenResponse;
         private OnResponseDelegate _onGetAntennaMatchingDataResponse;
         private OnResponseDelegate _onCheckForProfileSettingsChangesResponse;
+        private OnResponseDelegate _onResetLastErrorCodeResponse;
 
         #endregion
 
@@ -539,6 +540,13 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
                         _onCheckForProfileSettingsChangesResponse(responsePayload);
                         break;
 
+                    // Reset last error code
+                    case CommandType.ResetLastFailureCode:
+                        CheckOnResponseDelegate(_onResetLastErrorCodeResponse);
+
+                        _onResetLastErrorCodeResponse(responsePayload);
+                        break;
+
                     default:
                         return; // We've got some junk
                 }
@@ -865,6 +873,12 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
         {
             _onCheckForProfileSettingsChangesResponse = onCheckForProfileSettingsChanges
                 ?? throw new ArgumentNullException(nameof(onCheckForProfileSettingsChanges));
+        }
+
+        public void SetOnResetLastErrorCodeResponse(OnResponseDelegate onResetLastErrorCodeResponse)
+        {
+            _onResetLastErrorCodeResponse = onResetLastErrorCodeResponse
+                ?? throw new ArgumentNullException(nameof(onResetLastErrorCodeResponse));
         }
     }
 }

@@ -79,6 +79,7 @@ namespace org.whitefossa.yiffhl.Droid
             App.Container.Register<IGetAntennaMatchingDataCommand, GetAntennaMatchingDataCommand>().AsSingleton();
             App.Container.Register<ICheckForProfileSettingsChangesCommand, CheckForProfileSettingsChangesCommand>().AsSingleton();
             App.Container.Register<IGetLastErrorCodeCommand, GetLastErrorCodeCommand>().AsSingleton();
+            App.Container.Register<IResetLastErrorCodeCommand, ResetLastErrorCodeCommand>().AsSingleton();
 
             #endregion
 

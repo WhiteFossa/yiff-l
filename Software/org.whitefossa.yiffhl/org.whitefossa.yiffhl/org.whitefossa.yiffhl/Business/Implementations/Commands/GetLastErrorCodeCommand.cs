@@ -4,6 +4,7 @@ using org.whitefossa.yiffhl.Abstractions.Interfaces.Commands;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using OnGetLastErrorCodeDelegate = org.whitefossa.yiffhl.Abstractions.Interfaces.Commands.OnGetLastErrorCodeDelegate;
 
 namespace org.whitefossa.yiffhl.Business.Implementations.Commands
 {
