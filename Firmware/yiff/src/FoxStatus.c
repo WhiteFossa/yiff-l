@@ -52,6 +52,7 @@ void FoxState_Init(void)
 	PendingCommandsFlags.NeedToArmFoxByHandpaws = false;
 
 	PendingCommandsFlags.NeedToResetLastFailureCode = false;
+	PendingCommandsFlags.NeedToUpdateSerialNumber = false;
 
 	FoxState.CurrentDisplay = StatusDisplay;
 }

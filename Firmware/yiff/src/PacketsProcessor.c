@@ -253,6 +253,11 @@ void OnNewCommandToFox(uint8_t payloadSize, uint8_t* payload)
 			/* Reset last failure code */
 			OnResetLastFailureCode(payloadSize, payload);
 			break;
+
+		case UpdateSerialNumber:
+			/* Update serial number */
+			OnUpdateSerialNumber(payloadSize, payload);
+			break;
 	}
 }
 
@@ -1208,6 +1213,20 @@ void OnResetLastFailureCode(uint8_t payloadSize, uint8_t* payload)
 	}
 
 	PendingCommandsFlags.NeedToResetLastFailureCode = true;
+}
+
+void OnUpdateSerialNumber(uint8_t payloadSize, uint8_t* payload)
+{
+	if (payloadSize != 5)
+	{
+		return;
+	}
+
+	uint32_t newSerialNumber;
+	memcpy(&newSerialNumber, &payload[1], 4);
+
+	EEPROM_Header.SerialNumber = newSerialNumber;
+	PendingCommandsFlags.NeedToUpdateSerialNumber = true;
 }
 
 void EmitEnteringSleepmodeEvent(void)

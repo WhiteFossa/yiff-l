@@ -203,6 +203,7 @@ void Main_ProcessHighPriorityEvents(void)
 	Main_ProcessSetPower();
 	Main_ProcessFoxArming();
 	Main_ProcessResetLastFailureCode();
+	Main_ProcessSerialNumberUpdate();
 }
 
 void Main_ProcessFoxNameChange(void)
@@ -488,6 +489,18 @@ void Main_ProcessResetLastFailureCode(void)
 		SendResponse(ResetLastFailureCode, 0, NULL);
 
 		PendingCommandsFlags.NeedToResetLastFailureCode = false;
+	}
+}
+
+void Main_ProcessSerialNumberUpdate(void)
+{
+	if (PendingCommandsFlags.NeedToUpdateSerialNumber)
+	{
+		EEPROM_UpdateHeader();
+
+		SendResponse(UpdateSerialNumber, 0, NULL);
+
+		PendingCommandsFlags.NeedToUpdateSerialNumber = false;
 	}
 }
 

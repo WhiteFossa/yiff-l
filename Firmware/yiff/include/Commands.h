@@ -119,6 +119,11 @@ typedef struct
 	 * If true, then we need to reset last faiulre code to OK
 	 */
 	bool NeedToResetLastFailureCode;
+
+	/**
+	 * If true, then we need to save new serial number into EERPOM
+	 */
+	bool NeedToUpdateSerialNumber;
 }
 PendingCommandsFlagsStruct;
 

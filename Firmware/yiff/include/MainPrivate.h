@@ -181,6 +181,11 @@ void Main_ProcessFoxArmingCommon(void);
 void Main_ProcessResetLastFailureCode(void);
 
 /**
+ * Updates fox serial number if needed
+ */
+void Main_ProcessSerialNumberUpdate(void);
+
+/**
  * As it name states, processes high priority events.
  */
 void Main_ProcessHighPriorityEvents(void);

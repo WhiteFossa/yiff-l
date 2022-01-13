@@ -146,7 +146,9 @@ typedef enum
 
 	CheckForProfileSettingsChanges = 0x26,
 
-	ResetLastFailureCode = 0x27
+	ResetLastFailureCode = 0x27,
+
+	UpdateSerialNumber = 0x28
 }
 CommandToFoxEnum;
 
@@ -389,6 +391,11 @@ void OnCheckForProfileSettingsChanges(uint8_t payloadSize, uint8_t* payload);
  * Called when "Reset last failure code" command comes
  */
 void OnResetLastFailureCode(uint8_t payloadSize, uint8_t* payload);
+
+/**
+ * Called when "Update serial number" command comes
+ */
+void OnUpdateSerialNumber(uint8_t payloadSize, uint8_t* payload);
 
 /**
  * Emits "Entering sleepmode" event
