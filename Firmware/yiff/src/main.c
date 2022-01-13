@@ -485,8 +485,7 @@ void Main_ProcessResetLastFailureCode(void)
 		EEPROM_Header.LastFailure = YhlFailureCause_OK;
 		EEPROM_UpdateHeader();
 
-		uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
-		SendResponse(ResetLastFailureCode, 1, &response);
+		SendResponse(ResetLastFailureCode, 0, NULL);
 
 		PendingCommandsFlags.NeedToResetLastFailureCode = false;
 	}
