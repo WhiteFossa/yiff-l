@@ -10,15 +10,19 @@ namespace org.whitefossa.yiffhl.Business.Implementations
     {
         private readonly IGetLastErrorCodeCommand _getLastErrorCodeCommand;
         private readonly IResetLastErrorCodeCommand _resetLastErrorCodeCommand;
+        private readonly IUpdateSerialNumberCommand _updateSerialNumberCommand;
 
         private Abstractions.Interfaces.OnGetLastErrorCodeDelegate _onGetLastErrorCode;
         private Abstractions.Interfaces.OnResetLastErrorCodeDelegate _onResetLastErrorCode;
+        private OnSerialNumberUpdateDelegate _onSerialNumberUpdate;
 
         public ServiceCommandsManager(IGetLastErrorCodeCommand getLastErrorCodeCommand,
-            IResetLastErrorCodeCommand resetLastErrorCodeCommand)
+            IResetLastErrorCodeCommand resetLastErrorCodeCommand,
+            IUpdateSerialNumberCommand updateSerialNumberCommand)
         {
             _getLastErrorCodeCommand = getLastErrorCodeCommand;
             _resetLastErrorCodeCommand = resetLastErrorCodeCommand;
+            _updateSerialNumberCommand = updateSerialNumberCommand;
         }
 
         #region Get last error code
@@ -51,6 +55,23 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private void OnResetLastErrorCodeResponse()
         {
             _onResetLastErrorCode();
+        }
+
+        #endregion
+
+        #region Update serial number
+
+        public async Task UpdateSerialNumber(uint newSerialNumber, OnSerialNumberUpdateDelegate onSerialNumberUpdate)
+        {
+            _onSerialNumberUpdate = onSerialNumberUpdate ?? throw new ArgumentNullException( nameof(onSerialNumberUpdate));
+
+            _updateSerialNumberCommand.SetResponseDelegate(OnSerialNumberUpdated);
+            _updateSerialNumberCommand.SendUpdateSerialNumberCommand(newSerialNumber);
+        }
+
+        private void OnSerialNumberUpdated()
+        {
+            _onSerialNumberUpdate();
         }
 
         #endregion

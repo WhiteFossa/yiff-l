@@ -83,6 +83,8 @@
 
         CheckForProfileSettingsChanges = 0x26,
 
-        ResetLastFailureCode = 0x27
+        ResetLastFailureCode = 0x27,
+
+        UpdateSerialNumber = 0x28
     }
 }

@@ -73,6 +73,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
         private OnResponseDelegate _onGetAntennaMatchingDataResponse;
         private OnResponseDelegate _onCheckForProfileSettingsChangesResponse;
         private OnResponseDelegate _onResetLastErrorCodeResponse;
+        private OnResponseDelegate _onSerialNumberUpdatedResponse;
 
         #endregion
 
@@ -547,6 +548,13 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
                         _onResetLastErrorCodeResponse(responsePayload);
                         break;
 
+                    // Update serial number
+                    case CommandType.UpdateSerialNumber:
+                        CheckOnResponseDelegate(_onSerialNumberUpdatedResponse);
+
+                        _onSerialNumberUpdatedResponse(responsePayload);
+                        break;
+
                     default:
                         return; // We've got some junk
                 }
@@ -879,6 +887,12 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
         {
             _onResetLastErrorCodeResponse = onResetLastErrorCodeResponse
                 ?? throw new ArgumentNullException(nameof(onResetLastErrorCodeResponse));
+        }
+
+        public void SetOnSerialNumberUpdatedResponse(OnResponseDelegate onSerialNumberUpdatedResponse)
+        {
+            _onSerialNumberUpdatedResponse = onSerialNumberUpdatedResponse
+                ?? throw new ArgumentException(nameof(onSerialNumberUpdatedResponse));
         }
     }
 }

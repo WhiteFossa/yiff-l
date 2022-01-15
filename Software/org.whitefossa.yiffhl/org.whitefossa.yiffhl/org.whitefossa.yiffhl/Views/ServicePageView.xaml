@@ -52,6 +52,46 @@
                     </StackLayout>
                 </Frame>
                 <!-- End of last error code -->
+                
+                <!-- Serial number -->
+                <Frame
+                    Style="{StaticResource FramesStyle}">
+
+                    <StackLayout>
+                        <Label
+                            Text="Serial number"
+                            HorizontalOptions="Center" />
+
+                        <StackLayout
+                            Orientation="Horizontal">
+
+                            <Label
+                                Text="Serial number:"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                            <Editor
+                                Keyboard="Numeric"
+                                HorizontalOptions="FillAndExpand"
+                                Text="{Binding SerialNumberAsString}" />
+
+                            <Button
+                                Text="Reload"
+                                VerticalOptions="Center"
+                                HorizontalOptions="End"
+                                Command="{Binding ReloadSerialNumberCommand}" />
+
+                            <Button
+                                Text="Set"
+                                VerticalOptions="Center"
+                                HorizontalOptions="End"
+                                Command="{Binding SetSerialNumberCommand}" />
+
+                        </StackLayout>
+
+                    </StackLayout>
+                </Frame>
+                <!-- End of serial number -->
 
             </StackLayout>
         </ScrollView>

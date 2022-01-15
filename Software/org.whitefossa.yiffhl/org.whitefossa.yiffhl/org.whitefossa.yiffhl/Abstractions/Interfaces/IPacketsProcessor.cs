@@ -85,6 +85,7 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
         void SetOnGetAntennaMatchingDataResponse(OnResponseDelegate onGetAntennaMatchingDataResponse);
         void SetOnCheckForProfileSettingsChangesResponse(OnResponseDelegate onCheckForProfileSettingsChangesResponse);
         void SetOnResetLastErrorCodeResponse(OnResponseDelegate onResetLastErrorCodeResponse);
+        void SetOnSerialNumberUpdatedResponse(OnResponseDelegate onSerialNumberUpdatedResponse);
 
         #endregion
 

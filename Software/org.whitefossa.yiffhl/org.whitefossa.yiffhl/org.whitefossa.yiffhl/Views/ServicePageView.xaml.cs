@@ -1,6 +1,7 @@
 ﻿using org.whitefossa.yiffhl.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,6 +32,11 @@ namespace org.whitefossa.yiffhl.Views
             ViewModel.OnLeavingServiceDisplayAsync();
 
             return true;
+        }
+
+        public async Task OnShowAsync()
+        {
+            await ViewModel.OnShowAsync();
         }
     }
 }

@@ -1942,10 +1942,11 @@ Do you want to continue?");
             });
         }
 
-        private void NavigateToServicePage()
+        private async Task NavigateToServicePageAsync()
         {
             MainModel.ActiveDisplay = ActiveDisplay.ServiceDisplay;
 
+            await _servicePageView.OnShowAsync();
             Device.BeginInvokeOnMainThread(async () =>
             {
                 await Navigation.PushModalAsync(_servicePageView);
@@ -1983,7 +1984,7 @@ but wrong actions there can cause permanent fox malfunction. Do you want to open
                 return;
             }
 
-            NavigateToServicePage();
+            await NavigateToServicePageAsync();
         }
 
         #endregion

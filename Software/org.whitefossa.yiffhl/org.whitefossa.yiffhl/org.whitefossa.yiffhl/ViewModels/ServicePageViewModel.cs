@@ -14,6 +14,8 @@ namespace org.whitefossa.yiffhl.ViewModels
     public class ServicePageViewModel : BindableObject
     {
         private readonly IServiceCommandsManager _serviceCommandsManager;
+        private readonly IFoxIdentificationManager _foxIdentificationManager;
+        private readonly IUserNotifier _userNotifier;
 
         public MainModel MainModel;
 
@@ -38,6 +40,21 @@ namespace org.whitefossa.yiffhl.ViewModels
         }
 
         /// <summary>
+        /// Serial number (as a string)
+        /// </summary>
+        private string _serialNunberAsString;
+
+        public string SerialNumberAsString
+        {
+            get => _serialNunberAsString;
+            set
+            {
+                _serialNunberAsString = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
         /// Get last error code command
         /// </summary>
         public ICommand GetLastErrorCodeCommand { get; }
@@ -47,13 +64,32 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         public ICommand ResetLastErrorCodeCommand { get; }
 
+        /// <summary>
+        /// Reload serial number
+        /// </summary>
+        public ICommand ReloadSerialNumberCommand { get; }
+
+        /// <summary>
+        /// Set serial number
+        /// </summary>
+        public ICommand SetSerialNumberCommand { get; }
+
         public ServicePageViewModel()
         {
             MainModel = App.Container.Resolve<IMainModel>() as MainModel;
             _serviceCommandsManager = App.Container.Resolve<IServiceCommandsManager>();
+            _foxIdentificationManager = App.Container.Resolve<IFoxIdentificationManager>();
+            _userNotifier = App.Container.Resolve<IUserNotifier>();
 
             GetLastErrorCodeCommand = new Command(async () => await OnGetLastErrorAsync());
             ResetLastErrorCodeCommand = new Command(async () => await OnResetLastErrorCodeAsync());
+            ReloadSerialNumberCommand = new Command(async () => await OnReloadSerialNumberAsync());
+            SetSerialNumberCommand = new Command(async () => await OnSetSerialNumberAsync());
+        }
+
+        public async Task OnShowAsync()
+        {
+            SerialNumberAsString = MainModel.IdentificationData.SerialNumber.ToString();
         }
 
         public async Task OnLeavingServiceDisplayAsync()
@@ -88,6 +124,53 @@ namespace org.whitefossa.yiffhl.ViewModels
         {
             // Reloading last error code
             await OnGetLastErrorAsync();
+        }
+
+        #endregion
+
+        #region Reload serial number
+
+        private async Task OnReloadSerialNumberAsync()
+        {
+            await _foxIdentificationManager.IdentifyFoxAsync(async (isFox, pVer, hwRev, fwVer, sn)
+                => await OnGetIdentificationDataResponseAsync(isFox, pVer, hwRev, fwVer, sn));
+        }
+
+        private async Task OnGetIdentificationDataResponseAsync
+        (
+            bool isFox,
+            uint protocolVersion,
+            uint hardwareRevision,
+            uint firmwareVersion,
+            uint serialNumber
+        )
+        {
+            // Assuming that we are connected to fox and protocol version is OK
+            MainModel.IdentificationData.SerialNumber = serialNumber;
+
+            SerialNumberAsString = MainModel.IdentificationData.SerialNumber.ToString();
+        }
+
+        #endregion
+
+        #region Set serial number
+
+        private async Task OnSetSerialNumberAsync()
+        {
+            uint newSerialNumber;
+            if (!uint.TryParse(SerialNumberAsString, out newSerialNumber))
+            {
+                // Invalid value
+                await _userNotifier.ShowErrorMessageAsync("Wrong value", "Not a valid serial number!");
+                return;
+            }
+
+            await _serviceCommandsManager.UpdateSerialNumber(newSerialNumber, async () => await OnSerialNumberUpdatedAsync());
+        }
+
+        private async Task OnSerialNumberUpdatedAsync()
+        {
+            await OnReloadSerialNumberAsync();
         }
 
         #endregion
