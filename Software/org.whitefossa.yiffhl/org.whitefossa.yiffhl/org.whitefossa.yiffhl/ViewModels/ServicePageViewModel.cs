@@ -2,7 +2,10 @@
 using org.whitefossa.yiffhl.Abstractions.Interfaces;
 using org.whitefossa.yiffhl.Abstractions.Interfaces.Models;
 using org.whitefossa.yiffhl.Models;
+using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -10,12 +13,22 @@ namespace org.whitefossa.yiffhl.ViewModels
 {
     public class ServicePageViewModel : BindableObject
     {
+        /// <summary>
+        /// Interval in milliseconds to poll service data
+        /// </summary>
+        private const int PollServiceDataInterval = 2000;
+
         private readonly IServiceCommandsManager _serviceCommandsManager;
         private readonly IFoxIdentificationManager _foxIdentificationManager;
         private readonly IUserNotifier _userNotifier;
         private MainModel _mainModel;
 
         public INavigation Navigation;
+
+        /// <summary>
+        /// Timer to poll service data
+        /// </summary>
+        private Timer PollServiceDataTimer;
 
         /// <summary>
         /// Last error code
@@ -70,6 +83,14 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         public ICommand SetSerialNumberCommand { get; }
 
+        /// <summary>
+        /// Battery averaged ADC level
+        /// </summary>
+        public string BatteryADCLevelAsString
+        {
+            get => String.Format("{0:0.00}", _mainModel.ServiceSettingsModel.BatteryAveragedADCLevel);
+        }
+
         public ServicePageViewModel()
         {
 
@@ -82,6 +103,12 @@ namespace org.whitefossa.yiffhl.ViewModels
             ResetLastErrorCodeCommand = new Command(async () => await OnResetLastErrorCodeAsync());
             ReloadSerialNumberCommand = new Command(async () => await OnReloadSerialNumberAsync());
             SetSerialNumberCommand = new Command(async () => await OnSetSerialNumberAsync());
+
+            // Setting up poll service data timer
+            PollServiceDataTimer = new Timer(PollServiceDataInterval);
+            PollServiceDataTimer.Elapsed += async (s, e) => await OnReloadServiceDataRequest(s, e);
+            PollServiceDataTimer.AutoReset = true;
+            PollServiceDataTimer.Start();
         }
 
         public async Task OnShowAsync()
@@ -168,6 +195,28 @@ namespace org.whitefossa.yiffhl.ViewModels
         private async Task OnSerialNumberUpdatedAsync()
         {
             await OnReloadSerialNumberAsync();
+        }
+
+        #endregion
+
+        #region Reload service data
+
+        private async Task OnReloadServiceDataRequest(Object source, ElapsedEventArgs e)
+        {
+            if (_mainModel.ActiveDisplay != ActiveDisplay.ServiceDisplay)
+            {
+                return;
+            }
+
+            // Battery ADC level
+            await _serviceCommandsManager.GetBatteryADCLevel(async (l) => await OnGetBatteryADCLevelResponse(l));
+
+        }
+
+        private async Task OnGetBatteryADCLevelResponse(float averagedADCLevel)
+        {
+            _mainModel.ServiceSettingsModel.BatteryAveragedADCLevel = averagedADCLevel;
+            OnPropertyChanged(nameof(BatteryADCLevelAsString));
         }
 
         #endregion

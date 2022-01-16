@@ -11,6 +11,11 @@ namespace org.whitefossa.yiffhl.Models
         /// </summary>
         public uint? LastErrorCode { get; set; }
 
+        /// <summary>
+        /// Battery averaged ADC level
+        /// </summary>
+        public float BatteryAveragedADCLevel { get; set; }
+
         public ServiceSettingsModel()
         {
             LastErrorCode = null;

@@ -11,18 +11,22 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private readonly IGetLastErrorCodeCommand _getLastErrorCodeCommand;
         private readonly IResetLastErrorCodeCommand _resetLastErrorCodeCommand;
         private readonly IUpdateSerialNumberCommand _updateSerialNumberCommand;
+        private readonly IGetUbattADCCommand _getUbattADCCommand;
 
         private Abstractions.Interfaces.OnGetLastErrorCodeDelegate _onGetLastErrorCode;
         private Abstractions.Interfaces.OnResetLastErrorCodeDelegate _onResetLastErrorCode;
         private OnSerialNumberUpdateDelegate _onSerialNumberUpdate;
+        private OnGetBatteryADCLevelDelegate _onGetBatteryADCLevel;
 
         public ServiceCommandsManager(IGetLastErrorCodeCommand getLastErrorCodeCommand,
             IResetLastErrorCodeCommand resetLastErrorCodeCommand,
-            IUpdateSerialNumberCommand updateSerialNumberCommand)
+            IUpdateSerialNumberCommand updateSerialNumberCommand,
+            IGetUbattADCCommand getUbattADCCommand)
         {
             _getLastErrorCodeCommand = getLastErrorCodeCommand;
             _resetLastErrorCodeCommand = resetLastErrorCodeCommand;
             _updateSerialNumberCommand = updateSerialNumberCommand;
+            _getUbattADCCommand = getUbattADCCommand;
         }
 
         #region Get last error code
@@ -63,7 +67,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
 
         public async Task UpdateSerialNumber(uint newSerialNumber, OnSerialNumberUpdateDelegate onSerialNumberUpdate)
         {
-            _onSerialNumberUpdate = onSerialNumberUpdate ?? throw new ArgumentNullException( nameof(onSerialNumberUpdate));
+            _onSerialNumberUpdate = onSerialNumberUpdate ?? throw new ArgumentNullException(nameof(onSerialNumberUpdate));
 
             _updateSerialNumberCommand.SetResponseDelegate(OnSerialNumberUpdated);
             _updateSerialNumberCommand.SendUpdateSerialNumberCommand(newSerialNumber);
@@ -72,6 +76,23 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private void OnSerialNumberUpdated()
         {
             _onSerialNumberUpdate();
+        }
+
+        #endregion
+
+        #region Get battery level (ADC)
+
+        public async Task GetBatteryADCLevel(OnGetBatteryADCLevelDelegate onGetBatteryADCLevel)
+        {
+            _onGetBatteryADCLevel = onGetBatteryADCLevel ?? throw new ArgumentNullException(nameof(onGetBatteryADCLevel));
+
+            _getUbattADCCommand.SetResponseDelegate(OnGetBatteryADCLevelResponse);
+            _getUbattADCCommand.SendGetUbattADCCommand();
+        }
+
+        private void OnGetBatteryADCLevelResponse(float averagedADCLevel)
+        {
+            _onGetBatteryADCLevel(averagedADCLevel);
         }
 
         #endregion

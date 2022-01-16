@@ -8,6 +8,8 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
 
     public delegate void OnSerialNumberUpdateDelegate();
 
+    public delegate void OnGetBatteryADCLevelDelegate(float averagedADCLevel);
+
     public interface IServiceCommandsManager
     {
         Task GetLastErrorCode(OnGetLastErrorCodeDelegate onGetLastErrorCode);
@@ -15,5 +17,7 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
         Task ResetLastErrorCode(OnResetLastErrorCodeDelegate onResetLastErrorCode);
 
         Task UpdateSerialNumber(uint newSerialNumber, OnSerialNumberUpdateDelegate onSerialNumberUpdate);
+
+        Task GetBatteryADCLevel(OnGetBatteryADCLevelDelegate onGetBatteryADCLevel);
     }
 }

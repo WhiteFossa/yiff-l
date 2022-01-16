@@ -92,6 +92,46 @@
                     </StackLayout>
                 </Frame>
                 <!-- End of serial number -->
+                
+                <!-- Battery ADC -> Volts -->
+                <Frame
+                    Style="{StaticResource FramesStyle}">
+
+                    <StackLayout>
+                        <Label
+                            Text="Battery (ADC -> Volts)"
+                            HorizontalOptions="Center" />
+
+                        <StackLayout
+                            Orientation="Horizontal">
+
+                            <Label
+                                Text="ADC:"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                            <Label
+                                FontAttributes="Bold"
+                                Text="{Binding BatteryADCLevelAsString}"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                            <Label
+                                Text="Volts:"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                            <Label
+                                FontAttributes="Bold"
+                                Text="0.00V"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                        </StackLayout>
+
+                    </StackLayout>
+                </Frame>
+                <!-- End of battery ADC -> Volts -->
 
             </StackLayout>
         </ScrollView>
