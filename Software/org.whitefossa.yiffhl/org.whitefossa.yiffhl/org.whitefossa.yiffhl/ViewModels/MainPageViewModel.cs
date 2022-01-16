@@ -18,7 +18,7 @@ using Xamarin.Forms;
 
 namespace org.whitefossa.yiffhl.ViewModels
 {
-    internal class MainPageViewModel : BindableObject
+    public class MainPageViewModel : BindableObject
     {
         /// <summary>
         /// We support this version of fox protocol
@@ -836,6 +836,7 @@ namespace org.whitefossa.yiffhl.ViewModels
         public MainPageViewModel()
         {
             MainModel = App.Container.Resolve<IMainModel>() as MainModel;
+            MainModel.MainPageViewModel = this;
 
             _foxConnector = App.Container.Resolve<IFoxConnector>();
             _pairedFoxesEnumerator = App.Container.Resolve<IPairedFoxesEnumerator>();

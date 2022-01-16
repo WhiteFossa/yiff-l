@@ -2,9 +2,6 @@
 using org.whitefossa.yiffhl.Abstractions.Interfaces;
 using org.whitefossa.yiffhl.Abstractions.Interfaces.Models;
 using org.whitefossa.yiffhl.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -16,8 +13,7 @@ namespace org.whitefossa.yiffhl.ViewModels
         private readonly IServiceCommandsManager _serviceCommandsManager;
         private readonly IFoxIdentificationManager _foxIdentificationManager;
         private readonly IUserNotifier _userNotifier;
-
-        public MainModel MainModel;
+        private MainModel _mainModel;
 
         public INavigation Navigation;
 
@@ -28,9 +24,9 @@ namespace org.whitefossa.yiffhl.ViewModels
         {
             get
             {
-                if (MainModel.ServiceSettingsModel.LastErrorCode.HasValue)
+                if (_mainModel.ServiceSettingsModel.LastErrorCode.HasValue)
                 {
-                    return MainModel.ServiceSettingsModel.LastErrorCode.ToString();
+                    return _mainModel.ServiceSettingsModel.LastErrorCode.ToString();
                 }
                 else
                 {
@@ -76,7 +72,8 @@ namespace org.whitefossa.yiffhl.ViewModels
 
         public ServicePageViewModel()
         {
-            MainModel = App.Container.Resolve<IMainModel>() as MainModel;
+
+            _mainModel = App.Container.Resolve<IMainModel>() as MainModel;
             _serviceCommandsManager = App.Container.Resolve<IServiceCommandsManager>();
             _foxIdentificationManager = App.Container.Resolve<IFoxIdentificationManager>();
             _userNotifier = App.Container.Resolve<IUserNotifier>();
@@ -89,12 +86,12 @@ namespace org.whitefossa.yiffhl.ViewModels
 
         public async Task OnShowAsync()
         {
-            SerialNumberAsString = MainModel.IdentificationData.SerialNumber.ToString();
+            SerialNumberAsString = _mainModel.IdentificationData.SerialNumber.ToString();
         }
 
         public async Task OnLeavingServiceDisplayAsync()
         {
-            MainModel.ActiveDisplay = ActiveDisplay.MainDisplay;
+            _mainModel.ActiveDisplay = ActiveDisplay.MainDisplay;
             await Navigation.PopModalAsync();
         }
 
@@ -107,7 +104,7 @@ namespace org.whitefossa.yiffhl.ViewModels
 
         private async Task OnGetLastErrorCodeResponseAsync(uint errorCode)
         {
-            MainModel.ServiceSettingsModel.LastErrorCode = errorCode;
+            _mainModel.ServiceSettingsModel.LastErrorCode = errorCode;
             OnPropertyChanged(nameof(LastErrorCodeFormatted));
         }
 
@@ -146,9 +143,9 @@ namespace org.whitefossa.yiffhl.ViewModels
         )
         {
             // Assuming that we are connected to fox and protocol version is OK
-            MainModel.IdentificationData.SerialNumber = serialNumber;
+            _mainModel.MainPageViewModel.FoxSerialNumber = serialNumber;
 
-            SerialNumberAsString = MainModel.IdentificationData.SerialNumber.ToString();
+            SerialNumberAsString = _mainModel.IdentificationData.SerialNumber.ToString();
         }
 
         #endregion
