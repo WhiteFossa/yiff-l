@@ -85,6 +85,8 @@
 
         ResetLastFailureCode = 0x27,
 
-        UpdateSerialNumber = 0x28
+        UpdateSerialNumber = 0x28,
+
+        GetUbattADCToUbattVoltsFactors = 0x29
     }
 }

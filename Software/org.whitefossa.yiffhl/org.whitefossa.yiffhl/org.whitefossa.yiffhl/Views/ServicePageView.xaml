@@ -32,7 +32,7 @@
                             <Label
                                 Text="{Binding LastErrorCodeFormatted}"
                                 FontAttributes="Bold"
-                                HorizontalOptions="Start"
+                                HorizontalOptions="StartAndExpand"
                                 VerticalOptions="Center" />
 
                             <Button
@@ -73,6 +73,7 @@
                             <Editor
                                 Keyboard="Numeric"
                                 HorizontalOptions="FillAndExpand"
+                                VerticalOptions="Center"
                                 Text="{Binding SerialNumberAsString}" />
 
                             <Button
@@ -127,6 +128,59 @@
                                 HorizontalOptions="Start"
                                 VerticalOptions="Center" />
 
+                        </StackLayout>
+
+                        <StackLayout
+                            Orientation="Horizontal">
+
+                            <Label
+                                Text="Volts = "
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                            <Editor
+                                Keyboard="Numeric"
+                                HorizontalOptions="FillAndExpand"
+                                VerticalOptions="Center"
+                                Text="{Binding UBattAFactorAsString}" />
+
+                            <Label
+                                Text=" * ADC + "
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                            <Editor
+                                Keyboard="Numeric"
+                                HorizontalOptions="FillAndExpand"
+                                VerticalOptions="Center"
+                                Text="{Binding UBattBFactorAsString}" />
+
+                            
+
+                        </StackLayout>
+
+                        <StackLayout
+                            Orientation="Horizontal"
+                            HorizontalOptions="CenterAndExpand">
+
+                            <Button
+                                Text="Get"
+                                VerticalOptions="Center"
+                                HorizontalOptions="End"
+                                Command="{Binding GetUBattFactorsCommand}"
+                                />
+
+                            <Button
+                                Text="Set"
+                                VerticalOptions="Center"
+                                HorizontalOptions="End"
+                                />
+
+                            <Button
+                                Text="Reset"
+                                VerticalOptions="Center"
+                                HorizontalOptions="End"
+                                />
                         </StackLayout>
 
                     </StackLayout>

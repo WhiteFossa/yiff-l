@@ -21,6 +21,16 @@ namespace org.whitefossa.yiffhl.Models
         /// </summary>
         public float BatteryAveragedVoltageLevel { get; set; }
 
+        /// <summary>
+        /// UBatt(Volts) = UBatt(ADC) * A + B
+        /// </summary>
+        public float UBattFactorA { get; set; }
+
+        /// <summary>
+        /// UBatt(Volts) = UBatt(ADC) * A + B
+        /// </summary>
+        public float UBattFactorB { get; set; }
+
         public ServiceSettingsModel()
         {
             LastErrorCode = null;

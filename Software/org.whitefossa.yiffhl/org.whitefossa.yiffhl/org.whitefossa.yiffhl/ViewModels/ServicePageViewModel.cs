@@ -99,6 +99,41 @@ namespace org.whitefossa.yiffhl.ViewModels
             get => String.Format("{0:0.0000}V", _mainModel.ServiceSettingsModel.BatteryAveragedVoltageLevel);
         }
 
+        /// <summary>
+        /// A factor for Ubatt(ADC) -> Ubatt(volts)
+        /// </summary>
+        private string _uBattAFactorAsString;
+
+        public string UBattAFactorAsString
+        {
+            get => _uBattAFactorAsString;
+            set
+            {
+                _uBattAFactorAsString = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// B factor for Ubatt(ADC) -> Ubatt(volts)
+        /// </summary>
+        private string _uBattBFactorAsString;
+
+        public string UBattBFactorAsString
+        {
+            get => _uBattBFactorAsString;
+            set
+            {
+                _uBattBFactorAsString = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Get UBatt factors
+        /// </summary>
+        public ICommand GetUBattFactorsCommand { get; }
+
         public ServicePageViewModel()
         {
 
@@ -111,10 +146,11 @@ namespace org.whitefossa.yiffhl.ViewModels
             ResetLastErrorCodeCommand = new Command(async () => await OnResetLastErrorCodeAsync());
             ReloadSerialNumberCommand = new Command(async () => await OnReloadSerialNumberAsync());
             SetSerialNumberCommand = new Command(async () => await OnSetSerialNumberAsync());
+            GetUBattFactorsCommand = new Command(async() => await OnGetUBattFactorsAsync());
 
             // Setting up poll service data timer
             PollServiceDataTimer = new Timer(PollServiceDataInterval);
-            PollServiceDataTimer.Elapsed += async (s, e) => await OnReloadServiceDataRequest(s, e);
+            PollServiceDataTimer.Elapsed += async (s, e) => await OnReloadServiceDataRequestAsync(s, e);
             PollServiceDataTimer.AutoReset = true;
             PollServiceDataTimer.Start();
         }
@@ -134,7 +170,7 @@ namespace org.whitefossa.yiffhl.ViewModels
 
         private async Task OnGetLastErrorAsync()
         {
-            await _serviceCommandsManager.GetLastErrorCode(async (ec) => await OnGetLastErrorCodeResponseAsync(ec));
+            await _serviceCommandsManager.GetLastErrorCodeAsync(async (ec) => await OnGetLastErrorCodeResponseAsync(ec));
         }
 
         private async Task OnGetLastErrorCodeResponseAsync(uint errorCode)
@@ -149,10 +185,10 @@ namespace org.whitefossa.yiffhl.ViewModels
 
         private async Task OnResetLastErrorCodeAsync()
         {
-            await _serviceCommandsManager.ResetLastErrorCode(async () => await OnResetLastErrorCodeResponse());
+            await _serviceCommandsManager.ResetLastErrorCodeAsync(async () => await OnResetLastErrorCodeResponseAsync());
         }
 
-        private async Task OnResetLastErrorCodeResponse()
+        private async Task OnResetLastErrorCodeResponseAsync()
         {
             // Reloading last error code
             await OnGetLastErrorAsync();
@@ -197,7 +233,7 @@ namespace org.whitefossa.yiffhl.ViewModels
                 return;
             }
 
-            await _serviceCommandsManager.UpdateSerialNumber(newSerialNumber, async () => await OnSerialNumberUpdatedAsync());
+            await _serviceCommandsManager.UpdateSerialNumberAsync(newSerialNumber, async () => await OnSerialNumberUpdatedAsync());
         }
 
         private async Task OnSerialNumberUpdatedAsync()
@@ -209,7 +245,7 @@ namespace org.whitefossa.yiffhl.ViewModels
 
         #region Reload service data
 
-        private async Task OnReloadServiceDataRequest(Object source, ElapsedEventArgs e)
+        private async Task OnReloadServiceDataRequestAsync(Object source, ElapsedEventArgs e)
         {
             if (_mainModel.ActiveDisplay != ActiveDisplay.ServiceDisplay)
             {
@@ -217,23 +253,41 @@ namespace org.whitefossa.yiffhl.ViewModels
             }
 
             // Battery ADC level
-            await _serviceCommandsManager.GetBatteryADCLevel(async (l) => await OnGetBatteryADCLevelResponse(l));
+            await _serviceCommandsManager.GetBatteryADCLevelAsync(async (l) => await OnGetBatteryADCLevelResponseAsync(l));
 
             // Battery voltage level
-            await _serviceCommandsManager.GetBatteryVoltageLevel(async (l) => await OnGetBatteryVoltageLevelResponse(l));
+            await _serviceCommandsManager.GetBatteryVoltageLevelAsync(async (l) => await OnGetBatteryVoltageLevelResponseAsync(l));
 
         }
 
-        private async Task OnGetBatteryADCLevelResponse(float averagedADCLevel)
+        private async Task OnGetBatteryADCLevelResponseAsync(float averagedADCLevel)
         {
             _mainModel.ServiceSettingsModel.BatteryAveragedADCLevel = averagedADCLevel;
             OnPropertyChanged(nameof(BatteryADCLevelAsString));
         }
 
-        private async Task OnGetBatteryVoltageLevelResponse(float averagedVoltageLevel)
+        private async Task OnGetBatteryVoltageLevelResponseAsync(float averagedVoltageLevel)
         {
             _mainModel.ServiceSettingsModel.BatteryAveragedVoltageLevel = averagedVoltageLevel;
             OnPropertyChanged(nameof(BatteryVoltageLevelAsString));
+        }
+
+        #endregion
+
+        #region Get UBatt factors
+
+        private async Task OnGetUBattFactorsAsync()
+        {
+            await _serviceCommandsManager.GetUBattFactorsAsync(async (a, b) => await OnGetUBattFactorsResponseAsync(a, b));
+        }
+
+        private async Task OnGetUBattFactorsResponseAsync(float a, float b)
+        {
+            _mainModel.ServiceSettingsModel.UBattFactorA = a;
+            _mainModel.ServiceSettingsModel.UBattFactorB = b;
+
+            UBattAFactorAsString = _mainModel.ServiceSettingsModel.UBattFactorA.ToString();
+            UBattBFactorAsString = _mainModel.ServiceSettingsModel.UBattFactorB.ToString();
         }
 
         #endregion

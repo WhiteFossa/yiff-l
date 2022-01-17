@@ -86,6 +86,7 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
         void SetOnCheckForProfileSettingsChangesResponse(OnResponseDelegate onCheckForProfileSettingsChangesResponse);
         void SetOnResetLastErrorCodeResponse(OnResponseDelegate onResetLastErrorCodeResponse);
         void SetOnSerialNumberUpdatedResponse(OnResponseDelegate onSerialNumberUpdatedResponse);
+        void SetOnGetUBattFactorsResponse(OnResponseDelegate onGetUBattFactorsResponse);
 
         #endregion
 

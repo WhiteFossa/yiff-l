@@ -13,29 +13,33 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private readonly IUpdateSerialNumberCommand _updateSerialNumberCommand;
         private readonly IGetUbattADCCommand _getUbattADCCommand;
         private readonly IGetUbattVoltsCommand _getUbattVoltsCommand;
+        private readonly IGetUbattFactorsCommand _getUbattFactorsCommand;
 
         private Abstractions.Interfaces.OnGetLastErrorCodeDelegate _onGetLastErrorCode;
         private Abstractions.Interfaces.OnResetLastErrorCodeDelegate _onResetLastErrorCode;
         private OnSerialNumberUpdateDelegate _onSerialNumberUpdate;
         private OnGetBatteryADCLevelDelegate _onGetBatteryADCLevel;
         private OnGetBatteryVoltageLevelDelegate _onGetBatteryVoltageLevel;
+        private OnGetUBattFactorsDelegate _onGetUBattFactors;
 
         public ServiceCommandsManager(IGetLastErrorCodeCommand getLastErrorCodeCommand,
             IResetLastErrorCodeCommand resetLastErrorCodeCommand,
             IUpdateSerialNumberCommand updateSerialNumberCommand,
             IGetUbattADCCommand getUbattADCCommand,
-            IGetUbattVoltsCommand getUbattVoltsCommand)
+            IGetUbattVoltsCommand getUbattVoltsCommand,
+            IGetUbattFactorsCommand getUbattFactorsCommand)
         {
             _getLastErrorCodeCommand = getLastErrorCodeCommand;
             _resetLastErrorCodeCommand = resetLastErrorCodeCommand;
             _updateSerialNumberCommand = updateSerialNumberCommand;
             _getUbattADCCommand = getUbattADCCommand;
             _getUbattVoltsCommand = getUbattVoltsCommand;
+            _getUbattFactorsCommand = getUbattFactorsCommand;
         }
 
         #region Get last error code
 
-        public async Task GetLastErrorCode(Abstractions.Interfaces.OnGetLastErrorCodeDelegate onGetLastErrorCode)
+        public async Task GetLastErrorCodeAsync(Abstractions.Interfaces.OnGetLastErrorCodeDelegate onGetLastErrorCode)
         {
             _onGetLastErrorCode = onGetLastErrorCode ?? throw new ArgumentNullException(nameof(onGetLastErrorCode));
 
@@ -52,7 +56,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
 
         #region Reset last error code
 
-        public async Task ResetLastErrorCode(OnResetLastErrorCodeDelegate onResetLastErrorCode)
+        public async Task ResetLastErrorCodeAsync(OnResetLastErrorCodeDelegate onResetLastErrorCode)
         {
             _onResetLastErrorCode = onResetLastErrorCode ?? throw new ArgumentNullException(nameof(onResetLastErrorCode));
 
@@ -69,7 +73,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
 
         #region Update serial number
 
-        public async Task UpdateSerialNumber(uint newSerialNumber, OnSerialNumberUpdateDelegate onSerialNumberUpdate)
+        public async Task UpdateSerialNumberAsync(uint newSerialNumber, OnSerialNumberUpdateDelegate onSerialNumberUpdate)
         {
             _onSerialNumberUpdate = onSerialNumberUpdate ?? throw new ArgumentNullException(nameof(onSerialNumberUpdate));
 
@@ -86,7 +90,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
 
         #region Get battery level (ADC)
 
-        public async Task GetBatteryADCLevel(OnGetBatteryADCLevelDelegate onGetBatteryADCLevel)
+        public async Task GetBatteryADCLevelAsync(OnGetBatteryADCLevelDelegate onGetBatteryADCLevel)
         {
             _onGetBatteryADCLevel = onGetBatteryADCLevel ?? throw new ArgumentNullException(nameof(onGetBatteryADCLevel));
 
@@ -103,7 +107,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
 
         #region Get battery level (voltage)
 
-        public async Task GetBatteryVoltageLevel(OnGetBatteryVoltageLevelDelegate onGetBatteryVoltageLevel)
+        public async Task GetBatteryVoltageLevelAsync(OnGetBatteryVoltageLevelDelegate onGetBatteryVoltageLevel)
         {
             _onGetBatteryVoltageLevel = onGetBatteryVoltageLevel ?? throw new ArgumentNullException(nameof(onGetBatteryVoltageLevel));
 
@@ -114,6 +118,23 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private void OnGetBatteryVoltageLevelResponse(float averagedVoltageLevel)
         {
             _onGetBatteryVoltageLevel(averagedVoltageLevel);
+        }
+
+        #endregion
+
+        #region Get UBatt(ADC) -> UBatt(Volts) factors
+
+        public async Task GetUBattFactorsAsync(OnGetUBattFactorsDelegate onGetUBattFactors)
+        {
+            _onGetUBattFactors = onGetUBattFactors ?? throw new ArgumentNullException(nameof(onGetUBattFactors));
+
+            _getUbattFactorsCommand.SetResponseDelegate(OnGetUBattFactorsResponse);
+            _getUbattFactorsCommand.SendGetUbattFactorsCommand();
+        }
+
+        private void OnGetUBattFactorsResponse(float a, float b)
+        {
+            _onGetUBattFactors(a, b);
         }
 
         #endregion

@@ -83,6 +83,7 @@ namespace org.whitefossa.yiffhl.Droid
             App.Container.Register<IUpdateSerialNumberCommand, UpdateSerialNumberCommand>().AsSingleton();
             App.Container.Register<IGetUbattADCCommand, GetUbattADCCommand>().AsSingleton();
             App.Container.Register<IGetUbattVoltsCommand, GetUbattVoltsCommand>().AsSingleton();
+            App.Container.Register<IGetUbattFactorsCommand, GetUbattFactorsCommand>().AsSingleton();
 
             #endregion
 

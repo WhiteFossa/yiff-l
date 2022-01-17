@@ -12,16 +12,20 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
 
     public delegate void OnGetBatteryVoltageLevelDelegate(float averagedVoltageLevel);
 
+    public delegate void OnGetUBattFactorsDelegate(float a, float b);
+
     public interface IServiceCommandsManager
     {
-        Task GetLastErrorCode(OnGetLastErrorCodeDelegate onGetLastErrorCode);
+        Task GetLastErrorCodeAsync(OnGetLastErrorCodeDelegate onGetLastErrorCode);
 
-        Task ResetLastErrorCode(OnResetLastErrorCodeDelegate onResetLastErrorCode);
+        Task ResetLastErrorCodeAsync(OnResetLastErrorCodeDelegate onResetLastErrorCode);
 
-        Task UpdateSerialNumber(uint newSerialNumber, OnSerialNumberUpdateDelegate onSerialNumberUpdate);
+        Task UpdateSerialNumberAsync(uint newSerialNumber, OnSerialNumberUpdateDelegate onSerialNumberUpdate);
 
-        Task GetBatteryADCLevel(OnGetBatteryADCLevelDelegate onGetBatteryADCLevel);
+        Task GetBatteryADCLevelAsync(OnGetBatteryADCLevelDelegate onGetBatteryADCLevel);
 
-        Task GetBatteryVoltageLevel(OnGetBatteryVoltageLevelDelegate onGetBatteryVoltageLevel);
+        Task GetBatteryVoltageLevelAsync(OnGetBatteryVoltageLevelDelegate onGetBatteryVoltageLevel);
+
+        Task GetUBattFactorsAsync(OnGetUBattFactorsDelegate onGetUBattFactors);
     }
 }
