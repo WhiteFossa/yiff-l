@@ -6,7 +6,7 @@
  */
 
 #include <FoxStatus.h>
-#include <l2hal_aux.h>
+#include <EEPROM.h>
 
 void FoxState_Init(void)
 {
@@ -53,6 +53,8 @@ void FoxState_Init(void)
 
 	PendingCommandsFlags.NeedToResetLastFailureCode = false;
 	PendingCommandsFlags.NeedToUpdateSerialNumber = false;
+
+	PendingCommandsFlags.NeedToSetUbattADCToUbattVoltsFactors = false;
 
 	FoxState.CurrentDisplay = StatusDisplay;
 }
@@ -191,6 +193,26 @@ bool FoxState_SetPower(float power)
 	}
 
 	FoxState.Power = power;
+
+	return true;
+}
+
+bool FoxState_SetUbattADCToUbattVoltsFactors(bool reset, float a, float b)
+{
+	/* No fox-side check (at least for now) */
+	if (reset)
+	{
+		FoxState.ServiceSettings.SetThisUbattADCToUbattVoltsAFactor = YHL_DEFAULT_ADC_UBATT_A;
+		FoxState.ServiceSettings.SetThisUbattADCToUbattVoltsBFactor = YHL_DEFAULT_ADC_UBATT_B;
+	}
+	else
+	{
+		FoxState.ServiceSettings.SetThisUbattADCToUbattVoltsAFactor = a;
+		FoxState.ServiceSettings.SetThisUbattADCToUbattVoltsBFactor = b;
+	}
+
+
+	PendingCommandsFlags.NeedToSetUbattADCToUbattVoltsFactors = true;
 
 	return true;
 }

@@ -186,6 +186,11 @@ void Main_ProcessResetLastFailureCode(void);
 void Main_ProcessSerialNumberUpdate(void);
 
 /**
+ * Updates Ubatt(ADC)->Ubatt(Volts) factors if needed
+ */
+void Main_ProcessSetUbattADCToUbattVoltsFactors(void);
+
+/**
  * As it name states, processes high priority events.
  */
 void Main_ProcessHighPriorityEvents(void);

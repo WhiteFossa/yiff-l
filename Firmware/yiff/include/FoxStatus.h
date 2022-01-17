@@ -112,4 +112,10 @@ bool FoxState_IsPowerValid(float power);
  */
 bool FoxState_SetPower(float power);
 
+/**
+ * Checks new factors for Battery ADC -> Volts conversion and if successfull marks them to write into EEPROM.
+ * If reset == true, then A and B is ignored and factors are reset to the factory defaults.
+ */
+bool FoxState_SetUbattADCToUbattVoltsFactors(bool reset, float a, float b);
+
 #endif /* INCLUDE_FOXSTATUS_H_ */

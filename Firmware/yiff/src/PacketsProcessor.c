@@ -258,6 +258,16 @@ void OnNewCommandToFox(uint8_t payloadSize, uint8_t* payload)
 			/* Update serial number */
 			OnUpdateSerialNumber(payloadSize, payload);
 			break;
+
+		case GetUbattADCToUbattVoltsFactors:
+			/* Get Ubatt(ADC) -> Ubatt(Volts) factors */
+			OnGetUbattADCToUbattVoltsFactors(payloadSize, payload);
+			break;
+
+		case SetUbattADCToUbattVoltsFactors:
+			/* Set Ubatt(ADC) -> Ubatt(Volts) factors */
+			OnSetUbattADCToUbattVoltsFactors(payloadSize, payload);
+			break;
 	}
 }
 
@@ -1227,6 +1237,54 @@ void OnUpdateSerialNumber(uint8_t payloadSize, uint8_t* payload)
 
 	EEPROM_Header.SerialNumber = newSerialNumber;
 	PendingCommandsFlags.NeedToUpdateSerialNumber = true;
+}
+
+void OnGetUbattADCToUbattVoltsFactors(uint8_t payloadSize, uint8_t* payload)
+{
+	if (payloadSize != 1)
+	{
+		return;
+	}
+
+	uint8_t response[8];
+	memcpy(&response[0], &EEPROM_Header.UBattADCA, 4);
+	memcpy(&response[4], &EEPROM_Header.UBattADCB, 4);
+
+	SendResponse(GetUbattADCToUbattVoltsFactors, 8, &response);
+}
+
+void OnSetUbattADCToUbattVoltsFactors(uint8_t payloadSize, uint8_t* payload)
+{
+	bool isValid = true;
+
+	if (payloadSize != 10)
+	{
+		isValid = false;
+		goto OnSetUbattADCToUbattVoltsFactors_Validate;
+	}
+
+	bool isReset = IsBool(payload[1]);
+
+	float factorA;
+	memcpy(&factorA, &payload[2], 4);
+
+	float factorB;
+	memcpy(&factorB, &payload[6], 4);
+
+	/* Attempt to set */
+	isValid = FoxState_SetUbattADCToUbattVoltsFactors(isReset, factorA, factorB);
+	if (isValid)
+	{
+		return;
+	}
+
+OnSetUbattADCToUbattVoltsFactors_Validate:
+	if (!isValid)
+	{
+		uint8_t result = YHL_PACKET_PROCESSOR_FAILURE;
+		SendResponse(SetUbattADCToUbattVoltsFactors, 1, &result);
+		return;
+	}
 }
 
 void EmitEnteringSleepmodeEvent(void)

@@ -348,6 +348,23 @@ typedef struct
 MatchingStatusStruct;
 
 /**
+ * Structure with various service settings
+ */
+typedef struct
+{
+	/**
+	 * When executing a "Set Ubatt(ADC) to Ubatt(Volts) factors" command new A Factor will be stored here
+	 */
+	float SetThisUbattADCToUbattVoltsAFactor;
+
+	/**
+	 * When executing a "Set Ubatt(ADC) to Ubatt(Volts) factors" command new B Factor will be stored here
+	 */
+	float SetThisUbattADCToUbattVoltsBFactor;
+}
+ServiceSettingsStruct;
+
+/**
  * Fox status
  */
 typedef struct
@@ -456,6 +473,11 @@ typedef struct
 	 * If not reported to phone manual profile changes exist
 	 */
 	bool IsNotReportedManualProfileChanges;
+
+	/**
+	 * Stuff, related to service settings
+	 */
+	ServiceSettingsStruct ServiceSettings;
 }
 FoxStateStruct;
 

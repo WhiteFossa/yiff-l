@@ -148,7 +148,11 @@ typedef enum
 
 	ResetLastFailureCode = 0x27,
 
-	UpdateSerialNumber = 0x28
+	UpdateSerialNumber = 0x28,
+
+	GetUbattADCToUbattVoltsFactors = 0x29,
+
+	SetUbattADCToUbattVoltsFactors = 0x2A,
 }
 CommandToFoxEnum;
 
@@ -396,6 +400,16 @@ void OnResetLastFailureCode(uint8_t payloadSize, uint8_t* payload);
  * Called when "Update serial number" command comes
  */
 void OnUpdateSerialNumber(uint8_t payloadSize, uint8_t* payload);
+
+/**
+ * Called when "Get Ubatt(ADC) to Ubatt(Volts) factors" command comes
+ */
+void OnGetUbattADCToUbattVoltsFactors(uint8_t payloadSize, uint8_t* payload);
+
+/**
+ * Called when "Set Ubatt(ADC) to Ubatt(Volts) factors" command comes
+ */
+void OnSetUbattADCToUbattVoltsFactors(uint8_t payloadSize, uint8_t* payload);
 
 /**
  * Emits "Entering sleepmode" event

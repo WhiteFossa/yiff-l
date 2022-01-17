@@ -124,6 +124,11 @@ typedef struct
 	 * If true, then we need to save new serial number into EERPOM
 	 */
 	bool NeedToUpdateSerialNumber;
+
+	/**
+	 * If true, then we need to save new Ubatt ADC->Volts factors
+	 */
+	bool NeedToSetUbattADCToUbattVoltsFactors;
 }
 PendingCommandsFlagsStruct;
 
