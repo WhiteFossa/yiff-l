@@ -91,6 +91,14 @@ namespace org.whitefossa.yiffhl.ViewModels
             get => String.Format("{0:0.00}", _mainModel.ServiceSettingsModel.BatteryAveragedADCLevel);
         }
 
+        /// <summary>
+        /// Battery averaged voltage level
+        /// </summary>
+        public string BatteryVoltageLevelAsString
+        {
+            get => String.Format("{0:0.0000}V", _mainModel.ServiceSettingsModel.BatteryAveragedVoltageLevel);
+        }
+
         public ServicePageViewModel()
         {
 
@@ -211,12 +219,21 @@ namespace org.whitefossa.yiffhl.ViewModels
             // Battery ADC level
             await _serviceCommandsManager.GetBatteryADCLevel(async (l) => await OnGetBatteryADCLevelResponse(l));
 
+            // Battery voltage level
+            await _serviceCommandsManager.GetBatteryVoltageLevel(async (l) => await OnGetBatteryVoltageLevelResponse(l));
+
         }
 
         private async Task OnGetBatteryADCLevelResponse(float averagedADCLevel)
         {
             _mainModel.ServiceSettingsModel.BatteryAveragedADCLevel = averagedADCLevel;
             OnPropertyChanged(nameof(BatteryADCLevelAsString));
+        }
+
+        private async Task OnGetBatteryVoltageLevelResponse(float averagedVoltageLevel)
+        {
+            _mainModel.ServiceSettingsModel.BatteryAveragedVoltageLevel = averagedVoltageLevel;
+            OnPropertyChanged(nameof(BatteryVoltageLevelAsString));
         }
 
         #endregion

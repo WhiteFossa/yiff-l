@@ -16,9 +16,16 @@ namespace org.whitefossa.yiffhl.Models
         /// </summary>
         public float BatteryAveragedADCLevel { get; set; }
 
+        /// <summary>
+        /// Battery averaged voltage level
+        /// </summary>
+        public float BatteryAveragedVoltageLevel { get; set; }
+
         public ServiceSettingsModel()
         {
             LastErrorCode = null;
+            BatteryAveragedADCLevel = 0;
+            BatteryAveragedVoltageLevel = 0;
         }
     }
 }

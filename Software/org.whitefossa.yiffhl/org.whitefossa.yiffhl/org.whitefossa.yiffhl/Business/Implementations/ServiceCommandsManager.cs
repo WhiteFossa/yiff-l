@@ -12,21 +12,25 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private readonly IResetLastErrorCodeCommand _resetLastErrorCodeCommand;
         private readonly IUpdateSerialNumberCommand _updateSerialNumberCommand;
         private readonly IGetUbattADCCommand _getUbattADCCommand;
+        private readonly IGetUbattVoltsCommand _getUbattVoltsCommand;
 
         private Abstractions.Interfaces.OnGetLastErrorCodeDelegate _onGetLastErrorCode;
         private Abstractions.Interfaces.OnResetLastErrorCodeDelegate _onResetLastErrorCode;
         private OnSerialNumberUpdateDelegate _onSerialNumberUpdate;
         private OnGetBatteryADCLevelDelegate _onGetBatteryADCLevel;
+        private OnGetBatteryVoltageLevelDelegate _onGetBatteryVoltageLevel;
 
         public ServiceCommandsManager(IGetLastErrorCodeCommand getLastErrorCodeCommand,
             IResetLastErrorCodeCommand resetLastErrorCodeCommand,
             IUpdateSerialNumberCommand updateSerialNumberCommand,
-            IGetUbattADCCommand getUbattADCCommand)
+            IGetUbattADCCommand getUbattADCCommand,
+            IGetUbattVoltsCommand getUbattVoltsCommand)
         {
             _getLastErrorCodeCommand = getLastErrorCodeCommand;
             _resetLastErrorCodeCommand = resetLastErrorCodeCommand;
             _updateSerialNumberCommand = updateSerialNumberCommand;
             _getUbattADCCommand = getUbattADCCommand;
+            _getUbattVoltsCommand = getUbattVoltsCommand;
         }
 
         #region Get last error code
@@ -93,6 +97,23 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private void OnGetBatteryADCLevelResponse(float averagedADCLevel)
         {
             _onGetBatteryADCLevel(averagedADCLevel);
+        }
+
+        #endregion
+
+        #region Get battery level (voltage)
+
+        public async Task GetBatteryVoltageLevel(OnGetBatteryVoltageLevelDelegate onGetBatteryVoltageLevel)
+        {
+            _onGetBatteryVoltageLevel = onGetBatteryVoltageLevel ?? throw new ArgumentNullException(nameof(onGetBatteryVoltageLevel));
+
+            _getUbattVoltsCommand.SetResponseDelegate(OnGetBatteryVoltageLevelResponse);
+            _getUbattVoltsCommand.SendGetUbattVoltsCommand();
+        }
+
+        private void OnGetBatteryVoltageLevelResponse(float averagedVoltageLevel)
+        {
+            _onGetBatteryVoltageLevel(averagedVoltageLevel);
         }
 
         #endregion
