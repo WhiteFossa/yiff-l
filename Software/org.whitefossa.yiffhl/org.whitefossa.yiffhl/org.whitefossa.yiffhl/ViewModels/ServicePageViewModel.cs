@@ -139,6 +139,11 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         public ICommand ResetUbattFactorsCommand { get; }
 
+        /// <summary>
+        /// Set Ubatt factors
+        /// </summary>
+        public ICommand SetUbattFactorsCommand { get; }
+
         public ServicePageViewModel()
         {
 
@@ -153,6 +158,7 @@ namespace org.whitefossa.yiffhl.ViewModels
             SetSerialNumberCommand = new Command(async () => await OnSetSerialNumberAsync());
             GetUbattFactorsCommand = new Command(async() => await OnGetUbattFactorsAsync());
             ResetUbattFactorsCommand = new Command(async() => await OnResetUbattFactorsAsync());
+            SetUbattFactorsCommand = new Command(async() => await OnSetUbattFactorsAsync());
 
             // Setting up poll service data timer
             PollServiceDataTimer = new Timer(PollServiceDataInterval);
@@ -306,6 +312,36 @@ namespace org.whitefossa.yiffhl.ViewModels
         }
 
         private async Task OnResetUbattFactorsResponseAsync()
+        {
+            await OnGetUbattFactorsAsync();
+        }
+
+        #endregion
+
+        #region Set Ubatt factors
+
+        private async Task OnSetUbattFactorsAsync()
+        {
+            float newA;
+            if (!float.TryParse(UBattAFactorAsString, out newA))
+            {
+                // Invalid value
+                await _userNotifier.ShowErrorMessageAsync("Wrong value", "Factor A is not a number!");
+                return;
+            }
+
+            float newB;
+            if (!float.TryParse(UBattBFactorAsString, out newB))
+            {
+                // Invalid value
+                await _userNotifier.ShowErrorMessageAsync("Wrong value", "Factor B is not a number!");
+                return;
+            }
+
+            await _serviceCommandsManager.SetUbattFactorsAsync(newA, newB, async () => await OnSetUbattFactorsResponseAsync());
+        }
+
+        private async Task OnSetUbattFactorsResponseAsync()
         {
             await OnGetUbattFactorsAsync();
         }

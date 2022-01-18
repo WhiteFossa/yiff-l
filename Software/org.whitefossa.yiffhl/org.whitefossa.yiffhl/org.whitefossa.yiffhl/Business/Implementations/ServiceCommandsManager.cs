@@ -23,6 +23,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private OnGetBatteryVoltageLevelDelegate _onGetBatteryVoltageLevel;
         private OnGetUbattFactorsDelegate _onGetUBattFactors;
         private OnResetUbattFactorsDelegate _onResetUbattFactors;
+        private OnSetUbattFactorsDelegate _onSetUbattFactors;
 
         public ServiceCommandsManager(IGetLastErrorCodeCommand getLastErrorCodeCommand,
             IResetLastErrorCodeCommand resetLastErrorCodeCommand,
@@ -161,6 +162,28 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             }
 
             _onResetUbattFactors();
+        }
+
+        #endregion
+
+        #region Set Ubatt(ADC) -> Ubatt(Volts) factors
+
+        public async Task SetUbattFactorsAsync(float a, float b, OnSetUbattFactorsDelegate onSetUbattFactors)
+        {
+            _onSetUbattFactors = onSetUbattFactors;
+
+            _setUbattFactorsCommand.SetResponseDelegate(OnSetUbattFactorsResponse);
+            _setUbattFactorsCommand.SendSetUbattFactors(false, a, b);
+        }
+
+        private void OnSetUbattFactorsResponse(bool isSuccessfull)
+        {
+            if (!isSuccessfull)
+            {
+                throw new InvalidOperationException("Failed to set Ubatt(ADC) -> Ubatt(Volts) factors!");
+            }
+
+            _onSetUbattFactors();
         }
 
         #endregion
