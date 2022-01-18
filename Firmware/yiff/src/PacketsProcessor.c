@@ -1263,7 +1263,13 @@ void OnSetUbattADCToUbattVoltsFactors(uint8_t payloadSize, uint8_t* payload)
 		goto OnSetUbattADCToUbattVoltsFactors_Validate;
 	}
 
-	bool isReset = IsBool(payload[1]);
+	if (!IsBool(payload[1]))
+	{
+		isValid = false;
+		goto OnSetUbattADCToUbattVoltsFactors_Validate;
+	}
+
+	bool isReset = ToBool(payload[1]);
 
 	float factorA;
 	memcpy(&factorA, &payload[2], 4);
