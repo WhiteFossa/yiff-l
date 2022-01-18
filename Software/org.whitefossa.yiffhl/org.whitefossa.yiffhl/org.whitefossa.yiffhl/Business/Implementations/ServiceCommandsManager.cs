@@ -14,20 +14,23 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private readonly IGetUbattADCCommand _getUbattADCCommand;
         private readonly IGetUbattVoltsCommand _getUbattVoltsCommand;
         private readonly IGetUbattFactorsCommand _getUbattFactorsCommand;
+        private readonly ISetUbattFactorsCommand _setUbattFactorsCommand;
 
         private Abstractions.Interfaces.OnGetLastErrorCodeDelegate _onGetLastErrorCode;
         private Abstractions.Interfaces.OnResetLastErrorCodeDelegate _onResetLastErrorCode;
         private OnSerialNumberUpdateDelegate _onSerialNumberUpdate;
         private OnGetBatteryADCLevelDelegate _onGetBatteryADCLevel;
         private OnGetBatteryVoltageLevelDelegate _onGetBatteryVoltageLevel;
-        private OnGetUBattFactorsDelegate _onGetUBattFactors;
+        private OnGetUbattFactorsDelegate _onGetUBattFactors;
+        private OnResetUbattFactorsDelegate _onResetUbattFactors;
 
         public ServiceCommandsManager(IGetLastErrorCodeCommand getLastErrorCodeCommand,
             IResetLastErrorCodeCommand resetLastErrorCodeCommand,
             IUpdateSerialNumberCommand updateSerialNumberCommand,
             IGetUbattADCCommand getUbattADCCommand,
             IGetUbattVoltsCommand getUbattVoltsCommand,
-            IGetUbattFactorsCommand getUbattFactorsCommand)
+            IGetUbattFactorsCommand getUbattFactorsCommand,
+            ISetUbattFactorsCommand setUbattFactorsCommand)
         {
             _getLastErrorCodeCommand = getLastErrorCodeCommand;
             _resetLastErrorCodeCommand = resetLastErrorCodeCommand;
@@ -35,6 +38,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _getUbattADCCommand = getUbattADCCommand;
             _getUbattVoltsCommand = getUbattVoltsCommand;
             _getUbattFactorsCommand = getUbattFactorsCommand;
+            _setUbattFactorsCommand = setUbattFactorsCommand;
         }
 
         #region Get last error code
@@ -124,7 +128,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
 
         #region Get UBatt(ADC) -> UBatt(Volts) factors
 
-        public async Task GetUBattFactorsAsync(OnGetUBattFactorsDelegate onGetUBattFactors)
+        public async Task GetUbattFactorsAsync(OnGetUbattFactorsDelegate onGetUBattFactors)
         {
             _onGetUBattFactors = onGetUBattFactors ?? throw new ArgumentNullException(nameof(onGetUBattFactors));
 
@@ -135,6 +139,28 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private void OnGetUBattFactorsResponse(float a, float b)
         {
             _onGetUBattFactors(a, b);
+        }
+
+        #endregion
+
+        #region Reset Ubatt(ADC) -> Ubatt(Volts) factors
+
+        public async Task ResetUbattFactorsAsync(OnResetUbattFactorsDelegate onResetUbattFactors)
+        {
+            _onResetUbattFactors = onResetUbattFactors;
+
+            _setUbattFactorsCommand.SetResponseDelegate(OnResetUbattFactorsResponse);
+            _setUbattFactorsCommand.SendSetUbattFactors(true, 0, 0);
+        }
+
+        private void OnResetUbattFactorsResponse(bool isSuccessfull)
+        {
+            if (!isSuccessfull)
+            {
+                throw new InvalidOperationException("Failed to reset Ubatt(ADC) -> Ubatt(Volts) factors!");
+            }
+
+            _onResetUbattFactors();
         }
 
         #endregion

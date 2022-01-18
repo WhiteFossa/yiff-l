@@ -75,6 +75,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
         private OnResponseDelegate _onResetLastErrorCodeResponse;
         private OnResponseDelegate _onSerialNumberUpdatedResponse;
         private OnResponseDelegate _onGetUBattFactorsResponse;
+        private OnResponseDelegate _onSetUBattFactorsResponse;
 
         #endregion
 
@@ -563,6 +564,13 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
                         _onGetUBattFactorsResponse(responsePayload);
                         break;
 
+                    // Set Ubatt(ADC) -> Ubatt(Volts) factors
+                    case CommandType.SetUbattADCToUbattVoltsFactors:
+                        CheckOnResponseDelegate(_onSetUBattFactorsResponse);
+
+                        _onSetUBattFactorsResponse(responsePayload);
+                        break;
+
                     default:
                         return; // We've got some junk
                 }
@@ -907,6 +915,12 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
         {
             _onGetUBattFactorsResponse = onGetUBattFactorsResponse
                 ?? throw new ArgumentNullException(nameof(onGetUBattFactorsResponse));
+        }
+
+        public void SetOnSetUBattFactorsResponse(OnResponseDelegate onSetUBattFactorsResponse)
+        {
+            _onSetUBattFactorsResponse = onSetUBattFactorsResponse
+                ?? throw new ArgumentNullException(nameof(onSetUBattFactorsResponse));
         }
     }
 }

@@ -12,7 +12,9 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
 
     public delegate void OnGetBatteryVoltageLevelDelegate(float averagedVoltageLevel);
 
-    public delegate void OnGetUBattFactorsDelegate(float a, float b);
+    public delegate void OnGetUbattFactorsDelegate(float a, float b);
+
+    public delegate void OnResetUbattFactorsDelegate();
 
     public interface IServiceCommandsManager
     {
@@ -26,6 +28,8 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
 
         Task GetBatteryVoltageLevelAsync(OnGetBatteryVoltageLevelDelegate onGetBatteryVoltageLevel);
 
-        Task GetUBattFactorsAsync(OnGetUBattFactorsDelegate onGetUBattFactors);
+        Task GetUbattFactorsAsync(OnGetUbattFactorsDelegate onGetUBattFactors);
+
+        Task ResetUbattFactorsAsync(OnResetUbattFactorsDelegate onResetUbattFactors);
     }
 }

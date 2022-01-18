@@ -87,6 +87,8 @@
 
         UpdateSerialNumber = 0x28,
 
-        GetUbattADCToUbattVoltsFactors = 0x29
+        GetUbattADCToUbattVoltsFactors = 0x29,
+
+        SetUbattADCToUbattVoltsFactors = 0x2A
     }
 }

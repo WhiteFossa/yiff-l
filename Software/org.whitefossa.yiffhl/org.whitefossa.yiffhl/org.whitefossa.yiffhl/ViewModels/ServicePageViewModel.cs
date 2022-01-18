@@ -132,7 +132,12 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// <summary>
         /// Get UBatt factors
         /// </summary>
-        public ICommand GetUBattFactorsCommand { get; }
+        public ICommand GetUbattFactorsCommand { get; }
+
+        /// <summary>
+        /// Reset Ubatt factors
+        /// </summary>
+        public ICommand ResetUbattFactorsCommand { get; }
 
         public ServicePageViewModel()
         {
@@ -146,7 +151,8 @@ namespace org.whitefossa.yiffhl.ViewModels
             ResetLastErrorCodeCommand = new Command(async () => await OnResetLastErrorCodeAsync());
             ReloadSerialNumberCommand = new Command(async () => await OnReloadSerialNumberAsync());
             SetSerialNumberCommand = new Command(async () => await OnSetSerialNumberAsync());
-            GetUBattFactorsCommand = new Command(async() => await OnGetUBattFactorsAsync());
+            GetUbattFactorsCommand = new Command(async() => await OnGetUbattFactorsAsync());
+            ResetUbattFactorsCommand = new Command(async() => await OnResetUbattFactorsAsync());
 
             // Setting up poll service data timer
             PollServiceDataTimer = new Timer(PollServiceDataInterval);
@@ -276,18 +282,32 @@ namespace org.whitefossa.yiffhl.ViewModels
 
         #region Get UBatt factors
 
-        private async Task OnGetUBattFactorsAsync()
+        private async Task OnGetUbattFactorsAsync()
         {
-            await _serviceCommandsManager.GetUBattFactorsAsync(async (a, b) => await OnGetUBattFactorsResponseAsync(a, b));
+            await _serviceCommandsManager.GetUbattFactorsAsync(async (a, b) => await OnGetUbattFactorsResponseAsync(a, b));
         }
 
-        private async Task OnGetUBattFactorsResponseAsync(float a, float b)
+        private async Task OnGetUbattFactorsResponseAsync(float a, float b)
         {
             _mainModel.ServiceSettingsModel.UBattFactorA = a;
             _mainModel.ServiceSettingsModel.UBattFactorB = b;
 
             UBattAFactorAsString = _mainModel.ServiceSettingsModel.UBattFactorA.ToString();
             UBattBFactorAsString = _mainModel.ServiceSettingsModel.UBattFactorB.ToString();
+        }
+
+        #endregion
+
+        #region Reset Ubatt factors
+
+        private async Task OnResetUbattFactorsAsync()
+        {
+            await _serviceCommandsManager.ResetUbattFactorsAsync(async () => await OnResetUbattFactorsResponseAsync());
+        }
+
+        private async Task OnResetUbattFactorsResponseAsync()
+        {
+            await OnGetUbattFactorsAsync();
         }
 
         #endregion

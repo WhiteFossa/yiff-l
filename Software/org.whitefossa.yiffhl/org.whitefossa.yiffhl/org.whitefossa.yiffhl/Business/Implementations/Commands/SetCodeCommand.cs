@@ -17,6 +17,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations.Commands
             _packetsProcessor = packetsProcessor;
             _packetsProcessor.SetOnSetCodeResponse(OnSetCodeResponse);
         }
+
         public void SetResponseDelegate(OnSetCodeResponseDelegate onSetCodeResponse)
         {
             _onSetCodeResponse = onSetCodeResponse;

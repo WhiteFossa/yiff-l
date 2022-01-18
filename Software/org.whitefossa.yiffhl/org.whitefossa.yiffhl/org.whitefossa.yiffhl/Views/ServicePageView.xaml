@@ -167,7 +167,7 @@
                                 Text="Get"
                                 VerticalOptions="Center"
                                 HorizontalOptions="End"
-                                Command="{Binding GetUBattFactorsCommand}"
+                                Command="{Binding GetUbattFactorsCommand}"
                                 />
 
                             <Button
@@ -180,6 +180,7 @@
                                 Text="Reset"
                                 VerticalOptions="Center"
                                 HorizontalOptions="End"
+                                Command="{Binding ResetUbattFactorsCommand}"
                                 />
                         </StackLayout>
 
