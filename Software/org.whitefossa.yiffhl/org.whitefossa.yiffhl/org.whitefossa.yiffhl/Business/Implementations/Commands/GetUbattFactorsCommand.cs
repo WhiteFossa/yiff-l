@@ -4,7 +4,6 @@ using org.whitefossa.yiffhl.Abstractions.Interfaces.Commands;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace org.whitefossa.yiffhl.Business.Implementations.Commands
 {

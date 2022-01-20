@@ -85,6 +85,7 @@ namespace org.whitefossa.yiffhl.Droid
             App.Container.Register<IGetUbattVoltsCommand, GetUbattVoltsCommand>().AsSingleton();
             App.Container.Register<IGetUbattFactorsCommand, GetUbattFactorsCommand>().AsSingleton();
             App.Container.Register<ISetUbattFactorsCommand, SetUbattFactorsCommand>().AsSingleton();
+            App.Container.Register<IGetBattLevelFactorsCommand, GetBattLevelFactorsCommand>().AsSingleton();
 
             #endregion
 

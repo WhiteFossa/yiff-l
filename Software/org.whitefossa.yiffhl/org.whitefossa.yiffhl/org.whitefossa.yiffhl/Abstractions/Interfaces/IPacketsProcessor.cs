@@ -88,6 +88,7 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
         void SetOnSerialNumberUpdatedResponse(OnResponseDelegate onSerialNumberUpdatedResponse);
         void SetOnGetUBattFactorsResponse(OnResponseDelegate onGetUBattFactorsResponse);
         void SetOnSetUBattFactorsResponse(OnResponseDelegate onSetUBattFactorsResponse);
+        void SetOnGetBattLevelFactorsResponse(OnResponseDelegate onGetBattLevelFactorsResponse);
 
         #endregion
 

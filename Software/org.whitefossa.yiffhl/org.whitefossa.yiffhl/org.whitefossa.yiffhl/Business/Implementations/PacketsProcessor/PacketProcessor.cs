@@ -76,6 +76,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
         private OnResponseDelegate _onSerialNumberUpdatedResponse;
         private OnResponseDelegate _onGetUBattFactorsResponse;
         private OnResponseDelegate _onSetUBattFactorsResponse;
+        private OnResponseDelegate _onGetBattLevelFactorsResponse;
 
         #endregion
 
@@ -571,6 +572,13 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
                         _onSetUBattFactorsResponse(responsePayload);
                         break;
 
+                    // Get Ubatt(Volts) -> Battery level factors
+                    case CommandType.GetUbattVoltsToBattLevelFactors:
+                        CheckOnResponseDelegate(_onGetBattLevelFactorsResponse);
+
+                        _onGetBattLevelFactorsResponse(responsePayload);
+                        break;
+
                     default:
                         return; // We've got some junk
                 }
@@ -921,6 +929,12 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
         {
             _onSetUBattFactorsResponse = onSetUBattFactorsResponse
                 ?? throw new ArgumentNullException(nameof(onSetUBattFactorsResponse));
+        }
+
+        public void SetOnGetBattLevelFactorsResponse(OnResponseDelegate onGetBattLevelFactorsResponse)
+        {
+            _onGetBattLevelFactorsResponse = onGetBattLevelFactorsResponse
+                ?? throw new ArgumentNullException(nameof(onGetBattLevelFactorsResponse));
         }
     }
 }

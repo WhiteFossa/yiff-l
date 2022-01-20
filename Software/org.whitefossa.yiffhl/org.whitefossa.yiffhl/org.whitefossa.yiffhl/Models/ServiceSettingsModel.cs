@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace org.whitefossa.yiffhl.Models
+﻿namespace org.whitefossa.yiffhl.Models
 {
     public class ServiceSettingsModel
     {
@@ -31,11 +27,23 @@ namespace org.whitefossa.yiffhl.Models
         /// </summary>
         public float UBattFactorB { get; set; }
 
+        /// <summary>
+        /// Battery level = UBatt(Volts) * A + B
+        /// </summary>
+        public float BattLevelFactorA { get; set; }
+
+        /// <summary>
+        /// Battery level = UBatt(Volts) * A + B
+        /// </summary>
+        public float BattLevelFactorB { get; set; }
+
         public ServiceSettingsModel()
         {
             LastErrorCode = null;
             BatteryAveragedADCLevel = 0;
             BatteryAveragedVoltageLevel = 0;
+            BattLevelFactorA = 0;
+            BattLevelFactorB = 0;
         }
     }
 }

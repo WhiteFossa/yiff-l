@@ -144,6 +144,59 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         public ICommand SetUbattFactorsCommand { get; }
 
+        /// <summary>
+        /// Battery charge level
+        /// </summary>
+        public string BatteryLevelAsString
+        {
+            get => String.Format("{0:0.0%}", _mainModel.DynamicFoxStatus.BatteryLevel);
+        }
+
+        /// <summary>
+        /// A factor for Ubatt(volts) -> Battery level
+        /// </summary>
+        private string _battLevelAFactorAsString;
+
+        public string BattLevelAFactorAsString
+        {
+            get => _battLevelAFactorAsString;
+            set
+            {
+                _battLevelAFactorAsString = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// B factor for Ubatt(volts) -> Battery level
+        /// </summary>
+        private string _battLevelBFactorAsString;
+
+        public string BattLevelBFactorAsString
+        {
+            get => _battLevelBFactorAsString;
+            set
+            {
+                _battLevelBFactorAsString = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Get battery level factors
+        /// </summary>
+        public ICommand GetBattLevelFactorsCommand { get; }
+
+        /// <summary>
+        /// Reset battery level factors
+        /// </summary>
+        public ICommand ResetBattLevelFactorsCommand { get; }
+
+        /// <summary>
+        /// Set battery level factors
+        /// </summary>
+        public ICommand SetBattLevelFactorsCommand { get; }
+
         public ServicePageViewModel()
         {
 
@@ -154,11 +207,17 @@ namespace org.whitefossa.yiffhl.ViewModels
 
             GetLastErrorCodeCommand = new Command(async () => await OnGetLastErrorAsync());
             ResetLastErrorCodeCommand = new Command(async () => await OnResetLastErrorCodeAsync());
+
             ReloadSerialNumberCommand = new Command(async () => await OnReloadSerialNumberAsync());
             SetSerialNumberCommand = new Command(async () => await OnSetSerialNumberAsync());
+
             GetUbattFactorsCommand = new Command(async() => await OnGetUbattFactorsAsync());
             ResetUbattFactorsCommand = new Command(async() => await OnResetUbattFactorsAsync());
             SetUbattFactorsCommand = new Command(async() => await OnSetUbattFactorsAsync());
+
+            GetBattLevelFactorsCommand = new Command(async () => await OnGetBattLevelFactorsAsync());
+            ResetBattLevelFactorsCommand = new Command(async () => await OnResetBattLevelFactorsAsync());
+            SetBattLevelFactorsCommand = new Command(async () => await OnSetBattLevelFactorsAsync());
 
             // Setting up poll service data timer
             PollServiceDataTimer = new Timer(PollServiceDataInterval);
@@ -270,6 +329,8 @@ namespace org.whitefossa.yiffhl.ViewModels
             // Battery voltage level
             await _serviceCommandsManager.GetBatteryVoltageLevelAsync(async (l) => await OnGetBatteryVoltageLevelResponseAsync(l));
 
+            // Charge level
+            OnPropertyChanged(nameof(BatteryLevelAsString));
         }
 
         private async Task OnGetBatteryADCLevelResponseAsync(float averagedADCLevel)
@@ -344,6 +405,68 @@ namespace org.whitefossa.yiffhl.ViewModels
         private async Task OnSetUbattFactorsResponseAsync()
         {
             await OnGetUbattFactorsAsync();
+        }
+
+        #endregion
+
+        #region Get battery level factors
+
+        private async Task OnGetBattLevelFactorsAsync()
+        {
+            await _serviceCommandsManager.GetBattLevelFactorsAsync(async (a, b) => await OnGetBattLevelFactorsResponseAsync(a, b));
+        }
+
+        private async Task OnGetBattLevelFactorsResponseAsync(float a, float b)
+        {
+            _mainModel.ServiceSettingsModel.BattLevelFactorA = a;
+            _mainModel.ServiceSettingsModel.BattLevelFactorB = b;
+
+            BattLevelAFactorAsString = _mainModel.ServiceSettingsModel.BattLevelFactorA.ToString();
+            BattLevelBFactorAsString = _mainModel.ServiceSettingsModel.BattLevelFactorB.ToString();
+        }
+
+        #endregion
+
+        #region Reset battery level factors
+
+        private async Task OnResetBattLevelFactorsAsync()
+        {
+            //await _serviceCommandsManager.ResetUbattFactorsAsync(async () => await OnResetUbattFactorsResponseAsync());
+        }
+
+        private async Task OnResetBattLevelFactorsResponseAsync()
+        {
+            //await OnGetUbattFactorsAsync();
+        }
+
+        #endregion
+
+        #region Set battery level factors
+
+        private async Task OnSetBattLevelFactorsAsync()
+        {
+            //float newA;
+            //if (!float.TryParse(UBattAFactorAsString, out newA))
+            //{
+            //    // Invalid value
+            //    await _userNotifier.ShowErrorMessageAsync("Wrong value", "Factor A is not a number!");
+            //    return;
+            //}
+
+            //float newB;
+            //if (!float.TryParse(UBattBFactorAsString, out newB))
+            //{
+            //    // Invalid value
+            //    await _userNotifier.ShowErrorMessageAsync("Wrong value", "Factor B is not a number!");
+            //    return;
+            //}
+
+            //await _serviceCommandsManager.SetUbattFactorsAsync(newA, newB, async () => await OnSetUbattFactorsResponseAsync());
+        }
+
+        private async Task OnSetBattLevelFactorsResponseAsync()
+        {
+            //await OnGetUbattFactorsAsync();
         }
 
         #endregion

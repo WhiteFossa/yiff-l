@@ -8,22 +8,36 @@ namespace org.whitefossa.yiffhl.Business.Implementations
 {
     public class ServiceCommandsManager : IServiceCommandsManager
     {
+        #region Commands
+
         private readonly IGetLastErrorCodeCommand _getLastErrorCodeCommand;
         private readonly IResetLastErrorCodeCommand _resetLastErrorCodeCommand;
+
         private readonly IUpdateSerialNumberCommand _updateSerialNumberCommand;
+
         private readonly IGetUbattADCCommand _getUbattADCCommand;
         private readonly IGetUbattVoltsCommand _getUbattVoltsCommand;
+
         private readonly IGetUbattFactorsCommand _getUbattFactorsCommand;
         private readonly ISetUbattFactorsCommand _setUbattFactorsCommand;
 
+        private readonly IGetBattLevelFactorsCommand _getBattLevelFactorsCommand;
+
+        #endregion
+
         private Abstractions.Interfaces.OnGetLastErrorCodeDelegate _onGetLastErrorCode;
         private Abstractions.Interfaces.OnResetLastErrorCodeDelegate _onResetLastErrorCode;
+
         private OnSerialNumberUpdateDelegate _onSerialNumberUpdate;
         private OnGetBatteryADCLevelDelegate _onGetBatteryADCLevel;
+
         private OnGetBatteryVoltageLevelDelegate _onGetBatteryVoltageLevel;
+
         private OnGetUbattFactorsDelegate _onGetUBattFactors;
         private OnResetUbattFactorsDelegate _onResetUbattFactors;
         private OnSetUbattFactorsDelegate _onSetUbattFactors;
+
+        private OnGetBattLevelFactorsDelegate _onGetBattLevelFactors;
 
         public ServiceCommandsManager(IGetLastErrorCodeCommand getLastErrorCodeCommand,
             IResetLastErrorCodeCommand resetLastErrorCodeCommand,
@@ -31,7 +45,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             IGetUbattADCCommand getUbattADCCommand,
             IGetUbattVoltsCommand getUbattVoltsCommand,
             IGetUbattFactorsCommand getUbattFactorsCommand,
-            ISetUbattFactorsCommand setUbattFactorsCommand)
+            ISetUbattFactorsCommand setUbattFactorsCommand,
+            IGetBattLevelFactorsCommand getBattLevelFactorsCommand)
         {
             _getLastErrorCodeCommand = getLastErrorCodeCommand;
             _resetLastErrorCodeCommand = resetLastErrorCodeCommand;
@@ -40,6 +55,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _getUbattVoltsCommand = getUbattVoltsCommand;
             _getUbattFactorsCommand = getUbattFactorsCommand;
             _setUbattFactorsCommand = setUbattFactorsCommand;
+            _getBattLevelFactorsCommand = getBattLevelFactorsCommand;
         }
 
         #region Get last error code
@@ -184,6 +200,23 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             }
 
             _onSetUbattFactors();
+        }
+
+        #endregion
+
+        #region Get UBatt(Volts) -> Battery level factors
+
+        public async Task GetBattLevelFactorsAsync(OnGetBattLevelFactorsDelegate onGetBattLevelFactors)
+        {
+            _onGetBattLevelFactors = onGetBattLevelFactors ?? throw new ArgumentNullException(nameof(onGetBattLevelFactors));
+
+            _getBattLevelFactorsCommand.SetResponseDelegate(OnGetBattLevelFactorsResponse);
+            _getBattLevelFactorsCommand.SendGetBattLevelFactorsCommand();
+        }
+
+        private void OnGetBattLevelFactorsResponse(float a, float b)
+        {
+            _onGetBattLevelFactors(a, b);
         }
 
         #endregion

@@ -94,13 +94,13 @@
                 </Frame>
                 <!-- End of serial number -->
                 
-                <!-- Battery ADC -> Volts -->
+                <!-- Battery ADC -> Voltage -->
                 <Frame
                     Style="{StaticResource FramesStyle}">
 
                     <StackLayout>
                         <Label
-                            Text="Battery (ADC -> Volts)"
+                            Text="Battery (ADC -> Voltage)"
                             HorizontalOptions="Center" />
 
                         <StackLayout
@@ -118,7 +118,7 @@
                                 VerticalOptions="Center" />
 
                             <Label
-                                Text="Volts:"
+                                Text="Voltage:"
                                 HorizontalOptions="Start"
                                 VerticalOptions="Center" />
 
@@ -134,7 +134,7 @@
                             Orientation="Horizontal">
 
                             <Label
-                                Text="Volts = "
+                                Text="Voltage = "
                                 HorizontalOptions="Start"
                                 VerticalOptions="Center" />
 
@@ -154,9 +154,6 @@
                                 HorizontalOptions="FillAndExpand"
                                 VerticalOptions="Center"
                                 Text="{Binding UBattBFactorAsString}" />
-
-                            
-
                         </StackLayout>
 
                         <StackLayout
@@ -182,6 +179,98 @@
                                 VerticalOptions="Center"
                                 HorizontalOptions="End"
                                 Command="{Binding ResetUbattFactorsCommand}"
+                                />
+                        </StackLayout>
+
+                    </StackLayout>
+                </Frame>
+                <!-- End of battery ADC -> Volts -->
+
+                <!-- Battery Voltage -> Level -->
+                <Frame
+                    Style="{StaticResource FramesStyle}">
+
+                    <StackLayout>
+                        <Label
+                            Text="Battery (Voltage -> Level)"
+                            HorizontalOptions="Center" />
+
+                        <StackLayout
+                            Orientation="Horizontal">
+
+                            <Label
+                                Text="Voltage:"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                            <Label
+                                FontAttributes="Bold"
+                                Text="{Binding BatteryVoltageLevelAsString}"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                            <Label
+                                Text="Level:"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                            <Label
+                                FontAttributes="Bold"
+                                Text="{Binding BatteryLevelAsString}"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                        </StackLayout>
+
+                        <StackLayout
+                            Orientation="Horizontal">
+
+                            <Label
+                                Text="Level = "
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                            <Editor
+                                Keyboard="Numeric"
+                                HorizontalOptions="FillAndExpand"
+                                VerticalOptions="Center"
+                                Text="{Binding BattLevelAFactorAsString}" />
+
+                            <Label
+                                Text=" * Voltage + "
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                            <Editor
+                                Keyboard="Numeric"
+                                HorizontalOptions="FillAndExpand"
+                                VerticalOptions="Center"
+                                Text="{Binding BattLevelBFactorAsString}" />
+                        </StackLayout>
+
+                        <StackLayout
+                            Orientation="Horizontal"
+                            HorizontalOptions="CenterAndExpand">
+
+                            <Button
+                                Text="Get"
+                                VerticalOptions="Center"
+                                HorizontalOptions="End"
+                                Command="{Binding GetBattLevelFactorsCommand}"
+                                />
+
+                            <Button
+                                Text="Set"
+                                VerticalOptions="Center"
+                                HorizontalOptions="End"
+                                Command="{Binding SetBattLevelFactorsCommand}"
+                                />
+
+                            <Button
+                                Text="Reset"
+                                VerticalOptions="Center"
+                                HorizontalOptions="End"
+                                Command="{Binding ResetBattLevelFactorsCommand}"
                                 />
                         </StackLayout>
 
