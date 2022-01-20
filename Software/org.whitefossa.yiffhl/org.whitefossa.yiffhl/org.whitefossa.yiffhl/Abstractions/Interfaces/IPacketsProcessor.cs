@@ -89,6 +89,7 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
         void SetOnGetUBattFactorsResponse(OnResponseDelegate onGetUBattFactorsResponse);
         void SetOnSetUBattFactorsResponse(OnResponseDelegate onSetUBattFactorsResponse);
         void SetOnGetBattLevelFactorsResponse(OnResponseDelegate onGetBattLevelFactorsResponse);
+        void SetOnSetBattLevelFactorsResponse(OnResponseDelegate onSetBattLevelFactorsResponse);
 
         #endregion
 

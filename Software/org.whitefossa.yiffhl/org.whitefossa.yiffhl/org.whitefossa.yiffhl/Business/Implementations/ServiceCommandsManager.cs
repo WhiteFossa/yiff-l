@@ -22,6 +22,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private readonly ISetUbattFactorsCommand _setUbattFactorsCommand;
 
         private readonly IGetBattLevelFactorsCommand _getBattLevelFactorsCommand;
+        private readonly ISetBattLevelFactorsCommand _setBattLevelFactorsCommand;
 
         #endregion
 
@@ -38,6 +39,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private OnSetUbattFactorsDelegate _onSetUbattFactors;
 
         private OnGetBattLevelFactorsDelegate _onGetBattLevelFactors;
+        private OnResetBattLevelFactorsDelegate _onResetBattLevelFactors;
+        private OnSetBattLevelFactorsDelegate _onSetBattLevelFactors;
 
         public ServiceCommandsManager(IGetLastErrorCodeCommand getLastErrorCodeCommand,
             IResetLastErrorCodeCommand resetLastErrorCodeCommand,
@@ -46,7 +49,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             IGetUbattVoltsCommand getUbattVoltsCommand,
             IGetUbattFactorsCommand getUbattFactorsCommand,
             ISetUbattFactorsCommand setUbattFactorsCommand,
-            IGetBattLevelFactorsCommand getBattLevelFactorsCommand)
+            IGetBattLevelFactorsCommand getBattLevelFactorsCommand,
+            ISetBattLevelFactorsCommand setBattLevelFactorsCommand)
         {
             _getLastErrorCodeCommand = getLastErrorCodeCommand;
             _resetLastErrorCodeCommand = resetLastErrorCodeCommand;
@@ -56,6 +60,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _getUbattFactorsCommand = getUbattFactorsCommand;
             _setUbattFactorsCommand = setUbattFactorsCommand;
             _getBattLevelFactorsCommand = getBattLevelFactorsCommand;
+            _setBattLevelFactorsCommand = setBattLevelFactorsCommand;
         }
 
         #region Get last error code
@@ -217,6 +222,50 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private void OnGetBattLevelFactorsResponse(float a, float b)
         {
             _onGetBattLevelFactors(a, b);
+        }
+
+        #endregion
+
+        #region Reset UBatt(Volts) -> Battery level factors
+
+        public async Task ResetBattLevelFactorsAsync(OnResetBattLevelFactorsDelegate onResetBattLevelFactors)
+        {
+            _onResetBattLevelFactors = onResetBattLevelFactors;
+
+            _setBattLevelFactorsCommand.SetResponseDelegate(OnResetBattLevelFactorsResponse);
+            _setBattLevelFactorsCommand.SendSetBattLevelFactors(true, 0, 0);
+        }
+
+        private void OnResetBattLevelFactorsResponse(bool isSuccessfull)
+        {
+            if (!isSuccessfull)
+            {
+                throw new InvalidOperationException("Failed to reset UBatt(Volts) -> Battery level factors!");
+            }
+
+            _onResetBattLevelFactors();
+        }
+
+        #endregion
+
+        #region Set UBatt(Volts) -> Battery level factors
+
+        public async Task SetBattLevelFactorsAsync(float a, float b, OnSetBattLevelFactorsDelegate onSetBattLevelFactors)
+        {
+            _onSetBattLevelFactors = onSetBattLevelFactors;
+
+            _setBattLevelFactorsCommand.SetResponseDelegate(OnSetBattLevelFactorsResponse);
+            _setBattLevelFactorsCommand.SendSetBattLevelFactors(false, a, b);
+        }
+
+        private void OnSetBattLevelFactorsResponse(bool isSuccessfull)
+        {
+            if (!isSuccessfull)
+            {
+                throw new InvalidOperationException("Failed to set UBatt(Volts) -> Battery level factors!");
+            }
+
+            _onSetBattLevelFactors();
         }
 
         #endregion

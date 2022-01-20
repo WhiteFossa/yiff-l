@@ -20,6 +20,10 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
 
     public delegate void OnGetBattLevelFactorsDelegate(float a, float b);
 
+    public delegate void OnResetBattLevelFactorsDelegate();
+
+    public delegate void OnSetBattLevelFactorsDelegate();
+
     public interface IServiceCommandsManager
     {
         Task GetLastErrorCodeAsync(OnGetLastErrorCodeDelegate onGetLastErrorCode);
@@ -39,5 +43,9 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
         Task SetUbattFactorsAsync(float a, float b, OnSetUbattFactorsDelegate onSetUbattFactors);
 
         Task GetBattLevelFactorsAsync(OnGetBattLevelFactorsDelegate onGetBattLevelFactors);
+
+        Task ResetBattLevelFactorsAsync(OnResetBattLevelFactorsDelegate onResetBattLevelFactors);
+
+        Task SetBattLevelFactorsAsync(float a, float b, OnSetBattLevelFactorsDelegate onSetBattLevelFactors);
     }
 }

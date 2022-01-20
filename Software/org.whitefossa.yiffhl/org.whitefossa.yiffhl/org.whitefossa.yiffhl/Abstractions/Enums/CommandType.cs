@@ -91,6 +91,8 @@
 
         SetUbattADCToUbattVoltsFactors = 0x2A,
 
-        GetUbattVoltsToBattLevelFactors = 0x2B
+        GetUbattVoltsToBattLevelFactors = 0x2B,
+
+        SetUbattVoltsToBattLevelFactors = 0x2C
     }
 }

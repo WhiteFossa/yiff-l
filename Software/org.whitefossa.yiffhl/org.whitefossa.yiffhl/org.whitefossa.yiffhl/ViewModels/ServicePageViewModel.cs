@@ -431,12 +431,12 @@ namespace org.whitefossa.yiffhl.ViewModels
 
         private async Task OnResetBattLevelFactorsAsync()
         {
-            //await _serviceCommandsManager.ResetUbattFactorsAsync(async () => await OnResetUbattFactorsResponseAsync());
+            await _serviceCommandsManager.ResetBattLevelFactorsAsync(async () => await OnResetBattLevelFactorsResponseAsync());
         }
 
         private async Task OnResetBattLevelFactorsResponseAsync()
         {
-            //await OnGetUbattFactorsAsync();
+            await OnGetBattLevelFactorsAsync();
         }
 
         #endregion
@@ -445,28 +445,28 @@ namespace org.whitefossa.yiffhl.ViewModels
 
         private async Task OnSetBattLevelFactorsAsync()
         {
-            //float newA;
-            //if (!float.TryParse(UBattAFactorAsString, out newA))
-            //{
-            //    // Invalid value
-            //    await _userNotifier.ShowErrorMessageAsync("Wrong value", "Factor A is not a number!");
-            //    return;
-            //}
+            float newA;
+            if (!float.TryParse(BattLevelAFactorAsString, out newA))
+            {
+                // Invalid value
+                await _userNotifier.ShowErrorMessageAsync("Wrong value", "Factor A is not a number!");
+                return;
+            }
 
-            //float newB;
-            //if (!float.TryParse(UBattBFactorAsString, out newB))
-            //{
-            //    // Invalid value
-            //    await _userNotifier.ShowErrorMessageAsync("Wrong value", "Factor B is not a number!");
-            //    return;
-            //}
+            float newB;
+            if (!float.TryParse(BattLevelBFactorAsString, out newB))
+            {
+                // Invalid value
+                await _userNotifier.ShowErrorMessageAsync("Wrong value", "Factor B is not a number!");
+                return;
+            }
 
-            //await _serviceCommandsManager.SetUbattFactorsAsync(newA, newB, async () => await OnSetUbattFactorsResponseAsync());
+            await _serviceCommandsManager.SetBattLevelFactorsAsync(newA, newB, async () => await OnSetBattLevelFactorsResponseAsync());
         }
 
         private async Task OnSetBattLevelFactorsResponseAsync()
         {
-            //await OnGetUbattFactorsAsync();
+            await OnGetBattLevelFactorsAsync();
         }
 
         #endregion
