@@ -361,6 +361,16 @@ typedef struct
 	 * When executing a "Set Ubatt(ADC) to Ubatt(Volts) factors" command new B Factor will be stored here
 	 */
 	float SetThisUbattADCToUbattVoltsBFactor;
+
+	/**
+	 * When executing a "Set Ubatt(Volts) to battery level factors" command new A Factor will be stored here
+	 */
+	float SetThisUbattVoltsToBattLevelAFactor;
+
+	/**
+	 * When executing a "Set Ubatt(Volts) to battery level factors" command new B Factor will be stored here
+	 */
+	float SetThisUbattVoltsToBattLevelBFactor;
 }
 ServiceSettingsStruct;
 

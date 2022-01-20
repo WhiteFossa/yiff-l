@@ -205,6 +205,7 @@ void Main_ProcessHighPriorityEvents(void)
 	Main_ProcessResetLastFailureCode();
 	Main_ProcessSerialNumberUpdate();
 	Main_ProcessSetUbattADCToUbattVoltsFactors();
+	Main_ProcessSetUbattVoltsToBattLevelFactors();
 }
 
 void Main_ProcessFoxNameChange(void)
@@ -518,6 +519,22 @@ void Main_ProcessSetUbattADCToUbattVoltsFactors(void)
 		SendResponse(SetUbattADCToUbattVoltsFactors, 1, &response);
 
 		PendingCommandsFlags.NeedToSetUbattADCToUbattVoltsFactors = false;
+	}
+}
+
+void Main_ProcessSetUbattVoltsToBattLevelFactors(void)
+{
+	if (PendingCommandsFlags.NeedToSetUbattVoltsToBattLevelFactors)
+	{
+		EEPROM_Header.BattLevelA = FoxState.ServiceSettings.SetThisUbattVoltsToBattLevelAFactor;
+		EEPROM_Header.BattLevelB = FoxState.ServiceSettings.SetThisUbattVoltsToBattLevelBFactor;
+
+		EEPROM_UpdateHeader();
+
+		uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
+		SendResponse(SetUbattVoltsToBattLevelFactors, 1, &response);
+
+		PendingCommandsFlags.NeedToSetUbattVoltsToBattLevelFactors = false;
 	}
 }
 

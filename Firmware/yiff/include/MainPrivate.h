@@ -191,6 +191,11 @@ void Main_ProcessSerialNumberUpdate(void);
 void Main_ProcessSetUbattADCToUbattVoltsFactors(void);
 
 /**
+ * Updates Ubatt(Volts)->Battery level factors if needed
+ */
+void Main_ProcessSetUbattVoltsToBattLevelFactors(void);
+
+/**
  * As it name states, processes high priority events.
  */
 void Main_ProcessHighPriorityEvents(void);

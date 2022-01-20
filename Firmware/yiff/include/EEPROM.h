@@ -63,6 +63,12 @@ extern L2HAL_24x_ContextStruct EEPROMContext;
 #define YHL_DEFAULT_ADC_UBATT_B 0.3647f
 
 /**
+ * Default factors for UBatt(Volts)->Battery level conversion
+ */
+#define YHL_DEFAULT_BATTERY_LEVEL_A 0.4167f
+#define YHL_DEFAULT_BATTERY_LEVEL_B -2.5002f
+
+/**
  * Default factors for U80m(ADC)->Volts conversion
  */
 #define YHL_DEFAULT_ADC_U80M_A 0.006281f
@@ -135,6 +141,15 @@ typedef struct
 	float UBattADCA;
 	float UBattADCB;
 
+	/**
+	 * Factors to convert Ubatt(Volts) to battery level
+	 */
+	float BattLevelA;
+	float BattLevelB;
+
+	/**
+	 * Factors to calculate U80m(ADC) -> U80m(Volts)
+	 */
 	float U80mADCA;
 	float U80mADCB;
 

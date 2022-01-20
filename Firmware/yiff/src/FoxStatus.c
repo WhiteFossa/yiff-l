@@ -55,6 +55,7 @@ void FoxState_Init(void)
 	PendingCommandsFlags.NeedToUpdateSerialNumber = false;
 
 	PendingCommandsFlags.NeedToSetUbattADCToUbattVoltsFactors = false;
+	PendingCommandsFlags.NeedToSetUbattVoltsToBattLevelFactors = false;
 
 	FoxState.CurrentDisplay = StatusDisplay;
 }
@@ -213,6 +214,25 @@ bool FoxState_SetUbattADCToUbattVoltsFactors(bool reset, float a, float b)
 
 
 	PendingCommandsFlags.NeedToSetUbattADCToUbattVoltsFactors = true;
+
+	return true;
+}
+
+bool FoxState_SetUbattVoltsToBattLevelFactors(bool reset, float a, float b)
+{
+	/* No fox-side check (at least for now) */
+	if (reset)
+	{
+		FoxState.ServiceSettings.SetThisUbattVoltsToBattLevelAFactor = YHL_DEFAULT_BATTERY_LEVEL_A;
+		FoxState.ServiceSettings.SetThisUbattVoltsToBattLevelBFactor = YHL_DEFAULT_BATTERY_LEVEL_B;
+	}
+	else
+	{
+		FoxState.ServiceSettings.SetThisUbattVoltsToBattLevelAFactor = a;
+		FoxState.ServiceSettings.SetThisUbattVoltsToBattLevelBFactor = b;
+	}
+
+	PendingCommandsFlags.NeedToSetUbattVoltsToBattLevelFactors = true;
 
 	return true;
 }

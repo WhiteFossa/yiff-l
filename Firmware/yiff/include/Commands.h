@@ -129,6 +129,11 @@ typedef struct
 	 * If true, then we need to save new Ubatt ADC->Volts factors
 	 */
 	bool NeedToSetUbattADCToUbattVoltsFactors;
+
+	/**
+	 * If true, then we need to save new Ubatt Volts->Batt level factors
+	 */
+	bool NeedToSetUbattVoltsToBattLevelFactors;
 }
 PendingCommandsFlagsStruct;
 

@@ -268,6 +268,16 @@ void OnNewCommandToFox(uint8_t payloadSize, uint8_t* payload)
 			/* Set Ubatt(ADC) -> Ubatt(Volts) factors */
 			OnSetUbattADCToUbattVoltsFactors(payloadSize, payload);
 			break;
+
+		case GetUbattVoltsToBattLevelFactors:
+			/* Get Ubatt(Volts) -> battery level factors */
+			OnGetUbattVoltsToBattLevelFactors(payloadSize, payload);
+			break;
+
+		case SetUbattVoltsToBattLevelFactors:
+			/* Set Ubatt(Volts) -> battery level factors */
+			OnSetUbattVoltsToBattLevelFactors(payloadSize, payload);
+			break;
 	}
 }
 
@@ -1289,6 +1299,60 @@ OnSetUbattADCToUbattVoltsFactors_Validate:
 	{
 		uint8_t result = YHL_PACKET_PROCESSOR_FAILURE;
 		SendResponse(SetUbattADCToUbattVoltsFactors, 1, &result);
+		return;
+	}
+}
+
+void OnGetUbattVoltsToBattLevelFactors(uint8_t payloadSize, uint8_t* payload)
+{
+	if (payloadSize != 1)
+	{
+		return;
+	}
+
+	uint8_t response[8];
+	memcpy(&response[0], &EEPROM_Header.BattLevelA, 4);
+	memcpy(&response[4], &EEPROM_Header.BattLevelB, 4);
+
+	SendResponse(GetUbattVoltsToBattLevelFactors, 8, &response);
+}
+
+void OnSetUbattVoltsToBattLevelFactors(uint8_t payloadSize, uint8_t* payload)
+{
+	bool isValid = true;
+
+	if (payloadSize != 10)
+	{
+		isValid = false;
+		goto OnSetUbattVoltsToBattLevelFactors_Validate;
+	}
+
+	if (!IsBool(payload[1]))
+	{
+		isValid = false;
+		goto OnSetUbattVoltsToBattLevelFactors_Validate;
+	}
+
+	bool isReset = ToBool(payload[1]);
+
+	float factorA;
+	memcpy(&factorA, &payload[2], 4);
+
+	float factorB;
+	memcpy(&factorB, &payload[6], 4);
+
+	/* Attempt to set */
+	isValid = FoxState_SetUbattVoltsToBattLevelFactors(isReset, factorA, factorB);
+	if (isValid)
+	{
+		return;
+	}
+
+OnSetUbattVoltsToBattLevelFactors_Validate:
+	if (!isValid)
+	{
+		uint8_t result = YHL_PACKET_PROCESSOR_FAILURE;
+		SendResponse(SetUbattVoltsToBattLevelFactors, 1, &result);
 		return;
 	}
 }

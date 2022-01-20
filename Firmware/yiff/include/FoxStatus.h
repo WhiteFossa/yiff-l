@@ -118,4 +118,10 @@ bool FoxState_SetPower(float power);
  */
 bool FoxState_SetUbattADCToUbattVoltsFactors(bool reset, float a, float b);
 
+/**
+ * Checks new factors for Battery Volts -> Level conversion and if successfull marks them to write into EEPROM.
+ * If reset == true, then A and B is ignored and factors are reset to the factory defaults.
+ */
+bool FoxState_SetUbattVoltsToBattLevelFactors(bool reset, float a, float b);
+
 #endif /* INCLUDE_FOXSTATUS_H_ */
