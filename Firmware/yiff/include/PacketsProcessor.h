@@ -156,7 +156,11 @@ typedef enum
 
 	GetUbattVoltsToBattLevelFactors = 0x2B,
 
-	SetUbattVoltsToBattLevelFactors = 0x2C
+	SetUbattVoltsToBattLevelFactors = 0x2C,
+
+	GetU80mADCtoU80mVoltsFactors = 0x2D,
+
+	SetU80mADCtoU80mVoltsFactors = 0x2E
 }
 CommandToFoxEnum;
 
@@ -424,6 +428,17 @@ void OnGetUbattVoltsToBattLevelFactors(uint8_t payloadSize, uint8_t* payload);
  * Called when "Set Ubatt(Volts) to battery level factors" command comes
  */
 void OnSetUbattVoltsToBattLevelFactors(uint8_t payloadSize, uint8_t* payload);
+
+/**
+ * Called when "Get U80m(ADC) to U80m(Volts) level factors" command comes
+ */
+void OnGetU80mADCtoU80mVoltsFactors(uint8_t payloadSize, uint8_t* payload);
+
+/**
+ * Called when "Set U80m(ADC) to U80m(Volts) level factors" command comes
+ */
+void OnSetU80mADCtoU80mVoltsFactors(uint8_t payloadSize, uint8_t* payload);
+
 
 /**
  * Emits "Entering sleepmode" event
