@@ -24,6 +24,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private readonly IGetBattLevelFactorsCommand _getBattLevelFactorsCommand;
         private readonly ISetBattLevelFactorsCommand _setBattLevelFactorsCommand;
 
+        private readonly IGetU80mADCCommand _getU80mADCCommand;
+
         #endregion
 
         private Abstractions.Interfaces.OnGetLastErrorCodeDelegate _onGetLastErrorCode;
@@ -42,6 +44,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private OnResetBattLevelFactorsDelegate _onResetBattLevelFactors;
         private OnSetBattLevelFactorsDelegate _onSetBattLevelFactors;
 
+        private OnGetU80mADCValueDelegate _onGetU80mADCValue;
+
         public ServiceCommandsManager(IGetLastErrorCodeCommand getLastErrorCodeCommand,
             IResetLastErrorCodeCommand resetLastErrorCodeCommand,
             IUpdateSerialNumberCommand updateSerialNumberCommand,
@@ -50,7 +54,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             IGetUbattFactorsCommand getUbattFactorsCommand,
             ISetUbattFactorsCommand setUbattFactorsCommand,
             IGetBattLevelFactorsCommand getBattLevelFactorsCommand,
-            ISetBattLevelFactorsCommand setBattLevelFactorsCommand)
+            ISetBattLevelFactorsCommand setBattLevelFactorsCommand,
+            IGetU80mADCCommand getU80mADCCommand)
         {
             _getLastErrorCodeCommand = getLastErrorCodeCommand;
             _resetLastErrorCodeCommand = resetLastErrorCodeCommand;
@@ -61,6 +66,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _setUbattFactorsCommand = setUbattFactorsCommand;
             _getBattLevelFactorsCommand = getBattLevelFactorsCommand;
             _setBattLevelFactorsCommand = setBattLevelFactorsCommand;
+            _getU80mADCCommand = getU80mADCCommand;
         }
 
         #region Get last error code
@@ -266,6 +272,23 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             }
 
             _onSetBattLevelFactors();
+        }
+
+        #endregion
+
+        #region Get U80m ADC value
+
+        public async Task GetU80mADCValueAsync(OnGetU80mADCValueDelegate onGetU80mADCValue)
+        {
+            _onGetU80mADCValue = onGetU80mADCValue ?? throw new ArgumentNullException(nameof(onGetU80mADCValue));
+
+            _getU80mADCCommand.SetResponseDelegate(OnGetU80mADCValueResponse);
+            _getU80mADCCommand.SendGetU80mADCCommand();
+        }
+
+        private void OnGetU80mADCValueResponse(float averagedADCValue)
+        {
+            _onGetU80mADCValue(averagedADCValue);
         }
 
         #endregion

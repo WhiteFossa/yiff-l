@@ -278,6 +278,46 @@
                 </Frame>
                 <!-- End of battery ADC -> Volts -->
 
+                <!-- U80m ADC -> Voltage -->
+                <Frame
+                    Style="{StaticResource FramesStyle}">
+
+                    <StackLayout>
+                        <Label
+                            Text="U80m (ADC -> Voltage)"
+                            HorizontalOptions="Center" />
+
+                        <StackLayout
+                            Orientation="Horizontal">
+
+                            <Label
+                                Text="ADC:"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                            <Label
+                                FontAttributes="Bold"
+                                Text="{Binding U80mADCValueAsString}"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                            <Label
+                                Text="Voltage:"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                            <Label
+                                FontAttributes="Bold"
+                                Text="{Binding U80mVoltageLevelAsString}"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                        </StackLayout>
+
+                    </StackLayout>
+                </Frame>
+                <!-- End of U80m ADC -> Voltage -->
+
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>

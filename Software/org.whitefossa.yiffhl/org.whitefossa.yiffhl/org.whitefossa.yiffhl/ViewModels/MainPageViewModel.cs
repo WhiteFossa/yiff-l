@@ -833,6 +833,14 @@ namespace org.whitefossa.yiffhl.ViewModels
             get => MainModel.IsConnected;
         }
 
+        /// <summary>
+        /// Is "Service settings" button enabled
+        /// </summary>
+        public bool IsServiceSettingsButtonEnabled
+        {
+            get => MainModel.IsConnected;
+        }
+
         public MainPageViewModel()
         {
             MainModel = App.Container.Resolve<IMainModel>() as MainModel;
@@ -1059,6 +1067,7 @@ namespace org.whitefossa.yiffhl.ViewModels
             OnPropertyChanged(nameof(IsPowerControlsEnabled));
             OnPropertyChanged(nameof(IsAddProfileButtonEnabled));
             OnPropertyChanged(nameof(IsShowLastAntennaMatchingButtonEnabled));
+            OnPropertyChanged(nameof(IsServiceSettingsButtonEnabled));
 
             #endregion
         }

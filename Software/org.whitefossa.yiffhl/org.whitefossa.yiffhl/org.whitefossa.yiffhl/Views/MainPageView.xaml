@@ -744,7 +744,7 @@
                         <Button
                             Text="Service settings"
                             Command="{Binding OpenServiceSettingsCommand}"
-                            IsEnabled="{Binding IsSettingsControlsEnabled}"/>
+                            IsEnabled="{Binding IsServiceSettingsButtonEnabled}"/>
                     </StackLayout>
                 </Frame>
                 <!-- End of service settings -->
