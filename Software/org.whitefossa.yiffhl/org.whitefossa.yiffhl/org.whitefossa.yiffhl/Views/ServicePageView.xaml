@@ -308,7 +308,7 @@
 
                             <Label
                                 FontAttributes="Bold"
-                                Text="{Binding U80mVoltageLevelAsString}"
+                                Text="{Binding U80mVoltageAsString}"
                                 HorizontalOptions="Start"
                                 VerticalOptions="Center" />
 

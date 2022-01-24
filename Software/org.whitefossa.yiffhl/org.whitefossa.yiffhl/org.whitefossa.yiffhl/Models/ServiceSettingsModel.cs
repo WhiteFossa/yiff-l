@@ -45,7 +45,7 @@
         /// <summary>
         /// U80m averaged voltage level
         /// </summary>
-        public float U80mAveragedVoltageLevel { get; set; }
+        public float U80mAveragedVoltage { get; set; }
 
         public ServiceSettingsModel()
         {
@@ -55,7 +55,7 @@
             BattLevelFactorA = 0;
             BattLevelFactorB = 0;
             U80mAveragedADCValue = 0;
-            U80mAveragedVoltageLevel = 0;
+            U80mAveragedVoltage = 0;
         }
     }
 }

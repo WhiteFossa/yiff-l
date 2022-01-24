@@ -25,6 +25,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private readonly ISetBattLevelFactorsCommand _setBattLevelFactorsCommand;
 
         private readonly IGetU80mADCCommand _getU80mADCCommand;
+        private readonly IGetU80mVoltsCommand _getU80mVoltsCommand;
 
         #endregion
 
@@ -45,6 +46,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private OnSetBattLevelFactorsDelegate _onSetBattLevelFactors;
 
         private OnGetU80mADCValueDelegate _onGetU80mADCValue;
+        private OnGetU80mVoltageDelegate _onGetU80mVoltage;
 
         public ServiceCommandsManager(IGetLastErrorCodeCommand getLastErrorCodeCommand,
             IResetLastErrorCodeCommand resetLastErrorCodeCommand,
@@ -55,7 +57,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             ISetUbattFactorsCommand setUbattFactorsCommand,
             IGetBattLevelFactorsCommand getBattLevelFactorsCommand,
             ISetBattLevelFactorsCommand setBattLevelFactorsCommand,
-            IGetU80mADCCommand getU80mADCCommand)
+            IGetU80mADCCommand getU80mADCCommand,
+            IGetU80mVoltsCommand getU80mVoltsCommand)
         {
             _getLastErrorCodeCommand = getLastErrorCodeCommand;
             _resetLastErrorCodeCommand = resetLastErrorCodeCommand;
@@ -67,6 +70,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _getBattLevelFactorsCommand = getBattLevelFactorsCommand;
             _setBattLevelFactorsCommand = setBattLevelFactorsCommand;
             _getU80mADCCommand = getU80mADCCommand;
+            _getU80mVoltsCommand = getU80mVoltsCommand;
         }
 
         #region Get last error code
@@ -289,6 +293,23 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private void OnGetU80mADCValueResponse(float averagedADCValue)
         {
             _onGetU80mADCValue(averagedADCValue);
+        }
+
+        #endregion
+
+        #region Get U80m Voltage
+
+        public async Task GetU80mVoltageAsync(OnGetU80mVoltageDelegate onGetU80mVoltage)
+        {
+            _onGetU80mVoltage = onGetU80mVoltage ?? throw new ArgumentNullException(nameof(onGetU80mVoltage));
+
+            _getU80mVoltsCommand.SetResponseDelegate(OnGetU80mVoltageResponse);
+            _getU80mVoltsCommand.SendGetU80mVoltsCommand();
+        }
+
+        private void OnGetU80mVoltageResponse(float averagedVoltage)
+        {
+            _onGetU80mVoltage(averagedVoltage);
         }
 
         #endregion

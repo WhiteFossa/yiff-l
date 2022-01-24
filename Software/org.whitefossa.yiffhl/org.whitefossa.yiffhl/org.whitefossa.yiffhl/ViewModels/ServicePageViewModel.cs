@@ -206,11 +206,11 @@ namespace org.whitefossa.yiffhl.ViewModels
         }
 
         /// <summary>
-        /// U80m averaged voltage level
+        /// U80m averaged voltage
         /// </summary>
-        public string U80mVoltageLevelAsString
+        public string U80mVoltageAsString
         {
-            get => String.Format("{0:0.0000}V", _mainModel.ServiceSettingsModel.U80mAveragedVoltageLevel);
+            get => String.Format("{0:0.0000}V", _mainModel.ServiceSettingsModel.U80mAveragedVoltage);
         }
 
         public ServicePageViewModel()
@@ -342,7 +342,7 @@ namespace org.whitefossa.yiffhl.ViewModels
             // Battery ADC level
             await _serviceCommandsManager.GetBatteryADCLevelAsync(async (l) => await OnGetBatteryADCLevelResponseAsync(l));
 
-            // Battery voltage level
+            // Battery voltage
             await _serviceCommandsManager.GetBatteryVoltageLevelAsync(async (l) => await OnGetBatteryVoltageLevelResponseAsync(l));
 
             // Charge level
@@ -350,6 +350,9 @@ namespace org.whitefossa.yiffhl.ViewModels
 
             // U80m ADC level
             await _serviceCommandsManager.GetU80mADCValueAsync(async (v) => await OnGetU80mADCValueResponseAsync(v));
+
+            // U80m voltage
+            await _serviceCommandsManager.GetU80mVoltageAsync(async (v) => await OnGetU80mVoltageResponseAsync(v));
         }
 
         private async Task OnGetBatteryADCLevelResponseAsync(float averagedADCLevel)
@@ -368,6 +371,12 @@ namespace org.whitefossa.yiffhl.ViewModels
         {
             _mainModel.ServiceSettingsModel.U80mAveragedADCValue = averagedADCValue;
             OnPropertyChanged(nameof(U80mADCValueAsString));
+        }
+
+        private async Task OnGetU80mVoltageResponseAsync(float averagedVoltage)
+        {
+            _mainModel.ServiceSettingsModel.U80mAveragedVoltage = averagedVoltage;
+            OnPropertyChanged(nameof(U80mVoltageAsString));
         }
 
         #endregion
