@@ -281,6 +281,7 @@ namespace org.whitefossa.yiffhl.ViewModels
             SetBattLevelFactorsCommand = new Command(async () => await OnSetBattLevelFactorsAsync());
 
             GetU80mFactorsCommand = new Command(async () => await OnGetU80mFactorsAsync());
+            ResetU80mFactorsCommand = new Command(async () => await OnResetU80mFactorsAsync());
 
             // Setting up poll service data timer
             PollServiceDataTimer = new Timer(PollServiceDataInterval);
@@ -566,6 +567,20 @@ namespace org.whitefossa.yiffhl.ViewModels
 
             U80mAFactorAsString = _mainModel.ServiceSettingsModel.U80mFactorA.ToString();
             U80mBFactorAsString = _mainModel.ServiceSettingsModel.U80mFactorB.ToString();
+        }
+
+        #endregion
+
+        #region Reset U80m factors
+
+        private async Task OnResetU80mFactorsAsync()
+        {
+            await _serviceCommandsManager.ResetU80mFactorsAsync(async () => await OnResetU80mFactorsResponseAsync());
+        }
+
+        private async Task OnResetU80mFactorsResponseAsync()
+        {
+            await OnGetU80mFactorsAsync();
         }
 
         #endregion

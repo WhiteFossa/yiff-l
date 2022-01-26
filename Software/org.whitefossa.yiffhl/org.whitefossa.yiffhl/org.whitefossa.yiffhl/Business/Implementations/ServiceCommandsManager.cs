@@ -28,6 +28,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private readonly IGetU80mVoltsCommand _getU80mVoltsCommand;
 
         private readonly IGetU80mFactorsCommand _getU80mFactorsCommand;
+        private readonly ISetU80mFactorsCommand _setU80mFactorsCommand;
 
         #endregion
 
@@ -51,6 +52,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private OnGetU80mVoltageDelegate _onGetU80mVoltage;
 
         private OnGetU80mFactorsDelegate _onGetU80mFactors;
+        private OnResetU80mFactorsDelegate _onResetU80mFactors;
 
         public ServiceCommandsManager(IGetLastErrorCodeCommand getLastErrorCodeCommand,
             IResetLastErrorCodeCommand resetLastErrorCodeCommand,
@@ -63,7 +65,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             ISetBattLevelFactorsCommand setBattLevelFactorsCommand,
             IGetU80mADCCommand getU80mADCCommand,
             IGetU80mVoltsCommand getU80mVoltsCommand,
-            IGetU80mFactorsCommand getU80mFactorsCommand)
+            IGetU80mFactorsCommand getU80mFactorsCommand,
+            ISetU80mFactorsCommand setU80mFactorsCommand)
         {
             _getLastErrorCodeCommand = getLastErrorCodeCommand;
             _resetLastErrorCodeCommand = resetLastErrorCodeCommand;
@@ -77,6 +80,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _getU80mADCCommand = getU80mADCCommand;
             _getU80mVoltsCommand = getU80mVoltsCommand;
             _getU80mFactorsCommand = getU80mFactorsCommand;
+            _setU80mFactorsCommand = setU80mFactorsCommand;
         }
 
         #region Get last error code
@@ -333,6 +337,28 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private void OnGetU80mFactorsResponse(float a, float b)
         {
             _onGetU80mFactors(a, b);
+        }
+
+        #endregion
+
+        #region Reset U80m(ADC) -> U80m(Volts) factors
+
+        public async Task ResetU80mFactorsAsync(OnResetU80mFactorsDelegate onResetu80mFactors)
+        {
+            _onResetU80mFactors = onResetu80mFactors;
+
+            _setU80mFactorsCommand.SetResponseDelegate(OnResetU80mFactorsResponse);
+            _setU80mFactorsCommand.SendSetU80mFactors(true, 0, 0);
+        }
+
+        private void OnResetU80mFactorsResponse(bool isSuccessfull)
+        {
+            if (!isSuccessfull)
+            {
+                throw new InvalidOperationException("Failed to reset U80m(ADC) -> U80m(Volts) factors!");
+            }
+
+            _onResetU80mFactors();
         }
 
         #endregion
