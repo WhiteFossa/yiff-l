@@ -282,6 +282,7 @@ namespace org.whitefossa.yiffhl.ViewModels
 
             GetU80mFactorsCommand = new Command(async () => await OnGetU80mFactorsAsync());
             ResetU80mFactorsCommand = new Command(async () => await OnResetU80mFactorsAsync());
+            SetU80mFactorsCommand = new Command(async () => await OnSetU80mFactorsAsync());
 
             // Setting up poll service data timer
             PollServiceDataTimer = new Timer(PollServiceDataInterval);
@@ -579,6 +580,36 @@ namespace org.whitefossa.yiffhl.ViewModels
         }
 
         private async Task OnResetU80mFactorsResponseAsync()
+        {
+            await OnGetU80mFactorsAsync();
+        }
+
+        #endregion
+
+        #region Set U80m factors
+
+        private async Task OnSetU80mFactorsAsync()
+        {
+            float newA;
+            if (!float.TryParse(U80mAFactorAsString, out newA))
+            {
+                // Invalid value
+                await _userNotifier.ShowErrorMessageAsync("Wrong value", "Factor A is not a number!");
+                return;
+            }
+
+            float newB;
+            if (!float.TryParse(U80mBFactorAsString, out newB))
+            {
+                // Invalid value
+                await _userNotifier.ShowErrorMessageAsync("Wrong value", "Factor B is not a number!");
+                return;
+            }
+
+            await _serviceCommandsManager.SetU80mFactorsAsync(newA, newB, async () => await OnSetU80mFactorsResponseAsync());
+        }
+
+        private async Task OnSetU80mFactorsResponseAsync()
         {
             await OnGetU80mFactorsAsync();
         }

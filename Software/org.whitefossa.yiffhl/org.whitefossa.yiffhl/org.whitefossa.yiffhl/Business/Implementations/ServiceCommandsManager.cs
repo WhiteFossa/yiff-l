@@ -53,6 +53,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
 
         private OnGetU80mFactorsDelegate _onGetU80mFactors;
         private OnResetU80mFactorsDelegate _onResetU80mFactors;
+        private OnSetU80mFactorsDelegate _onSetU80mFactors;
 
         public ServiceCommandsManager(IGetLastErrorCodeCommand getLastErrorCodeCommand,
             IResetLastErrorCodeCommand resetLastErrorCodeCommand,
@@ -359,6 +360,28 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             }
 
             _onResetU80mFactors();
+        }
+
+        #endregion
+
+        #region Set U80m(ADC) -> U80m(Volts) factors
+
+        public async Task SetU80mFactorsAsync(float a, float b, OnSetU80mFactorsDelegate onSetU80mFactors)
+        {
+            _onSetU80mFactors = onSetU80mFactors;
+
+            _setU80mFactorsCommand.SetResponseDelegate(OnSetU80mFactorsResponse);
+            _setU80mFactorsCommand.SendSetU80mFactors(false, a, b);
+        }
+
+        private void OnSetU80mFactorsResponse(bool isSuccessfull)
+        {
+            if (!isSuccessfull)
+            {
+                throw new InvalidOperationException("Failed to set U80m(ADC) -> U80m(Volts) factors!");
+            }
+
+            _onSetU80mFactors();
         }
 
         #endregion
