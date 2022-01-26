@@ -28,6 +28,8 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
 
     public delegate void OnGetU80mVoltageDelegate(float averagedVoltage);
 
+    public delegate void OnGetU80mFactorsDelegate(float a, float b);
+
     public interface IServiceCommandsManager
     {
         Task GetLastErrorCodeAsync(OnGetLastErrorCodeDelegate onGetLastErrorCode);
@@ -55,5 +57,7 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
         Task GetU80mADCValueAsync(OnGetU80mADCValueDelegate onGetU80mADCValue);
 
         Task GetU80mVoltageAsync(OnGetU80mVoltageDelegate onGetU80mVoltage);
+
+        Task GetU80mFactorsAsync(OnGetU80mFactorsDelegate onGetU80mFactors);
     }
 }

@@ -78,6 +78,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
         private OnResponseDelegate _onSetUBattFactorsResponse;
         private OnResponseDelegate _onGetBattLevelFactorsResponse;
         private OnResponseDelegate _onSetBattLevelFactorsResponse;
+        private OnResponseDelegate _onGetU80mFactorsResponse;
 
         #endregion
 
@@ -587,6 +588,13 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
                         _onSetBattLevelFactorsResponse(responsePayload);
                         break;
 
+                    // Get U80m(ADC) -> U80m(Volts) factors
+                    case CommandType.GetU80mADCToU80mVoltsFactors:
+                        CheckOnResponseDelegate(_onGetU80mFactorsResponse);
+
+                        _onGetU80mFactorsResponse(responsePayload);
+                        break;
+
                     default:
                         return; // We've got some junk
                 }
@@ -949,6 +957,12 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
         {
             _onSetBattLevelFactorsResponse = onSetBattLevelFactorsResponse
                 ?? throw new ArgumentNullException(nameof(onSetBattLevelFactorsResponse));
+        }
+
+        public void SetOnGetU80mFactorsResponse(OnResponseDelegate onGetU80mFactorsResponse)
+        {
+            _onGetU80mFactorsResponse = onGetU80mFactorsResponse
+                ?? throw new ArgumentNullException(nameof(onGetU80mFactorsResponse));
         }
     }
 }

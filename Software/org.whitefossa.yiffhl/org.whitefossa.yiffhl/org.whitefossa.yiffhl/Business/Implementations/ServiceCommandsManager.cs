@@ -27,6 +27,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private readonly IGetU80mADCCommand _getU80mADCCommand;
         private readonly IGetU80mVoltsCommand _getU80mVoltsCommand;
 
+        private readonly IGetU80mFactorsCommand _getU80mFactorsCommand;
+
         #endregion
 
         private Abstractions.Interfaces.OnGetLastErrorCodeDelegate _onGetLastErrorCode;
@@ -48,6 +50,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private OnGetU80mADCValueDelegate _onGetU80mADCValue;
         private OnGetU80mVoltageDelegate _onGetU80mVoltage;
 
+        private OnGetU80mFactorsDelegate _onGetU80mFactors;
+
         public ServiceCommandsManager(IGetLastErrorCodeCommand getLastErrorCodeCommand,
             IResetLastErrorCodeCommand resetLastErrorCodeCommand,
             IUpdateSerialNumberCommand updateSerialNumberCommand,
@@ -58,7 +62,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             IGetBattLevelFactorsCommand getBattLevelFactorsCommand,
             ISetBattLevelFactorsCommand setBattLevelFactorsCommand,
             IGetU80mADCCommand getU80mADCCommand,
-            IGetU80mVoltsCommand getU80mVoltsCommand)
+            IGetU80mVoltsCommand getU80mVoltsCommand,
+            IGetU80mFactorsCommand getU80mFactorsCommand)
         {
             _getLastErrorCodeCommand = getLastErrorCodeCommand;
             _resetLastErrorCodeCommand = resetLastErrorCodeCommand;
@@ -71,6 +76,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _setBattLevelFactorsCommand = setBattLevelFactorsCommand;
             _getU80mADCCommand = getU80mADCCommand;
             _getU80mVoltsCommand = getU80mVoltsCommand;
+            _getU80mFactorsCommand = getU80mFactorsCommand;
         }
 
         #region Get last error code
@@ -310,6 +316,23 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private void OnGetU80mVoltageResponse(float averagedVoltage)
         {
             _onGetU80mVoltage(averagedVoltage);
+        }
+
+        #endregion
+
+        #region Get U80m(ADC) -> U80m(Volts) factors
+
+        public async Task GetU80mFactorsAsync(OnGetU80mFactorsDelegate onGetU80mFactors)
+        {
+            _onGetU80mFactors = onGetU80mFactors ?? throw new ArgumentNullException(nameof(onGetU80mFactors));
+
+            _getU80mFactorsCommand.SetResponseDelegate(OnGetU80mFactorsResponse);
+            _getU80mFactorsCommand.SendGetU80mFactorsCommand();
+        }
+
+        private void OnGetU80mFactorsResponse(float a, float b)
+        {
+            _onGetU80mFactors(a, b);
         }
 
         #endregion

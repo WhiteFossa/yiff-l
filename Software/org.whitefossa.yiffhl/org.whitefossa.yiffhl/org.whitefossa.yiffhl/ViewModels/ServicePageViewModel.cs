@@ -213,6 +213,51 @@ namespace org.whitefossa.yiffhl.ViewModels
             get => String.Format("{0:0.0000}V", _mainModel.ServiceSettingsModel.U80mAveragedVoltage);
         }
 
+        /// <summary>
+        /// A factor for U80m(ADC) -> U80m(Volts)
+        /// </summary>
+        private string _u80mAFactorAsString;
+
+        public string U80mAFactorAsString
+        {
+            get => _u80mAFactorAsString;
+            set
+            {
+                _u80mAFactorAsString = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// B factor for U80m(ADC) -> U80m(Volts)
+        /// </summary>
+        private string _u80mBFactorAsString;
+
+        public string U80mBFactorAsString
+        {
+            get => _u80mBFactorAsString;
+            set
+            {
+                _u80mBFactorAsString = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Get U80m factors
+        /// </summary>
+        public ICommand GetU80mFactorsCommand { get; }
+
+        /// <summary>
+        /// Reset U80m factors
+        /// </summary>
+        public ICommand ResetU80mFactorsCommand { get; }
+
+        /// <summary>
+        /// Set U80m factors
+        /// </summary>
+        public ICommand SetU80mFactorsCommand { get; }
+
         public ServicePageViewModel()
         {
 
@@ -234,6 +279,8 @@ namespace org.whitefossa.yiffhl.ViewModels
             GetBattLevelFactorsCommand = new Command(async () => await OnGetBattLevelFactorsAsync());
             ResetBattLevelFactorsCommand = new Command(async () => await OnResetBattLevelFactorsAsync());
             SetBattLevelFactorsCommand = new Command(async () => await OnSetBattLevelFactorsAsync());
+
+            GetU80mFactorsCommand = new Command(async () => await OnGetU80mFactorsAsync());
 
             // Setting up poll service data timer
             PollServiceDataTimer = new Timer(PollServiceDataInterval);
@@ -501,6 +548,24 @@ namespace org.whitefossa.yiffhl.ViewModels
         private async Task OnSetBattLevelFactorsResponseAsync()
         {
             await OnGetBattLevelFactorsAsync();
+        }
+
+        #endregion
+
+        #region Get U80m factors
+
+        private async Task OnGetU80mFactorsAsync()
+        {
+            await _serviceCommandsManager.GetU80mFactorsAsync(async (a, b) => await OnGetU80mFactorsResponseAsync(a, b));
+        }
+
+        private async Task OnGetU80mFactorsResponseAsync(float a, float b)
+        {
+            _mainModel.ServiceSettingsModel.U80mFactorA = a;
+            _mainModel.ServiceSettingsModel.U80mFactorB = b;
+
+            U80mAFactorAsString = _mainModel.ServiceSettingsModel.U80mFactorA.ToString();
+            U80mBFactorAsString = _mainModel.ServiceSettingsModel.U80mFactorB.ToString();
         }
 
         #endregion

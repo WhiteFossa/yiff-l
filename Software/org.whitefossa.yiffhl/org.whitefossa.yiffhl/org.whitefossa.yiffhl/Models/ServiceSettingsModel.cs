@@ -47,15 +47,32 @@
         /// </summary>
         public float U80mAveragedVoltage { get; set; }
 
+        /// <summary>
+        /// U80m(Volts) = U80m(ADC) * A + B
+        /// </summary>
+        public float U80mFactorA { get; set; }
+
+        /// <summary>
+        /// U80m(Volts) = U80m(ADC) * A + B
+        /// </summary>
+        public float U80mFactorB { get; set; }
+
         public ServiceSettingsModel()
         {
             LastErrorCode = null;
+
             BatteryAveragedADCLevel = 0;
+
             BatteryAveragedVoltageLevel = 0;
+
             BattLevelFactorA = 0;
             BattLevelFactorB = 0;
+
             U80mAveragedADCValue = 0;
             U80mAveragedVoltage = 0;
+
+            U80mFactorA = 0;
+            U80mFactorB = 0;
         }
     }
 }

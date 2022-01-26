@@ -311,7 +311,58 @@
                                 Text="{Binding U80mVoltageAsString}"
                                 HorizontalOptions="Start"
                                 VerticalOptions="Center" />
+                        </StackLayout>
 
+                        <StackLayout
+                            Orientation="Horizontal">
+
+                            <Label
+                                Text="Voltage = "
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                            <Editor
+                                Keyboard="Numeric"
+                                HorizontalOptions="FillAndExpand"
+                                VerticalOptions="Center"
+                                Text="{Binding U80mAFactorAsString}" />
+
+                            <Label
+                                Text=" * ADC + "
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                            <Editor
+                                Keyboard="Numeric"
+                                HorizontalOptions="FillAndExpand"
+                                VerticalOptions="Center"
+                                Text="{Binding U80mBFactorAsString}" />
+                        </StackLayout>
+
+                        <StackLayout
+                            Orientation="Horizontal"
+                            HorizontalOptions="CenterAndExpand">
+
+                            <Button
+                                Text="Get"
+                                VerticalOptions="Center"
+                                HorizontalOptions="End"
+                                Command="{Binding GetU80mFactorsCommand}"
+                                />
+
+                            <Button
+                                Text="Set"
+                                VerticalOptions="Center"
+                                HorizontalOptions="End"
+                                Command="{Binding SetU80mFactorsCommand}"
+                                />
+
+                            <Button
+                                Text="Reset"
+                                VerticalOptions="Center"
+                                HorizontalOptions="End"
+                                Command="{Binding ResetU80mFactorsCommand}"
+                                />
                         </StackLayout>
 
                     </StackLayout>
