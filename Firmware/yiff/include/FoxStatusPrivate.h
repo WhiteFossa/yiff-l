@@ -373,14 +373,24 @@ typedef struct
 	float SetThisUbattVoltsToBattLevelBFactor;
 
 	/**
-	 * When executing a "Set U80m(ADC) to U80m(Volts) level factors" command new A Factor will be stored here
+	 * When executing a "Set U80m(ADC) to U80m(Volts) factors" command new A Factor will be stored here
 	 */
 	float SetThisU80mADCtoU80mVoltsAFactor;
 
 	/**
-	 * When executing a "Set U80m(ADC) to U80m(Volts) level factors" command new B Factor will be stored here
+	 * When executing a "Set U80m(ADC) to U80m(Volts) factors" command new B Factor will be stored here
 	 */
 	float SetThisU80mADCtoU80mVoltsBFactor;
+
+	/**
+	 * When executing a "Set P80m to U80m factors" command new A Factor will be stored here
+	 */
+	float SetThisP80mToU80mAFactor;
+
+	/**
+	 * When executing a "Set P80m to U80m factors" command new B Factor will be stored here
+	 */
+	float SetThisP80mToU80mBFactor;
 }
 ServiceSettingsStruct;
 

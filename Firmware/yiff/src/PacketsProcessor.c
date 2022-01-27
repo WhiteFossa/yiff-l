@@ -288,6 +288,16 @@ void OnNewCommandToFox(uint8_t payloadSize, uint8_t* payload)
 			/* Set U80m(ADC) -> U80m(Volts) factors */
 			OnSetU80mADCtoU80mVoltsFactors(payloadSize, payload);
 			break;
+
+		case GetP80mToU80mFactors:
+			/* Get P80m -> U80m factors */
+			OnGetP80mToU80mFactors(payloadSize, payload);
+			break;
+
+		case SetP80mToU80mFactors:
+			/* Set P80m -> U80m factors */
+			OnSetP80mToU80mFactors(payloadSize, payload);
+			break;
 	}
 }
 
@@ -1417,6 +1427,60 @@ void OnSetU80mADCtoU80mVoltsFactors(uint8_t payloadSize, uint8_t* payload)
 	{
 		uint8_t result = YHL_PACKET_PROCESSOR_FAILURE;
 		SendResponse(SetU80mADCtoU80mVoltsFactors, 1, &result);
+		return;
+	}
+}
+
+void OnGetP80mToU80mFactors(uint8_t payloadSize, uint8_t* payload)
+{
+	if (payloadSize != 1)
+	{
+		return;
+	}
+
+	uint8_t response[8];
+	memcpy(&response[0], &EEPROM_Header.P80mA, 4);
+	memcpy(&response[4], &EEPROM_Header.P80mB, 4);
+
+	SendResponse(GetP80mToU80mFactors, 8, &response);
+}
+
+void OnSetP80mToU80mFactors(uint8_t payloadSize, uint8_t* payload)
+{
+	bool isValid = true;
+
+	if (payloadSize != 10)
+	{
+		isValid = false;
+		goto OnSetP80mToU80mFactors_Validate;
+	}
+
+	if (!IsBool(payload[1]))
+	{
+		isValid = false;
+		goto OnSetP80mToU80mFactors_Validate;
+	}
+
+	bool isReset = ToBool(payload[1]);
+
+	float factorA;
+	memcpy(&factorA, &payload[2], 4);
+
+	float factorB;
+	memcpy(&factorB, &payload[6], 4);
+
+	/* Attempt to set */
+	isValid = FoxState_SetP80mToU80mFactors(isReset, factorA, factorB);
+	if (isValid)
+	{
+		return;
+	}
+
+	OnSetP80mToU80mFactors_Validate: // TODO: Refactor validation
+	if (!isValid)
+	{
+		uint8_t result = YHL_PACKET_PROCESSOR_FAILURE;
+		SendResponse(SetP80mToU80mFactors, 1, &result);
 		return;
 	}
 }

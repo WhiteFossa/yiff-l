@@ -201,6 +201,11 @@ void Main_ProcessSetUbattVoltsToBattLevelFactors(void);
 void Main_ProcessSetU80mADCToU80mVoltsFactors(void);
 
 /**
+ * Updates P80m->U80m factors if needed
+ */
+void Main_ProcessSetP80mToU80mFactors(void);
+
+/**
  * As it name states, processes high priority events.
  */
 void Main_ProcessHighPriorityEvents(void);

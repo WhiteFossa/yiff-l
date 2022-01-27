@@ -130,4 +130,10 @@ bool FoxState_SetUbattVoltsToBattLevelFactors(bool reset, float a, float b);
  */
 bool FoxState_SetU80mADCtoU80mVoltsFactors(bool reset, float a, float b);
 
+/**
+ * Checks new factors for P80m -> U80m conversion and if successful marks them to write into EEPROM.
+ * If reset == true, then A and B is ignored and factors are reset to the factory defaults.
+ */
+bool FoxState_SetP80mToU80mFactors(bool reset, float a, float b);
+
 #endif /* INCLUDE_FOXSTATUS_H_ */

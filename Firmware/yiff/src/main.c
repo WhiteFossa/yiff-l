@@ -207,6 +207,7 @@ void Main_ProcessHighPriorityEvents(void)
 	Main_ProcessSetUbattADCToUbattVoltsFactors();
 	Main_ProcessSetUbattVoltsToBattLevelFactors();
 	Main_ProcessSetU80mADCToU80mVoltsFactors();
+	Main_ProcessSetP80mToU80mFactors();
 }
 
 void Main_ProcessFoxNameChange(void)
@@ -552,6 +553,22 @@ void Main_ProcessSetU80mADCToU80mVoltsFactors(void)
 		SendResponse(SetU80mADCtoU80mVoltsFactors, 1, &response);
 
 		PendingCommandsFlags.NeedToSetU80mADCtoU80mVoltsFactors = false;
+	}
+}
+
+void Main_ProcessSetP80mToU80mFactors(void)
+{
+	if (PendingCommandsFlags.NeedToSetP80mToU80mFactors)
+	{
+		EEPROM_Header.P80mA = FoxState.ServiceSettings.SetThisP80mToU80mAFactor;
+		EEPROM_Header.P80mB = FoxState.ServiceSettings.SetThisP80mToU80mBFactor;
+
+		EEPROM_UpdateHeader();
+
+		uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
+		SendResponse(SetP80mToU80mFactors, 1, &response);
+
+		PendingCommandsFlags.NeedToSetP80mToU80mFactors = false;
 	}
 }
 
