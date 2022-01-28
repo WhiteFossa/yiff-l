@@ -164,7 +164,13 @@ typedef enum
 
 	GetP80mToU80mFactors = 0x2F,
 
-	SetP80mToU80mFactors = 0x30
+	SetP80mToU80mFactors = 0x30,
+
+	GetUantVolts = 0x31,
+
+	GetUantADCToUantVoltsFactors = 0x32,
+
+	SetUantADCToUantVoltsFactors = 0x33
 }
 CommandToFoxEnum;
 
@@ -452,6 +458,21 @@ void OnGetP80mToU80mFactors(uint8_t payloadSize, uint8_t* payload);
  * Called when "Set P80m to U80m factors" command comes
  */
 void OnSetP80mToU80mFactors(uint8_t payloadSize, uint8_t* payload);
+
+/**
+ * Called when "Get Uant(volts) command comes
+ */
+void OnGetUantVolts(uint8_t payloadSize, uint8_t* payload);
+
+/**
+ * Called when "Get Uant(ADC) -> Uant(Volts) factors" command comes
+ */
+void OnGetUantADCToUantVoltsFactors(uint8_t payloadSize, uint8_t* payload);
+
+/**
+ * Called when "Set Uant(ADC) -> Uant(Volts) factors" command comes
+ */
+void OnSetUantADCToUantVoltsFactors(uint8_t payloadSize, uint8_t* payload);
 
 /**
  * Emits "Entering sleepmode" event

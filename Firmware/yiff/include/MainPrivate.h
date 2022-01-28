@@ -206,6 +206,11 @@ void Main_ProcessSetU80mADCToU80mVoltsFactors(void);
 void Main_ProcessSetP80mToU80mFactors(void);
 
 /**
+ * Updates Uant(ADC)->Uant(Volts) factors if needed
+ */
+void Main_ProcessSetUantADCToUantVoltsFactors(void);
+
+/**
  * As it name states, processes high priority events.
  */
 void Main_ProcessHighPriorityEvents(void);

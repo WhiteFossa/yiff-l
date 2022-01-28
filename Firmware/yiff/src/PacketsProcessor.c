@@ -298,6 +298,21 @@ void OnNewCommandToFox(uint8_t payloadSize, uint8_t* payload)
 			/* Set P80m -> U80m factors */
 			OnSetP80mToU80mFactors(payloadSize, payload);
 			break;
+
+		case GetUantVolts:
+			/* Get Uant(Volts) */
+			OnGetUantVolts(payloadSize, payload);
+			break;
+
+		case GetUantADCToUantVoltsFactors:
+			/* Get Uant(ADC) -> Uant(Volts) factors */
+			OnGetUantADCToUantVoltsFactors(payloadSize, payload);
+			break;
+
+		case SetUantADCToUantVoltsFactors:
+			/* Set Uant(ADC) -> Uant(Volts) factors */
+			OnSetUantADCToUantVoltsFactors(payloadSize, payload);
+			break;
 	}
 }
 
@@ -1481,6 +1496,71 @@ void OnSetP80mToU80mFactors(uint8_t payloadSize, uint8_t* payload)
 	{
 		uint8_t result = YHL_PACKET_PROCESSOR_FAILURE;
 		SendResponse(SetP80mToU80mFactors, 1, &result);
+		return;
+	}
+}
+
+void OnGetUantVolts(uint8_t payloadSize, uint8_t* payload)
+{
+	if (payloadSize != 1)
+	{
+		return;
+	}
+
+	float response = HAL_GetUAntVolts();
+	SendResponse(GetUantVolts, 4, (uint8_t*)&response);
+}
+
+void OnGetUantADCToUantVoltsFactors(uint8_t payloadSize, uint8_t* payload)
+{
+	if (payloadSize != 1)
+	{
+		return;
+	}
+
+	uint8_t response[8];
+	memcpy(&response[0], &EEPROM_Header.UAntADCA, 4);
+	memcpy(&response[4], &EEPROM_Header.UAntADCB, 4);
+
+	SendResponse(GetUantADCToUantVoltsFactors, 8, &response);
+}
+
+void OnSetUantADCToUantVoltsFactors(uint8_t payloadSize, uint8_t* payload)
+{
+	bool isValid = true;
+
+	if (payloadSize != 10)
+	{
+		isValid = false;
+		goto OnSetUantADCToUantVoltsFactors_Validate;
+	}
+
+	if (!IsBool(payload[1]))
+	{
+		isValid = false;
+		goto OnSetUantADCToUantVoltsFactors_Validate;
+	}
+
+	bool isReset = ToBool(payload[1]);
+
+	float factorA;
+	memcpy(&factorA, &payload[2], 4);
+
+	float factorB;
+	memcpy(&factorB, &payload[6], 4);
+
+	/* Attempt to set */
+	isValid = FoxState_SetUantADCToUantVoltsFactors(isReset, factorA, factorB);
+	if (isValid)
+	{
+		return;
+	}
+
+	OnSetUantADCToUantVoltsFactors_Validate: // TODO: Refactor validation
+	if (!isValid)
+	{
+		uint8_t result = YHL_PACKET_PROCESSOR_FAILURE;
+		SendResponse(SetUantADCToUantVoltsFactors, 1, &result);
 		return;
 	}
 }

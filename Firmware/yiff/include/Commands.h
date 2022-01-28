@@ -144,6 +144,11 @@ typedef struct
 	 * If true, then we need to save new P80m->U80m factors
 	 */
 	bool NeedToSetP80mToU80mFactors;
+
+	/**
+	 * If true, then we need to save new Uant(ADC)->Uant(Volts) factors
+	 */
+	bool NeedToSetUantADCToUantVoltsFactors;
 }
 PendingCommandsFlagsStruct;
 

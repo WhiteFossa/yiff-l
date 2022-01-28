@@ -391,6 +391,16 @@ typedef struct
 	 * When executing a "Set P80m to U80m factors" command new B Factor will be stored here
 	 */
 	float SetThisP80mToU80mBFactor;
+
+	/**
+	 * When executing a "Set Uant(ADC) to Uant(Volts) factors" command new A Factor will be stored here
+	 */
+	float SetThisUantADCToUantVoltsAFactor;
+
+	/**
+	 * When executing a "Set Uant(ADC) to Uant(Volts) factors" command new B Factor will be stored here
+	 */
+	float SetThisUantADCToUantVoltsBFactor;
 }
 ServiceSettingsStruct;
 
