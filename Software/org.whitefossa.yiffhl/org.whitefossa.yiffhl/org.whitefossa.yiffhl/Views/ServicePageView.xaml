@@ -368,6 +368,72 @@
                     </StackLayout>
                 </Frame>
                 <!-- End of U80m ADC -> Voltage -->
+                
+                <!-- P80m -> U80m -->
+                <Frame
+                    Style="{StaticResource FramesStyle}">
+
+                    <StackLayout>
+                        <Label
+                            Text="P80m -> U80m"
+                            HorizontalOptions="Center" />
+
+                        <StackLayout
+                            Orientation="Horizontal">
+
+                            <Label
+                                Text="U80m = "
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                            <Editor
+                                Keyboard="Numeric"
+                                HorizontalOptions="FillAndExpand"
+                                VerticalOptions="Center"
+                                Text="{Binding P80mAFactorAsString}" />
+
+                            <Label
+                                Text=" * P80m + "
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                            <Editor
+                                Keyboard="Numeric"
+                                HorizontalOptions="FillAndExpand"
+                                VerticalOptions="Center"
+                                Text="{Binding P80mBFactorAsString}" />
+                        </StackLayout>
+
+                        <StackLayout
+                            Orientation="Horizontal"
+                            HorizontalOptions="CenterAndExpand">
+
+                            <Button
+                                Text="Get"
+                                VerticalOptions="Center"
+                                HorizontalOptions="End"
+                                Command="{Binding GetP80mFactorsCommand}"
+                                />
+
+                            <Button
+                                Text="Set"
+                                VerticalOptions="Center"
+                                HorizontalOptions="End"
+                                Command="{Binding SetP80mFactorsCommand}"
+                                />
+
+                            <Button
+                                Text="Reset"
+                                VerticalOptions="Center"
+                                HorizontalOptions="End"
+                                Command="{Binding ResetP80mFactorsCommand}"
+                                />
+                        </StackLayout>
+
+                    </StackLayout>
+                </Frame>
+
+                <!-- End of P80m -> U80m -->
 
             </StackLayout>
         </ScrollView>

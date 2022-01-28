@@ -80,6 +80,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
         private OnResponseDelegate _onSetBattLevelFactorsResponse;
         private OnResponseDelegate _onGetU80mFactorsResponse;
         private OnResponseDelegate _onSetU80mFactorsResponse;
+        private OnResponseDelegate _onGetP80mFactorsResponse;
+        private OnResponseDelegate _onSetP80mFactorsResponse;
 
         #endregion
 
@@ -603,6 +605,20 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
                         _onSetU80mFactorsResponse(responsePayload);
                         break;
 
+                    // Get P80m -> U80m factors
+                    case CommandType.GetP80mToU80mFactors:
+                        CheckOnResponseDelegate(_onGetP80mFactorsResponse);
+
+                        _onGetP80mFactorsResponse(responsePayload);
+                        break;
+
+                    // Set P80m -> U80m factors
+                    case CommandType.SetP80mToU80mFactors:
+                        CheckOnResponseDelegate(_onSetP80mFactorsResponse);
+
+                        _onSetP80mFactorsResponse(responsePayload);
+                        break;
+
                     default:
                         return; // We've got some junk
                 }
@@ -977,6 +993,18 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
         {
             _onSetU80mFactorsResponse = onSetU80mFactorsResponse
                 ?? throw new ArgumentNullException(nameof(onSetU80mFactorsResponse));
+        }
+
+        public void SetOnGetP80mFactorsResponse(OnResponseDelegate onGetP80mFactorsResponse)
+        {
+            _onGetP80mFactorsResponse = onGetP80mFactorsResponse
+                ?? throw new ArgumentNullException(nameof(onGetP80mFactorsResponse));
+        }
+
+        public void SetOnSetP80mFactorsResponse(OnResponseDelegate onSetP80mFactorsResponse)
+        {
+            _onSetP80mFactorsResponse = onSetP80mFactorsResponse
+                ?? throw new ArgumentNullException(nameof(onSetP80mFactorsResponse));
         }
     }
 }

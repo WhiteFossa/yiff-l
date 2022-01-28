@@ -57,6 +57,16 @@
         /// </summary>
         public float U80mFactorB { get; set; }
 
+        /// <summary>
+        /// U80m = P80m * A + B
+        /// </summary>
+        public float P80mFactorA { get; set; }
+
+        /// <summary>
+        /// U80m = P80m * A + B
+        /// </summary>
+        public float P80mFactorB { get; set; }
+
         public ServiceSettingsModel()
         {
             LastErrorCode = null;
@@ -73,6 +83,9 @@
 
             U80mFactorA = 0;
             U80mFactorB = 0;
+
+            P80mFactorA = 0;
+            P80mFactorB = 0;
         }
     }
 }

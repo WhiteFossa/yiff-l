@@ -97,6 +97,10 @@
 
         GetU80mADCToU80mVoltsFactors = 0x2D,
 
-        SetU80mADCToU80mVoltsFactors = 0x2E
+        SetU80mADCToU80mVoltsFactors = 0x2E,
+
+        GetP80mToU80mFactors = 0x2F,
+
+        SetP80mToU80mFactors = 0x30
     }
 }

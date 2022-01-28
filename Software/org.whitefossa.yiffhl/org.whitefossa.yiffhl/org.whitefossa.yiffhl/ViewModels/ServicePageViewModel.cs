@@ -258,6 +258,51 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         public ICommand SetU80mFactorsCommand { get; }
 
+        /// <summary>
+        /// A factor for P80m -> U80m
+        /// </summary>
+        private string _p80mAFactorAsString;
+
+        public string P80mAFactorAsString
+        {
+            get => _p80mAFactorAsString;
+            set
+            {
+                _p80mAFactorAsString = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// B factor for P80m -> U80m
+        /// </summary>
+        private string _p80mBFactorAsString;
+
+        public string P80mBFactorAsString
+        {
+            get => _p80mBFactorAsString;
+            set
+            {
+                _p80mBFactorAsString = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Get P80m factors
+        /// </summary>
+        public ICommand GetP80mFactorsCommand { get; }
+
+        /// <summary>
+        /// Reset P80m factors
+        /// </summary>
+        public ICommand ResetP80mFactorsCommand { get; }
+
+        /// <summary>
+        /// Set P80m factors
+        /// </summary>
+        public ICommand SetP80mFactorsCommand { get; }
+
         public ServicePageViewModel()
         {
 
@@ -283,6 +328,10 @@ namespace org.whitefossa.yiffhl.ViewModels
             GetU80mFactorsCommand = new Command(async () => await OnGetU80mFactorsAsync());
             ResetU80mFactorsCommand = new Command(async () => await OnResetU80mFactorsAsync());
             SetU80mFactorsCommand = new Command(async () => await OnSetU80mFactorsAsync());
+
+            GetP80mFactorsCommand = new Command(async () => await OnGetP80mFactorsAsync());
+            ResetP80mFactorsCommand = new Command(async () => await OnResetP80mFactorsAsync());
+            SetP80mFactorsCommand = new Command(async () => await OnSetP80mFactorsAsync());
 
             // Setting up poll service data timer
             PollServiceDataTimer = new Timer(PollServiceDataInterval);
@@ -612,6 +661,68 @@ namespace org.whitefossa.yiffhl.ViewModels
         private async Task OnSetU80mFactorsResponseAsync()
         {
             await OnGetU80mFactorsAsync();
+        }
+
+        #endregion
+
+        #region Get P80m factors
+
+        private async Task OnGetP80mFactorsAsync()
+        {
+            await _serviceCommandsManager.GetP80mFactorsAsync(async (a, b) => await OnGetP80mFactorsResponseAsync(a, b));
+        }
+
+        private async Task OnGetP80mFactorsResponseAsync(float a, float b)
+        {
+            _mainModel.ServiceSettingsModel.P80mFactorA = a;
+            _mainModel.ServiceSettingsModel.P80mFactorB = b;
+
+            P80mAFactorAsString = _mainModel.ServiceSettingsModel.P80mFactorA.ToString();
+            P80mBFactorAsString = _mainModel.ServiceSettingsModel.P80mFactorB.ToString();
+        }
+
+        #endregion
+
+        #region Reset P80m factors
+
+        private async Task OnResetP80mFactorsAsync()
+        {
+            await _serviceCommandsManager.ResetP80mFactorsAsync(async () => await OnResetP80mFactorsResponseAsync());
+        }
+
+        private async Task OnResetP80mFactorsResponseAsync()
+        {
+            await OnGetP80mFactorsAsync();
+        }
+
+        #endregion
+
+        #region Set P80m factors
+
+        private async Task OnSetP80mFactorsAsync()
+        {
+            float newA;
+            if (!float.TryParse(P80mAFactorAsString, out newA))
+            {
+                // Invalid value
+                await _userNotifier.ShowErrorMessageAsync("Wrong value", "Factor A is not a number!");
+                return;
+            }
+
+            float newB;
+            if (!float.TryParse(P80mBFactorAsString, out newB))
+            {
+                // Invalid value
+                await _userNotifier.ShowErrorMessageAsync("Wrong value", "Factor B is not a number!");
+                return;
+            }
+
+            await _serviceCommandsManager.SetP80mFactorsAsync(newA, newB, async () => await OnSetP80mFactorsResponseAsync());
+        }
+
+        private async Task OnSetP80mFactorsResponseAsync()
+        {
+            await OnGetP80mFactorsAsync();
         }
 
         #endregion

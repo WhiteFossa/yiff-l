@@ -30,6 +30,9 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private readonly IGetU80mFactorsCommand _getU80mFactorsCommand;
         private readonly ISetU80mFactorsCommand _setU80mFactorsCommand;
 
+        private readonly IGetP80mFactorsCommand _getP80mFactorsCommand;
+        private readonly ISetP80mFactorsCommand _setP80mFactorsCommand;
+
         #endregion
 
         private Abstractions.Interfaces.OnGetLastErrorCodeDelegate _onGetLastErrorCode;
@@ -55,6 +58,10 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private OnResetU80mFactorsDelegate _onResetU80mFactors;
         private OnSetU80mFactorsDelegate _onSetU80mFactors;
 
+        private OnGetP80mFactorsDelegate _onGetP80mFactors;
+        private OnResetP80mFactorsDelegate _onResetP80mFactors;
+        private OnSetP80mFactorsDelegate _onSetP80mFactors;
+
         public ServiceCommandsManager(IGetLastErrorCodeCommand getLastErrorCodeCommand,
             IResetLastErrorCodeCommand resetLastErrorCodeCommand,
             IUpdateSerialNumberCommand updateSerialNumberCommand,
@@ -67,7 +74,9 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             IGetU80mADCCommand getU80mADCCommand,
             IGetU80mVoltsCommand getU80mVoltsCommand,
             IGetU80mFactorsCommand getU80mFactorsCommand,
-            ISetU80mFactorsCommand setU80mFactorsCommand)
+            ISetU80mFactorsCommand setU80mFactorsCommand,
+            IGetP80mFactorsCommand getP80mFactorsCommand,
+            ISetP80mFactorsCommand setP80mFactorsCommand)
         {
             _getLastErrorCodeCommand = getLastErrorCodeCommand;
             _resetLastErrorCodeCommand = resetLastErrorCodeCommand;
@@ -82,6 +91,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _getU80mVoltsCommand = getU80mVoltsCommand;
             _getU80mFactorsCommand = getU80mFactorsCommand;
             _setU80mFactorsCommand = setU80mFactorsCommand;
+            _getP80mFactorsCommand = getP80mFactorsCommand;
+            _setP80mFactorsCommand = setP80mFactorsCommand;
         }
 
         #region Get last error code
@@ -344,9 +355,9 @@ namespace org.whitefossa.yiffhl.Business.Implementations
 
         #region Reset U80m(ADC) -> U80m(Volts) factors
 
-        public async Task ResetU80mFactorsAsync(OnResetU80mFactorsDelegate onResetu80mFactors)
+        public async Task ResetU80mFactorsAsync(OnResetU80mFactorsDelegate onResetU80mFactors)
         {
-            _onResetU80mFactors = onResetu80mFactors;
+            _onResetU80mFactors = onResetU80mFactors;
 
             _setU80mFactorsCommand.SetResponseDelegate(OnResetU80mFactorsResponse);
             _setU80mFactorsCommand.SendSetU80mFactors(true, 0, 0);
@@ -382,6 +393,67 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             }
 
             _onSetU80mFactors();
+        }
+
+        #endregion
+
+        #region Get P80m -> U80m factors
+
+        public async Task GetP80mFactorsAsync(OnGetP80mFactorsDelegate onGetP80mFactors)
+        {
+            _onGetP80mFactors = onGetP80mFactors ?? throw new ArgumentNullException(nameof(onGetP80mFactors));
+
+            _getP80mFactorsCommand.SetResponseDelegate(OnGetP80mFactorsResponse);
+            _getP80mFactorsCommand.SendGetP80mFactorsCommand();
+        }
+
+        private void OnGetP80mFactorsResponse(float a, float b)
+        {
+            _onGetP80mFactors(a, b);
+        }
+
+        #endregion
+
+        #region Reset P80m -> U80m factors
+
+        public async Task ResetP80mFactorsAsync(OnResetP80mFactorsDelegate onResetP80mFactors)
+        {
+            _onResetP80mFactors = onResetP80mFactors;
+
+            _setP80mFactorsCommand.SetResponseDelegate(OnResetP80mFactorsResponse);
+            _setP80mFactorsCommand.SendSetP80mFactors(true, 0, 0);
+        }
+
+        private void OnResetP80mFactorsResponse(bool isSuccessfull)
+        {
+            if (!isSuccessfull)
+            {
+                throw new InvalidOperationException("Failed to reset P80m -> U80m factors!");
+            }
+
+            _onResetP80mFactors();
+        }
+
+        #endregion
+
+        #region Set P80m -> U80m factors
+
+        public async Task SetP80mFactorsAsync(float a, float b, OnSetP80mFactorsDelegate onSetP80mFactors)
+        {
+            _onSetP80mFactors = onSetP80mFactors;
+
+            _setP80mFactorsCommand.SetResponseDelegate(OnSetP80mFactorsResponse);
+            _setP80mFactorsCommand.SendSetP80mFactors(false, a, b);
+        }
+
+        private void OnSetP80mFactorsResponse(bool isSuccessfull)
+        {
+            if (!isSuccessfull)
+            {
+                throw new InvalidOperationException("Failed to set P80m -> U80m factors!");
+            }
+
+            _onSetP80mFactors();
         }
 
         #endregion

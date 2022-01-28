@@ -34,6 +34,12 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
 
     public delegate void OnSetU80mFactorsDelegate();
 
+    public delegate void OnGetP80mFactorsDelegate(float a, float b);
+
+    public delegate void OnResetP80mFactorsDelegate();
+
+    public delegate void OnSetP80mFactorsDelegate();
+
     public interface IServiceCommandsManager
     {
         Task GetLastErrorCodeAsync(OnGetLastErrorCodeDelegate onGetLastErrorCode);
@@ -64,8 +70,14 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
 
         Task GetU80mFactorsAsync(OnGetU80mFactorsDelegate onGetU80mFactors);
 
-        Task ResetU80mFactorsAsync(OnResetU80mFactorsDelegate onResetu80mFactors);
+        Task ResetU80mFactorsAsync(OnResetU80mFactorsDelegate onResetU80mFactors);
 
         Task SetU80mFactorsAsync(float a, float b, OnSetU80mFactorsDelegate onSetU80mFactors);
+
+        Task GetP80mFactorsAsync(OnGetP80mFactorsDelegate onGetP80mFactors);
+
+        Task ResetP80mFactorsAsync(OnResetP80mFactorsDelegate onResetP80mFactors);
+
+        Task SetP80mFactorsAsync(float a, float b, OnSetP80mFactorsDelegate onSetP80mFactors);
     }
 }

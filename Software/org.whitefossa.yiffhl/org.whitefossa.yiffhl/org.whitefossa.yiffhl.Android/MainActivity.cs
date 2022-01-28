@@ -91,6 +91,8 @@ namespace org.whitefossa.yiffhl.Droid
             App.Container.Register<IGetU80mVoltsCommand, GetU80mVoltsCommand>().AsSingleton();
             App.Container.Register<IGetU80mFactorsCommand, GetU80mFactorsCommand>().AsSingleton();
             App.Container.Register<ISetU80mFactorsCommand, SetU80mFactorsCommand>().AsSingleton();
+            App.Container.Register<IGetP80mFactorsCommand, GetP80mFactorsCommand>().AsSingleton();
+            App.Container.Register<ISetP80mFactorsCommand, SetP80mFactorsCommand>().AsSingleton();
 
             #endregion
 
