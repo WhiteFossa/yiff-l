@@ -83,6 +83,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
         private OnResponseDelegate _onGetP80mFactorsResponse;
         private OnResponseDelegate _onSetP80mFactorsResponse;
         private OnResponseDelegate _onGetUAntVoltsResponse;
+        private OnResponseDelegate _onGetUantFactorsResponse;
+        private OnResponseDelegate _onSetUantFactorsResponse;
 
         #endregion
 
@@ -627,6 +629,20 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
                         _onGetUAntVoltsResponse(responsePayload);
                         break;
 
+                    // Get Uant(ADC) -> Uant(Volts) factors
+                    case CommandType.GetUantADCToUantVoltsFactors:
+                        CheckOnResponseDelegate(_onGetUantFactorsResponse);
+
+                        _onGetUantFactorsResponse(responsePayload);
+                        break;
+
+                    // Set Uant(ADC) -> Uant(Volts) factors
+                    case CommandType.SetUantADCToUantVoltsFactors:
+                        CheckOnResponseDelegate(_onSetUantFactorsResponse);
+
+                        _onSetUantFactorsResponse(responsePayload);
+                        break;
+
                     default:
                         return; // We've got some junk
                 }
@@ -1019,6 +1035,18 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
         {
             _onGetUAntVoltsResponse = onGetUAntVoltsResponse
                 ?? throw new ArgumentNullException(nameof(onGetUAntVoltsResponse));
+        }
+
+        public void SetOnGetUantFactorsResponse(OnResponseDelegate onGetUantFactorsResponse)
+        {
+            _onGetUantFactorsResponse = onGetUantFactorsResponse
+                ?? throw new ArgumentNullException(nameof(onGetUantFactorsResponse));
+        }
+
+        public void SetOnSetUantFactorsResponse(OnResponseDelegate onSetUantFactorsResponse)
+        {
+            _onSetUantFactorsResponse = onSetUantFactorsResponse
+                ?? throw new ArgumentNullException(nameof(onSetUantFactorsResponse));
         }
     }
 }

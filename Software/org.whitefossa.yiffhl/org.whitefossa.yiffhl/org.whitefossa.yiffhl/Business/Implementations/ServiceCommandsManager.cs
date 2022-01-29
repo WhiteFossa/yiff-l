@@ -36,6 +36,9 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private readonly IGetUantADCCommand _getUantADCCommand;
         private readonly IGetUantVoltsCommand _getUantVoltsCommand;
 
+        private readonly IGetUantFactorsCommand _getUantFactorsCommand;
+        private readonly ISetUantFactorsCommand _setUantFactorsCommand;
+
         #endregion
 
         private Abstractions.Interfaces.OnGetLastErrorCodeDelegate _onGetLastErrorCode;
@@ -68,6 +71,10 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private OnGetUantADCValueDelegate _onGetUantADCValue;
         private OnGetUantVoltageDelegate _onGetUantVoltage;
 
+        private OnGetUantFactorsDelegate _onGetUantFactors;
+        private OnResetUantFactorsDelegate _onResetUantFactors;
+        private OnSetUantFactorsDelegate _onSetUantFactors;
+
         public ServiceCommandsManager(IGetLastErrorCodeCommand getLastErrorCodeCommand,
             IResetLastErrorCodeCommand resetLastErrorCodeCommand,
             IUpdateSerialNumberCommand updateSerialNumberCommand,
@@ -84,7 +91,9 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             IGetP80mFactorsCommand getP80mFactorsCommand,
             ISetP80mFactorsCommand setP80mFactorsCommand,
             IGetUantADCCommand getUantADCCommand,
-            IGetUantVoltsCommand getUantVoltsCommand)
+            IGetUantVoltsCommand getUantVoltsCommand,
+            IGetUantFactorsCommand getUantFactorsCommand,
+            ISetUantFactorsCommand setUantFactorsCommand)
         {
             _getLastErrorCodeCommand = getLastErrorCodeCommand;
             _resetLastErrorCodeCommand = resetLastErrorCodeCommand;
@@ -103,6 +112,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _setP80mFactorsCommand = setP80mFactorsCommand;
             _getUantADCCommand = getUantADCCommand;
             _getUantVoltsCommand = getUantVoltsCommand;
+            _getUantFactorsCommand = getUantFactorsCommand;
+            _setUantFactorsCommand = setUantFactorsCommand;
         }
 
         #region Get last error code
@@ -428,7 +439,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
 
         public async Task ResetP80mFactorsAsync(OnResetP80mFactorsDelegate onResetP80mFactors)
         {
-            _onResetP80mFactors = onResetP80mFactors;
+            _onResetP80mFactors = onResetP80mFactors ?? throw new ArgumentNullException(nameof(onResetP80mFactors));
 
             _setP80mFactorsCommand.SetResponseDelegate(OnResetP80mFactorsResponse);
             _setP80mFactorsCommand.SendSetP80mFactors(true, 0, 0);
@@ -450,7 +461,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
 
         public async Task SetP80mFactorsAsync(float a, float b, OnSetP80mFactorsDelegate onSetP80mFactors)
         {
-            _onSetP80mFactors = onSetP80mFactors;
+            _onSetP80mFactors = onSetP80mFactors ?? throw new ArgumentNullException(nameof(onSetP80mFactors));
 
             _setP80mFactorsCommand.SetResponseDelegate(OnSetP80mFactorsResponse);
             _setP80mFactorsCommand.SendSetP80mFactors(false, a, b);
@@ -489,7 +500,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
 
         public async Task GetUantVoltageAsync(OnGetUantVoltageDelegate onGetUantVoltage)
         {
-            _onGetUantVoltage = onGetUantVoltage;
+            _onGetUantVoltage = onGetUantVoltage ?? throw new ArgumentNullException(nameof(onGetUantVoltage));
 
             _getUantVoltsCommand.SetResponseDelegate(OnGetUantVoltageResponse);
             _getUantVoltsCommand.SendGetUantVoltsCommand();
@@ -498,6 +509,67 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private void OnGetUantVoltageResponse(float averagedVoltage)
         {
             _onGetUantVoltage(averagedVoltage);
+        }
+
+        #endregion
+
+        #region Get Uant(ADC) -> Uant(Volts) factors
+
+        public async Task GetUantFactorsAsync(OnGetUantFactorsDelegate onGetUantFactors)
+        {
+            _onGetUantFactors = onGetUantFactors ?? throw new ArgumentNullException(nameof(onGetUantFactors));
+
+            _getUantFactorsCommand.SetResponseDelegate(OnGetUantFactorsResponse);
+            _getUantFactorsCommand.SendGetUantFactorsCommand();
+        }
+
+        private void OnGetUantFactorsResponse(float a, float b)
+        {
+            _onGetUantFactors(a, b);
+        }
+
+        #endregion
+
+        #region Reset Uant(ADC) -> Uant(Volts) factors
+
+        public async Task ResetUantFactorsAsync(OnResetUantFactorsDelegate onResetUantFactors)
+        {
+            _onResetUantFactors = onResetUantFactors ?? throw new ArgumentNullException(nameof(onResetUantFactors));
+
+            _setUantFactorsCommand.SetResponseDelegate(OnResetUantFactorsResponse);
+            _setUantFactorsCommand.SendSetUantFactors(true, 0, 0);
+        }
+
+        private void OnResetUantFactorsResponse(bool isSuccessfull)
+        {
+            if (!isSuccessfull)
+            {
+                throw new InvalidOperationException("Failed to reset Uant(ADC) -> Uant(Volts) factors!");
+            }
+
+            _onResetUantFactors();
+        }
+
+        #endregion
+
+        #region Set Uant(ADC) -> Uant(Volts) factors
+
+        public async Task SetUantFactorsAsync(float a, float b, OnSetUantFactorsDelegate onSetUantFactors)
+        {
+            _onSetUantFactors = onSetUantFactors ?? throw new ArgumentNullException(nameof(onSetUantFactors));
+
+            _setUantFactorsCommand.SetResponseDelegate(OnSetUantFactorsResponse);
+            _setUantFactorsCommand.SendSetUantFactors(false, a, b);
+        }
+
+        private void OnSetUantFactorsResponse(bool isSuccessfull)
+        {
+            if (!isSuccessfull)
+            {
+                throw new InvalidOperationException("Failed to set Uant(ADC) -> Uant(Volts) factors!");
+            }
+
+            _onSetUantFactors();
         }
 
         #endregion

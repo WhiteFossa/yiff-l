@@ -319,6 +319,51 @@ namespace org.whitefossa.yiffhl.ViewModels
             get => String.Format("{0:0.0000}V", _mainModel.ServiceSettingsModel.UantAveragedVoltage);
         }
 
+        /// <summary>
+        /// A factor for Uant(ADC)->Uant(Volts)
+        /// </summary>
+        private string _uantAFactorAsString;
+
+        public string UantAFactorAsString
+        {
+            get => _uantAFactorAsString;
+            set
+            {
+                _uantAFactorAsString = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// B factor for Uant(ADC)->Uant(Volts)
+        /// </summary>
+        private string _uantBFactorAsString;
+
+        public string UantBFactorAsString
+        {
+            get => _uantBFactorAsString;
+            set
+            {
+                _uantBFactorAsString = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Get Uant factors
+        /// </summary>
+        public ICommand GetUantFactorsCommand { get; }
+
+        /// <summary>
+        /// Reset Uant factors
+        /// </summary>
+        public ICommand ResetUantFactorsCommand { get; }
+
+        /// <summary>
+        /// Set Uant factors
+        /// </summary>
+        public ICommand SetUantFactorsCommand { get; }
+
         public ServicePageViewModel()
         {
 
@@ -348,6 +393,10 @@ namespace org.whitefossa.yiffhl.ViewModels
             GetP80mFactorsCommand = new Command(async () => await OnGetP80mFactorsAsync());
             ResetP80mFactorsCommand = new Command(async () => await OnResetP80mFactorsAsync());
             SetP80mFactorsCommand = new Command(async () => await OnSetP80mFactorsAsync());
+
+            GetUantFactorsCommand = new Command(async () => await OnGetUantFactorsAsync());
+            ResetUantFactorsCommand = new Command(async () => await OnResetUantFactorsAsync());
+            SetUantFactorsCommand = new Command(async () => await OnSetUantFactorsAsync());
 
             // Setting up poll service data timer
             PollServiceDataTimer = new Timer(PollServiceDataInterval);
@@ -757,6 +806,68 @@ namespace org.whitefossa.yiffhl.ViewModels
         private async Task OnSetP80mFactorsResponseAsync()
         {
             await OnGetP80mFactorsAsync();
+        }
+
+        #endregion
+
+        #region Get Uant factors
+
+        private async Task OnGetUantFactorsAsync()
+        {
+            await _serviceCommandsManager.GetUantFactorsAsync(async (a, b) => await OnGetUantFactorsResponseAsync(a, b));
+        }
+
+        private async Task OnGetUantFactorsResponseAsync(float a, float b)
+        {
+            _mainModel.ServiceSettingsModel.UantFactorA = a;
+            _mainModel.ServiceSettingsModel.UantFactorB = b;
+
+            UantAFactorAsString = _mainModel.ServiceSettingsModel.UantFactorA.ToString();
+            UantBFactorAsString = _mainModel.ServiceSettingsModel.UantFactorB.ToString();
+        }
+
+        #endregion
+
+        #region Reset Uant factors
+
+        private async Task OnResetUantFactorsAsync()
+        {
+            await _serviceCommandsManager.ResetUantFactorsAsync(async () => await OnResetUantFactorsResponseAsync());
+        }
+
+        private async Task OnResetUantFactorsResponseAsync()
+        {
+            await OnGetUantFactorsAsync();
+        }
+
+        #endregion
+
+        #region Set Uant factors
+
+        private async Task OnSetUantFactorsAsync()
+        {
+            float newA;
+            if (!float.TryParse(UantAFactorAsString, out newA))
+            {
+                // Invalid value
+                await _userNotifier.ShowErrorMessageAsync("Wrong value", "Factor A is not a number!");
+                return;
+            }
+
+            float newB;
+            if (!float.TryParse(UantBFactorAsString, out newB))
+            {
+                // Invalid value
+                await _userNotifier.ShowErrorMessageAsync("Wrong value", "Factor B is not a number!");
+                return;
+            }
+
+            await _serviceCommandsManager.SetUantFactorsAsync(newA, newB, async () => await OnSetUantFactorsResponseAsync());
+        }
+
+        private async Task OnSetUantFactorsResponseAsync()
+        {
+            await OnGetUantFactorsAsync();
         }
 
         #endregion

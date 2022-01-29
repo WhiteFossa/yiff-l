@@ -33,6 +33,10 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
     public delegate void OnGetUantADCValueDelegate(float averagedADCValue);
     public delegate void OnGetUantVoltageDelegate(float averagedVoltage);
 
+    public delegate void OnGetUantFactorsDelegate(float a, float b);
+    public delegate void OnResetUantFactorsDelegate();
+    public delegate void OnSetUantFactorsDelegate();
+
     public interface IServiceCommandsManager
     {
         Task GetLastErrorCodeAsync(OnGetLastErrorCodeDelegate onGetLastErrorCode);
@@ -65,5 +69,9 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
 
         Task GetUantADCValueAsync(OnGetUantADCValueDelegate onGetUantADCValue);
         Task GetUantVoltageAsync(OnGetUantVoltageDelegate onGetUantVoltage);
+
+        Task GetUantFactorsAsync(OnGetUantFactorsDelegate onGetUantFactors);
+        Task ResetUantFactorsAsync(OnResetUantFactorsDelegate onResetUantFactors);
+        Task SetUantFactorsAsync(float a, float b, OnSetUantFactorsDelegate onSetUantFactors);
     }
 }

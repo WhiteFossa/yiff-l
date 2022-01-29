@@ -77,6 +77,16 @@
         /// </summary>
         public float UantAveragedVoltage { get; set; }
 
+        /// <summary>
+        /// Uant(Volts) = Uant(ADC) * A + B
+        /// </summary>
+        public float UantFactorA { get; set; }
+
+        /// <summary>
+        /// Uant(Volts) = Uant(ADC) * A + B
+        /// </summary>
+        public float UantFactorB { get; set; }
+
         public ServiceSettingsModel()
         {
             LastErrorCode = null;
@@ -99,6 +109,9 @@
 
             UantAveragedADCValue = 0;
             UantAveragedVoltage = 0;
+
+            UantFactorA = 0;
+            UantFactorB = 0;
         }
     }
 }

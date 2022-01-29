@@ -482,7 +482,7 @@
                                 Keyboard="Numeric"
                                 HorizontalOptions="FillAndExpand"
                                 VerticalOptions="Center"
-                                Text="{Binding P80mAFactorAsString}" />
+                                Text="{Binding UantAFactorAsString}" />
 
                             <Label
                                 Text=" * ADC + "
@@ -493,7 +493,33 @@
                                 Keyboard="Numeric"
                                 HorizontalOptions="FillAndExpand"
                                 VerticalOptions="Center"
-                                Text="{Binding P80mBFactorAsString}" />
+                                Text="{Binding UantBFactorAsString}" />
+                        </StackLayout>
+
+                        <StackLayout
+                            Orientation="Horizontal"
+                            HorizontalOptions="CenterAndExpand">
+
+                            <Button
+                                Text="Get"
+                                VerticalOptions="Center"
+                                HorizontalOptions="End"
+                                Command="{Binding GetUantFactorsCommand}"
+                                />
+
+                            <Button
+                                Text="Set"
+                                VerticalOptions="Center"
+                                HorizontalOptions="End"
+                                Command="{Binding SetUantFactorsCommand}"
+                                />
+
+                            <Button
+                                Text="Reset"
+                                VerticalOptions="Center"
+                                HorizontalOptions="End"
+                                Command="{Binding ResetUantFactorsCommand}"
+                                />
                         </StackLayout>
 
                     </StackLayout>
