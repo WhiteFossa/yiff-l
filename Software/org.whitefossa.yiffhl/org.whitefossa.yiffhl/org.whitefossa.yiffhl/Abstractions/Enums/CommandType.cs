@@ -101,6 +101,8 @@
 
         GetP80mToU80mFactors = 0x2F,
 
-        SetP80mToU80mFactors = 0x30
+        SetP80mToU80mFactors = 0x30,
+
+        GetUAntVolts = 0x31
     }
 }

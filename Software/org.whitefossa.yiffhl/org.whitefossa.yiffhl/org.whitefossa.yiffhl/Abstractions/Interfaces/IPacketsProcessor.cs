@@ -94,6 +94,7 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
         void SetOnSetU80mFactorsResponse(OnResponseDelegate onSetU80mFactorsResponse);
         void SetOnGetP80mFactorsResponse(OnResponseDelegate onGetP80mFactorsResponse);
         void SetOnSetP80mFactorsResponse(OnResponseDelegate onSetP80mFactorsResponse);
+        void SetOnGetUAntVoltsResponse(OnResponseDelegate onGetUAntVoltsResponse);
 
         #endregion
 

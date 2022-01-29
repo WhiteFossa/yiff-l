@@ -67,6 +67,16 @@
         /// </summary>
         public float P80mFactorB { get; set; }
 
+        /// <summary>
+        /// Uant averaged ADC value
+        /// </summary>
+        public float UantAveragedADCValue { get; set; }
+
+        /// <summary>
+        /// Uant averaged voltage level
+        /// </summary>
+        public float UantAveragedVoltage { get; set; }
+
         public ServiceSettingsModel()
         {
             LastErrorCode = null;
@@ -86,6 +96,9 @@
 
             P80mFactorA = 0;
             P80mFactorB = 0;
+
+            UantAveragedADCValue = 0;
+            UantAveragedVoltage = 0;
         }
     }
 }

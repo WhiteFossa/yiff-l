@@ -276,7 +276,7 @@
 
                     </StackLayout>
                 </Frame>
-                <!-- End of battery ADC -> Volts -->
+                <!-- End of Battery Voltage -> Level -->
 
                 <!-- U80m ADC -> Voltage -->
                 <Frame
@@ -434,6 +434,72 @@
                 </Frame>
 
                 <!-- End of P80m -> U80m -->
+
+                <!-- Uant(ADC) -> Uant(Volts) -->
+                <Frame
+                    Style="{StaticResource FramesStyle}">
+
+                    <StackLayout>
+                        <Label
+                            Text="Uant(ADC -> Voltage)"
+                            HorizontalOptions="Center" />
+
+                        <StackLayout
+                            Orientation="Horizontal">
+
+                            <Label
+                                Text="ADC:"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                            <Label
+                                FontAttributes="Bold"
+                                Text="{Binding UantADCValueAsString}"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                            <Label
+                                Text="Voltage:"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                            <Label
+                                FontAttributes="Bold"
+                                Text="{Binding UantVoltageAsString}"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+                        </StackLayout>
+
+                        <StackLayout
+                            Orientation="Horizontal">
+
+                            <Label
+                                Text="Voltage = "
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                            <Editor
+                                Keyboard="Numeric"
+                                HorizontalOptions="FillAndExpand"
+                                VerticalOptions="Center"
+                                Text="{Binding P80mAFactorAsString}" />
+
+                            <Label
+                                Text=" * ADC + "
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                            <Editor
+                                Keyboard="Numeric"
+                                HorizontalOptions="FillAndExpand"
+                                VerticalOptions="Center"
+                                Text="{Binding P80mBFactorAsString}" />
+                        </StackLayout>
+
+                    </StackLayout>
+                </Frame>
+
+                <!-- End of Uant(ADC) -> Uant(Volts) -->
 
             </StackLayout>
         </ScrollView>

@@ -33,6 +33,9 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private readonly IGetP80mFactorsCommand _getP80mFactorsCommand;
         private readonly ISetP80mFactorsCommand _setP80mFactorsCommand;
 
+        private readonly IGetUantADCCommand _getUantADCCommand;
+        private readonly IGetUantVoltsCommand _getUantVoltsCommand;
+
         #endregion
 
         private Abstractions.Interfaces.OnGetLastErrorCodeDelegate _onGetLastErrorCode;
@@ -62,6 +65,9 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private OnResetP80mFactorsDelegate _onResetP80mFactors;
         private OnSetP80mFactorsDelegate _onSetP80mFactors;
 
+        private OnGetUantADCValueDelegate _onGetUantADCValue;
+        private OnGetUantVoltageDelegate _onGetUantVoltage;
+
         public ServiceCommandsManager(IGetLastErrorCodeCommand getLastErrorCodeCommand,
             IResetLastErrorCodeCommand resetLastErrorCodeCommand,
             IUpdateSerialNumberCommand updateSerialNumberCommand,
@@ -76,7 +82,9 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             IGetU80mFactorsCommand getU80mFactorsCommand,
             ISetU80mFactorsCommand setU80mFactorsCommand,
             IGetP80mFactorsCommand getP80mFactorsCommand,
-            ISetP80mFactorsCommand setP80mFactorsCommand)
+            ISetP80mFactorsCommand setP80mFactorsCommand,
+            IGetUantADCCommand getUantADCCommand,
+            IGetUantVoltsCommand getUantVoltsCommand)
         {
             _getLastErrorCodeCommand = getLastErrorCodeCommand;
             _resetLastErrorCodeCommand = resetLastErrorCodeCommand;
@@ -93,6 +101,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _setU80mFactorsCommand = setU80mFactorsCommand;
             _getP80mFactorsCommand = getP80mFactorsCommand;
             _setP80mFactorsCommand = setP80mFactorsCommand;
+            _getUantADCCommand = getUantADCCommand;
+            _getUantVoltsCommand = getUantVoltsCommand;
         }
 
         #region Get last error code
@@ -454,6 +464,40 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             }
 
             _onSetP80mFactors();
+        }
+
+        #endregion
+
+        #region Get Uant(ADC)
+
+        public async Task GetUantADCValueAsync(OnGetUantADCValueDelegate onGetUantADCValue)
+        {
+            _onGetUantADCValue = onGetUantADCValue ?? throw new ArgumentNullException(nameof(onGetUantADCValue));
+
+            _getUantADCCommand.SetResponseDelegate(OnGetUantADCValueResponse);
+            _getUantADCCommand.SendGetUantADCCommand();
+        }
+
+        private void OnGetUantADCValueResponse(float averagedADCValue)
+        {
+            _onGetUantADCValue(averagedADCValue);
+        }
+
+        #endregion
+
+        #region Get Uant(Volts)
+
+        public async Task GetUantVoltageAsync(OnGetUantVoltageDelegate onGetUantVoltage)
+        {
+            _onGetUantVoltage = onGetUantVoltage;
+
+            _getUantVoltsCommand.SetResponseDelegate(OnGetUantVoltageResponse);
+            _getUantVoltsCommand.SendGetUantVoltsCommand();
+        }
+
+        private void OnGetUantVoltageResponse(float averagedVoltage)
+        {
+            _onGetUantVoltage(averagedVoltage);
         }
 
         #endregion

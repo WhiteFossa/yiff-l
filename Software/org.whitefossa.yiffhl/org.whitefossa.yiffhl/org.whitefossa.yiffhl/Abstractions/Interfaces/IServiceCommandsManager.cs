@@ -9,7 +9,6 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
     public delegate void OnSerialNumberUpdateDelegate();
 
     public delegate void OnGetBatteryADCLevelDelegate(float averagedADCLevel);
-
     public delegate void OnGetBatteryVoltageLevelDelegate(float averagedVoltageLevel);
 
     public delegate void OnGetUbattFactorsDelegate(float a, float b);
@@ -21,7 +20,6 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
     public delegate void OnSetBattLevelFactorsDelegate();
 
     public delegate void OnGetU80mADCValueDelegate(float averagedADCValue);
-
     public delegate void OnGetU80mVoltageDelegate(float averagedVoltage);
 
     public delegate void OnGetU80mFactorsDelegate(float a, float b);
@@ -32,6 +30,9 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
     public delegate void OnResetP80mFactorsDelegate();
     public delegate void OnSetP80mFactorsDelegate();
 
+    public delegate void OnGetUantADCValueDelegate(float averagedADCValue);
+    public delegate void OnGetUantVoltageDelegate(float averagedVoltage);
+
     public interface IServiceCommandsManager
     {
         Task GetLastErrorCodeAsync(OnGetLastErrorCodeDelegate onGetLastErrorCode);
@@ -41,7 +42,6 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
         Task UpdateSerialNumberAsync(uint newSerialNumber, OnSerialNumberUpdateDelegate onSerialNumberUpdate);
 
         Task GetBatteryADCLevelAsync(OnGetBatteryADCLevelDelegate onGetBatteryADCLevel);
-
         Task GetBatteryVoltageLevelAsync(OnGetBatteryVoltageLevelDelegate onGetBatteryVoltageLevel);
 
         Task GetUbattFactorsAsync(OnGetUbattFactorsDelegate onGetUBattFactors);
@@ -53,7 +53,6 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
         Task SetBattLevelFactorsAsync(float a, float b, OnSetBattLevelFactorsDelegate onSetBattLevelFactors);
 
         Task GetU80mADCValueAsync(OnGetU80mADCValueDelegate onGetU80mADCValue);
-
         Task GetU80mVoltageAsync(OnGetU80mVoltageDelegate onGetU80mVoltage);
 
         Task GetU80mFactorsAsync(OnGetU80mFactorsDelegate onGetU80mFactors);
@@ -63,5 +62,8 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
         Task GetP80mFactorsAsync(OnGetP80mFactorsDelegate onGetP80mFactors);
         Task ResetP80mFactorsAsync(OnResetP80mFactorsDelegate onResetP80mFactors);
         Task SetP80mFactorsAsync(float a, float b, OnSetP80mFactorsDelegate onSetP80mFactors);
+
+        Task GetUantADCValueAsync(OnGetUantADCValueDelegate onGetUantADCValue);
+        Task GetUantVoltageAsync(OnGetUantVoltageDelegate onGetUantVoltage);
     }
 }

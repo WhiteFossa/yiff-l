@@ -303,6 +303,22 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         public ICommand SetP80mFactorsCommand { get; }
 
+        /// <summary>
+        /// Uant averaged ADC level
+        /// </summary>
+        public string UantADCValueAsString
+        {
+            get => String.Format("{0:0.00}", _mainModel.ServiceSettingsModel.UantAveragedADCValue);
+        }
+
+        /// <summary>
+        /// Uant averaged voltage
+        /// </summary>
+        public string UantVoltageAsString
+        {
+            get => String.Format("{0:0.0000}V", _mainModel.ServiceSettingsModel.UantAveragedVoltage);
+        }
+
         public ServicePageViewModel()
         {
 
@@ -451,6 +467,12 @@ namespace org.whitefossa.yiffhl.ViewModels
 
             // U80m voltage
             await _serviceCommandsManager.GetU80mVoltageAsync(async (v) => await OnGetU80mVoltageResponseAsync(v));
+
+            // Uant ADC level
+            await _serviceCommandsManager.GetUantADCValueAsync(async (v) => await OnGetUantADCValueResponseAsync(v));
+
+            // Uant voltage
+            await _serviceCommandsManager.GetUantVoltageAsync(async (v) => await OnGetUantVoltageResponseAsync(v));
         }
 
         private async Task OnGetBatteryADCLevelResponseAsync(float averagedADCLevel)
@@ -475,6 +497,18 @@ namespace org.whitefossa.yiffhl.ViewModels
         {
             _mainModel.ServiceSettingsModel.U80mAveragedVoltage = averagedVoltage;
             OnPropertyChanged(nameof(U80mVoltageAsString));
+        }
+
+        private async Task OnGetUantADCValueResponseAsync(float averagedADCValue)
+        {
+            _mainModel.ServiceSettingsModel.UantAveragedADCValue = averagedADCValue;
+            OnPropertyChanged(nameof(UantADCValueAsString));
+        }
+
+        private async Task OnGetUantVoltageResponseAsync(float averagedVoltage)
+        {
+            _mainModel.ServiceSettingsModel.UantAveragedVoltage = averagedVoltage;
+            OnPropertyChanged(nameof(UantVoltageAsString));
         }
 
         #endregion

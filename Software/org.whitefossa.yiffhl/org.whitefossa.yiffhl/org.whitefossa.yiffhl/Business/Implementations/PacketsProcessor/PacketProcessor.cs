@@ -82,6 +82,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
         private OnResponseDelegate _onSetU80mFactorsResponse;
         private OnResponseDelegate _onGetP80mFactorsResponse;
         private OnResponseDelegate _onSetP80mFactorsResponse;
+        private OnResponseDelegate _onGetUAntVoltsResponse;
 
         #endregion
 
@@ -619,6 +620,13 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
                         _onSetP80mFactorsResponse(responsePayload);
                         break;
 
+                    // Get Uant(Volts)
+                    case CommandType.GetUAntVolts:
+                        CheckOnResponseDelegate(_onGetUAntVoltsResponse);
+
+                        _onGetUAntVoltsResponse(responsePayload);
+                        break;
+
                     default:
                         return; // We've got some junk
                 }
@@ -1005,6 +1013,12 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
         {
             _onSetP80mFactorsResponse = onSetP80mFactorsResponse
                 ?? throw new ArgumentNullException(nameof(onSetP80mFactorsResponse));
+        }
+
+        public void SetOnGetUAntVoltsResponse(OnResponseDelegate onGetUAntVoltsResponse)
+        {
+            _onGetUAntVoltsResponse = onGetUAntVoltsResponse
+                ?? throw new ArgumentNullException(nameof(onGetUAntVoltsResponse));
         }
     }
 }
