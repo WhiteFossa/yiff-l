@@ -288,8 +288,8 @@ bool FoxState_SetUantADCToUantVoltsFactors(bool reset, float a, float b)
 	}
 	else
 	{
-		FoxState.ServiceSettings.SetThisUantADCToUantVoltsAFactor = YHL_DEFAULT_ADC_UANT_A;
-		FoxState.ServiceSettings.SetThisUantADCToUantVoltsBFactor = YHL_DEFAULT_ADC_UANT_B;
+		FoxState.ServiceSettings.SetThisUantADCToUantVoltsAFactor = a;
+		FoxState.ServiceSettings.SetThisUantADCToUantVoltsBFactor = b;
 	}
 
 	PendingCommandsFlags.NeedToSetUantADCToUantVoltsFactors = true;
