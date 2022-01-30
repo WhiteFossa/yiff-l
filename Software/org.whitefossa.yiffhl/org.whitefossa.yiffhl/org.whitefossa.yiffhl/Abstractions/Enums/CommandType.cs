@@ -81,6 +81,32 @@
 
         MarkMatchingAsSeen = 0x25,
 
-        CheckForProfileSettingsChanges = 0x26
+        CheckForProfileSettingsChanges = 0x26,
+
+        ResetLastFailureCode = 0x27,
+
+        UpdateSerialNumber = 0x28,
+
+        GetUbattADCToUbattVoltsFactors = 0x29,
+
+        SetUbattADCToUbattVoltsFactors = 0x2A,
+
+        GetUbattVoltsToBattLevelFactors = 0x2B,
+
+        SetUbattVoltsToBattLevelFactors = 0x2C,
+
+        GetU80mADCToU80mVoltsFactors = 0x2D,
+
+        SetU80mADCToU80mVoltsFactors = 0x2E,
+
+        GetP80mToU80mFactors = 0x2F,
+
+        SetP80mToU80mFactors = 0x30,
+
+        GetUAntVolts = 0x31,
+
+        GetUantADCToUantVoltsFactors = 0x32,
+
+        SetUantADCToUantVoltsFactors = 0x33
     }
 }

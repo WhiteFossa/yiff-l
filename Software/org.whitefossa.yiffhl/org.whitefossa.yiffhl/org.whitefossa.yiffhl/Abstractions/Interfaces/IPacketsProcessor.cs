@@ -83,7 +83,20 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
         void SetOnGetAntennaMatchingStatusResponse(OnResponseDelegate onGetAntennaMatchingStatusResponse);
         void SetOnMarkMatchingAsSeenResponse(OnResponseDelegate onMarkMatchingAsSeenResponse);
         void SetOnGetAntennaMatchingDataResponse(OnResponseDelegate onGetAntennaMatchingDataResponse);
-        void SetOnCheckForProfileSettingsChangesResponse(OnResponseDelegate onCheckForProfileSettingsChanges);
+        void SetOnCheckForProfileSettingsChangesResponse(OnResponseDelegate onCheckForProfileSettingsChangesResponse);
+        void SetOnResetLastErrorCodeResponse(OnResponseDelegate onResetLastErrorCodeResponse);
+        void SetOnSerialNumberUpdatedResponse(OnResponseDelegate onSerialNumberUpdatedResponse);
+        void SetOnGetUBattFactorsResponse(OnResponseDelegate onGetUBattFactorsResponse);
+        void SetOnSetUBattFactorsResponse(OnResponseDelegate onSetUBattFactorsResponse);
+        void SetOnGetBattLevelFactorsResponse(OnResponseDelegate onGetBattLevelFactorsResponse);
+        void SetOnSetBattLevelFactorsResponse(OnResponseDelegate onSetBattLevelFactorsResponse);
+        void SetOnGetU80mFactorsResponse(OnResponseDelegate onGetU80mFactorsResponse);
+        void SetOnSetU80mFactorsResponse(OnResponseDelegate onSetU80mFactorsResponse);
+        void SetOnGetP80mFactorsResponse(OnResponseDelegate onGetP80mFactorsResponse);
+        void SetOnSetP80mFactorsResponse(OnResponseDelegate onSetP80mFactorsResponse);
+        void SetOnGetUAntVoltsResponse(OnResponseDelegate onGetUAntVoltsResponse);
+        void SetOnGetUantFactorsResponse(OnResponseDelegate onGetUantFactorsResponse);
+        void SetOnSetUantFactorsResponse(OnResponseDelegate onSetUantFactorsResponse);
 
         #endregion
 

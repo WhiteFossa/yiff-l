@@ -10,11 +10,10 @@ using Xamarin.Forms;
 
 namespace org.whitefossa.yiffhl.ViewModels
 {
-    public class MatchingViewModel : BindableObject
+    public class MatchingPageViewModel : BindableObject
     {
         public delegate void RedrawMatchingGraphDelegate();
 
-        private readonly IDynamicFoxStatusManager _dynamicFoxStatusManager;
         private readonly IAntennaMatchingManager _antennaMatchingManager;
 
         public MainModel MainModel;
@@ -78,10 +77,9 @@ namespace org.whitefossa.yiffhl.ViewModels
             }
         }
 
-        public MatchingViewModel()
+        public MatchingPageViewModel()
         {
             MainModel = App.Container.Resolve<IMainModel>() as MainModel;
-            _dynamicFoxStatusManager = App.Container.Resolve<IDynamicFoxStatusManager>();
             _antennaMatchingManager = App.Container.Resolve<IAntennaMatchingManager>();
         }
 
@@ -137,10 +135,10 @@ namespace org.whitefossa.yiffhl.ViewModels
 
         private async Task OnMatchingInitiated()
         {
-            MainModel.ArmingModel.MatchingPositionsCount = 0;
-            MainModel.ArmingModel.BestMatchingPosition = 0;
-            MainModel.ArmingModel.BestMatchingPositionVoltage = 0;
-            MainModel.ArmingModel.MatchingData.Clear();
+            MainModel.MatchingModel.MatchingPositionsCount = 0;
+            MainModel.MatchingModel.BestMatchingPosition = 0;
+            MainModel.MatchingModel.BestMatchingPositionVoltage = 0;
+            MainModel.MatchingModel.MatchingData.Clear();
 
             RedrawMatchingGraph();
         }
@@ -148,10 +146,10 @@ namespace org.whitefossa.yiffhl.ViewModels
         private async Task OnAntennaMatchingCompleted()
         {
             // Making snapshot to arming model
-            MainModel.ArmingModel.MatchingPositionsCount = MainModel.DynamicFoxStatus.AntennaMatchingStatus.TotalMatcherPositions;
-            MainModel.ArmingModel.BestMatchingPosition = MainModel.DynamicFoxStatus.AntennaMatchingStatus.CurrentBestMatchPosition;
-            MainModel.ArmingModel.BestMatchingPositionVoltage = MainModel.DynamicFoxStatus.AntennaMatchingStatus.CurrentBestMatchVoltage;
-            MainModel.ArmingModel.MatchingData.Clear();
+            MainModel.MatchingModel.MatchingPositionsCount = MainModel.DynamicFoxStatus.AntennaMatchingStatus.TotalMatcherPositions;
+            MainModel.MatchingModel.BestMatchingPosition = MainModel.DynamicFoxStatus.AntennaMatchingStatus.CurrentBestMatchPosition;
+            MainModel.MatchingModel.BestMatchingPositionVoltage = MainModel.DynamicFoxStatus.AntennaMatchingStatus.CurrentBestMatchVoltage;
+            MainModel.MatchingModel.MatchingData.Clear();
 
             // Loading first voltage
             _progressDialog = UserDialogs.Instance.Progress("Loading matching data...", null, null, true, MaskType.Clear);
@@ -160,11 +158,11 @@ namespace org.whitefossa.yiffhl.ViewModels
 
         private async Task OnGetAntennaMatchingDataAsync(int matcherPosition, float antennaVoltage)
         {
-            MainModel.ArmingModel.MatchingData.Add(antennaVoltage);
+            MainModel.MatchingModel.MatchingData.Add(antennaVoltage);
 
-            if (matcherPosition < MainModel.ArmingModel.MatchingPositionsCount - 1)
+            if (matcherPosition < MainModel.MatchingModel.MatchingPositionsCount - 1)
             {
-                _progressDialog.PercentComplete = (int)Math.Round(100 * matcherPosition / (double)MainModel.ArmingModel.MatchingPositionsCount);
+                _progressDialog.PercentComplete = (int)Math.Round(100 * matcherPosition / (double)MainModel.MatchingModel.MatchingPositionsCount);
                 await _antennaMatchingManager.GetAntennaMatchingDataAsync(matcherPosition + 1, async (p, v) => await OnGetAntennaMatchingDataAsync(p, v));
                 return;
             }

@@ -348,6 +348,63 @@ typedef struct
 MatchingStatusStruct;
 
 /**
+ * Structure with various service settings
+ */
+typedef struct
+{
+	/**
+	 * When executing a "Set Ubatt(ADC) to Ubatt(Volts) factors" command new A Factor will be stored here
+	 */
+	float SetThisUbattADCToUbattVoltsAFactor;
+
+	/**
+	 * When executing a "Set Ubatt(ADC) to Ubatt(Volts) factors" command new B Factor will be stored here
+	 */
+	float SetThisUbattADCToUbattVoltsBFactor;
+
+	/**
+	 * When executing a "Set Ubatt(Volts) to battery level factors" command new A Factor will be stored here
+	 */
+	float SetThisUbattVoltsToBattLevelAFactor;
+
+	/**
+	 * When executing a "Set Ubatt(Volts) to battery level factors" command new B Factor will be stored here
+	 */
+	float SetThisUbattVoltsToBattLevelBFactor;
+
+	/**
+	 * When executing a "Set U80m(ADC) to U80m(Volts) factors" command new A Factor will be stored here
+	 */
+	float SetThisU80mADCtoU80mVoltsAFactor;
+
+	/**
+	 * When executing a "Set U80m(ADC) to U80m(Volts) factors" command new B Factor will be stored here
+	 */
+	float SetThisU80mADCtoU80mVoltsBFactor;
+
+	/**
+	 * When executing a "Set P80m to U80m factors" command new A Factor will be stored here
+	 */
+	float SetThisP80mToU80mAFactor;
+
+	/**
+	 * When executing a "Set P80m to U80m factors" command new B Factor will be stored here
+	 */
+	float SetThisP80mToU80mBFactor;
+
+	/**
+	 * When executing a "Set Uant(ADC) to Uant(Volts) factors" command new A Factor will be stored here
+	 */
+	float SetThisUantADCToUantVoltsAFactor;
+
+	/**
+	 * When executing a "Set Uant(ADC) to Uant(Volts) factors" command new B Factor will be stored here
+	 */
+	float SetThisUantADCToUantVoltsBFactor;
+}
+ServiceSettingsStruct;
+
+/**
  * Fox status
  */
 typedef struct
@@ -456,6 +513,11 @@ typedef struct
 	 * If not reported to phone manual profile changes exist
 	 */
 	bool IsNotReportedManualProfileChanges;
+
+	/**
+	 * Stuff, related to service settings
+	 */
+	ServiceSettingsStruct ServiceSettings;
 }
 FoxStateStruct;
 

@@ -176,6 +176,41 @@ void Main_InitDisplayAndShowBootScreen(void);
 void Main_ProcessFoxArmingCommon(void);
 
 /**
+ * Resets last failure code if needed
+ */
+void Main_ProcessResetLastFailureCode(void);
+
+/**
+ * Updates fox serial number if needed
+ */
+void Main_ProcessSerialNumberUpdate(void);
+
+/**
+ * Updates Ubatt(ADC)->Ubatt(Volts) factors if needed
+ */
+void Main_ProcessSetUbattADCToUbattVoltsFactors(void);
+
+/**
+ * Updates Ubatt(Volts)->Battery level factors if needed
+ */
+void Main_ProcessSetUbattVoltsToBattLevelFactors(void);
+
+/**
+ * Updates U80m(ADC)->U80m(Volts) factors if needed
+ */
+void Main_ProcessSetU80mADCToU80mVoltsFactors(void);
+
+/**
+ * Updates P80m->U80m factors if needed
+ */
+void Main_ProcessSetP80mToU80mFactors(void);
+
+/**
+ * Updates Uant(ADC)->Uant(Volts) factors if needed
+ */
+void Main_ProcessSetUantADCToUantVoltsFactors(void);
+
+/**
  * As it name states, processes high priority events.
  */
 void Main_ProcessHighPriorityEvents(void);

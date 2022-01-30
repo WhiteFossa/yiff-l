@@ -1,0 +1,533 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:org.whitefossa.yiffhl.ViewModels"
+             x:Class="org.whitefossa.yiffhl.Views.ServicePageView">
+
+    <ContentPage.BindingContext>
+        <viewModels:ServicePageViewModel />
+    </ContentPage.BindingContext>
+
+    <ContentPage.Content>
+        <ScrollView>
+            <StackLayout>
+
+                <!-- Last error code -->
+                <Frame
+                    Style="{StaticResource FramesStyle}">
+
+                    <StackLayout>
+                        <Label
+                            Text="Last error code"
+                            HorizontalOptions="Center" />
+
+                        <StackLayout
+                            Orientation="Horizontal">
+
+                            <Label
+                                Text="Last error code:"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                            <Label
+                                Text="{Binding LastErrorCodeFormatted}"
+                                FontAttributes="Bold"
+                                HorizontalOptions="StartAndExpand"
+                                VerticalOptions="Center" />
+
+                            <Button
+                                Text="Get"
+                                VerticalOptions="Center"
+                                HorizontalOptions="End"
+                                Command="{Binding GetLastErrorCodeCommand}" />
+
+                            <Button
+                                Text="Reset"
+                                VerticalOptions="Center"
+                                HorizontalOptions="End"
+                                Command="{Binding ResetLastErrorCodeCommand}" />
+
+                        </StackLayout>
+                        
+                    </StackLayout>
+                </Frame>
+                <!-- End of last error code -->
+                
+                <!-- Serial number -->
+                <Frame
+                    Style="{StaticResource FramesStyle}">
+
+                    <StackLayout>
+                        <Label
+                            Text="Serial number"
+                            HorizontalOptions="Center" />
+
+                        <StackLayout
+                            Orientation="Horizontal">
+
+                            <Label
+                                Text="Serial number:"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                            <Editor
+                                Keyboard="Numeric"
+                                HorizontalOptions="FillAndExpand"
+                                VerticalOptions="Center"
+                                Text="{Binding SerialNumberAsString}" />
+
+                            <Button
+                                Text="Reload"
+                                VerticalOptions="Center"
+                                HorizontalOptions="End"
+                                Command="{Binding ReloadSerialNumberCommand}" />
+
+                            <Button
+                                Text="Set"
+                                VerticalOptions="Center"
+                                HorizontalOptions="End"
+                                Command="{Binding SetSerialNumberCommand}" />
+
+                        </StackLayout>
+
+                    </StackLayout>
+                </Frame>
+                <!-- End of serial number -->
+                
+                <!-- Battery ADC -> Voltage -->
+                <Frame
+                    Style="{StaticResource FramesStyle}">
+
+                    <StackLayout>
+                        <Label
+                            Text="Battery (ADC -> Voltage)"
+                            HorizontalOptions="Center" />
+
+                        <StackLayout
+                            Orientation="Horizontal">
+
+                            <Label
+                                Text="ADC:"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                            <Label
+                                FontAttributes="Bold"
+                                Text="{Binding BatteryADCLevelAsString}"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                            <Label
+                                Text="Voltage:"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                            <Label
+                                FontAttributes="Bold"
+                                Text="{Binding BatteryVoltageLevelAsString}"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                        </StackLayout>
+
+                        <StackLayout
+                            Orientation="Horizontal">
+
+                            <Label
+                                Text="Voltage = "
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                            <Editor
+                                Keyboard="Numeric"
+                                HorizontalOptions="FillAndExpand"
+                                VerticalOptions="Center"
+                                Text="{Binding UBattAFactorAsString}" />
+
+                            <Label
+                                Text=" * ADC + "
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                            <Editor
+                                Keyboard="Numeric"
+                                HorizontalOptions="FillAndExpand"
+                                VerticalOptions="Center"
+                                Text="{Binding UBattBFactorAsString}" />
+                        </StackLayout>
+
+                        <StackLayout
+                            Orientation="Horizontal"
+                            HorizontalOptions="CenterAndExpand">
+
+                            <Button
+                                Text="Get"
+                                VerticalOptions="Center"
+                                HorizontalOptions="End"
+                                Command="{Binding GetUbattFactorsCommand}"
+                                />
+
+                            <Button
+                                Text="Set"
+                                VerticalOptions="Center"
+                                HorizontalOptions="End"
+                                Command="{Binding SetUbattFactorsCommand}"
+                                />
+
+                            <Button
+                                Text="Reset"
+                                VerticalOptions="Center"
+                                HorizontalOptions="End"
+                                Command="{Binding ResetUbattFactorsCommand}"
+                                />
+                        </StackLayout>
+
+                    </StackLayout>
+                </Frame>
+                <!-- End of battery ADC -> Volts -->
+
+                <!-- Battery Voltage -> Level -->
+                <Frame
+                    Style="{StaticResource FramesStyle}">
+
+                    <StackLayout>
+                        <Label
+                            Text="Battery (Voltage -> Level)"
+                            HorizontalOptions="Center" />
+
+                        <StackLayout
+                            Orientation="Horizontal">
+
+                            <Label
+                                Text="Voltage:"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                            <Label
+                                FontAttributes="Bold"
+                                Text="{Binding BatteryVoltageLevelAsString}"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                            <Label
+                                Text="Level:"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                            <Label
+                                FontAttributes="Bold"
+                                Text="{Binding BatteryLevelAsString}"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                        </StackLayout>
+
+                        <StackLayout
+                            Orientation="Horizontal">
+
+                            <Label
+                                Text="Level = "
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                            <Editor
+                                Keyboard="Numeric"
+                                HorizontalOptions="FillAndExpand"
+                                VerticalOptions="Center"
+                                Text="{Binding BattLevelAFactorAsString}" />
+
+                            <Label
+                                Text=" * Voltage + "
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                            <Editor
+                                Keyboard="Numeric"
+                                HorizontalOptions="FillAndExpand"
+                                VerticalOptions="Center"
+                                Text="{Binding BattLevelBFactorAsString}" />
+                        </StackLayout>
+
+                        <StackLayout
+                            Orientation="Horizontal"
+                            HorizontalOptions="CenterAndExpand">
+
+                            <Button
+                                Text="Get"
+                                VerticalOptions="Center"
+                                HorizontalOptions="End"
+                                Command="{Binding GetBattLevelFactorsCommand}"
+                                />
+
+                            <Button
+                                Text="Set"
+                                VerticalOptions="Center"
+                                HorizontalOptions="End"
+                                Command="{Binding SetBattLevelFactorsCommand}"
+                                />
+
+                            <Button
+                                Text="Reset"
+                                VerticalOptions="Center"
+                                HorizontalOptions="End"
+                                Command="{Binding ResetBattLevelFactorsCommand}"
+                                />
+                        </StackLayout>
+
+                    </StackLayout>
+                </Frame>
+                <!-- End of Battery Voltage -> Level -->
+
+                <!-- U80m ADC -> Voltage -->
+                <Frame
+                    Style="{StaticResource FramesStyle}">
+
+                    <StackLayout>
+                        <Label
+                            Text="U80m (ADC -> Voltage)"
+                            HorizontalOptions="Center" />
+
+                        <StackLayout
+                            Orientation="Horizontal">
+
+                            <Label
+                                Text="ADC:"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                            <Label
+                                FontAttributes="Bold"
+                                Text="{Binding U80mADCValueAsString}"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                            <Label
+                                Text="Voltage:"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                            <Label
+                                FontAttributes="Bold"
+                                Text="{Binding U80mVoltageAsString}"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+                        </StackLayout>
+
+                        <StackLayout
+                            Orientation="Horizontal">
+
+                            <Label
+                                Text="Voltage = "
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                            <Editor
+                                Keyboard="Numeric"
+                                HorizontalOptions="FillAndExpand"
+                                VerticalOptions="Center"
+                                Text="{Binding U80mAFactorAsString}" />
+
+                            <Label
+                                Text=" * ADC + "
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                            <Editor
+                                Keyboard="Numeric"
+                                HorizontalOptions="FillAndExpand"
+                                VerticalOptions="Center"
+                                Text="{Binding U80mBFactorAsString}" />
+                        </StackLayout>
+
+                        <StackLayout
+                            Orientation="Horizontal"
+                            HorizontalOptions="CenterAndExpand">
+
+                            <Button
+                                Text="Get"
+                                VerticalOptions="Center"
+                                HorizontalOptions="End"
+                                Command="{Binding GetU80mFactorsCommand}"
+                                />
+
+                            <Button
+                                Text="Set"
+                                VerticalOptions="Center"
+                                HorizontalOptions="End"
+                                Command="{Binding SetU80mFactorsCommand}"
+                                />
+
+                            <Button
+                                Text="Reset"
+                                VerticalOptions="Center"
+                                HorizontalOptions="End"
+                                Command="{Binding ResetU80mFactorsCommand}"
+                                />
+                        </StackLayout>
+
+                    </StackLayout>
+                </Frame>
+                <!-- End of U80m ADC -> Voltage -->
+                
+                <!-- P80m -> U80m -->
+                <Frame
+                    Style="{StaticResource FramesStyle}">
+
+                    <StackLayout>
+                        <Label
+                            Text="P80m -> U80m"
+                            HorizontalOptions="Center" />
+
+                        <StackLayout
+                            Orientation="Horizontal">
+
+                            <Label
+                                Text="U80m = "
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                            <Editor
+                                Keyboard="Numeric"
+                                HorizontalOptions="FillAndExpand"
+                                VerticalOptions="Center"
+                                Text="{Binding P80mAFactorAsString}" />
+
+                            <Label
+                                Text=" * P80m + "
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                            <Editor
+                                Keyboard="Numeric"
+                                HorizontalOptions="FillAndExpand"
+                                VerticalOptions="Center"
+                                Text="{Binding P80mBFactorAsString}" />
+                        </StackLayout>
+
+                        <StackLayout
+                            Orientation="Horizontal"
+                            HorizontalOptions="CenterAndExpand">
+
+                            <Button
+                                Text="Get"
+                                VerticalOptions="Center"
+                                HorizontalOptions="End"
+                                Command="{Binding GetP80mFactorsCommand}"
+                                />
+
+                            <Button
+                                Text="Set"
+                                VerticalOptions="Center"
+                                HorizontalOptions="End"
+                                Command="{Binding SetP80mFactorsCommand}"
+                                />
+
+                            <Button
+                                Text="Reset"
+                                VerticalOptions="Center"
+                                HorizontalOptions="End"
+                                Command="{Binding ResetP80mFactorsCommand}"
+                                />
+                        </StackLayout>
+
+                    </StackLayout>
+                </Frame>
+
+                <!-- End of P80m -> U80m -->
+
+                <!-- Uant(ADC) -> Uant(Volts) -->
+                <Frame
+                    Style="{StaticResource FramesStyle}">
+
+                    <StackLayout>
+                        <Label
+                            Text="Uant(ADC -> Voltage)"
+                            HorizontalOptions="Center" />
+
+                        <StackLayout
+                            Orientation="Horizontal">
+
+                            <Label
+                                Text="ADC:"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                            <Label
+                                FontAttributes="Bold"
+                                Text="{Binding UantADCValueAsString}"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                            <Label
+                                Text="Voltage:"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                            <Label
+                                FontAttributes="Bold"
+                                Text="{Binding UantVoltageAsString}"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+                        </StackLayout>
+
+                        <StackLayout
+                            Orientation="Horizontal">
+
+                            <Label
+                                Text="Voltage = "
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                            <Editor
+                                Keyboard="Numeric"
+                                HorizontalOptions="FillAndExpand"
+                                VerticalOptions="Center"
+                                Text="{Binding UantAFactorAsString}" />
+
+                            <Label
+                                Text=" * ADC + "
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                            <Editor
+                                Keyboard="Numeric"
+                                HorizontalOptions="FillAndExpand"
+                                VerticalOptions="Center"
+                                Text="{Binding UantBFactorAsString}" />
+                        </StackLayout>
+
+                        <StackLayout
+                            Orientation="Horizontal"
+                            HorizontalOptions="CenterAndExpand">
+
+                            <Button
+                                Text="Get"
+                                VerticalOptions="Center"
+                                HorizontalOptions="End"
+                                Command="{Binding GetUantFactorsCommand}"
+                                />
+
+                            <Button
+                                Text="Set"
+                                VerticalOptions="Center"
+                                HorizontalOptions="End"
+                                Command="{Binding SetUantFactorsCommand}"
+                                />
+
+                            <Button
+                                Text="Reset"
+                                VerticalOptions="Center"
+                                HorizontalOptions="End"
+                                Command="{Binding ResetUantFactorsCommand}"
+                                />
+                        </StackLayout>
+
+                    </StackLayout>
+                </Frame>
+
+                <!-- End of Uant(ADC) -> Uant(Volts) -->
+
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

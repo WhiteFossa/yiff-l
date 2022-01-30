@@ -248,6 +248,71 @@ void OnNewCommandToFox(uint8_t payloadSize, uint8_t* payload)
 			/* Check for profile settings changes */
 			OnCheckForProfileSettingsChanges(payloadSize, payload);
 			break;
+
+		case ResetLastFailureCode:
+			/* Reset last failure code */
+			OnResetLastFailureCode(payloadSize, payload);
+			break;
+
+		case UpdateSerialNumber:
+			/* Update serial number */
+			OnUpdateSerialNumber(payloadSize, payload);
+			break;
+
+		case GetUbattADCToUbattVoltsFactors:
+			/* Get Ubatt(ADC) -> Ubatt(Volts) factors */
+			OnGetUbattADCToUbattVoltsFactors(payloadSize, payload);
+			break;
+
+		case SetUbattADCToUbattVoltsFactors:
+			/* Set Ubatt(ADC) -> Ubatt(Volts) factors */
+			OnSetUbattADCToUbattVoltsFactors(payloadSize, payload);
+			break;
+
+		case GetUbattVoltsToBattLevelFactors:
+			/* Get Ubatt(Volts) -> battery level factors */
+			OnGetUbattVoltsToBattLevelFactors(payloadSize, payload);
+			break;
+
+		case SetUbattVoltsToBattLevelFactors:
+			/* Set Ubatt(Volts) -> battery level factors */
+			OnSetUbattVoltsToBattLevelFactors(payloadSize, payload);
+			break;
+
+		case GetU80mADCtoU80mVoltsFactors:
+			/* Get U80m(ADC) -> U80m(Volts) factors */
+			OnGetU80mADCtoU80mVoltsFactors(payloadSize, payload);
+			break;
+
+		case SetU80mADCtoU80mVoltsFactors:
+			/* Set U80m(ADC) -> U80m(Volts) factors */
+			OnSetU80mADCtoU80mVoltsFactors(payloadSize, payload);
+			break;
+
+		case GetP80mToU80mFactors:
+			/* Get P80m -> U80m factors */
+			OnGetP80mToU80mFactors(payloadSize, payload);
+			break;
+
+		case SetP80mToU80mFactors:
+			/* Set P80m -> U80m factors */
+			OnSetP80mToU80mFactors(payloadSize, payload);
+			break;
+
+		case GetUantVolts:
+			/* Get Uant(Volts) */
+			OnGetUantVolts(payloadSize, payload);
+			break;
+
+		case GetUantADCToUantVoltsFactors:
+			/* Get Uant(ADC) -> Uant(Volts) factors */
+			OnGetUantADCToUantVoltsFactors(payloadSize, payload);
+			break;
+
+		case SetUantADCToUantVoltsFactors:
+			/* Set Uant(ADC) -> Uant(Volts) factors */
+			OnSetUantADCToUantVoltsFactors(payloadSize, payload);
+			break;
 	}
 }
 
@@ -1193,6 +1258,311 @@ void OnCheckForProfileSettingsChanges(uint8_t payloadSize, uint8_t* payload)
 	FoxState.IsNotReportedManualProfileChanges = false;
 
 	SendResponse(CheckForProfileSettingsChanges, 1, &response);
+}
+
+void OnResetLastFailureCode(uint8_t payloadSize, uint8_t* payload)
+{
+	if (payloadSize != 1)
+	{
+		return;
+	}
+
+	PendingCommandsFlags.NeedToResetLastFailureCode = true;
+}
+
+void OnUpdateSerialNumber(uint8_t payloadSize, uint8_t* payload)
+{
+	if (payloadSize != 5)
+	{
+		return;
+	}
+
+	uint32_t newSerialNumber;
+	memcpy(&newSerialNumber, &payload[1], 4);
+
+	EEPROM_Header.SerialNumber = newSerialNumber;
+	PendingCommandsFlags.NeedToUpdateSerialNumber = true;
+}
+
+void OnGetUbattADCToUbattVoltsFactors(uint8_t payloadSize, uint8_t* payload)
+{
+	if (payloadSize != 1)
+	{
+		return;
+	}
+
+	uint8_t response[8];
+	memcpy(&response[0], &EEPROM_Header.UBattADCA, 4);
+	memcpy(&response[4], &EEPROM_Header.UBattADCB, 4);
+
+	SendResponse(GetUbattADCToUbattVoltsFactors, 8, &response);
+}
+
+void OnSetUbattADCToUbattVoltsFactors(uint8_t payloadSize, uint8_t* payload)
+{
+	bool isValid = true;
+
+	if (payloadSize != 10)
+	{
+		isValid = false;
+		goto OnSetUbattADCToUbattVoltsFactors_Validate;
+	}
+
+	if (!IsBool(payload[1]))
+	{
+		isValid = false;
+		goto OnSetUbattADCToUbattVoltsFactors_Validate;
+	}
+
+	bool isReset = ToBool(payload[1]);
+
+	float factorA;
+	memcpy(&factorA, &payload[2], 4);
+
+	float factorB;
+	memcpy(&factorB, &payload[6], 4);
+
+	/* Attempt to set */
+	isValid = FoxState_SetUbattADCToUbattVoltsFactors(isReset, factorA, factorB);
+	if (isValid)
+	{
+		return;
+	}
+
+OnSetUbattADCToUbattVoltsFactors_Validate:
+	if (!isValid)
+	{
+		uint8_t result = YHL_PACKET_PROCESSOR_FAILURE;
+		SendResponse(SetUbattADCToUbattVoltsFactors, 1, &result);
+		return;
+	}
+}
+
+void OnGetUbattVoltsToBattLevelFactors(uint8_t payloadSize, uint8_t* payload)
+{
+	if (payloadSize != 1)
+	{
+		return;
+	}
+
+	uint8_t response[8];
+	memcpy(&response[0], &EEPROM_Header.BattLevelA, 4);
+	memcpy(&response[4], &EEPROM_Header.BattLevelB, 4);
+
+	SendResponse(GetUbattVoltsToBattLevelFactors, 8, &response);
+}
+
+void OnSetUbattVoltsToBattLevelFactors(uint8_t payloadSize, uint8_t* payload)
+{
+	bool isValid = true;
+
+	if (payloadSize != 10)
+	{
+		isValid = false;
+		goto OnSetUbattVoltsToBattLevelFactors_Validate;
+	}
+
+	if (!IsBool(payload[1]))
+	{
+		isValid = false;
+		goto OnSetUbattVoltsToBattLevelFactors_Validate;
+	}
+
+	bool isReset = ToBool(payload[1]);
+
+	float factorA;
+	memcpy(&factorA, &payload[2], 4);
+
+	float factorB;
+	memcpy(&factorB, &payload[6], 4);
+
+	/* Attempt to set */
+	isValid = FoxState_SetUbattVoltsToBattLevelFactors(isReset, factorA, factorB);
+	if (isValid)
+	{
+		return;
+	}
+
+OnSetUbattVoltsToBattLevelFactors_Validate:
+	if (!isValid)
+	{
+		uint8_t result = YHL_PACKET_PROCESSOR_FAILURE;
+		SendResponse(SetUbattVoltsToBattLevelFactors, 1, &result);
+		return;
+	}
+}
+
+void OnGetU80mADCtoU80mVoltsFactors(uint8_t payloadSize, uint8_t* payload)
+{
+	if (payloadSize != 1)
+	{
+		return;
+	}
+
+	uint8_t response[8];
+	memcpy(&response[0], &EEPROM_Header.U80mADCA, 4);
+	memcpy(&response[4], &EEPROM_Header.U80mADCB, 4);
+
+	SendResponse(GetU80mADCtoU80mVoltsFactors, 8, &response);
+}
+
+void OnSetU80mADCtoU80mVoltsFactors(uint8_t payloadSize, uint8_t* payload)
+{
+	bool isValid = true;
+
+	if (payloadSize != 10)
+	{
+		isValid = false;
+		goto OnSetU80mADCtoU80mVoltsFactors_Validate;
+	}
+
+	if (!IsBool(payload[1]))
+	{
+		isValid = false;
+		goto OnSetU80mADCtoU80mVoltsFactors_Validate;
+	}
+
+	bool isReset = ToBool(payload[1]);
+
+	float factorA;
+	memcpy(&factorA, &payload[2], 4);
+
+	float factorB;
+	memcpy(&factorB, &payload[6], 4);
+
+	/* Attempt to set */
+	isValid = FoxState_SetU80mADCtoU80mVoltsFactors(isReset, factorA, factorB);
+	if (isValid)
+	{
+		return;
+	}
+
+	OnSetU80mADCtoU80mVoltsFactors_Validate:
+	if (!isValid)
+	{
+		uint8_t result = YHL_PACKET_PROCESSOR_FAILURE;
+		SendResponse(SetU80mADCtoU80mVoltsFactors, 1, &result);
+		return;
+	}
+}
+
+void OnGetP80mToU80mFactors(uint8_t payloadSize, uint8_t* payload)
+{
+	if (payloadSize != 1)
+	{
+		return;
+	}
+
+	uint8_t response[8];
+	memcpy(&response[0], &EEPROM_Header.P80mA, 4);
+	memcpy(&response[4], &EEPROM_Header.P80mB, 4);
+
+	SendResponse(GetP80mToU80mFactors, 8, &response);
+}
+
+void OnSetP80mToU80mFactors(uint8_t payloadSize, uint8_t* payload)
+{
+	bool isValid = true;
+
+	if (payloadSize != 10)
+	{
+		isValid = false;
+		goto OnSetP80mToU80mFactors_Validate;
+	}
+
+	if (!IsBool(payload[1]))
+	{
+		isValid = false;
+		goto OnSetP80mToU80mFactors_Validate;
+	}
+
+	bool isReset = ToBool(payload[1]);
+
+	float factorA;
+	memcpy(&factorA, &payload[2], 4);
+
+	float factorB;
+	memcpy(&factorB, &payload[6], 4);
+
+	/* Attempt to set */
+	isValid = FoxState_SetP80mToU80mFactors(isReset, factorA, factorB);
+	if (isValid)
+	{
+		return;
+	}
+
+	OnSetP80mToU80mFactors_Validate: // TODO: Refactor validation
+	if (!isValid)
+	{
+		uint8_t result = YHL_PACKET_PROCESSOR_FAILURE;
+		SendResponse(SetP80mToU80mFactors, 1, &result);
+		return;
+	}
+}
+
+void OnGetUantVolts(uint8_t payloadSize, uint8_t* payload)
+{
+	if (payloadSize != 1)
+	{
+		return;
+	}
+
+	float response = HAL_GetUAntVolts();
+	SendResponse(GetUantVolts, 4, (uint8_t*)&response);
+}
+
+void OnGetUantADCToUantVoltsFactors(uint8_t payloadSize, uint8_t* payload)
+{
+	if (payloadSize != 1)
+	{
+		return;
+	}
+
+	uint8_t response[8];
+	memcpy(&response[0], &EEPROM_Header.UAntADCA, 4);
+	memcpy(&response[4], &EEPROM_Header.UAntADCB, 4);
+
+	SendResponse(GetUantADCToUantVoltsFactors, 8, &response);
+}
+
+void OnSetUantADCToUantVoltsFactors(uint8_t payloadSize, uint8_t* payload)
+{
+	bool isValid = true;
+
+	if (payloadSize != 10)
+	{
+		isValid = false;
+		goto OnSetUantADCToUantVoltsFactors_Validate;
+	}
+
+	if (!IsBool(payload[1]))
+	{
+		isValid = false;
+		goto OnSetUantADCToUantVoltsFactors_Validate;
+	}
+
+	bool isReset = ToBool(payload[1]);
+
+	float factorA;
+	memcpy(&factorA, &payload[2], 4);
+
+	float factorB;
+	memcpy(&factorB, &payload[6], 4);
+
+	/* Attempt to set */
+	isValid = FoxState_SetUantADCToUantVoltsFactors(isReset, factorA, factorB);
+	if (isValid)
+	{
+		return;
+	}
+
+	OnSetUantADCToUantVoltsFactors_Validate: // TODO: Refactor validation
+	if (!isValid)
+	{
+		uint8_t result = YHL_PACKET_PROCESSOR_FAILURE;
+		SendResponse(SetUantADCToUantVoltsFactors, 1, &result);
+		return;
+	}
 }
 
 void EmitEnteringSleepmodeEvent(void)

@@ -32,10 +32,15 @@ void EEPROM_Format(void)
 	defaultHeader.ProfileInUse = 0;
 	defaultHeader.ProfilesAddresses[defaultHeader.ProfileInUse] = (uint16_t)(constantHeader.HeaderAddress + sizeof(EEPROMHeaderStruct)); /* First profile goes after header */
 
-	/* Factors for ADC measurements */
+	/* Ubatt(ADC) -> Ubatt(Volts) */
 	defaultHeader.UBattADCA = YHL_DEFAULT_ADC_UBATT_A;
 	defaultHeader.UBattADCB = YHL_DEFAULT_ADC_UBATT_B;
 
+	/* Ubatt(Volts) -> Battery level */
+	defaultHeader.BattLevelA = YHL_DEFAULT_BATTERY_LEVEL_A;
+	defaultHeader.BattLevelB = YHL_DEFAULT_BATTERY_LEVEL_B;
+
+	/* U80m(ADC) -> U80m(Volts) */
 	defaultHeader.U80mADCA = YHL_DEFAULT_ADC_U80M_A;
 	defaultHeader.U80mADCB = YHL_DEFAULT_ADC_U80M_B;
 

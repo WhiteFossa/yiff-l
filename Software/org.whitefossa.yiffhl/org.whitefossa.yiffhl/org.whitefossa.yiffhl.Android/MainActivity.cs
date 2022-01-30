@@ -42,6 +42,7 @@ namespace org.whitefossa.yiffhl.Droid
             App.Container.Register<IColorsFactory, ColorsFactory>().AsSingleton();
             App.Container.Register<IAntennaMatchingManager, AntennaMatchingManager>().AsSingleton();
             App.Container.Register<IEventsGenerator, EventsGenerator>().AsSingleton();
+            App.Container.Register<IServiceCommandsManager, ServiceCommandsManager>().AsSingleton();
 
             #region Commands
 
@@ -77,6 +78,25 @@ namespace org.whitefossa.yiffhl.Droid
             App.Container.Register<IMarkMatchingAsSeenCommand, MarkMatchingAsSeenCommand>().AsSingleton();
             App.Container.Register<IGetAntennaMatchingDataCommand, GetAntennaMatchingDataCommand>().AsSingleton();
             App.Container.Register<ICheckForProfileSettingsChangesCommand, CheckForProfileSettingsChangesCommand>().AsSingleton();
+            App.Container.Register<IGetLastErrorCodeCommand, GetLastErrorCodeCommand>().AsSingleton();
+            App.Container.Register<IResetLastErrorCodeCommand, ResetLastErrorCodeCommand>().AsSingleton();
+            App.Container.Register<IUpdateSerialNumberCommand, UpdateSerialNumberCommand>().AsSingleton();
+            App.Container.Register<IGetUbattADCCommand, GetUbattADCCommand>().AsSingleton();
+            App.Container.Register<IGetUbattVoltsCommand, GetUbattVoltsCommand>().AsSingleton();
+            App.Container.Register<IGetUbattFactorsCommand, GetUbattFactorsCommand>().AsSingleton();
+            App.Container.Register<ISetUbattFactorsCommand, SetUbattFactorsCommand>().AsSingleton();
+            App.Container.Register<IGetBattLevelFactorsCommand, GetBattLevelFactorsCommand>().AsSingleton();
+            App.Container.Register<ISetBattLevelFactorsCommand, SetBattLevelFactorsCommand>().AsSingleton();
+            App.Container.Register<IGetU80mADCCommand, GetU80mADCCommand>().AsSingleton();
+            App.Container.Register<IGetU80mVoltsCommand, GetU80mVoltsCommand>().AsSingleton();
+            App.Container.Register<IGetU80mFactorsCommand, GetU80mFactorsCommand>().AsSingleton();
+            App.Container.Register<ISetU80mFactorsCommand, SetU80mFactorsCommand>().AsSingleton();
+            App.Container.Register<IGetP80mFactorsCommand, GetP80mFactorsCommand>().AsSingleton();
+            App.Container.Register<ISetP80mFactorsCommand, SetP80mFactorsCommand>().AsSingleton();
+            App.Container.Register<IGetUantADCCommand, GetUantADCCommand>().AsSingleton();
+            App.Container.Register<IGetUantVoltsCommand, GetUantVoltsCommand>().AsSingleton();
+            App.Container.Register<IGetUantFactorsCommand, GetUantFactorsCommand>().AsSingleton();
+            App.Container.Register<ISetUantFactorsCommand, SetUantFactorsCommand>().AsSingleton();
 
             #endregion
 

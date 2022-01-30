@@ -2,6 +2,7 @@
 using org.whitefossa.yiffhl.Abstractions.Enums;
 using org.whitefossa.yiffhl.Abstractions.Interfaces;
 using org.whitefossa.yiffhl.Abstractions.Interfaces.Models;
+using org.whitefossa.yiffhl.ViewModels;
 
 namespace org.whitefossa.yiffhl.Models
 {
@@ -70,7 +71,15 @@ namespace org.whitefossa.yiffhl.Models
         /// </summary>
         public StaticFoxStatus StaticFoxStatus { get; set; } = new StaticFoxStatus();
 
-        public ArmingModel ArmingModel { get; set; } = new ArmingModel();
+        /// <summary>
+        /// Antenna matching model
+        /// </summary>
+        public MatchingModel MatchingModel { get; set; } = new MatchingModel();
+
+        /// <summary>
+        /// Service settings model
+        /// </summary>
+        public ServiceSettingsModel ServiceSettingsModel { get; set; } = new ServiceSettingsModel();
 
         /// <summary>
         /// Current app display
@@ -103,6 +112,15 @@ namespace org.whitefossa.yiffhl.Models
         /// Delegate, called when profile changed
         /// </summary>
         public OnProfileChangedDelegate OnProfileChanged { get; set; }
+
+        #endregion
+
+        #region View Models (kinda dirty)
+
+        /// <summary>
+        /// Main page view model (to update it's properties from other pages)
+        /// </summary>
+        public MainPageViewModel MainPageViewModel;
 
         #endregion
 

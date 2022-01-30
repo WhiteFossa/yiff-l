@@ -15,7 +15,7 @@ using Xamarin.Forms.Xaml;
 namespace org.whitefossa.yiffhl.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class ArmingView : ContentPage
+    public partial class MatchingPageView : ContentPage
     {
         private const int BordersSpan = 10;
 
@@ -33,13 +33,13 @@ namespace org.whitefossa.yiffhl.Views
 
         private IColorsFactory _colorsFactory;
 
-        public MatchingViewModel ViewModel
+        public MatchingPageViewModel ViewModel
         {
-            get => BindingContext as MatchingViewModel;
+            get => BindingContext as MatchingPageViewModel;
             set => BindingContext = value;
         }
 
-        public ArmingView()
+        public MatchingPageView()
         {
             _colorsFactory = App.Container.Resolve<IColorsFactory>();
 
@@ -115,16 +115,16 @@ namespace org.whitefossa.yiffhl.Views
             canvas.DrawRect(bordersRect, mainPaint);
 
             // Vertical (matching) lines
-            for (var matchingPosition = 0; matchingPosition < ViewModel.MainModel.ArmingModel.MatchingPositionsCount; matchingPosition ++)
+            for (var matchingPosition = 0; matchingPosition < ViewModel.MainModel.MatchingModel.MatchingPositionsCount; matchingPosition ++)
             {
                 var x = MatcherPositionToX(bordersRect, matchingPosition);
                 canvas.DrawLine(x, bordersRect.Bottom, x, bordersRect.Top, secondaryPaint);
             }
 
             // Matching points
-            if (ViewModel.MainModel.ArmingModel.MatchingData != null)
+            if (ViewModel.MainModel.MatchingModel.MatchingData != null)
             {
-                var maxValue = ViewModel.MainModel.ArmingModel.BestMatchingPositionVoltage;
+                var maxValue = ViewModel.MainModel.MatchingModel.BestMatchingPositionVoltage;
 
                 if (maxValue == 0)
                 {
@@ -133,11 +133,11 @@ namespace org.whitefossa.yiffhl.Views
 
                 var yScale = bordersRect.Height * AutoScaleMaxVoltageGraphHeight / maxValue;
 
-                for (var position = 0; position < ViewModel.MainModel.ArmingModel.MatchingData.Count(); position++)
+                for (var position = 0; position < ViewModel.MainModel.MatchingModel.MatchingData.Count(); position++)
                 {
                     // Point itself
                     var x = MatcherPositionToX(bordersRect, position);
-                    var y = AntennaVoltageToY(bordersRect, yScale, ViewModel.MainModel.ArmingModel.MatchingData[position]);
+                    var y = AntennaVoltageToY(bordersRect, yScale, ViewModel.MainModel.MatchingModel.MatchingData[position]);
 
                     canvas.DrawCircle(x, y, MatchingPointRadius, matchingPointsPaint);
 
@@ -145,21 +145,21 @@ namespace org.whitefossa.yiffhl.Views
                     if (position != 0)
                     {
                         var previousX = MatcherPositionToX(bordersRect, position - 1);
-                        var previousY = AntennaVoltageToY(bordersRect, yScale, ViewModel.MainModel.ArmingModel.MatchingData[position - 1]);
+                        var previousY = AntennaVoltageToY(bordersRect, yScale, ViewModel.MainModel.MatchingModel.MatchingData[position - 1]);
 
                         canvas.DrawLine(x, y, previousX, previousY, matchingPointsLinesPaint);
                     }
                 }
 
                 // Best matching
-                var bestMatchingX = MatcherPositionToX(bordersRect, ViewModel.MainModel.ArmingModel.BestMatchingPosition);
-                var bestMatchingY = AntennaVoltageToY(bordersRect, yScale, ViewModel.MainModel.ArmingModel.BestMatchingPositionVoltage);
+                var bestMatchingX = MatcherPositionToX(bordersRect, ViewModel.MainModel.MatchingModel.BestMatchingPosition);
+                var bestMatchingY = AntennaVoltageToY(bordersRect, yScale, ViewModel.MainModel.MatchingModel.BestMatchingPositionVoltage);
 
                 canvas.DrawLine(bordersRect.Left, bestMatchingY, bordersRect.Right, bestMatchingY, bestMatchingLinesPaint);
                 canvas.DrawLine(bestMatchingX, bordersRect.Top, bestMatchingX, bordersRect.Bottom, bestMatchingLinesPaint);
 
                 // Voltage (at horizontal line)
-                var voltageString = $"{ ViewModel.MainModel.ArmingModel.BestMatchingPositionVoltage }V";
+                var voltageString = $"{ ViewModel.MainModel.MatchingModel.BestMatchingPositionVoltage }V";
 
                 var voltageBounds = new SKRect();
                 textPaint.MeasureText(voltageString, ref voltageBounds);
@@ -169,7 +169,7 @@ namespace org.whitefossa.yiffhl.Views
                 canvas.DrawText(voltageString, bordersRect.Right - voltageBounds.Width - TextPadding, voltageY, textPaint); // Right
 
                 // Matcher position (at vertical line)
-                var matcherString = $"{ ViewModel.MainModel.ArmingModel.BestMatchingPosition }";
+                var matcherString = $"{ ViewModel.MainModel.MatchingModel.BestMatchingPosition }";
 
                 var matcherBounds = new SKRect();
                 textPaint.MeasureText(matcherString, ref matcherBounds);
@@ -183,7 +183,7 @@ namespace org.whitefossa.yiffhl.Views
 
         private float CalculateCellWidth(SKRect borders)
         {
-            return borders.Width / (ViewModel.MainModel.ArmingModel.MatchingPositionsCount - 1);
+            return borders.Width / (ViewModel.MainModel.MatchingModel.MatchingPositionsCount - 1);
         }
 
         private float MatcherPositionToX(SKRect borders, int position)

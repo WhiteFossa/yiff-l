@@ -202,6 +202,13 @@ void Main_ProcessHighPriorityEvents(void)
 	Main_ProcessSetBeginAndEndTimes();
 	Main_ProcessSetPower();
 	Main_ProcessFoxArming();
+	Main_ProcessResetLastFailureCode();
+	Main_ProcessSerialNumberUpdate();
+	Main_ProcessSetUbattADCToUbattVoltsFactors();
+	Main_ProcessSetUbattVoltsToBattLevelFactors();
+	Main_ProcessSetU80mADCToU80mVoltsFactors();
+	Main_ProcessSetP80mToU80mFactors();
+	Main_ProcessSetUantADCToUantVoltsFactors();
 }
 
 void Main_ProcessFoxNameChange(void)
@@ -475,6 +482,111 @@ void Main_PrepareFoxFoxTransmission(bool isArmFoxAfterMatching)
 	}
 
 	AMSM_StartMatching(isArmFoxAfterMatching);
+}
+
+void Main_ProcessResetLastFailureCode(void)
+{
+	if (PendingCommandsFlags.NeedToResetLastFailureCode)
+	{
+		EEPROM_Header.LastFailure = YhlFailureCause_OK;
+		EEPROM_UpdateHeader();
+
+		SendResponse(ResetLastFailureCode, 0, NULL);
+
+		PendingCommandsFlags.NeedToResetLastFailureCode = false;
+	}
+}
+
+void Main_ProcessSerialNumberUpdate(void)
+{
+	if (PendingCommandsFlags.NeedToUpdateSerialNumber)
+	{
+		EEPROM_UpdateHeader();
+
+		SendResponse(UpdateSerialNumber, 0, NULL);
+
+		PendingCommandsFlags.NeedToUpdateSerialNumber = false;
+	}
+}
+
+void Main_ProcessSetUbattADCToUbattVoltsFactors(void)
+{
+	if (PendingCommandsFlags.NeedToSetUbattADCToUbattVoltsFactors)
+	{
+		EEPROM_Header.UBattADCA = FoxState.ServiceSettings.SetThisUbattADCToUbattVoltsAFactor;
+		EEPROM_Header.UBattADCB = FoxState.ServiceSettings.SetThisUbattADCToUbattVoltsBFactor;
+
+		EEPROM_UpdateHeader();
+
+		uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
+		SendResponse(SetUbattADCToUbattVoltsFactors, 1, &response);
+
+		PendingCommandsFlags.NeedToSetUbattADCToUbattVoltsFactors = false;
+	}
+}
+
+void Main_ProcessSetUbattVoltsToBattLevelFactors(void)
+{
+	if (PendingCommandsFlags.NeedToSetUbattVoltsToBattLevelFactors)
+	{
+		EEPROM_Header.BattLevelA = FoxState.ServiceSettings.SetThisUbattVoltsToBattLevelAFactor;
+		EEPROM_Header.BattLevelB = FoxState.ServiceSettings.SetThisUbattVoltsToBattLevelBFactor;
+
+		EEPROM_UpdateHeader();
+
+		uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
+		SendResponse(SetUbattVoltsToBattLevelFactors, 1, &response);
+
+		PendingCommandsFlags.NeedToSetUbattVoltsToBattLevelFactors = false;
+	}
+}
+
+void Main_ProcessSetU80mADCToU80mVoltsFactors(void)
+{
+	if (PendingCommandsFlags.NeedToSetU80mADCtoU80mVoltsFactors)
+	{
+		EEPROM_Header.U80mADCA = FoxState.ServiceSettings.SetThisU80mADCtoU80mVoltsAFactor;
+		EEPROM_Header.U80mADCB = FoxState.ServiceSettings.SetThisU80mADCtoU80mVoltsBFactor;
+
+		EEPROM_UpdateHeader();
+
+		uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
+		SendResponse(SetU80mADCtoU80mVoltsFactors, 1, &response);
+
+		PendingCommandsFlags.NeedToSetU80mADCtoU80mVoltsFactors = false;
+	}
+}
+
+void Main_ProcessSetP80mToU80mFactors(void)
+{
+	if (PendingCommandsFlags.NeedToSetP80mToU80mFactors)
+	{
+		EEPROM_Header.P80mA = FoxState.ServiceSettings.SetThisP80mToU80mAFactor;
+		EEPROM_Header.P80mB = FoxState.ServiceSettings.SetThisP80mToU80mBFactor;
+
+		EEPROM_UpdateHeader();
+
+		uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
+		SendResponse(SetP80mToU80mFactors, 1, &response);
+
+		PendingCommandsFlags.NeedToSetP80mToU80mFactors = false;
+	}
+}
+
+void Main_ProcessSetUantADCToUantVoltsFactors(void)
+{
+	if (PendingCommandsFlags.NeedToSetUantADCToUantVoltsFactors)
+	{
+		EEPROM_Header.UAntADCA = FoxState.ServiceSettings.SetThisUantADCToUantVoltsAFactor;
+		EEPROM_Header.UAntADCB = FoxState.ServiceSettings.SetThisUantADCToUantVoltsBFactor;
+
+		EEPROM_UpdateHeader();
+
+		uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
+		SendResponse(SetUantADCToUantVoltsFactors, 1, &response);
+
+		PendingCommandsFlags.NeedToSetUantADCToUantVoltsFactors = false;
+	}
 }
 
 void Main_MeasureBatteryLevel(void)

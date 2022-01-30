@@ -469,7 +469,7 @@ float HAL_GetBatteryLevel(void)
 {
 	float voltage = HAL_GetUbattVolts();
 
-	float result = HAL_BATTERY_LEVEL_A * voltage + HAL_BATTERY_LEVEL_B;
+	float result = EEPROM_Header.BattLevelA * voltage + EEPROM_Header.BattLevelB;
 
 	if (result < 0)
 	{

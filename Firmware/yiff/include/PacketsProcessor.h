@@ -144,7 +144,33 @@ typedef enum
 
 	MarkMatchingAsSeen = 0x25,
 
-	CheckForProfileSettingsChanges = 0x26
+	CheckForProfileSettingsChanges = 0x26,
+
+	ResetLastFailureCode = 0x27,
+
+	UpdateSerialNumber = 0x28,
+
+	GetUbattADCToUbattVoltsFactors = 0x29,
+
+	SetUbattADCToUbattVoltsFactors = 0x2A,
+
+	GetUbattVoltsToBattLevelFactors = 0x2B,
+
+	SetUbattVoltsToBattLevelFactors = 0x2C,
+
+	GetU80mADCtoU80mVoltsFactors = 0x2D,
+
+	SetU80mADCtoU80mVoltsFactors = 0x2E,
+
+	GetP80mToU80mFactors = 0x2F,
+
+	SetP80mToU80mFactors = 0x30,
+
+	GetUantVolts = 0x31,
+
+	GetUantADCToUantVoltsFactors = 0x32,
+
+	SetUantADCToUantVoltsFactors = 0x33
 }
 CommandToFoxEnum;
 
@@ -379,9 +405,74 @@ void OnGetAntennaMatchingData(uint8_t payloadSize, uint8_t* payload);
 void OnMarkMatchingAsSeen(uint8_t payloadSize, uint8_t* payload);
 
 /**
- * Called when "Check for profile settings changes" comes
+ * Called when "Check for profile settings changes" command comes
  */
 void OnCheckForProfileSettingsChanges(uint8_t payloadSize, uint8_t* payload);
+
+/**
+ * Called when "Reset last failure code" command comes
+ */
+void OnResetLastFailureCode(uint8_t payloadSize, uint8_t* payload);
+
+/**
+ * Called when "Update serial number" command comes
+ */
+void OnUpdateSerialNumber(uint8_t payloadSize, uint8_t* payload);
+
+/**
+ * Called when "Get Ubatt(ADC) to Ubatt(Volts) factors" command comes
+ */
+void OnGetUbattADCToUbattVoltsFactors(uint8_t payloadSize, uint8_t* payload);
+
+/**
+ * Called when "Set Ubatt(ADC) to Ubatt(Volts) factors" command comes
+ */
+void OnSetUbattADCToUbattVoltsFactors(uint8_t payloadSize, uint8_t* payload);
+
+/**
+ * Called when "Get Ubatt(Volts) to battery level factors" command comes
+ */
+void OnGetUbattVoltsToBattLevelFactors(uint8_t payloadSize, uint8_t* payload);
+
+/**
+ * Called when "Set Ubatt(Volts) to battery level factors" command comes
+ */
+void OnSetUbattVoltsToBattLevelFactors(uint8_t payloadSize, uint8_t* payload);
+
+/**
+ * Called when "Get U80m(ADC) to U80m(Volts) level factors" command comes
+ */
+void OnGetU80mADCtoU80mVoltsFactors(uint8_t payloadSize, uint8_t* payload);
+
+/**
+ * Called when "Set U80m(ADC) to U80m(Volts) level factors" command comes
+ */
+void OnSetU80mADCtoU80mVoltsFactors(uint8_t payloadSize, uint8_t* payload);
+
+/**
+ * Called when "Get P80m to U80m factors" command comes
+ */
+void OnGetP80mToU80mFactors(uint8_t payloadSize, uint8_t* payload);
+
+/**
+ * Called when "Set P80m to U80m factors" command comes
+ */
+void OnSetP80mToU80mFactors(uint8_t payloadSize, uint8_t* payload);
+
+/**
+ * Called when "Get Uant(volts) command comes
+ */
+void OnGetUantVolts(uint8_t payloadSize, uint8_t* payload);
+
+/**
+ * Called when "Get Uant(ADC) -> Uant(Volts) factors" command comes
+ */
+void OnGetUantADCToUantVoltsFactors(uint8_t payloadSize, uint8_t* payload);
+
+/**
+ * Called when "Set Uant(ADC) -> Uant(Volts) factors" command comes
+ */
+void OnSetUantADCToUantVoltsFactors(uint8_t payloadSize, uint8_t* payload);
 
 /**
  * Emits "Entering sleepmode" event

@@ -6,7 +6,7 @@
  */
 
 #include <FoxStatus.h>
-#include <l2hal_aux.h>
+#include <EEPROM.h>
 
 void FoxState_Init(void)
 {
@@ -50,6 +50,15 @@ void FoxState_Init(void)
 
 	PendingCommandsFlags.NeedToArmFox = false;
 	PendingCommandsFlags.NeedToArmFoxByHandpaws = false;
+
+	PendingCommandsFlags.NeedToResetLastFailureCode = false;
+	PendingCommandsFlags.NeedToUpdateSerialNumber = false;
+
+	PendingCommandsFlags.NeedToSetUbattADCToUbattVoltsFactors = false;
+	PendingCommandsFlags.NeedToSetUbattVoltsToBattLevelFactors = false;
+	PendingCommandsFlags.NeedToSetU80mADCtoU80mVoltsFactors = false;
+	PendingCommandsFlags.NeedToSetP80mToU80mFactors = false;
+	PendingCommandsFlags.NeedToSetUantADCToUantVoltsFactors = false;
 
 	FoxState.CurrentDisplay = StatusDisplay;
 }
@@ -188,6 +197,102 @@ bool FoxState_SetPower(float power)
 	}
 
 	FoxState.Power = power;
+
+	return true;
+}
+
+bool FoxState_SetUbattADCToUbattVoltsFactors(bool reset, float a, float b)
+{
+	/* No fox-side check (at least for now) */
+	if (reset)
+	{
+		FoxState.ServiceSettings.SetThisUbattADCToUbattVoltsAFactor = YHL_DEFAULT_ADC_UBATT_A;
+		FoxState.ServiceSettings.SetThisUbattADCToUbattVoltsBFactor = YHL_DEFAULT_ADC_UBATT_B;
+	}
+	else
+	{
+		FoxState.ServiceSettings.SetThisUbattADCToUbattVoltsAFactor = a;
+		FoxState.ServiceSettings.SetThisUbattADCToUbattVoltsBFactor = b;
+	}
+
+
+	PendingCommandsFlags.NeedToSetUbattADCToUbattVoltsFactors = true;
+
+	return true;
+}
+
+bool FoxState_SetUbattVoltsToBattLevelFactors(bool reset, float a, float b)
+{
+	/* No fox-side check (at least for now) */
+	if (reset)
+	{
+		FoxState.ServiceSettings.SetThisUbattVoltsToBattLevelAFactor = YHL_DEFAULT_BATTERY_LEVEL_A;
+		FoxState.ServiceSettings.SetThisUbattVoltsToBattLevelBFactor = YHL_DEFAULT_BATTERY_LEVEL_B;
+	}
+	else
+	{
+		FoxState.ServiceSettings.SetThisUbattVoltsToBattLevelAFactor = a;
+		FoxState.ServiceSettings.SetThisUbattVoltsToBattLevelBFactor = b;
+	}
+
+	PendingCommandsFlags.NeedToSetUbattVoltsToBattLevelFactors = true;
+
+	return true;
+}
+
+bool FoxState_SetU80mADCtoU80mVoltsFactors(bool reset, float a, float b)
+{
+	/* No fox-side check (at least for now) */
+	if (reset)
+	{
+		FoxState.ServiceSettings.SetThisU80mADCtoU80mVoltsAFactor = YHL_DEFAULT_ADC_U80M_A;
+		FoxState.ServiceSettings.SetThisU80mADCtoU80mVoltsBFactor = YHL_DEFAULT_ADC_U80M_B;
+	}
+	else
+	{
+		FoxState.ServiceSettings.SetThisU80mADCtoU80mVoltsAFactor = a;
+		FoxState.ServiceSettings.SetThisU80mADCtoU80mVoltsBFactor = b;
+	}
+
+	PendingCommandsFlags.NeedToSetU80mADCtoU80mVoltsFactors = true;
+
+	return true;
+}
+
+bool FoxState_SetP80mToU80mFactors(bool reset, float a, float b)
+{
+	/* No fox-side check (at least for now) */
+	if (reset)
+	{
+		FoxState.ServiceSettings.SetThisP80mToU80mAFactor = YHL_DEFAULT_P80M_A;
+		FoxState.ServiceSettings.SetThisP80mToU80mBFactor = YHL_DEFAULT_P80M_B;
+	}
+	else
+	{
+		FoxState.ServiceSettings.SetThisP80mToU80mAFactor = a;
+		FoxState.ServiceSettings.SetThisP80mToU80mBFactor = b;
+	}
+
+	PendingCommandsFlags.NeedToSetP80mToU80mFactors = true;
+
+	return true;
+}
+
+bool FoxState_SetUantADCToUantVoltsFactors(bool reset, float a, float b)
+{
+	/* No fox-side check (at least for now) */
+	if (reset)
+	{
+		FoxState.ServiceSettings.SetThisUantADCToUantVoltsAFactor = YHL_DEFAULT_ADC_UANT_A;
+		FoxState.ServiceSettings.SetThisUantADCToUantVoltsBFactor = YHL_DEFAULT_ADC_UANT_B;
+	}
+	else
+	{
+		FoxState.ServiceSettings.SetThisUantADCToUantVoltsAFactor = a;
+		FoxState.ServiceSettings.SetThisUantADCToUantVoltsBFactor = b;
+	}
+
+	PendingCommandsFlags.NeedToSetUantADCToUantVoltsFactors = true;
 
 	return true;
 }

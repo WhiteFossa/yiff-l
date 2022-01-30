@@ -72,6 +72,19 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
         private OnResponseDelegate _onMarkMatchingAsSeenResponse;
         private OnResponseDelegate _onGetAntennaMatchingDataResponse;
         private OnResponseDelegate _onCheckForProfileSettingsChangesResponse;
+        private OnResponseDelegate _onResetLastErrorCodeResponse;
+        private OnResponseDelegate _onSerialNumberUpdatedResponse;
+        private OnResponseDelegate _onGetUBattFactorsResponse;
+        private OnResponseDelegate _onSetUBattFactorsResponse;
+        private OnResponseDelegate _onGetBattLevelFactorsResponse;
+        private OnResponseDelegate _onSetBattLevelFactorsResponse;
+        private OnResponseDelegate _onGetU80mFactorsResponse;
+        private OnResponseDelegate _onSetU80mFactorsResponse;
+        private OnResponseDelegate _onGetP80mFactorsResponse;
+        private OnResponseDelegate _onSetP80mFactorsResponse;
+        private OnResponseDelegate _onGetUAntVoltsResponse;
+        private OnResponseDelegate _onGetUantFactorsResponse;
+        private OnResponseDelegate _onSetUantFactorsResponse;
 
         #endregion
 
@@ -539,6 +552,97 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
                         _onCheckForProfileSettingsChangesResponse(responsePayload);
                         break;
 
+                    // Reset last error code
+                    case CommandType.ResetLastFailureCode:
+                        CheckOnResponseDelegate(_onResetLastErrorCodeResponse);
+
+                        _onResetLastErrorCodeResponse(responsePayload);
+                        break;
+
+                    // Update serial number
+                    case CommandType.UpdateSerialNumber:
+                        CheckOnResponseDelegate(_onSerialNumberUpdatedResponse);
+
+                        _onSerialNumberUpdatedResponse(responsePayload);
+                        break;
+
+                    // Get Ubatt(ADC) -> Ubatt(Volts) factors
+                    case CommandType.GetUbattADCToUbattVoltsFactors:
+                        CheckOnResponseDelegate(_onGetUBattFactorsResponse);
+
+                        _onGetUBattFactorsResponse(responsePayload);
+                        break;
+
+                    // Set Ubatt(ADC) -> Ubatt(Volts) factors
+                    case CommandType.SetUbattADCToUbattVoltsFactors:
+                        CheckOnResponseDelegate(_onSetUBattFactorsResponse);
+
+                        _onSetUBattFactorsResponse(responsePayload);
+                        break;
+
+                    // Get Ubatt(Volts) -> Battery level factors
+                    case CommandType.GetUbattVoltsToBattLevelFactors:
+                        CheckOnResponseDelegate(_onGetBattLevelFactorsResponse);
+
+                        _onGetBattLevelFactorsResponse(responsePayload);
+                        break;
+
+                    // Set Ubatt(Volts) -> Battery level factors
+                    case CommandType.SetUbattVoltsToBattLevelFactors:
+                        CheckOnResponseDelegate(_onSetBattLevelFactorsResponse);
+
+                        _onSetBattLevelFactorsResponse(responsePayload);
+                        break;
+
+                    // Get U80m(ADC) -> U80m(Volts) factors
+                    case CommandType.GetU80mADCToU80mVoltsFactors:
+                        CheckOnResponseDelegate(_onGetU80mFactorsResponse);
+
+                        _onGetU80mFactorsResponse(responsePayload);
+                        break;
+
+                    // Set U80m(ADC) -> U80m(Volts) factors
+                    case CommandType.SetU80mADCToU80mVoltsFactors:
+                        CheckOnResponseDelegate(_onSetU80mFactorsResponse);
+
+                        _onSetU80mFactorsResponse(responsePayload);
+                        break;
+
+                    // Get P80m -> U80m factors
+                    case CommandType.GetP80mToU80mFactors:
+                        CheckOnResponseDelegate(_onGetP80mFactorsResponse);
+
+                        _onGetP80mFactorsResponse(responsePayload);
+                        break;
+
+                    // Set P80m -> U80m factors
+                    case CommandType.SetP80mToU80mFactors:
+                        CheckOnResponseDelegate(_onSetP80mFactorsResponse);
+
+                        _onSetP80mFactorsResponse(responsePayload);
+                        break;
+
+                    // Get Uant(Volts)
+                    case CommandType.GetUAntVolts:
+                        CheckOnResponseDelegate(_onGetUAntVoltsResponse);
+
+                        _onGetUAntVoltsResponse(responsePayload);
+                        break;
+
+                    // Get Uant(ADC) -> Uant(Volts) factors
+                    case CommandType.GetUantADCToUantVoltsFactors:
+                        CheckOnResponseDelegate(_onGetUantFactorsResponse);
+
+                        _onGetUantFactorsResponse(responsePayload);
+                        break;
+
+                    // Set Uant(ADC) -> Uant(Volts) factors
+                    case CommandType.SetUantADCToUantVoltsFactors:
+                        CheckOnResponseDelegate(_onSetUantFactorsResponse);
+
+                        _onSetUantFactorsResponse(responsePayload);
+                        break;
+
                     default:
                         return; // We've got some junk
                 }
@@ -865,6 +969,84 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
         {
             _onCheckForProfileSettingsChangesResponse = onCheckForProfileSettingsChanges
                 ?? throw new ArgumentNullException(nameof(onCheckForProfileSettingsChanges));
+        }
+
+        public void SetOnResetLastErrorCodeResponse(OnResponseDelegate onResetLastErrorCodeResponse)
+        {
+            _onResetLastErrorCodeResponse = onResetLastErrorCodeResponse
+                ?? throw new ArgumentNullException(nameof(onResetLastErrorCodeResponse));
+        }
+
+        public void SetOnSerialNumberUpdatedResponse(OnResponseDelegate onSerialNumberUpdatedResponse)
+        {
+            _onSerialNumberUpdatedResponse = onSerialNumberUpdatedResponse
+                ?? throw new ArgumentException(nameof(onSerialNumberUpdatedResponse));
+        }
+
+        public void SetOnGetUBattFactorsResponse(OnResponseDelegate onGetUBattFactorsResponse)
+        {
+            _onGetUBattFactorsResponse = onGetUBattFactorsResponse
+                ?? throw new ArgumentNullException(nameof(onGetUBattFactorsResponse));
+        }
+
+        public void SetOnSetUBattFactorsResponse(OnResponseDelegate onSetUBattFactorsResponse)
+        {
+            _onSetUBattFactorsResponse = onSetUBattFactorsResponse
+                ?? throw new ArgumentNullException(nameof(onSetUBattFactorsResponse));
+        }
+
+        public void SetOnGetBattLevelFactorsResponse(OnResponseDelegate onGetBattLevelFactorsResponse)
+        {
+            _onGetBattLevelFactorsResponse = onGetBattLevelFactorsResponse
+                ?? throw new ArgumentNullException(nameof(onGetBattLevelFactorsResponse));
+        }
+
+        public void SetOnSetBattLevelFactorsResponse(OnResponseDelegate onSetBattLevelFactorsResponse)
+        {
+            _onSetBattLevelFactorsResponse = onSetBattLevelFactorsResponse
+                ?? throw new ArgumentNullException(nameof(onSetBattLevelFactorsResponse));
+        }
+
+        public void SetOnGetU80mFactorsResponse(OnResponseDelegate onGetU80mFactorsResponse)
+        {
+            _onGetU80mFactorsResponse = onGetU80mFactorsResponse
+                ?? throw new ArgumentNullException(nameof(onGetU80mFactorsResponse));
+        }
+
+        public void SetOnSetU80mFactorsResponse(OnResponseDelegate onSetU80mFactorsResponse)
+        {
+            _onSetU80mFactorsResponse = onSetU80mFactorsResponse
+                ?? throw new ArgumentNullException(nameof(onSetU80mFactorsResponse));
+        }
+
+        public void SetOnGetP80mFactorsResponse(OnResponseDelegate onGetP80mFactorsResponse)
+        {
+            _onGetP80mFactorsResponse = onGetP80mFactorsResponse
+                ?? throw new ArgumentNullException(nameof(onGetP80mFactorsResponse));
+        }
+
+        public void SetOnSetP80mFactorsResponse(OnResponseDelegate onSetP80mFactorsResponse)
+        {
+            _onSetP80mFactorsResponse = onSetP80mFactorsResponse
+                ?? throw new ArgumentNullException(nameof(onSetP80mFactorsResponse));
+        }
+
+        public void SetOnGetUAntVoltsResponse(OnResponseDelegate onGetUAntVoltsResponse)
+        {
+            _onGetUAntVoltsResponse = onGetUAntVoltsResponse
+                ?? throw new ArgumentNullException(nameof(onGetUAntVoltsResponse));
+        }
+
+        public void SetOnGetUantFactorsResponse(OnResponseDelegate onGetUantFactorsResponse)
+        {
+            _onGetUantFactorsResponse = onGetUantFactorsResponse
+                ?? throw new ArgumentNullException(nameof(onGetUantFactorsResponse));
+        }
+
+        public void SetOnSetUantFactorsResponse(OnResponseDelegate onSetUantFactorsResponse)
+        {
+            _onSetUantFactorsResponse = onSetUantFactorsResponse
+                ?? throw new ArgumentNullException(nameof(onSetUantFactorsResponse));
         }
     }
 }
