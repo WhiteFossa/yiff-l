@@ -484,6 +484,11 @@ void OnSetUantADCToUantVoltsFactors(uint8_t payloadSize, uint8_t* payload);
 void OnForceTxOn(uint8_t payloadSize, uint8_t* payload);
 
 /**
+ * Called when "Return to normal operations after force TX On" command comes
+ */
+void OnReturnAfterForceTxOn(uint8_t payloadSize, uint8_t* payload);
+
+/**
  * Emits "Entering sleepmode" event
  */
 void EmitEnteringSleepmodeEvent(void);
