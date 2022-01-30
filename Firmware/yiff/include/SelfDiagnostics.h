@@ -575,6 +575,16 @@ typedef enum
 	 * Null is passed to HAL_RegisterHighPriorityEventCallback
 	 */
 	YhlFailureCause_NullPassedToHALRegisterHighPriorityEventCallback = 111,
+
+	/**
+	 * Attempt to force transmission when fox is not prepared
+	 */
+	YhlFailureCause_AttemptToForceTxWhenFoxIsNotReady = 112,
+
+	/**
+	 * Both isArmFoxAfterMatching and isForceTxAfterMatching are set to true
+	 */
+	YhlFailureCause_IncorrectFlagsInAntennaMatching = 113
 }
 YhlFailureCausesEnum;
 

@@ -209,6 +209,7 @@ void Main_ProcessHighPriorityEvents(void)
 	Main_ProcessSetU80mADCToU80mVoltsFactors();
 	Main_ProcessSetP80mToU80mFactors();
 	Main_ProcessSetUantADCToUantVoltsFactors();
+	Main_ProcessForceTx();
 }
 
 void Main_ProcessFoxNameChange(void)
@@ -429,7 +430,7 @@ void Main_ProcessFoxArming(void)
 {
 	if (PendingCommandsFlags.NeedToArmFox)
 	{
-		if (!FoxState.GlobalState.IsArmed)
+		if (!FoxState.GlobalState.IsArmed && !FoxState.ServiceSettings.IsForceTx)
 		{
 			/* Immediately reporting that arming in progress */
 			uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
@@ -468,20 +469,25 @@ void Main_ProcessFoxArmingCommon(void)
 		return;
 	}
 
-	Main_PrepareFoxFoxTransmission(true);
+	Main_PrepareFoxFoxTransmission(true, false);
 }
 
-void Main_PrepareFoxFoxTransmission(bool isArmFoxAfterMatching)
+void Main_PrepareFoxFoxTransmission(bool isArmFoxAfterMatching, bool forceTxAfterPreparation)
 {
 	Sleepmodes_PreventSleep();
 
 	if (FoxState.Frequency.Is144MHz)
 	{
 		HL_PrepareFoxForCycle();
+
+		if (forceTxAfterPreparation)
+		{
+			HL_ForceTxOn();
+		}
 		return;
 	}
 
-	AMSM_StartMatching(isArmFoxAfterMatching);
+	AMSM_StartMatching(isArmFoxAfterMatching, forceTxAfterPreparation);
 }
 
 void Main_ProcessResetLastFailureCode(void)
@@ -586,6 +592,16 @@ void Main_ProcessSetUantADCToUantVoltsFactors(void)
 		SendResponse(SetUantADCToUantVoltsFactors, 1, &response);
 
 		PendingCommandsFlags.NeedToSetUantADCToUantVoltsFactors = false;
+	}
+}
+
+void Main_ProcessForceTx(void)
+{
+	if (PendingCommandsFlags.NeedToForceTx)
+	{
+		Main_PrepareFoxFoxTransmission(false, true);
+
+		PendingCommandsFlags.NeedToForceTx = false;
 	}
 }
 

@@ -149,6 +149,11 @@ typedef struct
 	 * If true, then we need to save new Uant(ADC)->Uant(Volts) factors
 	 */
 	bool NeedToSetUantADCToUantVoltsFactors;
+
+	/**
+	 * If true, then we need to force TX (service mode)
+	 */
+	bool NeedToForceTx;
 }
 PendingCommandsFlagsStruct;
 

@@ -401,6 +401,11 @@ typedef struct
 	 * When executing a "Set Uant(ADC) to Uant(Volts) factors" command new B Factor will be stored here
 	 */
 	float SetThisUantADCToUantVoltsBFactor;
+
+	/**
+	 * Flag, raised by service command, causing fox to transmit continuously
+	 */
+	bool IsForceTx;
 }
 ServiceSettingsStruct;
 

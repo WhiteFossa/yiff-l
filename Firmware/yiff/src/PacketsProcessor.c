@@ -313,6 +313,11 @@ void OnNewCommandToFox(uint8_t payloadSize, uint8_t* payload)
 			/* Set Uant(ADC) -> Uant(Volts) factors */
 			OnSetUantADCToUantVoltsFactors(payloadSize, payload);
 			break;
+
+		case ForceTxOn:
+			/* Force fox to transmit continuously */
+			OnForceTxOn(payloadSize, payload);
+			break;
 	}
 }
 
@@ -1563,6 +1568,23 @@ void OnSetUantADCToUantVoltsFactors(uint8_t payloadSize, uint8_t* payload)
 		SendResponse(SetUantADCToUantVoltsFactors, 1, &result);
 		return;
 	}
+}
+
+void OnForceTxOn(uint8_t payloadSize, uint8_t* payload)
+{
+	if (payloadSize != 1)
+	{
+		return;
+	}
+
+	if (FoxState.ServiceSettings.IsForceTx || FoxState.GlobalState.IsArmed)
+	{
+		uint8_t result = YHL_PACKET_PROCESSOR_FAILURE;
+		SendResponse(ForceTxOn, 1, &result);
+		return;
+	}
+
+	PendingCommandsFlags.NeedToForceTx = true;
 }
 
 void EmitEnteringSleepmodeEvent(void)

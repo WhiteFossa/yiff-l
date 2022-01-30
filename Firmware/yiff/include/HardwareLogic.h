@@ -184,4 +184,9 @@ void HL_TurnBluetoothOff(void);
  */
 bool HL_CheckIfU80mLocked(void);
 
+/**
+ * Forces continuous transmission, assuming that fox is prepared for cycle
+ */
+void HL_ForceTxOn(void);
+
 #endif /* INCLUDE_HARDWARELOGIC_H_ */

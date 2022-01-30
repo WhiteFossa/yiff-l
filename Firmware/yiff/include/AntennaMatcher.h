@@ -74,7 +74,7 @@ void AMSM_MoveToNextState(void);
 /**
  * Starts antenna matching procedure after some checks.
  */
-void AMSM_StartMatching(bool isArmFoxAfterMatching);
+void AMSM_StartMatching(bool isArmFoxAfterMatching, bool isForceTxAfterMatching);
 
 /**
  * Call it each SysTick
