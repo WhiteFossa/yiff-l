@@ -1585,6 +1585,9 @@ void OnForceTxOn(uint8_t payloadSize, uint8_t* payload)
 	}
 
 	PendingCommandsFlags.NeedToForceTx = true;
+
+	uint8_t result = YHL_PACKET_PROCESSOR_SUCCESS;
+	SendResponse(ForceTxOn, 1, &result);
 }
 
 void EmitEnteringSleepmodeEvent(void)

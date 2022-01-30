@@ -487,6 +487,7 @@ void Main_PrepareFoxFoxTransmission(bool isArmFoxAfterMatching, bool forceTxAfte
 		return;
 	}
 
+	/* 80m */
 	AMSM_StartMatching(isArmFoxAfterMatching, forceTxAfterPreparation);
 }
 
