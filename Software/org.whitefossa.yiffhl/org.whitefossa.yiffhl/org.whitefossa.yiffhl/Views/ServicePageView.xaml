@@ -527,6 +527,39 @@
 
                 <!-- End of Uant(ADC) -> Uant(Volts) -->
 
+                <!-- Force TX on -->
+                <Frame
+                    Style="{StaticResource FramesStyle}">
+
+                    <StackLayout>
+                        <Label
+                            Text="Force TX On"
+                            HorizontalOptions="Center" />
+
+                        <StackLayout
+                            Orientation="Horizontal"
+                            HorizontalOptions="CenterAndExpand">
+
+                            <Button
+                                Text="Force"
+                                VerticalOptions="Center"
+                                HorizontalOptions="End"
+                                Command="{Binding ForceTxOnCommand}"
+                                />
+
+                            <Button
+                                Text="Normal"
+                                VerticalOptions="Center"
+                                HorizontalOptions="End"
+                                Command="{Binding TxNormalCommand}"
+                                />
+                        </StackLayout>
+
+                    </StackLayout>
+                </Frame>
+
+                <!-- End of force TX on -->
+
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>

@@ -37,6 +37,8 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
     public delegate void OnResetUantFactorsDelegate();
     public delegate void OnSetUantFactorsDelegate();
 
+    public delegate void OnForceTxOnDelegate(bool isSuccessfull);
+
     public interface IServiceCommandsManager
     {
         Task GetLastErrorCodeAsync(OnGetLastErrorCodeDelegate onGetLastErrorCode);
@@ -73,5 +75,7 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
         Task GetUantFactorsAsync(OnGetUantFactorsDelegate onGetUantFactors);
         Task ResetUantFactorsAsync(OnResetUantFactorsDelegate onResetUantFactors);
         Task SetUantFactorsAsync(float a, float b, OnSetUantFactorsDelegate onSetUantFactors);
+
+        Task ForceTxOnAsync(OnForceTxOnDelegate onForceTxOn);
     }
 }

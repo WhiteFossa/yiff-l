@@ -364,6 +364,11 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         public ICommand SetUantFactorsCommand { get; }
 
+        /// <summary>
+        /// Force TX on
+        /// </summary>
+        public ICommand ForceTxOnCommand { get; }
+
         public ServicePageViewModel()
         {
 
@@ -397,6 +402,8 @@ namespace org.whitefossa.yiffhl.ViewModels
             GetUantFactorsCommand = new Command(async () => await OnGetUantFactorsAsync());
             ResetUantFactorsCommand = new Command(async () => await OnResetUantFactorsAsync());
             SetUantFactorsCommand = new Command(async () => await OnSetUantFactorsAsync());
+
+            ForceTxOnCommand = new Command(async () => await OnForceTxOnAsync());
 
             // Setting up poll service data timer
             PollServiceDataTimer = new Timer(PollServiceDataInterval);
@@ -868,6 +875,20 @@ namespace org.whitefossa.yiffhl.ViewModels
         private async Task OnSetUantFactorsResponseAsync()
         {
             await OnGetUantFactorsAsync();
+        }
+
+        #endregion
+
+        #region Force TX On
+
+        private async Task OnForceTxOnAsync()
+        {
+            await _serviceCommandsManager.ForceTxOnAsync(async (s) => await OnForceTxOnResponseAsync(s));
+        }
+
+        private async Task OnForceTxOnResponseAsync(bool isSuccessfull)
+        {
+            Debug.WriteLine($"Force TX On: {isSuccessfull}");
         }
 
         #endregion
