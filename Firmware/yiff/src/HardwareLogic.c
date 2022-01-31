@@ -345,4 +345,5 @@ void HL_ForceTxOn(void)
 	}
 
 	HAL_SwitchManipulator(true);
+	FoxState.ServiceSettings.IsForceTx = true;
 }

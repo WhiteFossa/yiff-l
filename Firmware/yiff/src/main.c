@@ -613,6 +613,7 @@ void Main_ReturnFromForceTx(void)
 	{
 		HAL_SwitchManipulator(false);
 		HL_UnPrepareFoxFromCycle();
+		FoxState.ServiceSettings.IsForceTx = false;
 
 		PendingCommandsFlags.NeedToReturnFromForceTx = false;
 	}
