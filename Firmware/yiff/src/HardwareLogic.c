@@ -344,6 +344,12 @@ void HL_ForceTxOn(void)
 		SelfDiagnostics_HaltOnFailure(YhlFailureCause_AttemptToForceTxWhenFoxIsNotReady);
 	}
 
+	if (!FoxState.Frequency.Is144MHz)
+	{
+		// We are expecting completed matching
+		HAL_SetAntennaMatchingValue(FoxState.AntennaMatching.BestMatchPosition);
+	}
+
 	HAL_SwitchManipulator(true);
 	FoxState.ServiceSettings.IsForceTx = true;
 }
