@@ -210,6 +210,7 @@ void Main_ProcessHighPriorityEvents(void)
 	Main_ProcessSetP80mToU80mFactors();
 	Main_ProcessSetUantADCToUantVoltsFactors();
 	Main_ProcessForceTx();
+	Main_ReturnFromForceTx();
 }
 
 void Main_ProcessFoxNameChange(void)
@@ -487,6 +488,7 @@ void Main_PrepareFoxFoxTransmission(bool isArmFoxAfterMatching, bool forceTxAfte
 		return;
 	}
 
+	/* 80m */
 	AMSM_StartMatching(isArmFoxAfterMatching, forceTxAfterPreparation);
 }
 
@@ -602,6 +604,17 @@ void Main_ProcessForceTx(void)
 		Main_PrepareFoxFoxTransmission(false, true);
 
 		PendingCommandsFlags.NeedToForceTx = false;
+	}
+}
+
+void Main_ReturnFromForceTx(void)
+{
+	if (PendingCommandsFlags.NeedToReturnFromForceTx)
+	{
+		HAL_SwitchManipulator(false);
+		HL_UnPrepareFoxFromCycle();
+
+		PendingCommandsFlags.NeedToReturnFromForceTx = false;
 	}
 }
 

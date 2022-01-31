@@ -154,6 +154,11 @@ typedef struct
 	 * If true, then we need to force TX (service mode)
 	 */
 	bool NeedToForceTx;
+
+	/**
+	 * If true, then we need to return from force TX
+	 */
+	bool NeedToReturnFromForceTx;
 }
 PendingCommandsFlagsStruct;
 

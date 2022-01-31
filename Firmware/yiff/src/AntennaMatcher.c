@@ -115,7 +115,10 @@ void AMSM_MoveToNextState(void)
 				AMSM_SupressCarrier(false);
 				AMSM_ForceCarrier(false);
 
-				HL_UnPrepareFoxFromCycle();
+				if (!AMSM_IsForceTxAfterMatching)
+				{
+					HL_UnPrepareFoxFromCycle();
+				}
 
 				FoxState.CurrentDisplay = StatusDisplay;
 				FoxState.AntennaMatching.Status = AntennaMatching_Completed;

@@ -63,6 +63,7 @@ void FoxState_Init(void)
 	PendingCommandsFlags.NeedToSetUantADCToUantVoltsFactors = false;
 
 	PendingCommandsFlags.NeedToForceTx = false;
+	PendingCommandsFlags.NeedToReturnFromForceTx = false;
 
 	FoxState.CurrentDisplay = StatusDisplay;
 }
