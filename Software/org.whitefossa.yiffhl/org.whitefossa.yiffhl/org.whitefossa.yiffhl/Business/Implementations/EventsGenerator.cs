@@ -35,7 +35,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
 
             if
             (
-                model.ActiveDisplay != ActiveDisplay.MatchingDisplay
+                model.AppDisplays.Peek() != ActiveDisplay.MatchingDisplay
                 &&
                 (
                     model.DynamicFoxStatus.AntennaMatchingStatus.Status == AntennaMatchingStatus.InProgress

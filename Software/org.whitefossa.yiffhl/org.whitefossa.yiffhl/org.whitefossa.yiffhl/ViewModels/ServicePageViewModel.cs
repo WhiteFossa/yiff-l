@@ -413,6 +413,8 @@ namespace org.whitefossa.yiffhl.ViewModels
             PollServiceDataTimer.Elapsed += async (s, e) => await OnReloadServiceDataRequestAsync(s, e);
             PollServiceDataTimer.AutoReset = true;
             PollServiceDataTimer.Start();
+
+            Debug.WriteLine("Timer created");
         }
 
         public async Task OnShowAsync()
@@ -422,7 +424,7 @@ namespace org.whitefossa.yiffhl.ViewModels
 
         public async Task OnLeavingServiceDisplayAsync()
         {
-            _mainModel.ActiveDisplay = ActiveDisplay.MainDisplay;
+            _mainModel.AppDisplays.Pop();
             await Navigation.PopModalAsync();
         }
 
@@ -507,7 +509,7 @@ namespace org.whitefossa.yiffhl.ViewModels
 
         private async Task OnReloadServiceDataRequestAsync(Object source, ElapsedEventArgs e)
         {
-            if (_mainModel.ActiveDisplay != ActiveDisplay.ServiceDisplay)
+            if (_mainModel.AppDisplays.Peek() != ActiveDisplay.ServiceDisplay)
             {
                 return;
             }

@@ -1944,7 +1944,7 @@ Do you want to continue?");
 
         private void NavigateToMatchingPage()
         {
-            MainModel.ActiveDisplay = ActiveDisplay.MatchingDisplay;
+            MainModel.AppDisplays.Push(ActiveDisplay.MatchingDisplay);
 
             Device.BeginInvokeOnMainThread(async () =>
             {
@@ -1954,7 +1954,7 @@ Do you want to continue?");
 
         private async Task NavigateToServicePageAsync()
         {
-            MainModel.ActiveDisplay = ActiveDisplay.ServiceDisplay;
+            MainModel.AppDisplays.Push(ActiveDisplay.ServiceDisplay);
 
             await _servicePageView.OnShowAsync();
             Device.BeginInvokeOnMainThread(async () =>

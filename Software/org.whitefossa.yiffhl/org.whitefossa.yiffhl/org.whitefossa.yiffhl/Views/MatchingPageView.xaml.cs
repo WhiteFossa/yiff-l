@@ -210,7 +210,7 @@ namespace org.whitefossa.yiffhl.Views
 
         public async Task LeaveMatchingDisplayAsync()
         {
-            if (ViewModel.MainModel.ActiveDisplay == ActiveDisplay.MatchingDisplay)
+            if (ViewModel.MainModel.AppDisplays.Peek() == ActiveDisplay.MatchingDisplay)
             {
                 await ViewModel.OnLeavingMatchingDisplayAsync();
             }
