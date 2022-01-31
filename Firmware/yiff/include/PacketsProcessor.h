@@ -170,7 +170,11 @@ typedef enum
 
 	GetUantADCToUantVoltsFactors = 0x32,
 
-	SetUantADCToUantVoltsFactors = 0x33
+	SetUantADCToUantVoltsFactors = 0x33,
+
+	ForceTxOn = 0x34,
+
+	ReturnAfterForceTxOn = 0x35
 }
 CommandToFoxEnum;
 
@@ -473,6 +477,16 @@ void OnGetUantADCToUantVoltsFactors(uint8_t payloadSize, uint8_t* payload);
  * Called when "Set Uant(ADC) -> Uant(Volts) factors" command comes
  */
 void OnSetUantADCToUantVoltsFactors(uint8_t payloadSize, uint8_t* payload);
+
+/**
+ * Called when "Force TX On" service command comes
+ */
+void OnForceTxOn(uint8_t payloadSize, uint8_t* payload);
+
+/**
+ * Called when "Return to normal operations after force TX On" command comes
+ */
+void OnReturnAfterForceTxOn(uint8_t payloadSize, uint8_t* payload);
 
 /**
  * Emits "Entering sleepmode" event

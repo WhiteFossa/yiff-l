@@ -97,7 +97,7 @@ namespace org.whitefossa.yiffhl.ViewModels
                 &&
                 newMatchingStatus == AntennaMatchingStatus.InProgress
                 &&
-                MainModel.ActiveDisplay == ActiveDisplay.MatchingDisplay)
+                MainModel.AppDisplays.Peek() == ActiveDisplay.MatchingDisplay)
             {
                 // Matching just initiated
                 await OnMatchingInitiated();
@@ -107,7 +107,7 @@ namespace org.whitefossa.yiffhl.ViewModels
                 &&
                 newMatchingStatus == AntennaMatchingStatus.Completed
                 &&
-                MainModel.ActiveDisplay == ActiveDisplay.MatchingDisplay
+                MainModel.AppDisplays.Peek() == ActiveDisplay.MatchingDisplay
                 ||
                 ForceReloadMatchingData)
             {
@@ -124,7 +124,7 @@ namespace org.whitefossa.yiffhl.ViewModels
         {
             await _antennaMatchingManager.MarkAntennaMatchingAsSeenAsync(OnMarkAntennaMatchingAsSeen);
 
-            MainModel.ActiveDisplay = ActiveDisplay.MainDisplay;
+            MainModel.AppDisplays.Pop();
             await Navigation.PopModalAsync();
         }
 

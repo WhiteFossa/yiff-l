@@ -886,6 +886,12 @@ void MenuDisplay_Arm(void)
 		return;
 	}
 
+	if (FoxState.ServiceSettings.IsForceTx)
+	{
+		InformationPopup_Show("Service mode!", "Fox in service TX!", MenuDisplay);
+		return;
+	}
+
 	PendingCommandsFlags.NeedToArmFoxByHandpaws = true;
 }
 

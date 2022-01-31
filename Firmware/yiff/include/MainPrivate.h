@@ -211,6 +211,16 @@ void Main_ProcessSetP80mToU80mFactors(void);
 void Main_ProcessSetUantADCToUantVoltsFactors(void);
 
 /**
+ * Activates forced TX (service mode) if needed
+ */
+void Main_ProcessForceTx(void);
+
+/**
+ * Deactivates forced TX (service mode) if needed
+ */
+void Main_ReturnFromForceTx(void);
+
+/**
  * As it name states, processes high priority events.
  */
 void Main_ProcessHighPriorityEvents(void);

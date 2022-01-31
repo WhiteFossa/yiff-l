@@ -52,6 +52,6 @@ void Main_ProcessIncomingPackets(void);
 /**
  * Part of arming procedure
  */
-void Main_PrepareFoxFoxTransmission(bool isArmFoxAfterMatching);
+void Main_PrepareFoxFoxTransmission(bool isArmFoxAfterMatching, bool forceTxAfterPreparation);
 
 #endif /* __MAIN_H */

@@ -364,6 +364,13 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         public ICommand SetUantFactorsCommand { get; }
 
+        /// <summary>
+        /// Force TX on
+        /// </summary>
+        public ICommand ForceTxOnCommand { get; }
+
+        public ICommand TxNormalCommand { get; }
+
         public ServicePageViewModel()
         {
 
@@ -398,11 +405,16 @@ namespace org.whitefossa.yiffhl.ViewModels
             ResetUantFactorsCommand = new Command(async () => await OnResetUantFactorsAsync());
             SetUantFactorsCommand = new Command(async () => await OnSetUantFactorsAsync());
 
+            ForceTxOnCommand = new Command(async () => await OnForceTxOnAsync());
+            TxNormalCommand = new Command(async () => await OnTxNormalAsync());
+
             // Setting up poll service data timer
             PollServiceDataTimer = new Timer(PollServiceDataInterval);
             PollServiceDataTimer.Elapsed += async (s, e) => await OnReloadServiceDataRequestAsync(s, e);
             PollServiceDataTimer.AutoReset = true;
             PollServiceDataTimer.Start();
+
+            Debug.WriteLine("Timer created");
         }
 
         public async Task OnShowAsync()
@@ -412,7 +424,7 @@ namespace org.whitefossa.yiffhl.ViewModels
 
         public async Task OnLeavingServiceDisplayAsync()
         {
-            _mainModel.ActiveDisplay = ActiveDisplay.MainDisplay;
+            _mainModel.AppDisplays.Pop();
             await Navigation.PopModalAsync();
         }
 
@@ -497,7 +509,7 @@ namespace org.whitefossa.yiffhl.ViewModels
 
         private async Task OnReloadServiceDataRequestAsync(Object source, ElapsedEventArgs e)
         {
-            if (_mainModel.ActiveDisplay != ActiveDisplay.ServiceDisplay)
+            if (_mainModel.AppDisplays.Peek() != ActiveDisplay.ServiceDisplay)
             {
                 return;
             }
@@ -868,6 +880,40 @@ namespace org.whitefossa.yiffhl.ViewModels
         private async Task OnSetUantFactorsResponseAsync()
         {
             await OnGetUantFactorsAsync();
+        }
+
+        #endregion
+
+        #region Force TX On
+
+        private async Task OnForceTxOnAsync()
+        {
+            await _serviceCommandsManager.ForceTxOnAsync(async (s) => await OnForceTxOnResponseAsync(s));
+        }
+
+        private async Task OnForceTxOnResponseAsync(bool isSuccessfull)
+        {
+            if (!isSuccessfull)
+            {
+                await _userNotifier.ShowErrorMessageAsync("Failure", "Unable to turn TX ON.\nIs fox armed?\nIs it already ON?");
+            }
+        }
+
+        #endregion
+
+        #region Return to normal TX
+
+        private async Task OnTxNormalAsync()
+        {
+            await _serviceCommandsManager.ReturnToNormalTxAsync(async (s) => await OnTxNormalResponseResponseAsync(s));
+        }
+
+        private async Task OnTxNormalResponseResponseAsync(bool isSuccessfull)
+        {
+            if (!isSuccessfull)
+            {
+                await _userNotifier.ShowErrorMessageAsync("Failure", "Unable to return to normal operations. Is fox already in normal mode?");
+            }
         }
 
         #endregion

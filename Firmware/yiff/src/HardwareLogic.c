@@ -336,3 +336,14 @@ bool HL_CheckIfU80mLocked(void)
 {
 	return HL_IsU80mLocked;
 }
+
+void HL_ForceTxOn(void)
+{
+	if (!HL_IsFoxPrepared)
+	{
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_AttemptToForceTxWhenFoxIsNotReady);
+	}
+
+	HAL_SwitchManipulator(true);
+	FoxState.ServiceSettings.IsForceTx = true;
+}

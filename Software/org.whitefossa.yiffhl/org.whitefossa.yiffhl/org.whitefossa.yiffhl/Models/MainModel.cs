@@ -3,6 +3,7 @@ using org.whitefossa.yiffhl.Abstractions.Enums;
 using org.whitefossa.yiffhl.Abstractions.Interfaces;
 using org.whitefossa.yiffhl.Abstractions.Interfaces.Models;
 using org.whitefossa.yiffhl.ViewModels;
+using System.Collections.Generic;
 
 namespace org.whitefossa.yiffhl.Models
 {
@@ -82,9 +83,9 @@ namespace org.whitefossa.yiffhl.Models
         public ServiceSettingsModel ServiceSettingsModel { get; set; } = new ServiceSettingsModel();
 
         /// <summary>
-        /// Current app display
+        /// Stacked app displays
         /// </summary>
-        public ActiveDisplay ActiveDisplay { get; set; }
+        public Stack<ActiveDisplay> AppDisplays { get; set; } = new Stack<ActiveDisplay>();
 
         #region Fox events
 
@@ -140,7 +141,7 @@ namespace org.whitefossa.yiffhl.Models
             OnFoxDisarmed = null;
             OnProfileChanged = null;
 
-            ActiveDisplay = ActiveDisplay.MainDisplay;
+            AppDisplays.Push(ActiveDisplay.MainDisplay);
         }
     }
 }

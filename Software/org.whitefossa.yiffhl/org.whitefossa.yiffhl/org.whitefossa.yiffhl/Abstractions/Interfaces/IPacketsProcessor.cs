@@ -97,6 +97,8 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
         void SetOnGetUAntVoltsResponse(OnResponseDelegate onGetUAntVoltsResponse);
         void SetOnGetUantFactorsResponse(OnResponseDelegate onGetUantFactorsResponse);
         void SetOnSetUantFactorsResponse(OnResponseDelegate onSetUantFactorsResponse);
+        void SetOnForceTxOnResponse(OnResponseDelegate onForceTxOnResponse);
+        void SetOnReturnToNormalTxResponse(OnResponseDelegate onReturnToNormalTxResponse);
 
         #endregion
 

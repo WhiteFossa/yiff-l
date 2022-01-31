@@ -39,6 +39,9 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private readonly IGetUantFactorsCommand _getUantFactorsCommand;
         private readonly ISetUantFactorsCommand _setUantFactorsCommand;
 
+        private readonly IForceTxOnCommand _forceTxOnCommand;
+        private readonly IReturnToNormalTxCommand _returnToNormalTxCommand;
+
         #endregion
 
         private Abstractions.Interfaces.OnGetLastErrorCodeDelegate _onGetLastErrorCode;
@@ -75,6 +78,9 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private OnResetUantFactorsDelegate _onResetUantFactors;
         private OnSetUantFactorsDelegate _onSetUantFactors;
 
+        private OnForceTxOnDelegate _onForceTxOn;
+        public OnReturnToNormalTxDelegate _onReturnToNormalTx;
+
         public ServiceCommandsManager(IGetLastErrorCodeCommand getLastErrorCodeCommand,
             IResetLastErrorCodeCommand resetLastErrorCodeCommand,
             IUpdateSerialNumberCommand updateSerialNumberCommand,
@@ -93,7 +99,9 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             IGetUantADCCommand getUantADCCommand,
             IGetUantVoltsCommand getUantVoltsCommand,
             IGetUantFactorsCommand getUantFactorsCommand,
-            ISetUantFactorsCommand setUantFactorsCommand)
+            ISetUantFactorsCommand setUantFactorsCommand,
+            IForceTxOnCommand forceTxOnCommand,
+            IReturnToNormalTxCommand returnToNormalTxCommand)
         {
             _getLastErrorCodeCommand = getLastErrorCodeCommand;
             _resetLastErrorCodeCommand = resetLastErrorCodeCommand;
@@ -114,6 +122,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _getUantVoltsCommand = getUantVoltsCommand;
             _getUantFactorsCommand = getUantFactorsCommand;
             _setUantFactorsCommand = setUantFactorsCommand;
+            _forceTxOnCommand = forceTxOnCommand;
+            _returnToNormalTxCommand = returnToNormalTxCommand;
         }
 
         #region Get last error code
@@ -570,6 +580,40 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             }
 
             _onSetUantFactors();
+        }
+
+        #endregion
+
+        #region Force TX On
+
+        public async Task ForceTxOnAsync(OnForceTxOnDelegate onForceTxOn)
+        {
+            _onForceTxOn = onForceTxOn ?? throw new ArgumentNullException(nameof(onForceTxOn));
+
+            _forceTxOnCommand.SetResponseDelegate(OnForceTxOnResponse);
+            _forceTxOnCommand.SendForceTxOnCommand();
+        }
+
+        private void OnForceTxOnResponse(bool isSuccessfull)
+        {
+            _onForceTxOn(isSuccessfull);
+        }
+
+        #endregion
+
+        #region Return to normal TX
+
+        public async Task ReturnToNormalTxAsync(OnReturnToNormalTxDelegate onReturnToNormalTx)
+        {
+            _onReturnToNormalTx = onReturnToNormalTx ?? throw new ArgumentNullException(nameof(onReturnToNormalTx));
+
+            _returnToNormalTxCommand.SetResponseDelegate(OnReturnToNormalTxResponse);
+            _returnToNormalTxCommand.SendReturnToNormalTxCommand();
+        }
+
+        private void OnReturnToNormalTxResponse(bool isSuccessfull)
+        {
+            _onReturnToNormalTx(isSuccessfull);
         }
 
         #endregion

@@ -22,6 +22,8 @@ void FoxState_Init(void)
 	FoxState.ForceCarrierOn = false;
 	FoxState.IsNotReportedManualProfileChanges = false;
 
+	FoxState.ServiceSettings.IsForceTx = false;
+
 	PendingCommandsFlags.FoxStateNameChanged = false;
 	PendingCommandsFlags.NeedToAddNewProfile = false;
 	PendingCommandsFlags.NeedToSwitchProfile = false;
@@ -59,6 +61,9 @@ void FoxState_Init(void)
 	PendingCommandsFlags.NeedToSetU80mADCtoU80mVoltsFactors = false;
 	PendingCommandsFlags.NeedToSetP80mToU80mFactors = false;
 	PendingCommandsFlags.NeedToSetUantADCToUantVoltsFactors = false;
+
+	PendingCommandsFlags.NeedToForceTx = false;
+	PendingCommandsFlags.NeedToReturnFromForceTx = false;
 
 	FoxState.CurrentDisplay = StatusDisplay;
 }

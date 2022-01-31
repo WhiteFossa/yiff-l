@@ -26,6 +26,11 @@ uint16_t AMSM_Timer;
 bool AMSM_IsArmFoxAfterMatching;
 
 /**
+ * Do we need to force TX after matching?
+ */
+bool AMSM_IsForceTxAfterMatching;
+
+/**
  * Supress transmitter carrier
  */
 void AMSM_SupressCarrier(bool isSupress);

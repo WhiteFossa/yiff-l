@@ -13,6 +13,9 @@ void AMSM_Init(void)
 	AMSM_State = AMSM_Inactive;
 	AMSM_Timer = 0;
 
+	AMSM_IsArmFoxAfterMatching = false;
+	AMSM_IsForceTxAfterMatching = false;
+
 	FoxState.AntennaMatching.Status = AntennaMatching_NeverInitiated;
 	FoxState.AntennaMatching.IsNewForApp = false;
 
@@ -112,7 +115,10 @@ void AMSM_MoveToNextState(void)
 				AMSM_SupressCarrier(false);
 				AMSM_ForceCarrier(false);
 
-				HL_UnPrepareFoxFromCycle();
+				if (!AMSM_IsForceTxAfterMatching)
+				{
+					HL_UnPrepareFoxFromCycle();
+				}
 
 				FoxState.CurrentDisplay = StatusDisplay;
 				FoxState.AntennaMatching.Status = AntennaMatching_Completed;
@@ -122,6 +128,11 @@ void AMSM_MoveToNextState(void)
 				if (AMSM_IsArmFoxAfterMatching)
 				{
 					GSM_Arm();
+				}
+
+				if (AMSM_IsForceTxAfterMatching)
+				{
+					HL_ForceTxOn();
 				}
 
 				return;
@@ -144,8 +155,13 @@ void AMSM_MoveToNextState(void)
 	}
 }
 
-void AMSM_StartMatching(bool isArmFoxAfterMatching)
+void AMSM_StartMatching(bool isArmFoxAfterMatching, bool isForceTxAfterMatching)
 {
+	if (isArmFoxAfterMatching && isForceTxAfterMatching)
+	{
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_IncorrectFlagsInAntennaMatching);
+	}
+
 	if (FoxState.Frequency.Is144MHz)
 	{
 		SelfDiagnostics_HaltOnFailure(YhlFailureCause_AttemptToSetup80mAntennaWhile2m);
@@ -163,6 +179,7 @@ void AMSM_StartMatching(bool isArmFoxAfterMatching)
 	}
 
 	AMSM_IsArmFoxAfterMatching = isArmFoxAfterMatching;
+	AMSM_IsForceTxAfterMatching = isForceTxAfterMatching;
 
 	FoxState.AntennaMatching.IsNewForApp = true;
 	FoxState.AntennaMatching.Status = AntennaMatching_InProgress;
