@@ -40,6 +40,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private readonly ISetUantFactorsCommand _setUantFactorsCommand;
 
         private readonly IForceTxOnCommand _forceTxOnCommand;
+        private readonly IReturnToNormalTxCommand _returnToNormalTxCommand;
 
         #endregion
 
@@ -78,6 +79,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private OnSetUantFactorsDelegate _onSetUantFactors;
 
         private OnForceTxOnDelegate _onForceTxOn;
+        public OnReturnToNormalTxDelegate _onReturnToNormalTx;
 
         public ServiceCommandsManager(IGetLastErrorCodeCommand getLastErrorCodeCommand,
             IResetLastErrorCodeCommand resetLastErrorCodeCommand,
@@ -98,7 +100,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             IGetUantVoltsCommand getUantVoltsCommand,
             IGetUantFactorsCommand getUantFactorsCommand,
             ISetUantFactorsCommand setUantFactorsCommand,
-            IForceTxOnCommand forceTxOnCommand)
+            IForceTxOnCommand forceTxOnCommand,
+            IReturnToNormalTxCommand returnToNormalTxCommand)
         {
             _getLastErrorCodeCommand = getLastErrorCodeCommand;
             _resetLastErrorCodeCommand = resetLastErrorCodeCommand;
@@ -120,6 +123,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _getUantFactorsCommand = getUantFactorsCommand;
             _setUantFactorsCommand = setUantFactorsCommand;
             _forceTxOnCommand = forceTxOnCommand;
+            _returnToNormalTxCommand = returnToNormalTxCommand;
         }
 
         #region Get last error code
@@ -593,6 +597,23 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private void OnForceTxOnResponse(bool isSuccessfull)
         {
             _onForceTxOn(isSuccessfull);
+        }
+
+        #endregion
+
+        #region Return to normal TX
+
+        public async Task ReturnToNormalTxAsync(OnReturnToNormalTxDelegate onReturnToNormalTx)
+        {
+            _onReturnToNormalTx = onReturnToNormalTx ?? throw new ArgumentNullException(nameof(onReturnToNormalTx));
+
+            _returnToNormalTxCommand.SetResponseDelegate(OnReturnToNormalTxResponse);
+            _returnToNormalTxCommand.SendReturnToNormalTxCommand();
+        }
+
+        private void OnReturnToNormalTxResponse(bool isSuccessfull)
+        {
+            _onReturnToNormalTx(isSuccessfull);
         }
 
         #endregion

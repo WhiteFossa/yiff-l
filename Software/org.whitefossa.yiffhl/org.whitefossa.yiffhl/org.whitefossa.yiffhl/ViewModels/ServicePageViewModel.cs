@@ -369,6 +369,8 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         public ICommand ForceTxOnCommand { get; }
 
+        public ICommand TxNormalCommand { get; }
+
         public ServicePageViewModel()
         {
 
@@ -404,6 +406,7 @@ namespace org.whitefossa.yiffhl.ViewModels
             SetUantFactorsCommand = new Command(async () => await OnSetUantFactorsAsync());
 
             ForceTxOnCommand = new Command(async () => await OnForceTxOnAsync());
+            TxNormalCommand = new Command(async () => await OnTxNormalAsync());
 
             // Setting up poll service data timer
             PollServiceDataTimer = new Timer(PollServiceDataInterval);
@@ -888,7 +891,27 @@ namespace org.whitefossa.yiffhl.ViewModels
 
         private async Task OnForceTxOnResponseAsync(bool isSuccessfull)
         {
-            Debug.WriteLine($"Force TX On: {isSuccessfull}");
+            if (!isSuccessfull)
+            {
+                await _userNotifier.ShowErrorMessageAsync("Failure", "Unable to turn TX ON.\nIs fox armed?\nIs it already ON?");
+            }
+        }
+
+        #endregion
+
+        #region Return to normal TX
+
+        private async Task OnTxNormalAsync()
+        {
+            await _serviceCommandsManager.ReturnToNormalTxAsync(async (s) => await OnTxNormalResponseResponseAsync(s));
+        }
+
+        private async Task OnTxNormalResponseResponseAsync(bool isSuccessfull)
+        {
+            if (!isSuccessfull)
+            {
+                await _userNotifier.ShowErrorMessageAsync("Failure", "Unable to return to normal operations. Is fox already in normal mode?");
+            }
         }
 
         #endregion

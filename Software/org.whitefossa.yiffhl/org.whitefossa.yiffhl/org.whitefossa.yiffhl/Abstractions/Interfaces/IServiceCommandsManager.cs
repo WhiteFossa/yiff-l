@@ -38,6 +38,7 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
     public delegate void OnSetUantFactorsDelegate();
 
     public delegate void OnForceTxOnDelegate(bool isSuccessfull);
+    public delegate void OnReturnToNormalTxDelegate(bool isSuccessfull);
 
     public interface IServiceCommandsManager
     {
@@ -77,5 +78,6 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
         Task SetUantFactorsAsync(float a, float b, OnSetUantFactorsDelegate onSetUantFactors);
 
         Task ForceTxOnAsync(OnForceTxOnDelegate onForceTxOn);
+        Task ReturnToNormalTxAsync(OnReturnToNormalTxDelegate onReturnToNormalTx);
     }
 }

@@ -109,6 +109,8 @@
 
         SetUantADCToUantVoltsFactors = 0x33,
 
-        ForceTxOn = 0x34
+        ForceTxOn = 0x34,
+
+        ReturnToNormalTx = 0x35
     }
 }

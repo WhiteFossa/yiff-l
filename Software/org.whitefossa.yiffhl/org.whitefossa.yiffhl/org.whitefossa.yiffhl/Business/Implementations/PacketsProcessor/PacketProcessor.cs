@@ -86,6 +86,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
         private OnResponseDelegate _onGetUantFactorsResponse;
         private OnResponseDelegate _onSetUantFactorsResponse;
         private OnResponseDelegate _onForceTxOnResponse;
+        private OnResponseDelegate _onReturnToNormalTxResponse;
 
         #endregion
 
@@ -651,6 +652,13 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
                         _onForceTxOnResponse(responsePayload);
                         break;
 
+                    // Return to normal TX operations
+                    case CommandType.ReturnToNormalTx:
+                        CheckOnResponseDelegate(_onReturnToNormalTxResponse);
+
+                        _onReturnToNormalTxResponse(responsePayload);
+                        break;
+
                     default:
                         return; // We've got some junk
                 }
@@ -1061,6 +1069,12 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
         {
             _onForceTxOnResponse = onForceTxOnResponse
                 ?? throw new ArgumentNullException(nameof(onForceTxOnResponse));
+        }
+
+        public void SetOnReturnToNormalTxResponse(OnResponseDelegate onReturnToNormalTxResponse)
+        {
+            _onReturnToNormalTxResponse = onReturnToNormalTxResponse
+                ?? throw new ArgumentNullException(nameof(onReturnToNormalTxResponse));
         }
     }
 }
