@@ -97,6 +97,7 @@ int main(int argc, char* argv[])
 
 	/* Starting RTC */
 	InitRTC();
+	RTC_SetCalibrationValue(EEPROM_Header.RTCCalibrationValue);
 
 	/* Registering morse player in SysTick handler */
 	MorsePlayerInit();

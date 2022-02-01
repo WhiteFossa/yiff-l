@@ -179,3 +179,8 @@ uint8_t GetWeekdayFromDayNumber(uint8_t dayNumber)
 	}
 }
 
+void RTC_SetCalibrationValue(uint8_t calibrationValue)
+{
+	HAL_SetRTCCalibrationValue(calibrationValue);
+}
+

@@ -194,12 +194,12 @@ typedef struct
 	/**
 	 * If true, then 144MHz transmitter will be used.
 	 */
-	bool Is144MHz;
+	volatile bool Is144MHz;
 
 	/**
 	 * Desired frequency in hertzs.
 	 */
-	uint32_t FrequencyHz;
+	volatile uint32_t FrequencyHz;
 }
 FoxFrequencyStruct;
 
@@ -211,17 +211,17 @@ typedef struct
 	/**
 	 * Is continuous transmission?
 	 */
-	bool IsContinuous;
+	volatile bool IsContinuous;
 
 	/**
 	 * Transmission length.
 	 */
-	uint32_t TxTime;
+	volatile uint32_t TxTime;
 
 	/**
 	 * Pause length.
 	 */
-	uint32_t PauseTime;
+	volatile uint32_t PauseTime;
 }
 FoxCycleStruct;
 

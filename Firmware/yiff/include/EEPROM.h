@@ -87,6 +87,11 @@ extern L2HAL_24x_ContextStruct EEPROMContext;
 #define YHL_DEFAULT_ADC_UANT_B 0
 
 /**
+ * Default value for RTC calibration
+ */
+#define YHL_DEFAULT_RTC_CALIBRATION_VALUE 0x3F
+
+/**
  * EEPROM constant header. It's structure must not change from version
  * to version
  */
@@ -95,18 +100,18 @@ typedef struct
 	/**
 	 * EEPROM version, bump each time when EEPROM structure changes
 	 */
-	uint16_t Version;
+	volatile uint16_t Version;
 
 	/**
 	 * Absolute address of main header
 	 */
-	uint16_t HeaderAddress;
+	volatile uint16_t HeaderAddress;
 
 	/**
 	 * CRC
 	 */
-	uint32_t CRCSum;
-} __attribute__((packed))
+	volatile uint32_t CRCSum;
+}
 EEPROMConstantHeaderStruct;
 
 
@@ -118,78 +123,83 @@ typedef struct
 	/**
 	 * Fox name
 	 */
-	char Name[YHL_FOX_NAME_BUFFER_LENGTH];
+	volatile char Name[YHL_FOX_NAME_BUFFER_LENGTH];
 
 	/**
 	 * How many profiles do we have
 	 */
-	uint8_t NumberOfProfiles;
+	volatile uint8_t NumberOfProfiles;
 
 	/**
 	 * Start addresses of each profile
 	 */
-	uint16_t ProfilesAddresses[YHL_MAX_PROFILES_COUNT];
+	volatile uint16_t ProfilesAddresses[YHL_MAX_PROFILES_COUNT];
 
 	/**
 	 * Profile in use (index for ProfilesAddresses)
 	 */
-	uint8_t ProfileInUse;
+	volatile uint8_t ProfileInUse;
 
 	/**
 	 * Factors to convert ADC measurements into volts
 	 */
-	float UBattADCA;
-	float UBattADCB;
+	volatile float UBattADCA;
+	volatile float UBattADCB;
 
 	/**
 	 * Factors to convert Ubatt(Volts) to battery level
 	 */
-	float BattLevelA;
-	float BattLevelB;
+	volatile float BattLevelA;
+	volatile float BattLevelB;
 
 	/**
 	 * Factors to calculate U80m(ADC) -> U80m(Volts)
 	 */
-	float U80mADCA;
-	float U80mADCB;
+	volatile float U80mADCA;
+	volatile float U80mADCB;
 
 	/**
 	 * Factors to calculate P80m from U80m
 	 */
-	float P80mA;
-	float P80mB;
+	volatile float P80mA;
+	volatile float P80mB;
 
 	/**
 	 * Factors to calculate Uant(volts) from Uant(ADC)
 	 */
-	float UAntADCA;
-	float UAntADCB;
+	volatile float UAntADCA;
+	volatile float UAntADCB;
 
 	/**
 	 * Code of last failure
 	 */
-	YhlFailureCausesEnum LastFailure;
+	volatile YhlFailureCausesEnum LastFailure;
 
 	/**
 	 * Fox hardware revision
 	 */
-	uint16_t HardwareRevision;
+	volatile uint16_t HardwareRevision;
 
 	/**
 	 * Fox software version
 	 */
-	uint16_t SoftwareVersion;
+	volatile uint16_t SoftwareVersion;
 
 	/**
 	 * Device serial number
 	 */
-	uint32_t SerialNumber;
+	volatile uint32_t SerialNumber;
+
+	/**
+	 * RTC calibration value
+	 */
+	volatile uint8_t RTCCalibrationValue;
 
 	/**
 	 * CRC
 	 */
-	uint32_t CRCSum;
-} __attribute__((packed))
+	volatile uint32_t CRCSum;
+}
 EEPROMHeaderStruct;
 
 /**
@@ -200,53 +210,53 @@ typedef struct
 	/**
 	 * Profile name.
 	 */
-	char Name[YHL_PROFILE_NAME_MEMORY_SIZE];
+	volatile char Name[YHL_PROFILE_NAME_MEMORY_SIZE];
 
 	/**
 	 * Fox frequency
 	 */
-	FoxFrequencyStruct Frequency;
+	volatile FoxFrequencyStruct Frequency;
 
 	/**
 	 * Fox code.
 	 */
-	FoxCodeEnum Code;
+	volatile FoxCodeEnum Code;
 
 	/**
 	 * Is fast fox?
 	 */
-	bool IsFast;
+	volatile bool IsFast;
 
 	/**
 	 * Fox cycle settings.
 	 */
-	FoxCycleStruct Cycle;
+	volatile FoxCycleStruct Cycle;
 
 	/**
 	 * Length of ending tone in seconds.
 	 */
-	uint8_t EndingToneLength;
+	volatile uint8_t EndingToneLength;
 
 	/**
 	 * Fox power in watts, applicable only for 3.5MHz mode
 	 */
-	float Power;
+	volatile float Power;
 
 	/**
 	 * Fox start timespan
 	 */
-	uint32_t StartTimespan;
+	volatile uint32_t StartTimespan;
 
 	/**
 	 * Fox end timespan
 	 */
-	uint32_t EndTimespan;
+	volatile uint32_t EndTimespan;
 
 	/**
 	 * CRC
 	 */
-	uint32_t CRCSum;
-} __attribute__((packed))
+	volatile uint32_t CRCSum;
+}
 EEPROMProfileStruct;
 
 extern EEPROMConstantHeaderStruct EEPROM_ConstantHeader;

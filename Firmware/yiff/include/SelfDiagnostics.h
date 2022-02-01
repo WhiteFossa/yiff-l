@@ -584,7 +584,17 @@ typedef enum
 	/**
 	 * Both isArmFoxAfterMatching and isForceTxAfterMatching are set to true
 	 */
-	YhlFailureCause_IncorrectFlagsInAntennaMatching = 113
+	YhlFailureCause_IncorrectFlagsInAntennaMatching = 113,
+
+	/**
+	 * Incorrect argument given to HAL_SetRTCCalibrationValue()
+	 */
+	YhlFailureCause_IncorrectRTCCalibrationValue = 114,
+
+	/**
+	 * Something went wrong when trying to set RTC calibration value
+	 */
+	YhlFailureCause_FailedToSetRTCCalibrationValue = 115
 }
 YhlFailureCausesEnum;
 
