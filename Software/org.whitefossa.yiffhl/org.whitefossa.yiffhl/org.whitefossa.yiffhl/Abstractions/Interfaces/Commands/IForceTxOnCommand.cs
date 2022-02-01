@@ -1,6 +1,6 @@
 ﻿namespace org.whitefossa.yiffhl.Abstractions.Interfaces.Commands
 {
-    public delegate void OnForceTxOnResponseDelegate(bool isSuccessfull);
+    public delegate void OnForceTxOnResponseDelegate(bool isSuccessful);
 
     public interface IForceTxOnCommand
     {

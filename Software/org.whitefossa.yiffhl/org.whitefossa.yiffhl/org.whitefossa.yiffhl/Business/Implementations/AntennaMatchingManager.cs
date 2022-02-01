@@ -58,12 +58,12 @@ namespace org.whitefossa.yiffhl.Business.Implementations
 
         private void OnGetAntennaMatchingData
         (
-            bool isSuccessfull,
+            bool isSuccessful,
             int matcherPosition,
             float antennaVoltage
         )
         {
-            if (!isSuccessfull)
+            if (!isSuccessful)
             {
                 throw new InvalidOperationException("Failed to get antenna matching data");
             }

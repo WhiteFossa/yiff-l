@@ -1,6 +1,6 @@
 ﻿namespace org.whitefossa.yiffhl.Abstractions.Interfaces.Commands
 {
-    public delegate void OnSetProfileNameResponseDelegate(bool isSuccessfull);
+    public delegate void OnSetProfileNameResponseDelegate(bool isSuccessful);
 
     public interface ISetProfileNameCommand
     {

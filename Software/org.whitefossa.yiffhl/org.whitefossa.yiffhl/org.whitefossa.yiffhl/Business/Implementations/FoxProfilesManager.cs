@@ -118,9 +118,9 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _switchToProfileCommand.SendSwitchToProfileCommand(_newProfileId);
         }
 
-        private void OnSwitchToProfileResponse_SwitchPathway(bool isSuccessfull)
+        private void OnSwitchToProfileResponse_SwitchPathway(bool isSuccessful)
         {
-            if (!isSuccessfull)
+            if (!isSuccessful)
             {
                 throw new InvalidOperationException("Failed to switch to a new profile!");
             }
@@ -136,9 +136,9 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _setProfileNameCommand.SendSetProfileNameCommand(newName);
         }
 
-        private void OnProfileRenamedResponse_RenamePathway(bool isSuccessfull)
+        private void OnProfileRenamedResponse_RenamePathway(bool isSuccessful)
         {
-            if (!isSuccessfull)
+            if (!isSuccessful)
             {
                 throw new InvalidOperationException("Failed to rename profile!");
             }

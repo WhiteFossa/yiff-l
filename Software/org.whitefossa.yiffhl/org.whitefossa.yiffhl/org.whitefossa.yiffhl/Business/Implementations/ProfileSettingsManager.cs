@@ -219,9 +219,9 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _setSpeedCommand.SendSetSpeedCommand(_speedToSet);
         }
 
-        private void OnSetSpeedResponse(bool isSuccessfull)
+        private void OnSetSpeedResponse(bool isSuccessful)
         {
-            if (!isSuccessfull)
+            if (!isSuccessful)
             {
                 throw new InvalidOperationException("Failed to set speed");
             }
@@ -251,9 +251,9 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _setCodeCommand.SendSetCodeCommand(_callsignToSet.Code);
         }
 
-        private void OnSetCodeResponse(bool isSuccessfull)
+        private void OnSetCodeResponse(bool isSuccessful)
         {
-            if (!isSuccessfull)
+            if (!isSuccessful)
             {
                 throw new InvalidOperationException("Failed to set fox code");
             }
@@ -316,9 +316,9 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _setCycleCommand.SendSetCycleCommand(_cycleSettingsToSet.IsContinuous, _cycleSettingsToSet.TxDuration, _cycleSettingsToSet.PauseDuration);
         }
 
-        private void OnSetCycleResponse(bool isSuccessfull)
+        private void OnSetCycleResponse(bool isSuccessful)
         {
-            if (!isSuccessfull)
+            if (!isSuccessful)
             {
                 throw new InvalidOperationException("Failed to set fox cycle");
             }
@@ -328,9 +328,9 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _setEndingToneDurationCommand.SendSetEndingToneResponseDurationCommand(_cycleSettingsToSet.EndingToneDuration);
         }
 
-        private void OnSetEndingToneDurationResponse(bool isSuccessfull)
+        private void OnSetEndingToneDurationResponse(bool isSuccessful)
         {
-            if (!isSuccessfull)
+            if (!isSuccessful)
             {
                 throw new InvalidOperationException("Failed to set ending tone duration");
             }
@@ -380,9 +380,9 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _setBeginAndEndTimesCommand.SendSetBeginAndEndTimesCommand(_runTimesSettingsToSet.StartTime, _runTimesSettingsToSet.FinishTime);
         }
 
-        private void OnSetBeginAndEndTimesResponse(bool isSuccessfull)
+        private void OnSetBeginAndEndTimesResponse(bool isSuccessful)
         {
-            if (!isSuccessfull)
+            if (!isSuccessful)
             {
                 throw new InvalidOperationException("Failed to set start and finish times");
             }
@@ -429,9 +429,9 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _setPowerCommand.SendSetPowerCommand(_powerSettingsToSet.Power);
         }
 
-        private void OnSetPowerResponse(bool isSuccessfull)
+        private void OnSetPowerResponse(bool isSuccessful)
         {
-            if (!isSuccessfull)
+            if (!isSuccessful)
             {
                 throw new InvalidOperationException("Failed to set fox power");
             }

@@ -1,6 +1,6 @@
 ﻿namespace org.whitefossa.yiffhl.Abstractions.Interfaces.Commands
 {
-    public delegate void OnSetPowerResponseDelegate(bool isSuccessfull);
+    public delegate void OnSetPowerResponseDelegate(bool isSuccessful);
 
     public interface ISetPowerCommand
     {

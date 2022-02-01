@@ -2,7 +2,7 @@
 
 namespace org.whitefossa.yiffhl.Abstractions.Interfaces
 {
-    public delegate void OnClockSynchronizedDelegate(bool isSuccessfull);
+    public delegate void OnClockSynchronizedDelegate(bool isSuccessful);
 
     /// <summary>
     /// Interface to work with fox clock

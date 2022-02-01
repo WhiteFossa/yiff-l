@@ -2,7 +2,7 @@
 {
     public delegate void OnGetAntennaMatchingDataResponseDelegate
         (
-            bool isSuccessfull,
+            bool isSuccessful,
             int matcherPosition,
             float antennaVoltage
         );

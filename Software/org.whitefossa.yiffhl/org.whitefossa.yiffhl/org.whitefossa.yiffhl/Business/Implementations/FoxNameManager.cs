@@ -41,9 +41,9 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _onGetName(name);
         }
 
-        private void OnSetFoxNameResponse(bool isSuccessfull)
+        private void OnSetFoxNameResponse(bool isSuccessful)
         {
-            _onSetName(isSuccessfull);
+            _onSetName(isSuccessful);
         }
     }
 }

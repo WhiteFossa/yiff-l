@@ -1142,9 +1142,9 @@ namespace org.whitefossa.yiffhl.ViewModels
             FoxSerialNumber = 0;
         }
 
-        private async Task OnSetFoxDateAndTimeResponseAsync(bool isSuccessfull)
+        private async Task OnSetFoxDateAndTimeResponseAsync(bool isSuccessful)
         {
-            if (!isSuccessfull)
+            if (!isSuccessful)
             {
                 await OnDisconnectButtonClickedAsync();
 
@@ -1196,16 +1196,16 @@ Do you want to continue?");
                 return;
             }
 
-            await _foxNameManager.SetNameAsync(newNameData.Item2, async (isSuccessfull) => await OnSetFoxNameResponseAsync(isSuccessfull));
+            await _foxNameManager.SetNameAsync(newNameData.Item2, async (isSuccessful) => await OnSetFoxNameResponseAsync(isSuccessful));
         }
 
-        private async Task OnSetFoxNameResponseAsync(bool isSuccessfull)
+        private async Task OnSetFoxNameResponseAsync(bool isSuccessful)
         {
             var fox = MainModel.ConnectedFox;
 
             await OnDisconnectButtonClickedAsync();
 
-            if (!isSuccessfull)
+            if (!isSuccessful)
             {
                 await _userNotifier.ShowErrorMessageAsync("Error", "Failed to change fox name!");
                 return;
@@ -1895,7 +1895,7 @@ Do you want to continue?");
             if (!MainModel.StaticFoxStatus.IsFoxArmed)
             {
                 // Setting fox time
-                await _foxClockManager.SynchronizeClockAsync(async (isSuccessfull) => await OnSetFoxDateAndTimeResponseAsync(isSuccessfull));
+                await _foxClockManager.SynchronizeClockAsync(async (isSuccessful) => await OnSetFoxDateAndTimeResponseAsync(isSuccessful));
             }
         }
 

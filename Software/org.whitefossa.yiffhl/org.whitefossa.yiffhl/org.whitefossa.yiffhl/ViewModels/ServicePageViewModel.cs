@@ -922,9 +922,9 @@ namespace org.whitefossa.yiffhl.ViewModels
             await _serviceCommandsManager.ForceTxOnAsync(async (s) => await OnForceTxOnResponseAsync(s));
         }
 
-        private async Task OnForceTxOnResponseAsync(bool isSuccessfull)
+        private async Task OnForceTxOnResponseAsync(bool isSuccessful)
         {
-            if (!isSuccessfull)
+            if (!isSuccessful)
             {
                 await _userNotifier.ShowErrorMessageAsync("Failure", "Unable to turn TX ON.\nIs fox armed?\nIs it already ON?");
             }
@@ -939,9 +939,9 @@ namespace org.whitefossa.yiffhl.ViewModels
             await _serviceCommandsManager.ReturnToNormalTxAsync(async (s) => await OnTxNormalResponseResponseAsync(s));
         }
 
-        private async Task OnTxNormalResponseResponseAsync(bool isSuccessfull)
+        private async Task OnTxNormalResponseResponseAsync(bool isSuccessful)
         {
-            if (!isSuccessfull)
+            if (!isSuccessful)
             {
                 await _userNotifier.ShowErrorMessageAsync("Failure", "Unable to return to normal operations. Is fox already in normal mode?");
             }

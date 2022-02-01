@@ -37,8 +37,8 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
     public delegate void OnResetUantFactorsDelegate();
     public delegate void OnSetUantFactorsDelegate();
 
-    public delegate void OnForceTxOnDelegate(bool isSuccessfull);
-    public delegate void OnReturnToNormalTxDelegate(bool isSuccessfull);
+    public delegate void OnForceTxOnDelegate(bool isSuccessful);
+    public delegate void OnReturnToNormalTxDelegate(bool isSuccessful);
 
     public delegate void OnGetRTCCalibrationValueDelegate(uint value);
     public delegate void OnSetRTCCalibrationValueDelegate(bool isSuccessful);

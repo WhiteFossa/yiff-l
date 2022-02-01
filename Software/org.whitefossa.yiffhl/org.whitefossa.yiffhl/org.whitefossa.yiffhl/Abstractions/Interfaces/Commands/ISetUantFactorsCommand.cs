@@ -1,6 +1,6 @@
 ﻿namespace org.whitefossa.yiffhl.Abstractions.Interfaces.Commands
 {
-    public delegate void OnSetUantFactorsResponseDelegate(bool isSuccessfull);
+    public delegate void OnSetUantFactorsResponseDelegate(bool isSuccessful);
 
     public interface ISetUantFactorsCommand
     {

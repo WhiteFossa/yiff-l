@@ -248,9 +248,9 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _setUbattFactorsCommand.SendSetUbattFactors(true, 0, 0);
         }
 
-        private void OnResetUbattFactorsResponse(bool isSuccessfull)
+        private void OnResetUbattFactorsResponse(bool isSuccessful)
         {
-            if (!isSuccessfull)
+            if (!isSuccessful)
             {
                 throw new InvalidOperationException("Failed to reset Ubatt(ADC) -> Ubatt(Volts) factors!");
             }
@@ -270,9 +270,9 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _setUbattFactorsCommand.SendSetUbattFactors(false, a, b);
         }
 
-        private void OnSetUbattFactorsResponse(bool isSuccessfull)
+        private void OnSetUbattFactorsResponse(bool isSuccessful)
         {
-            if (!isSuccessfull)
+            if (!isSuccessful)
             {
                 throw new InvalidOperationException("Failed to set Ubatt(ADC) -> Ubatt(Volts) factors!");
             }
@@ -309,9 +309,9 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _setBattLevelFactorsCommand.SendSetBattLevelFactors(true, 0, 0);
         }
 
-        private void OnResetBattLevelFactorsResponse(bool isSuccessfull)
+        private void OnResetBattLevelFactorsResponse(bool isSuccessful)
         {
-            if (!isSuccessfull)
+            if (!isSuccessful)
             {
                 throw new InvalidOperationException("Failed to reset UBatt(Volts) -> Battery level factors!");
             }
@@ -331,9 +331,9 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _setBattLevelFactorsCommand.SendSetBattLevelFactors(false, a, b);
         }
 
-        private void OnSetBattLevelFactorsResponse(bool isSuccessfull)
+        private void OnSetBattLevelFactorsResponse(bool isSuccessful)
         {
-            if (!isSuccessfull)
+            if (!isSuccessful)
             {
                 throw new InvalidOperationException("Failed to set UBatt(Volts) -> Battery level factors!");
             }
@@ -404,9 +404,9 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _setU80mFactorsCommand.SendSetU80mFactors(true, 0, 0);
         }
 
-        private void OnResetU80mFactorsResponse(bool isSuccessfull)
+        private void OnResetU80mFactorsResponse(bool isSuccessful)
         {
-            if (!isSuccessfull)
+            if (!isSuccessful)
             {
                 throw new InvalidOperationException("Failed to reset U80m(ADC) -> U80m(Volts) factors!");
             }
@@ -426,9 +426,9 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _setU80mFactorsCommand.SendSetU80mFactors(false, a, b);
         }
 
-        private void OnSetU80mFactorsResponse(bool isSuccessfull)
+        private void OnSetU80mFactorsResponse(bool isSuccessful)
         {
-            if (!isSuccessfull)
+            if (!isSuccessful)
             {
                 throw new InvalidOperationException("Failed to set U80m(ADC) -> U80m(Volts) factors!");
             }
@@ -465,9 +465,9 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _setP80mFactorsCommand.SendSetP80mFactors(true, 0, 0);
         }
 
-        private void OnResetP80mFactorsResponse(bool isSuccessfull)
+        private void OnResetP80mFactorsResponse(bool isSuccessful)
         {
-            if (!isSuccessfull)
+            if (!isSuccessful)
             {
                 throw new InvalidOperationException("Failed to reset P80m -> U80m factors!");
             }
@@ -487,9 +487,9 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _setP80mFactorsCommand.SendSetP80mFactors(false, a, b);
         }
 
-        private void OnSetP80mFactorsResponse(bool isSuccessfull)
+        private void OnSetP80mFactorsResponse(bool isSuccessful)
         {
-            if (!isSuccessfull)
+            if (!isSuccessful)
             {
                 throw new InvalidOperationException("Failed to set P80m -> U80m factors!");
             }
@@ -560,9 +560,9 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _setUantFactorsCommand.SendSetUantFactors(true, 0, 0);
         }
 
-        private void OnResetUantFactorsResponse(bool isSuccessfull)
+        private void OnResetUantFactorsResponse(bool isSuccessful)
         {
-            if (!isSuccessfull)
+            if (!isSuccessful)
             {
                 throw new InvalidOperationException("Failed to reset Uant(ADC) -> Uant(Volts) factors!");
             }
@@ -582,9 +582,9 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _setUantFactorsCommand.SendSetUantFactors(false, a, b);
         }
 
-        private void OnSetUantFactorsResponse(bool isSuccessfull)
+        private void OnSetUantFactorsResponse(bool isSuccessful)
         {
-            if (!isSuccessfull)
+            if (!isSuccessful)
             {
                 throw new InvalidOperationException("Failed to set Uant(ADC) -> Uant(Volts) factors!");
             }
@@ -604,9 +604,9 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _forceTxOnCommand.SendForceTxOnCommand();
         }
 
-        private void OnForceTxOnResponse(bool isSuccessfull)
+        private void OnForceTxOnResponse(bool isSuccessful)
         {
-            _onForceTxOn(isSuccessfull);
+            _onForceTxOn(isSuccessful);
         }
 
         #endregion
@@ -621,9 +621,9 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _returnToNormalTxCommand.SendReturnToNormalTxCommand();
         }
 
-        private void OnReturnToNormalTxResponse(bool isSuccessfull)
+        private void OnReturnToNormalTxResponse(bool isSuccessful)
         {
-            _onReturnToNormalTx(isSuccessfull);
+            _onReturnToNormalTx(isSuccessful);
         }
 
         #endregion

@@ -3,7 +3,7 @@
 namespace org.whitefossa.yiffhl.Abstractions.Interfaces
 {
     public delegate void OnGetNameDelegate(string name);
-    public delegate void OnSetNameDelegate(bool isSuccessfull);
+    public delegate void OnSetNameDelegate(bool isSuccessful);
 
     /// <summary>
     /// Interface to work with fox name

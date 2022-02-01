@@ -2,7 +2,7 @@
 
 namespace org.whitefossa.yiffhl.Abstractions.Interfaces.Commands
 {
-    public delegate void OnSetCodeResponseDelegate(bool isSuccessfull);
+    public delegate void OnSetCodeResponseDelegate(bool isSuccessful);
 
     public interface ISetCodeCommand
     {

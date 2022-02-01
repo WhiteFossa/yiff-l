@@ -1,6 +1,6 @@
 ﻿namespace org.whitefossa.yiffhl.Abstractions.Interfaces.Commands
 {
-    public delegate void OnReturnToNormalTxResponseDelegate(bool isSuccessfull);
+    public delegate void OnReturnToNormalTxResponseDelegate(bool isSuccessful);
 
     public interface IReturnToNormalTxCommand
     {

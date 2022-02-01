@@ -24,9 +24,9 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _setDateAndTimeCommand.SendSetDateAndTimeCommand(DateTime.Now);
         }
 
-        private void OnSetDateAndTimeResponse(bool isSuccessfull)
+        private void OnSetDateAndTimeResponse(bool isSuccessful)
         {
-            _onClockSynchronized(isSuccessfull);
+            _onClockSynchronized(isSuccessful);
         }
     }
 }

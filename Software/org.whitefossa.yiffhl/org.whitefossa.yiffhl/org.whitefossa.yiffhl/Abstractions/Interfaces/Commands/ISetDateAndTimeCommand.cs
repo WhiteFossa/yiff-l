@@ -2,7 +2,7 @@
 
 namespace org.whitefossa.yiffhl.Abstractions.Interfaces.Commands
 {
-    public delegate void OnSetDateAndTimeResponseDelegate(bool isSuccessfull);
+    public delegate void OnSetDateAndTimeResponseDelegate(bool isSuccessful);
 
     public interface ISetDateAndTimeCommand
     {

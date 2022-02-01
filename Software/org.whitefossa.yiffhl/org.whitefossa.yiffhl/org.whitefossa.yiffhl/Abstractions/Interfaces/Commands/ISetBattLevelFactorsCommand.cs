@@ -1,6 +1,6 @@
 ﻿namespace org.whitefossa.yiffhl.Abstractions.Interfaces.Commands
 {
-    public delegate void OnSetBattLevelFactorsResponseDelegate(bool isSuccessfull);
+    public delegate void OnSetBattLevelFactorsResponseDelegate(bool isSuccessful);
 
     public interface ISetBattLevelFactorsCommand
     {
