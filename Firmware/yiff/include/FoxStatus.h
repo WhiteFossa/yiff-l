@@ -142,4 +142,9 @@ bool FoxState_SetP80mToU80mFactors(bool reset, float a, float b);
  */
 bool FoxState_SetUantADCToUantVoltsFactors(bool reset, float a, float b);
 
+/**
+ * Checks new RTC calibration value and if successful marks it to write into EEPROM and update RTC calibration.
+ */
+bool FoxState_SetRTCCalibrationValue(uint8_t calibrationValue);
+
 #endif /* INCLUDE_FOXSTATUS_H_ */

@@ -328,6 +328,11 @@ void OnNewCommandToFox(uint8_t payloadSize, uint8_t* payload)
 			/* Get RTC calibration value */
 			OnGetRTCCalibrationValue(payloadSize, payload);
 			break;
+
+		case SetRTCCalibrationValue:
+			/* Set RTC calibration value */
+			OnSetRTCCalibrationValue(payloadSize, payload);
+			break;
 	}
 }
 
@@ -1629,6 +1634,25 @@ void OnGetRTCCalibrationValue(uint8_t payloadSize, uint8_t* payload)
 
 	uint8_t response = EEPROM_Header.RTCCalibrationValue;
 	SendResponse(GetRTCCalibrationValue, 1, &response);
+}
+
+void OnSetRTCCalibrationValue(uint8_t payloadSize, uint8_t* payload)
+{
+	if (payloadSize != 2)
+	{
+		return;
+	}
+
+	uint8_t calibrationValue = payload[1];
+
+	bool isValid = FoxState_SetRTCCalibrationValue(calibrationValue);
+
+	if (!isValid)
+	{
+		uint8_t result = YHL_PACKET_PROCESSOR_FAILURE;
+		SendResponse(SetRTCCalibrationValue, 1, &result);
+		return;
+	}
 }
 
 void EmitEnteringSleepmodeEvent(void)

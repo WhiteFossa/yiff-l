@@ -212,6 +212,7 @@ void Main_ProcessHighPriorityEvents(void)
 	Main_ProcessSetUantADCToUantVoltsFactors();
 	Main_ProcessForceTx();
 	Main_ReturnFromForceTx();
+	Main_SetRTCCalibrationValue();
 }
 
 void Main_ProcessFoxNameChange(void)
@@ -617,6 +618,22 @@ void Main_ReturnFromForceTx(void)
 		FoxState.ServiceSettings.IsForceTx = false;
 
 		PendingCommandsFlags.NeedToReturnFromForceTx = false;
+	}
+}
+
+void Main_SetRTCCalibrationValue(void)
+{
+	if (PendingCommandsFlags.NeedToSetRTCCalibrationValue)
+	{
+		EEPROM_Header.RTCCalibrationValue = FoxState.ServiceSettings.SetThisRTCCalibrationValue;
+		EEPROM_UpdateHeader();
+
+		RTC_SetCalibrationValue(EEPROM_Header.RTCCalibrationValue);
+
+		uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
+		SendResponse(SetRTCCalibrationValue, 1, &response);
+
+		PendingCommandsFlags.NeedToSetRTCCalibrationValue = false;
 	}
 }
 

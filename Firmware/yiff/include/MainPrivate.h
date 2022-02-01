@@ -221,6 +221,11 @@ void Main_ProcessForceTx(void);
 void Main_ReturnFromForceTx(void);
 
 /**
+ * Sets RTC calibration value if needed
+ */
+void Main_SetRTCCalibrationValue(void);
+
+/**
  * As it name states, processes high priority events.
  */
 void Main_ProcessHighPriorityEvents(void);

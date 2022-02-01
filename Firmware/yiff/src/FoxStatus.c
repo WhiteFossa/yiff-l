@@ -7,6 +7,7 @@
 
 #include <FoxStatus.h>
 #include <EEPROM.h>
+#include <HAL.h>
 
 void FoxState_Init(void)
 {
@@ -64,6 +65,8 @@ void FoxState_Init(void)
 
 	PendingCommandsFlags.NeedToForceTx = false;
 	PendingCommandsFlags.NeedToReturnFromForceTx = false;
+
+	PendingCommandsFlags.NeedToSetRTCCalibrationValue = false;
 
 	FoxState.CurrentDisplay = StatusDisplay;
 }
@@ -302,3 +305,13 @@ bool FoxState_SetUantADCToUantVoltsFactors(bool reset, float a, float b)
 	return true;
 }
 
+bool FoxState_SetRTCCalibrationValue(uint8_t calibrationValue)
+{
+	if (calibrationValue > HAL_RTC_CALIBRATION_MAX_VALUE)
+	{
+		return false;
+	}
+
+	FoxState.ServiceSettings.SetThisRTCCalibrationValue = calibrationValue;
+	PendingCommandsFlags.NeedToSetRTCCalibrationValue = true;
+}

@@ -176,7 +176,9 @@ typedef enum
 
 	ReturnAfterForceTxOn = 0x35,
 
-	GetRTCCalibrationValue = 0x36
+	GetRTCCalibrationValue = 0x36,
+
+	SetRTCCalibrationValue = 0x37
 }
 CommandToFoxEnum;
 
@@ -494,6 +496,11 @@ void OnReturnAfterForceTxOn(uint8_t payloadSize, uint8_t* payload);
  * Called when "Get RTC calibration value" command comes
  */
 void OnGetRTCCalibrationValue(uint8_t payloadSize, uint8_t* payload);
+
+/**
+ * Called when "Set RTC calibration value" command comes
+ */
+void OnSetRTCCalibrationValue(uint8_t payloadSize, uint8_t* payload);
 
 /**
  * Emits "Entering sleepmode" event

@@ -406,6 +406,11 @@ typedef struct
 	 * Flag, raised by service command, causing fox to transmit continuously
 	 */
 	bool IsForceTx;
+
+	/**
+	 * When executing "Set RTC calibration value" command new value is stored here
+	 */
+	uint8_t SetThisRTCCalibrationValue;
 }
 ServiceSettingsStruct;
 
