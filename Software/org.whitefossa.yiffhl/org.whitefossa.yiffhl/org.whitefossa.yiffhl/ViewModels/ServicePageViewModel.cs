@@ -369,7 +369,30 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         public ICommand ForceTxOnCommand { get; }
 
+        /// <summary>
+        /// Return to normal TX operations
+        /// </summary>
         public ICommand TxNormalCommand { get; }
+
+        /// <summary>
+        /// RTC calibration value (as a string)
+        /// </summary>
+        private string _rtcCalibrationValueAsString;
+
+        public string RTCCalibrationValueAsString
+        {
+            get => _rtcCalibrationValueAsString;
+            set
+            {
+                _rtcCalibrationValueAsString = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Get RTC calibration value
+        /// </summary>
+        public ICommand GetRTCCalibrationValueCommand { get; }
 
         public ServicePageViewModel()
         {
@@ -407,6 +430,8 @@ namespace org.whitefossa.yiffhl.ViewModels
 
             ForceTxOnCommand = new Command(async () => await OnForceTxOnAsync());
             TxNormalCommand = new Command(async () => await OnTxNormalAsync());
+
+            GetRTCCalibrationValueCommand = new Command(async() => await OnGetRTCCalibrationValueAsync());
 
             // Setting up poll service data timer
             PollServiceDataTimer = new Timer(PollServiceDataInterval);
@@ -914,6 +939,22 @@ namespace org.whitefossa.yiffhl.ViewModels
             {
                 await _userNotifier.ShowErrorMessageAsync("Failure", "Unable to return to normal operations. Is fox already in normal mode?");
             }
+        }
+
+        #endregion
+
+        #region Get RTC calibration value
+
+        private async Task OnGetRTCCalibrationValueAsync()
+        {
+            await _serviceCommandsManager.GetRTCCalibrationValueAsync(async(v) => await OnGetRTCCalibrationValueResponseAsync(v));
+        }
+
+        private async Task OnGetRTCCalibrationValueResponseAsync(uint value)
+        {
+            _mainModel.ServiceSettingsModel.RTCCalibrationValue = value;
+
+            RTCCalibrationValueAsString = _mainModel.ServiceSettingsModel.RTCCalibrationValue.ToString();
         }
 
         #endregion

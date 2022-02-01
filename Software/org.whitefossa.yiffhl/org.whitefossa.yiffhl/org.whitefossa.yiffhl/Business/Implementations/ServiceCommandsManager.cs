@@ -42,6 +42,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private readonly IForceTxOnCommand _forceTxOnCommand;
         private readonly IReturnToNormalTxCommand _returnToNormalTxCommand;
 
+        private readonly IGetRTCCalibrationValueCommand _getRTCCalibrationValueCommand;
+
         #endregion
 
         private Abstractions.Interfaces.OnGetLastErrorCodeDelegate _onGetLastErrorCode;
@@ -79,7 +81,9 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private OnSetUantFactorsDelegate _onSetUantFactors;
 
         private OnForceTxOnDelegate _onForceTxOn;
-        public OnReturnToNormalTxDelegate _onReturnToNormalTx;
+        private OnReturnToNormalTxDelegate _onReturnToNormalTx;
+
+        private OnGetRTCCalibrationValueDelegate _onGetRTCCalibrationValue;
 
         public ServiceCommandsManager(IGetLastErrorCodeCommand getLastErrorCodeCommand,
             IResetLastErrorCodeCommand resetLastErrorCodeCommand,
@@ -101,7 +105,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             IGetUantFactorsCommand getUantFactorsCommand,
             ISetUantFactorsCommand setUantFactorsCommand,
             IForceTxOnCommand forceTxOnCommand,
-            IReturnToNormalTxCommand returnToNormalTxCommand)
+            IReturnToNormalTxCommand returnToNormalTxCommand,
+            IGetRTCCalibrationValueCommand getRTCCalibrationValueCommand)
         {
             _getLastErrorCodeCommand = getLastErrorCodeCommand;
             _resetLastErrorCodeCommand = resetLastErrorCodeCommand;
@@ -124,6 +129,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _setUantFactorsCommand = setUantFactorsCommand;
             _forceTxOnCommand = forceTxOnCommand;
             _returnToNormalTxCommand = returnToNormalTxCommand;
+            _getRTCCalibrationValueCommand = getRTCCalibrationValueCommand;
         }
 
         #region Get last error code
@@ -614,6 +620,23 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private void OnReturnToNormalTxResponse(bool isSuccessfull)
         {
             _onReturnToNormalTx(isSuccessfull);
+        }
+
+        #endregion
+
+        #region Get RTC calibration value
+
+        public async Task GetRTCCalibrationValueAsync(OnGetRTCCalibrationValueDelegate onGetRTCCalibrationValue)
+        {
+            _onGetRTCCalibrationValue = onGetRTCCalibrationValue ?? throw new ArgumentNullException(nameof(onGetRTCCalibrationValue));
+
+            _getRTCCalibrationValueCommand.SetResponseDelegate(OnGetRTCCalibrationValueResponse);
+            _getRTCCalibrationValueCommand.SendGetRTCCalibrationValue();
+        }
+
+        private void OnGetRTCCalibrationValueResponse(uint value)
+        {
+            _onGetRTCCalibrationValue(value);
         }
 
         #endregion

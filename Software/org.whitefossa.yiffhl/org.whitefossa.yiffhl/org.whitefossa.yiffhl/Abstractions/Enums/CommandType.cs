@@ -111,6 +111,8 @@
 
         ForceTxOn = 0x34,
 
-        ReturnToNormalTx = 0x35
+        ReturnToNormalTx = 0x35,
+
+        GetRTCCalibrationValue = 0x36
     }
 }

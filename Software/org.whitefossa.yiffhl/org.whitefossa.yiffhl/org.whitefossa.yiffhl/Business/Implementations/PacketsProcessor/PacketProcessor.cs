@@ -87,6 +87,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
         private OnResponseDelegate _onSetUantFactorsResponse;
         private OnResponseDelegate _onForceTxOnResponse;
         private OnResponseDelegate _onReturnToNormalTxResponse;
+        private OnResponseDelegate _onGetRTCCalibrationValueResponse;
 
         #endregion
 
@@ -659,6 +660,13 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
                         _onReturnToNormalTxResponse(responsePayload);
                         break;
 
+                    // Get RTC calibration value
+                    case CommandType.GetRTCCalibrationValue:
+                        CheckOnResponseDelegate(_onGetRTCCalibrationValueResponse);
+
+                        _onGetRTCCalibrationValueResponse(responsePayload);
+                        break;
+
                     default:
                         return; // We've got some junk
                 }
@@ -1075,6 +1083,12 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
         {
             _onReturnToNormalTxResponse = onReturnToNormalTxResponse
                 ?? throw new ArgumentNullException(nameof(onReturnToNormalTxResponse));
+        }
+
+        public void SetOnGetRTCCalibrationValueResponse(OnResponseDelegate onGetRTCCalibrationValueResponse)
+        {
+            _onGetRTCCalibrationValueResponse = onGetRTCCalibrationValueResponse
+                ?? throw new ArgumentNullException(nameof(onGetRTCCalibrationValueResponse));
         }
     }
 }
