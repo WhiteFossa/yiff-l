@@ -100,6 +100,7 @@ namespace org.whitefossa.yiffhl.Droid
             App.Container.Register<IForceTxOnCommand, ForceTxOnCommand>().AsSingleton();
             App.Container.Register<IReturnToNormalTxCommand, ReturnToNormalTxCommand>().AsSingleton();
             App.Container.Register<IGetRTCCalibrationValueCommand, GetRTCCalibrationValueCommand>().AsSingleton();
+            App.Container.Register<ISetRTCCalibrationValueCommand, SetRTCCalibrationValueCommand>().AsSingleton();
 
             #endregion
 

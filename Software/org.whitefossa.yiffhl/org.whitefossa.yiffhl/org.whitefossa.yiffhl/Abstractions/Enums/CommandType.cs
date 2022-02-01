@@ -113,6 +113,8 @@
 
         ReturnToNormalTx = 0x35,
 
-        GetRTCCalibrationValue = 0x36
+        GetRTCCalibrationValue = 0x36,
+
+        SetRTCCalibrationValue = 0x37
     }
 }

@@ -43,6 +43,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private readonly IReturnToNormalTxCommand _returnToNormalTxCommand;
 
         private readonly IGetRTCCalibrationValueCommand _getRTCCalibrationValueCommand;
+        private readonly ISetRTCCalibrationValueCommand _setRTCCalibrationValueCommand;
 
         #endregion
 
@@ -84,6 +85,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private OnReturnToNormalTxDelegate _onReturnToNormalTx;
 
         private OnGetRTCCalibrationValueDelegate _onGetRTCCalibrationValue;
+        private OnSetRTCCalibrationValueDelegate _onSetRTCCalibrationValue;
 
         public ServiceCommandsManager(IGetLastErrorCodeCommand getLastErrorCodeCommand,
             IResetLastErrorCodeCommand resetLastErrorCodeCommand,
@@ -106,7 +108,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             ISetUantFactorsCommand setUantFactorsCommand,
             IForceTxOnCommand forceTxOnCommand,
             IReturnToNormalTxCommand returnToNormalTxCommand,
-            IGetRTCCalibrationValueCommand getRTCCalibrationValueCommand)
+            IGetRTCCalibrationValueCommand getRTCCalibrationValueCommand,
+            ISetRTCCalibrationValueCommand setRTCCalibrationValueCommand)
         {
             _getLastErrorCodeCommand = getLastErrorCodeCommand;
             _resetLastErrorCodeCommand = resetLastErrorCodeCommand;
@@ -130,6 +133,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _forceTxOnCommand = forceTxOnCommand;
             _returnToNormalTxCommand = returnToNormalTxCommand;
             _getRTCCalibrationValueCommand = getRTCCalibrationValueCommand;
+            _setRTCCalibrationValueCommand = setRTCCalibrationValueCommand;
         }
 
         #region Get last error code
@@ -637,6 +641,23 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private void OnGetRTCCalibrationValueResponse(uint value)
         {
             _onGetRTCCalibrationValue(value);
+        }
+
+        #endregion
+
+        #region Set RTC calibration value
+
+        public async Task SetRTCCalibrationValueAsync(uint newValue, OnSetRTCCalibrationValueDelegate onSetRTCCalibrationValue)
+        {
+            _onSetRTCCalibrationValue = onSetRTCCalibrationValue ?? throw new ArgumentNullException(nameof(onSetRTCCalibrationValue));
+
+            _setRTCCalibrationValueCommand.SetResponseDelegate(OnSetRTCCalibrationValueResponse);
+            _setRTCCalibrationValueCommand.SendSetRTCCalibrationValue(newValue);
+        }
+
+        private void OnSetRTCCalibrationValueResponse(bool isSuccessful)
+        {
+            _onSetRTCCalibrationValue(isSuccessful);
         }
 
         #endregion
