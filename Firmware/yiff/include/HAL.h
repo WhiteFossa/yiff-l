@@ -269,6 +269,11 @@ extern FoxStateStruct FoxState;
  */
 #define HAL_SYSTICK_PRELOAD_VALUE_SLEEP 500
 
+/**
+ * Maximal RTC calibration value
+ */
+#define HAL_RTC_CALIBRATION_MAX_VALUE 0x7F
+
 
 extern ADC_HandleTypeDef ADC_Handle;
 extern L2HAL_AD5245_ContextStruct U80mRegulatorContext;
@@ -277,6 +282,7 @@ extern L2HAL_AD9835_ContextStruct SynthesizerContext;
 extern SPI_HandleTypeDef SPIHandle;
 extern TIM_HandleTypeDef ToneTimerHandle;
 extern TIM_HandleTypeDef HighPriorityTasksTimerHandle;
+extern RTC_HandleTypeDef RtcHandle;
 
 /**
  * ADC channel in use
@@ -581,5 +587,10 @@ void HAL_StartHightPriorityEventsProcessing(void);
  * Stop high priority events processing
  */
 void HAL_StopHighPriorityEventsProcessing(void);
+
+/**
+ * Set RTC calibration value. Value must be between 0x00 and 0x7F. Greater value - slower RTC
+ */
+void HAL_SetRTCCalibrationValue(uint8_t calibrationValue);
 
 #endif /* INCLUDE_HAL_H_ */

@@ -87,6 +87,11 @@
         /// </summary>
         public float UantFactorB { get; set; }
 
+        /// <summary>
+        /// RTC calibration value. [0x00;0x7F], bigger - slower
+        /// </summary>
+        public uint RTCCalibrationValue { get; set; }
+
         public ServiceSettingsModel()
         {
             LastErrorCode = null;

@@ -559,6 +559,48 @@
                 </Frame>
 
                 <!-- End of force TX on -->
+                
+                <!-- RTC calibration -->
+
+                <Frame
+                    Style="{StaticResource FramesStyle}">
+
+                    <StackLayout>
+                        <Label
+                            Text="RTC calibration"
+                            HorizontalOptions="Center" />
+
+                        <StackLayout
+                            Orientation="Horizontal">
+
+                            <Label
+                                Text="Calibration value:"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                            <Editor
+                                Keyboard="Numeric"
+                                HorizontalOptions="FillAndExpand"
+                                VerticalOptions="Center"
+                                Text="{Binding RTCCalibrationValueAsString}" />
+
+                            <Button
+                                Text="Get"
+                                VerticalOptions="Center"
+                                HorizontalOptions="End"
+                                Command="{Binding GetRTCCalibrationValueCommand}" />
+
+                            <Button
+                                Text="Set"
+                                VerticalOptions="Center"
+                                HorizontalOptions="End"
+                                Command="{Binding SetRTCCalibrationValueCommand}" />
+                        </StackLayout>
+
+                    </StackLayout>
+                </Frame>
+
+                <!-- End of RTC calibration -->
 
             </StackLayout>
         </ScrollView>

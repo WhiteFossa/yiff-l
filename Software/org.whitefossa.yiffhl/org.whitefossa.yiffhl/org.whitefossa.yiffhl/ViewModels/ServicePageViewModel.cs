@@ -369,7 +369,35 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         public ICommand ForceTxOnCommand { get; }
 
+        /// <summary>
+        /// Return to normal TX operations
+        /// </summary>
         public ICommand TxNormalCommand { get; }
+
+        /// <summary>
+        /// RTC calibration value (as a string)
+        /// </summary>
+        private string _rtcCalibrationValueAsString;
+
+        public string RTCCalibrationValueAsString
+        {
+            get => _rtcCalibrationValueAsString;
+            set
+            {
+                _rtcCalibrationValueAsString = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Get RTC calibration value
+        /// </summary>
+        public ICommand GetRTCCalibrationValueCommand { get; }
+
+        /// <summary>
+        /// Set RTC calibration value
+        /// </summary>
+        public ICommand SetRTCCalibrationValueCommand { get; }
 
         public ServicePageViewModel()
         {
@@ -407,6 +435,9 @@ namespace org.whitefossa.yiffhl.ViewModels
 
             ForceTxOnCommand = new Command(async () => await OnForceTxOnAsync());
             TxNormalCommand = new Command(async () => await OnTxNormalAsync());
+
+            GetRTCCalibrationValueCommand = new Command(async() => await OnGetRTCCalibrationValueAsync());
+            SetRTCCalibrationValueCommand = new Command(async() => await OnSetRTCCalibrationValueAsync());
 
             // Setting up poll service data timer
             PollServiceDataTimer = new Timer(PollServiceDataInterval);
@@ -913,6 +944,50 @@ namespace org.whitefossa.yiffhl.ViewModels
             if (!isSuccessfull)
             {
                 await _userNotifier.ShowErrorMessageAsync("Failure", "Unable to return to normal operations. Is fox already in normal mode?");
+            }
+        }
+
+        #endregion
+
+        #region Get RTC calibration value
+
+        private async Task OnGetRTCCalibrationValueAsync()
+        {
+            await _serviceCommandsManager.GetRTCCalibrationValueAsync(async(v) => await OnGetRTCCalibrationValueResponseAsync(v));
+        }
+
+        private async Task OnGetRTCCalibrationValueResponseAsync(uint value)
+        {
+            _mainModel.ServiceSettingsModel.RTCCalibrationValue = value;
+
+            RTCCalibrationValueAsString = _mainModel.ServiceSettingsModel.RTCCalibrationValue.ToString();
+        }
+
+        #endregion
+
+        #region Set RTC calibration value
+
+        private async Task OnSetRTCCalibrationValueAsync()
+        {
+            uint newValue;
+
+            if (!uint.TryParse(RTCCalibrationValueAsString, out newValue))
+            {
+                // Invalid value
+                await _userNotifier.ShowErrorMessageAsync("Wrong value", "Not a valid calibration value!");
+                return;
+            }
+
+            await _serviceCommandsManager.SetRTCCalibrationValueAsync(newValue, async (s) => await OnSetRTCCalibrationValueResponseAsync(s));
+        }
+
+        private async Task OnSetRTCCalibrationValueResponseAsync(bool isSuccessful)
+        {
+            await OnGetRTCCalibrationValueAsync();
+
+            if (!isSuccessful)
+            {
+                await _userNotifier.ShowErrorMessageAsync("Failure", "Unable to set new RTC calibration value.\nIs value in a valid range?");
             }
         }
 

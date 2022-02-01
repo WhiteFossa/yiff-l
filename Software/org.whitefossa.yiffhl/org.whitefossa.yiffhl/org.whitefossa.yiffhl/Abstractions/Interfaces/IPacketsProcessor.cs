@@ -99,6 +99,8 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
         void SetOnSetUantFactorsResponse(OnResponseDelegate onSetUantFactorsResponse);
         void SetOnForceTxOnResponse(OnResponseDelegate onForceTxOnResponse);
         void SetOnReturnToNormalTxResponse(OnResponseDelegate onReturnToNormalTxResponse);
+        void SetOnGetRTCCalibrationValueResponse(OnResponseDelegate onGetRTCCalibrationValueResponse);
+        void SetOnSetRTCCalibrationValueResponse(OnResponseDelegate onSetRTCCalibrationValueResponse);
 
         #endregion
 

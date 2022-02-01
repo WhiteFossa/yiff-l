@@ -1168,3 +1168,16 @@ void HAL_StopHighPriorityEventsProcessing(void)
 {
 	HAL_NVIC_DisableIRQ(TIM2_IRQn);
 }
+
+void HAL_SetRTCCalibrationValue(uint8_t calibrationValue)
+{
+	if (calibrationValue > HAL_RTC_CALIBRATION_MAX_VALUE)
+	{
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_IncorrectRTCCalibrationValue);
+	}
+
+	if (HAL_OK != HAL_RTCEx_SetSmoothCalib(&RtcHandle, 0, 0, calibrationValue))
+	{
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_FailedToSetRTCCalibrationValue);
+	}
+}

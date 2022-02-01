@@ -68,6 +68,10 @@ uint8_t GetWeekdayFromDayNumber(uint8_t dayNumber);
  */
 void RTC_AddOnDateOrTimeChangeListener(void (*listener)(void));
 
+/**
+ * Set calibration value. For parameter values see HAL_SetRTCCalibrationValue
+ */
+void RTC_SetCalibrationValue(uint8_t calibrationValue);
 
 /* Private stuff goes below */
 

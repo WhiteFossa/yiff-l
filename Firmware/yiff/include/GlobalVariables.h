@@ -24,9 +24,11 @@ RTC_DateTypeDef CurrentDate;
 /***************************
  * EEPROM structs go below *
  ***************************/
+#pragma pack(push, 1)
 EEPROMConstantHeaderStruct EEPROM_ConstantHeader;
 EEPROMHeaderStruct EEPROM_Header;
 EEPROMProfileStruct EEPROM_CurrentProfile;
+#pragma pack(pop)
 
 /****************************
 * Hardware handles go below *

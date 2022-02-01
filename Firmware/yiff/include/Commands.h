@@ -159,6 +159,11 @@ typedef struct
 	 * If true, then we need to return from force TX
 	 */
 	bool NeedToReturnFromForceTx;
+
+	/**
+	 * If true, then we need to set RTC calibration value
+	 */
+	bool NeedToSetRTCCalibrationValue;
 }
 PendingCommandsFlagsStruct;
 

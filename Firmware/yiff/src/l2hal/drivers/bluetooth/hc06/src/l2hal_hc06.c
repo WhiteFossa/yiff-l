@@ -19,7 +19,7 @@ L2HAL_HC06_ContextStruct L2HAL_HC06_AttachToDevice(UART_HandleTypeDef* uart)
 	context.IsFound = false;
 	context.UART_Handle = uart;
 
-	uint8_t bufferSize = 3; /* 3, not 2, because snprintf will add null-termination */
+	uint8_t bufferSize = 3;
 	char buffer[bufferSize];
 	snprintf(buffer, bufferSize, "AT");
 
@@ -28,29 +28,24 @@ L2HAL_HC06_ContextStruct L2HAL_HC06_AttachToDevice(UART_HandleTypeDef* uart)
 		L2HAL_Error(Generic);
 	}
 
-	memset(buffer, 0, 3);
+	/* Immediately expecting an answer (Somehow HC-06 may return either OK or \0OK. Probably we aren't
+	 * fast enough */
 
-	/* Immediately expecting an answer */
-	HAL_StatusTypeDef receiveStatus = HAL_UART_Receive(context.UART_Handle, (uint8_t*)buffer, 2, L2HAL_HC06_UART_TIMEOUT);
+	/* We MUST NOT check for received status - it might be timeout, because we don't know how many bytes
+	 * will be returned */
+	HAL_UART_Receive(context.UART_Handle, (uint8_t*)buffer, 3, L2HAL_HC06_UART_TIMEOUT);
 
-	if (HAL_TIMEOUT == receiveStatus)
+	if ((buffer[0] == 'O' && buffer[1] == 'K')
+		|| (buffer[0] == 0x00 && buffer[1] == 'O' && buffer[2] == 'K'))
 	{
-		return context; /* Not found */
-	}
-	else if (HAL_OK == receiveStatus)
-	{
-		/* 3rd byte in buffer is 0x00, so we can use strcmp*/
-		if (0 == strcmp("OK", buffer))
-		{
-			context.IsFound = true;
-		}
-
-		return context;
+		context.IsFound = true;
 	}
 	else
 	{
-		L2HAL_Error(Generic);
+		context.IsFound = false;
 	}
+
+	return context;
 
 	return context;
 }

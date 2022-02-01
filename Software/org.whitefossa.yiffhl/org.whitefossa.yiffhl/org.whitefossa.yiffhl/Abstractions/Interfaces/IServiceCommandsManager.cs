@@ -40,6 +40,9 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
     public delegate void OnForceTxOnDelegate(bool isSuccessfull);
     public delegate void OnReturnToNormalTxDelegate(bool isSuccessfull);
 
+    public delegate void OnGetRTCCalibrationValueDelegate(uint value);
+    public delegate void OnSetRTCCalibrationValueDelegate(bool isSuccessful);
+
     public interface IServiceCommandsManager
     {
         Task GetLastErrorCodeAsync(OnGetLastErrorCodeDelegate onGetLastErrorCode);
@@ -79,5 +82,8 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
 
         Task ForceTxOnAsync(OnForceTxOnDelegate onForceTxOn);
         Task ReturnToNormalTxAsync(OnReturnToNormalTxDelegate onReturnToNormalTx);
+
+        Task GetRTCCalibrationValueAsync(OnGetRTCCalibrationValueDelegate onGetRTCCalibrationValue);
+        Task SetRTCCalibrationValueAsync(uint newValue, OnSetRTCCalibrationValueDelegate onSetRTCCalibrationValue);
     }
 }
