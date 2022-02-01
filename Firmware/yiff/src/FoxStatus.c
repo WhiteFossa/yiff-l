@@ -314,4 +314,6 @@ bool FoxState_SetRTCCalibrationValue(uint8_t calibrationValue)
 
 	FoxState.ServiceSettings.SetThisRTCCalibrationValue = calibrationValue;
 	PendingCommandsFlags.NeedToSetRTCCalibrationValue = true;
+
+	return true;
 }
