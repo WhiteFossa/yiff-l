@@ -323,6 +323,11 @@ void OnNewCommandToFox(uint8_t payloadSize, uint8_t* payload)
 			/* Return to normal operations after Force TX On */
 			OnReturnAfterForceTxOn(payloadSize, payload);
 			break;
+
+		case GetRTCCalibrationValue:
+			/* Get RTC calibration value */
+			OnGetRTCCalibrationValue(payloadSize, payload);
+			break;
 	}
 }
 
@@ -1305,7 +1310,7 @@ void OnGetUbattADCToUbattVoltsFactors(uint8_t payloadSize, uint8_t* payload)
 	memcpy(&response[0], &EEPROM_Header.UBattADCA, 4);
 	memcpy(&response[4], &EEPROM_Header.UBattADCB, 4);
 
-	SendResponse(GetUbattADCToUbattVoltsFactors, 8, &response);
+	SendResponse(GetUbattADCToUbattVoltsFactors, 8, response);
 }
 
 void OnSetUbattADCToUbattVoltsFactors(uint8_t payloadSize, uint8_t* payload)
@@ -1359,7 +1364,7 @@ void OnGetUbattVoltsToBattLevelFactors(uint8_t payloadSize, uint8_t* payload)
 	memcpy(&response[0], &EEPROM_Header.BattLevelA, 4);
 	memcpy(&response[4], &EEPROM_Header.BattLevelB, 4);
 
-	SendResponse(GetUbattVoltsToBattLevelFactors, 8, &response);
+	SendResponse(GetUbattVoltsToBattLevelFactors, 8, response);
 }
 
 void OnSetUbattVoltsToBattLevelFactors(uint8_t payloadSize, uint8_t* payload)
@@ -1413,7 +1418,7 @@ void OnGetU80mADCtoU80mVoltsFactors(uint8_t payloadSize, uint8_t* payload)
 	memcpy(&response[0], &EEPROM_Header.U80mADCA, 4);
 	memcpy(&response[4], &EEPROM_Header.U80mADCB, 4);
 
-	SendResponse(GetU80mADCtoU80mVoltsFactors, 8, &response);
+	SendResponse(GetU80mADCtoU80mVoltsFactors, 8, response);
 }
 
 void OnSetU80mADCtoU80mVoltsFactors(uint8_t payloadSize, uint8_t* payload)
@@ -1467,7 +1472,7 @@ void OnGetP80mToU80mFactors(uint8_t payloadSize, uint8_t* payload)
 	memcpy(&response[0], &EEPROM_Header.P80mA, 4);
 	memcpy(&response[4], &EEPROM_Header.P80mB, 4);
 
-	SendResponse(GetP80mToU80mFactors, 8, &response);
+	SendResponse(GetP80mToU80mFactors, 8, response);
 }
 
 void OnSetP80mToU80mFactors(uint8_t payloadSize, uint8_t* payload)
@@ -1532,7 +1537,7 @@ void OnGetUantADCToUantVoltsFactors(uint8_t payloadSize, uint8_t* payload)
 	memcpy(&response[0], &EEPROM_Header.UAntADCA, 4);
 	memcpy(&response[4], &EEPROM_Header.UAntADCB, 4);
 
-	SendResponse(GetUantADCToUantVoltsFactors, 8, &response);
+	SendResponse(GetUantADCToUantVoltsFactors, 8, response);
 }
 
 void OnSetUantADCToUantVoltsFactors(uint8_t payloadSize, uint8_t* payload)
@@ -1613,6 +1618,17 @@ void OnReturnAfterForceTxOn(uint8_t payloadSize, uint8_t* payload)
 
 	uint8_t result = YHL_PACKET_PROCESSOR_SUCCESS;
 	SendResponse(ReturnAfterForceTxOn, 1, &result);
+}
+
+void OnGetRTCCalibrationValue(uint8_t payloadSize, uint8_t* payload)
+{
+	if (payloadSize != 1)
+	{
+		return;
+	}
+
+	uint8_t response = EEPROM_Header.RTCCalibrationValue;
+	SendResponse(GetRTCCalibrationValue, 1, &response);
 }
 
 void EmitEnteringSleepmodeEvent(void)
