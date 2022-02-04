@@ -92,6 +92,11 @@ extern L2HAL_24x_ContextStruct EEPROMContext;
 #define YHL_DEFAULT_RTC_CALIBRATION_VALUE 0x3F
 
 /**
+ * Default value for disarm battery percent (see EEPROMHeaderStruct field description)
+ */
+#define YHL_DEFAULT_DISARM_BATTERY_PERCENT 0
+
+/**
  * EEPROM constant header. It's structure must not change from version
  * to version
  */
@@ -112,6 +117,7 @@ typedef struct
 	 */
 	volatile uint32_t CRCSum;
 }
+__attribute__((packed))
 EEPROMConstantHeaderStruct;
 
 
@@ -196,10 +202,17 @@ typedef struct
 	volatile uint8_t RTCCalibrationValue;
 
 	/**
+	 * If battery charge percent is this value or less, then disarm the fox.
+	 * The value must be [0; 1]
+	 */
+	volatile float DisarmBatteryPercent;
+
+	/**
 	 * CRC
 	 */
 	volatile uint32_t CRCSum;
 }
+__attribute__((packed))
 EEPROMHeaderStruct;
 
 /**
@@ -257,6 +270,7 @@ typedef struct
 	 */
 	volatile uint32_t CRCSum;
 }
+__attribute__((packed))
 EEPROMProfileStruct;
 
 extern EEPROMConstantHeaderStruct EEPROM_ConstantHeader;

@@ -29,7 +29,8 @@ uint32_t L2HAL_CRC_Calculate(L2HAL_CRCContextStruct* context, uint8_t* buffer, u
 	if (0 == size % 4)
 	{
 		// Buffer is aligned, just calculating
-		return HAL_CRC_Calculate(&context->Handle, (uint32_t*)buffer, size / 4);
+		volatile uint32_t result = HAL_CRC_Calculate(&context->Handle, (uint32_t*)buffer, size / 4);
+		return result;
 	}
 	else
 	{

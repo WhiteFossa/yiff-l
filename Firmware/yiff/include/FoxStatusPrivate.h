@@ -201,6 +201,7 @@ typedef struct
 	 */
 	volatile uint32_t FrequencyHz;
 }
+__attribute__((packed))
 FoxFrequencyStruct;
 
 /**
@@ -223,6 +224,7 @@ typedef struct
 	 */
 	volatile uint32_t PauseTime;
 }
+__attribute__((packed))
 FoxCycleStruct;
 
 /**

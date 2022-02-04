@@ -78,7 +78,6 @@ int main(int argc, char* argv[])
 	CRC_Context = L2HAL_CRC_Init();
 
 	/* Connecting to EEPROM */
-	/* 24C256 at A0h. Page size is no more than 8! Address overflow otherwise */
 	EEPROMContext = L2HAL_24x_DetectEepromAtAddress(&I2C_Other, YHL_EEPROM_ADDRESS, true, YHL_EEPROM_PAGE_SIZE);
 	if (!EEPROMContext.IsFound)
 	{
