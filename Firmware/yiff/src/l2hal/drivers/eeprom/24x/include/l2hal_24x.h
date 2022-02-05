@@ -97,7 +97,7 @@
 /**
  * Wait this time between two writes
  */
-#define L2HAL_24X_INTERWRITE_PAUSE 10
+#define L2HAL_24X_INTERWRITE_PAUSE 5
 
 
 /**
