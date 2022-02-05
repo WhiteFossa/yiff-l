@@ -639,6 +639,17 @@ void Main_SetRTCCalibrationValue(void)
 void Main_MeasureBatteryLevel(void)
 {
 	FoxState.BatteryLevel = HAL_GetBatteryLevel();
+
+	/* If fox is armed and the battery got discharged we have to disarm fox */
+	/* Do not do it in deepsleep, because ADC is stopped there */
+	if (FoxState.Sleepmodes.Mode != SleepmodeDeepSleep
+		&&
+		FoxState.GlobalState.IsArmed
+		&&
+		FoxState.BatteryLevel <= EEPROM_Header.DisarmBatteryPercent)
+	{
+		GSM_Disarm();
+	}
 }
 
 void Main_OnLeftButtonPressedInterrupt(void)
