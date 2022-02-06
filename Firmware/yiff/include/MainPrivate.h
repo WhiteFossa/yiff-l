@@ -226,6 +226,11 @@ void Main_ReturnFromForceTx(void);
 void Main_SetRTCCalibrationValue(void);
 
 /**
+ * Sets disarm-on-discharge value if needed
+ */
+void Main_SetDisarmOnDischargeValue(void);
+
+/**
  * As it name states, processes high priority events.
  */
 void Main_ProcessHighPriorityEvents(void);

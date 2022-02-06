@@ -178,7 +178,11 @@ typedef enum
 
 	GetRTCCalibrationValue = 0x36,
 
-	SetRTCCalibrationValue = 0x37
+	SetRTCCalibrationValue = 0x37,
+
+	GetDisarmOnDischargeValue = 0x38,
+
+	SetDisarmOnDischargeValue = 0x39
 }
 CommandToFoxEnum;
 
@@ -501,6 +505,16 @@ void OnGetRTCCalibrationValue(uint8_t payloadSize, uint8_t* payload);
  * Called when "Set RTC calibration value" command comes
  */
 void OnSetRTCCalibrationValue(uint8_t payloadSize, uint8_t* payload);
+
+/**
+ * Called when "Get disarm on discharge" command comes
+ */
+void OnGetDisarmOnDischargeValue(uint8_t payloadSize, uint8_t* payload);
+
+/**
+ * Called when "Set disarm on discharge" command comes
+ */
+void OnSetDisarmOnDischargeValue(uint8_t payloadSize, uint8_t* payload);
 
 /**
  * Emits "Entering sleepmode" event

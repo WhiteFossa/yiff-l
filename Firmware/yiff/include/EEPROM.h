@@ -97,6 +97,17 @@ extern L2HAL_24x_ContextStruct EEPROMContext;
 #define YHL_DEFAULT_DISARM_BATTERY_PERCENT 0.01f
 
 /**
+ * Minimal possible disarm battery percent
+ */
+#define YHL_MIN_DISARM_BATTERY_PERCENT 0.005f
+
+/**
+ * Maximal possible disarm battery percent
+ */
+#define YHL_MAX_DISARM_BATTERY_PERCENT 0.2f
+
+
+/**
  * EEPROM constant header. It's structure must not change from version
  * to version
  */

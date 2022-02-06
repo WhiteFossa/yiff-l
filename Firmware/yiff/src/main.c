@@ -212,6 +212,7 @@ void Main_ProcessHighPriorityEvents(void)
 	Main_ProcessForceTx();
 	Main_ReturnFromForceTx();
 	Main_SetRTCCalibrationValue();
+	Main_SetDisarmOnDischargeValue();
 }
 
 void Main_ProcessFoxNameChange(void)
@@ -633,6 +634,20 @@ void Main_SetRTCCalibrationValue(void)
 		SendResponse(SetRTCCalibrationValue, 1, &response);
 
 		PendingCommandsFlags.NeedToSetRTCCalibrationValue = false;
+	}
+}
+
+void Main_SetDisarmOnDischargeValue(void)
+{
+	if (PendingCommandsFlags.NeedToSetDisarmOnDischargeValue)
+	{
+		EEPROM_Header.DisarmBatteryPercent = FoxState.ServiceSettings.SetThisDisarmOnDischargeValue;
+		EEPROM_UpdateHeader();
+
+		uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
+		SendResponse(SetDisarmOnDischargeValue, 1, &response);
+
+		PendingCommandsFlags.NeedToSetDisarmOnDischargeValue = false;
 	}
 }
 

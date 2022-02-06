@@ -413,6 +413,11 @@ typedef struct
 	 * When executing "Set RTC calibration value" command new value is stored here
 	 */
 	uint8_t SetThisRTCCalibrationValue;
+
+	/**
+	 * When executing "Set disarm on discharge value" command new value is stored here
+	 */
+	float SetThisDisarmOnDischargeValue;
 }
 ServiceSettingsStruct;
 

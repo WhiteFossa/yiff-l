@@ -68,6 +68,8 @@ void FoxState_Init(void)
 
 	PendingCommandsFlags.NeedToSetRTCCalibrationValue = false;
 
+	PendingCommandsFlags.NeedToSetDisarmOnDischargeValue = false;
+
 	FoxState.CurrentDisplay = StatusDisplay;
 }
 
@@ -314,6 +316,19 @@ bool FoxState_SetRTCCalibrationValue(uint8_t calibrationValue)
 
 	FoxState.ServiceSettings.SetThisRTCCalibrationValue = calibrationValue;
 	PendingCommandsFlags.NeedToSetRTCCalibrationValue = true;
+
+	return true;
+}
+
+bool FoxState_SetDisarmOnDischargeValue(float newValue)
+{
+	if (newValue < YHL_MIN_DISARM_BATTERY_PERCENT || newValue > YHL_MAX_DISARM_BATTERY_PERCENT)
+	{
+		return false;
+	}
+
+	FoxState.ServiceSettings.SetThisDisarmOnDischargeValue = newValue;
+	PendingCommandsFlags.NeedToSetDisarmOnDischargeValue = true;
 
 	return true;
 }
