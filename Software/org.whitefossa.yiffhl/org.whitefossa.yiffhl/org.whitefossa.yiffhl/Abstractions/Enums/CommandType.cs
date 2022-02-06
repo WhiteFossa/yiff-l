@@ -117,6 +117,8 @@
 
         SetRTCCalibrationValue = 0x37,
 
-        GetDisarmOnDischargeThreshold = 0x38
+        GetDisarmOnDischargeThreshold = 0x38,
+
+        SetDisarmOnDischargeThreshold = 0x39
     }
 }
