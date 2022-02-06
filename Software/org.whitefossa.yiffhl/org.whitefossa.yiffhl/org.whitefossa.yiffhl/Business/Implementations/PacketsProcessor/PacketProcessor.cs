@@ -89,6 +89,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
         private OnResponseDelegate _onReturnToNormalTxResponse;
         private OnResponseDelegate _onGetRTCCalibrationValueResponse;
         private OnResponseDelegate _onSetRTCCalibrationValueResponse;
+        private OnResponseDelegate _onGetDisarmOnDischargeThresholdResponse;
+        private OnResponseDelegate _onSetDisarmOnDischargeThresholdResponse;
 
         #endregion
 
@@ -675,6 +677,20 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
                         _onSetRTCCalibrationValueResponse(responsePayload);
                         break;
 
+                    // Get disarm-on-discharge threshold
+                    case CommandType.GetDisarmOnDischargeThreshold:
+                        CheckOnResponseDelegate(_onGetDisarmOnDischargeThresholdResponse);
+
+                        _onGetDisarmOnDischargeThresholdResponse(responsePayload);
+                        break;
+
+                    // Set disarm-on-discharge threshold
+                    case CommandType.SetDisarmOnDischargeThreshold:
+                        CheckOnResponseDelegate(_onSetDisarmOnDischargeThresholdResponse);
+
+                        _onSetDisarmOnDischargeThresholdResponse(responsePayload);
+                        break;
+
                     default:
                         return; // We've got some junk
                 }
@@ -1103,6 +1119,18 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
         {
             _onSetRTCCalibrationValueResponse = onSetRTCCalibrationValueResponse
                 ?? throw new ArgumentNullException(nameof(onSetRTCCalibrationValueResponse));
+        }
+
+        public void SetOnGetDisarmOnDischargeThresholdResponse(OnResponseDelegate onGetDisarmOnDischargeThresholdResponse)
+        {
+            _onGetDisarmOnDischargeThresholdResponse = onGetDisarmOnDischargeThresholdResponse
+                ?? throw new ArgumentNullException(nameof(onGetDisarmOnDischargeThresholdResponse));
+        }
+
+        public void SetOnSetDisarmOnDischargeThresholdResponse(OnResponseDelegate onSetDisarmOnDischargeThresholdResponse)
+        {
+            _onSetDisarmOnDischargeThresholdResponse = onSetDisarmOnDischargeThresholdResponse
+                ?? throw new ArgumentNullException(nameof(onSetDisarmOnDischargeThresholdResponse));
         }
     }
 }

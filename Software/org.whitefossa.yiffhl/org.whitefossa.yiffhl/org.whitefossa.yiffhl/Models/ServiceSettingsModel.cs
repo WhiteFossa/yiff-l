@@ -92,6 +92,11 @@
         /// </summary>
         public uint RTCCalibrationValue { get; set; }
 
+        /// <summary>
+        /// If charge is less or equal to this value fox will be disarmed
+        /// </summary>
+        public float DisarmOnDischargeThreshold { get; set; }
+
         public ServiceSettingsModel()
         {
             LastErrorCode = null;
@@ -117,6 +122,8 @@
 
             UantFactorA = 0;
             UantFactorB = 0;
+
+            DisarmOnDischargeThreshold = 0;
         }
     }
 }

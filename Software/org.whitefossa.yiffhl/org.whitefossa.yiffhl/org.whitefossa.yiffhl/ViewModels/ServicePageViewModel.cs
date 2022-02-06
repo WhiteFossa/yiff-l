@@ -399,6 +399,31 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         public ICommand SetRTCCalibrationValueCommand { get; }
 
+        /// <summary>
+        /// Disarm on discharge threshold
+        /// </summary>
+        private string _disarmOnDischargeThresholdAsString;
+
+        public string DisarmOnDischargeThresholdAsString
+        {
+            get => _disarmOnDischargeThresholdAsString;
+            set
+            {
+                _disarmOnDischargeThresholdAsString = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Get disarm on discharge threshold command
+        /// </summary>
+        public ICommand GetDisarmOnDischargeThresholdCommand { get; }
+
+        /// <summary>
+        /// Set disarm on discharge threshold command
+        /// </summary>
+        public ICommand SetDisarmOnDischargeThresholdCommand { get; }
+
         public ServicePageViewModel()
         {
 
@@ -436,16 +461,17 @@ namespace org.whitefossa.yiffhl.ViewModels
             ForceTxOnCommand = new Command(async () => await OnForceTxOnAsync());
             TxNormalCommand = new Command(async () => await OnTxNormalAsync());
 
-            GetRTCCalibrationValueCommand = new Command(async() => await OnGetRTCCalibrationValueAsync());
-            SetRTCCalibrationValueCommand = new Command(async() => await OnSetRTCCalibrationValueAsync());
+            GetRTCCalibrationValueCommand = new Command(async () => await OnGetRTCCalibrationValueAsync());
+            SetRTCCalibrationValueCommand = new Command(async () => await OnSetRTCCalibrationValueAsync());
+
+            GetDisarmOnDischargeThresholdCommand = new Command(async () => await OnGetDisarmOnDischargeThresholdAsync());
+            SetDisarmOnDischargeThresholdCommand = new Command(async () => await OnSetDisarmOnDischargeThresholdAsync());
 
             // Setting up poll service data timer
             PollServiceDataTimer = new Timer(PollServiceDataInterval);
             PollServiceDataTimer.Elapsed += async (s, e) => await OnReloadServiceDataRequestAsync(s, e);
             PollServiceDataTimer.AutoReset = true;
             PollServiceDataTimer.Start();
-
-            Debug.WriteLine("Timer created");
         }
 
         public async Task OnShowAsync()
@@ -988,6 +1014,52 @@ namespace org.whitefossa.yiffhl.ViewModels
             if (!isSuccessful)
             {
                 await _userNotifier.ShowErrorMessageAsync("Failure", "Unable to set new RTC calibration value.\nIs value in a valid range?");
+            }
+        }
+
+        #endregion
+
+        #region Get disarm on discharge threshold
+
+        private async Task OnGetDisarmOnDischargeThresholdAsync()
+        {
+            await _serviceCommandsManager.GetDisarmOnDischargeThresholdAsync(async (v) => await OnGetDisarmOnDischargeThresholdResponseAsync(v));
+        }
+
+        private async Task OnGetDisarmOnDischargeThresholdResponseAsync(float value)
+        {
+            _mainModel.ServiceSettingsModel.DisarmOnDischargeThreshold = value;
+
+            DisarmOnDischargeThresholdAsString = (_mainModel.ServiceSettingsModel.DisarmOnDischargeThreshold * 100).ToString();
+        }
+
+        #endregion
+
+        #region Set RTC calibration value
+
+        private async Task OnSetDisarmOnDischargeThresholdAsync()
+        {
+            float newThreshold;
+
+            if (!float.TryParse(DisarmOnDischargeThresholdAsString, out newThreshold))
+            {
+                // Invalid value
+                await _userNotifier.ShowErrorMessageAsync("Wrong value", "Not a valid disarm on discharge value!");
+                return;
+            }
+
+            await _serviceCommandsManager
+                .SetDisarmOnDischargeThresholdAsync(newThreshold / 100.0f, async (s) => await OnOnSetDisarmOnDischargeThresholdAsyncAsync(s));
+        }
+
+        private async Task OnOnSetDisarmOnDischargeThresholdAsyncAsync(bool isSuccessful)
+        {
+            await OnGetDisarmOnDischargeThresholdAsync();
+
+            if (!isSuccessful)
+            {
+                await _userNotifier.ShowErrorMessageAsync("Failure", @"Unable to set new disarm щт discharge threshold calibration value.
+Is value in a valid range?");
             }
         }
 

@@ -12,18 +12,14 @@
 void EEPROM_Format(void)
 {
 	/* Writing constant header*/
-#pragma pack(push, 1)
 	EEPROMConstantHeaderStruct constantHeader;
-#pragma pack(pop)
 
 	constantHeader.Version = YHL_EEPROM_DATA_VERSION;
 	constantHeader.HeaderAddress = sizeof(EEPROMConstantHeaderStruct); /* Main header goes immediately after constant header */
 	EEPROM_WriteConstantHeader(&constantHeader);
 
 	/* Writing main header */
-#pragma pack(push, 1)
 	EEPROMHeaderStruct defaultHeader;
-#pragma pack(pop)
 
 	/* Fox name */
 	/* Random digits to add to fox name */
@@ -68,13 +64,16 @@ void EEPROM_Format(void)
 	/* RTC calibration */
 	defaultHeader.RTCCalibrationValue = YHL_DEFAULT_RTC_CALIBRATION_VALUE;
 
+	/* Disarm battery percent */
+	defaultHeader.DisarmBatteryPercent = YHL_DEFAULT_DISARM_BATTERY_PERCENT;
+
 	defaultHeader.CRCSum = 0;
 	EEPROM_WriteHeader(&defaultHeader, constantHeader.HeaderAddress);
 
+	EEPROM_ReadHeader(&defaultHeader, constantHeader.HeaderAddress);
+
 	/* Regenerating default profile */
-#pragma pack(push, 1)
 	EEPROMProfileStruct profile = EEPROM_GenerateDefaultProfile();
-#pragma pack(pop)
 	EEPROM_WriteProfile(&profile, defaultHeader.ProfilesAddresses[defaultHeader.ProfileInUse]);
 
 	/* Renaming bluetooth device because name was changed */
@@ -109,6 +108,7 @@ void EEPROM_WriteHeader(EEPROMHeaderStruct* header, uint16_t address)
 	/* Calculating CRC for header with CRCSum = 0 */
 	header->CRCSum = 0;
 	header->CRCSum = L2HAL_CRC_Calculate(&CRC_Context, (uint8_t*)header, sizeof(EEPROMHeaderStruct));
+
 	L2HAL_24x_WriteData(&EEPROMContext, address, (uint8_t*)header, sizeof(EEPROMHeaderStruct));
 }
 
@@ -148,10 +148,7 @@ void EEPROM_Init(void)
 	{
 		uint16_t profileAddress = EEPROM_Header.ProfilesAddresses[profileIndex];
 
-#pragma pack(push, 1)
 		EEPROMProfileStruct profile;
-#pragma pack(pop)
-
 		EEPROM_ReadProfile(&profile, profileAddress);
 		if (!EEPROM_CheckProfile(&profile))
 		{
@@ -228,10 +225,7 @@ void EEPROM_WriteProfile(EEPROMProfileStruct* profile, uint16_t address)
 
 EEPROMProfileStruct EEPROM_GenerateDefaultProfile(void)
 {
-#pragma pack(push, 1)
 	EEPROMProfileStruct result;
-#pragma pack(pop)
-
 	snprintf(result.Name, YHL_PROFILE_NAME_MEMORY_SIZE, YHL_DEFAULT_PROFILE_NAME);
 
 	result.Frequency.Is144MHz = false;
@@ -319,9 +313,7 @@ void EEPROM_AddProfile(void)
 		SelfDiagnostics_HaltOnFailure(YhlFailureCause_TooManyProfiles);
 	}
 
-#pragma pack(push, 1)
 	EEPROMProfileStruct newProfile = EEPROM_GenerateDefaultProfile();
-#pragma pack(pop)
 
 	uint16_t newProfileAddress = EEPROM_Header.ProfilesAddresses[EEPROM_Header.NumberOfProfiles - 1] + sizeof(EEPROMProfileStruct);
 	EEPROM_WriteProfile(&newProfile, newProfileAddress);

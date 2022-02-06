@@ -201,6 +201,7 @@ typedef struct
 	 */
 	volatile uint32_t FrequencyHz;
 }
+__attribute__((packed))
 FoxFrequencyStruct;
 
 /**
@@ -223,6 +224,7 @@ typedef struct
 	 */
 	volatile uint32_t PauseTime;
 }
+__attribute__((packed))
 FoxCycleStruct;
 
 /**
@@ -411,6 +413,11 @@ typedef struct
 	 * When executing "Set RTC calibration value" command new value is stored here
 	 */
 	uint8_t SetThisRTCCalibrationValue;
+
+	/**
+	 * When executing "Set disarm on discharge value" command new value is stored here
+	 */
+	float SetThisDisarmOnDischargeValue;
 }
 ServiceSettingsStruct;
 

@@ -333,6 +333,16 @@ void OnNewCommandToFox(uint8_t payloadSize, uint8_t* payload)
 			/* Set RTC calibration value */
 			OnSetRTCCalibrationValue(payloadSize, payload);
 			break;
+
+		case GetDisarmOnDischargeValue:
+			/* Get disarm-on-discharge value */
+			OnGetDisarmOnDischargeValue(payloadSize, payload);
+			break;
+
+		case SetDisarmOnDischargeValue:
+			/* Set disarm-on-discharge value */
+			OnSetDisarmOnDischargeValue(payloadSize, payload);
+			break;
 	}
 }
 
@@ -1651,6 +1661,39 @@ void OnSetRTCCalibrationValue(uint8_t payloadSize, uint8_t* payload)
 	{
 		uint8_t result = YHL_PACKET_PROCESSOR_FAILURE;
 		SendResponse(SetRTCCalibrationValue, 1, &result);
+		return;
+	}
+}
+
+void OnGetDisarmOnDischargeValue(uint8_t payloadSize, uint8_t* payload)
+{
+	if (payloadSize != 1)
+	{
+		return;
+	}
+
+	uint8_t response[4];
+	memcpy(&response[0], &EEPROM_Header.DisarmBatteryPercent, 4);
+
+	SendResponse(GetDisarmOnDischargeValue, 4, response);
+}
+
+void OnSetDisarmOnDischargeValue(uint8_t payloadSize, uint8_t* payload)
+{
+	if (payloadSize != 5)
+	{
+		return;
+	}
+
+	float newValue;
+	memcpy(&newValue, &payload[1], 4);
+
+	bool isValid = FoxState_SetDisarmOnDischargeValue(newValue);
+
+	if (!isValid)
+	{
+		uint8_t result = YHL_PACKET_PROCESSOR_FAILURE;
+		SendResponse(SetDisarmOnDischargeValue, 1, &result);
 		return;
 	}
 }

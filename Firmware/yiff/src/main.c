@@ -78,7 +78,6 @@ int main(int argc, char* argv[])
 	CRC_Context = L2HAL_CRC_Init();
 
 	/* Connecting to EEPROM */
-	/* 24C256 at A0h. Page size is no more than 8! Address overflow otherwise */
 	EEPROMContext = L2HAL_24x_DetectEepromAtAddress(&I2C_Other, YHL_EEPROM_ADDRESS, true, YHL_EEPROM_PAGE_SIZE);
 	if (!EEPROMContext.IsFound)
 	{
@@ -213,6 +212,7 @@ void Main_ProcessHighPriorityEvents(void)
 	Main_ProcessForceTx();
 	Main_ReturnFromForceTx();
 	Main_SetRTCCalibrationValue();
+	Main_SetDisarmOnDischargeValue();
 }
 
 void Main_ProcessFoxNameChange(void)
@@ -637,9 +637,34 @@ void Main_SetRTCCalibrationValue(void)
 	}
 }
 
+void Main_SetDisarmOnDischargeValue(void)
+{
+	if (PendingCommandsFlags.NeedToSetDisarmOnDischargeValue)
+	{
+		EEPROM_Header.DisarmBatteryPercent = FoxState.ServiceSettings.SetThisDisarmOnDischargeValue;
+		EEPROM_UpdateHeader();
+
+		uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
+		SendResponse(SetDisarmOnDischargeValue, 1, &response);
+
+		PendingCommandsFlags.NeedToSetDisarmOnDischargeValue = false;
+	}
+}
+
 void Main_MeasureBatteryLevel(void)
 {
 	FoxState.BatteryLevel = HAL_GetBatteryLevel();
+
+	/* If fox is armed and the battery got discharged we have to disarm fox */
+	/* Do not do it in deepsleep, because ADC is stopped there */
+	if (FoxState.Sleepmodes.Mode != SleepmodeDeepSleep
+		&&
+		FoxState.GlobalState.IsArmed
+		&&
+		FoxState.BatteryLevel <= EEPROM_Header.DisarmBatteryPercent)
+	{
+		GSM_Disarm();
+	}
 }
 
 void Main_OnLeftButtonPressedInterrupt(void)

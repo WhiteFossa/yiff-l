@@ -164,6 +164,11 @@ typedef struct
 	 * If true, then we need to set RTC calibration value
 	 */
 	bool NeedToSetRTCCalibrationValue;
+
+	/**
+	 * If true, then we need to set disarm-on-discharge value
+	 */
+	bool NeedToSetDisarmOnDischargeValue;
 }
 PendingCommandsFlagsStruct;
 

@@ -147,4 +147,9 @@ bool FoxState_SetUantADCToUantVoltsFactors(bool reset, float a, float b);
  */
 bool FoxState_SetRTCCalibrationValue(uint8_t calibrationValue);
 
+/**
+ * Checks new disarm-on-discharge value and if successful marks it to write into EEPROM.
+ */
+bool FoxState_SetDisarmOnDischargeValue(float newValue);
+
 #endif /* INCLUDE_FOXSTATUS_H_ */
