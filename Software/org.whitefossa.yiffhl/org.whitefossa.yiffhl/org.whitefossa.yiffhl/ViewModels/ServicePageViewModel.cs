@@ -399,6 +399,26 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         public ICommand SetRTCCalibrationValueCommand { get; }
 
+        /// <summary>
+        /// Disarm on discharge threshold
+        /// </summary>
+        private string _disarmOnDischargeThresholdAsString;
+
+        public string DisarmOnDischargeThresholdAsString
+        {
+            get => _disarmOnDischargeThresholdAsString;
+            set
+            {
+                _disarmOnDischargeThresholdAsString = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Get disarm on discharge threshold command
+        /// </summary>
+        public ICommand GetDisarmOnDischargeThresholdCommand { get; }
+
         public ServicePageViewModel()
         {
 
@@ -438,6 +458,8 @@ namespace org.whitefossa.yiffhl.ViewModels
 
             GetRTCCalibrationValueCommand = new Command(async() => await OnGetRTCCalibrationValueAsync());
             SetRTCCalibrationValueCommand = new Command(async() => await OnSetRTCCalibrationValueAsync());
+
+            GetDisarmOnDischargeThresholdCommand = new Command(async () => await OnGetDisarmOnDischargeThresholdAsync());
 
             // Setting up poll service data timer
             PollServiceDataTimer = new Timer(PollServiceDataInterval);
@@ -989,6 +1011,22 @@ namespace org.whitefossa.yiffhl.ViewModels
             {
                 await _userNotifier.ShowErrorMessageAsync("Failure", "Unable to set new RTC calibration value.\nIs value in a valid range?");
             }
+        }
+
+        #endregion
+
+        #region Get disarm on discharge threshold
+
+        private async Task OnGetDisarmOnDischargeThresholdAsync()
+        {
+            await _serviceCommandsManager.GetDisarmOnDischargeThresholdAsync(async (v) => await OnGetDisarmOnDischargeThresholdResponseAsync(v));
+        }
+
+        private async Task OnGetDisarmOnDischargeThresholdResponseAsync(float value)
+        {
+            _mainModel.ServiceSettingsModel.DisarmOnDischargeThreshold = value;
+
+            DisarmOnDischargeThresholdAsString = (_mainModel.ServiceSettingsModel.DisarmOnDischargeThreshold * 100).ToString();
         }
 
         #endregion

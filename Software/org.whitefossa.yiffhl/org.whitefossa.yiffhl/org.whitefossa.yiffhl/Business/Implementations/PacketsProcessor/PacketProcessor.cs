@@ -89,6 +89,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
         private OnResponseDelegate _onReturnToNormalTxResponse;
         private OnResponseDelegate _onGetRTCCalibrationValueResponse;
         private OnResponseDelegate _onSetRTCCalibrationValueResponse;
+        private OnResponseDelegate _onGetDisarmOnDischargeThresholdResponse;
 
         #endregion
 
@@ -675,6 +676,13 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
                         _onSetRTCCalibrationValueResponse(responsePayload);
                         break;
 
+                    // Get disarm-on-discharge threshold
+                    case CommandType.GetDisarmOnDischargeThreshold:
+                        CheckOnResponseDelegate(_onGetDisarmOnDischargeThresholdResponse);
+
+                        _onGetDisarmOnDischargeThresholdResponse(responsePayload);
+                        break;
+
                     default:
                         return; // We've got some junk
                 }
@@ -1103,6 +1111,12 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
         {
             _onSetRTCCalibrationValueResponse = onSetRTCCalibrationValueResponse
                 ?? throw new ArgumentNullException(nameof(onSetRTCCalibrationValueResponse));
+        }
+
+        public void SetOnGetDisarmOnDischargeThresholdResponse(OnResponseDelegate onGetDisarmOnDischargeThresholdResponse)
+        {
+            _onGetDisarmOnDischargeThresholdResponse = onGetDisarmOnDischargeThresholdResponse
+                ?? throw new ArgumentNullException(nameof(onGetDisarmOnDischargeThresholdResponse));
         }
     }
 }

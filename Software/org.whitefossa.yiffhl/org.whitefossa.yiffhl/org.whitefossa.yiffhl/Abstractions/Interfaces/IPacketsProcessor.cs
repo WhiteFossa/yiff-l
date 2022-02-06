@@ -101,6 +101,7 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
         void SetOnReturnToNormalTxResponse(OnResponseDelegate onReturnToNormalTxResponse);
         void SetOnGetRTCCalibrationValueResponse(OnResponseDelegate onGetRTCCalibrationValueResponse);
         void SetOnSetRTCCalibrationValueResponse(OnResponseDelegate onSetRTCCalibrationValueResponse);
+        void SetOnGetDisarmOnDischargeThresholdResponse(OnResponseDelegate onGetDisarmOnDischargeThresholdResponse);
 
         #endregion
 

@@ -45,6 +45,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private readonly IGetRTCCalibrationValueCommand _getRTCCalibrationValueCommand;
         private readonly ISetRTCCalibrationValueCommand _setRTCCalibrationValueCommand;
 
+        private readonly IGetDisarmOnDischargeThresholdCommand _getDisarmOnDischargeThresholdCommand;
+
         #endregion
 
         private Abstractions.Interfaces.OnGetLastErrorCodeDelegate _onGetLastErrorCode;
@@ -87,6 +89,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private OnGetRTCCalibrationValueDelegate _onGetRTCCalibrationValue;
         private OnSetRTCCalibrationValueDelegate _onSetRTCCalibrationValue;
 
+        private OnGetDisarmOnDischargeThresholdDelegate _onGetDisarmOnDischargeThreshold;
+
         public ServiceCommandsManager(IGetLastErrorCodeCommand getLastErrorCodeCommand,
             IResetLastErrorCodeCommand resetLastErrorCodeCommand,
             IUpdateSerialNumberCommand updateSerialNumberCommand,
@@ -109,7 +113,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             IForceTxOnCommand forceTxOnCommand,
             IReturnToNormalTxCommand returnToNormalTxCommand,
             IGetRTCCalibrationValueCommand getRTCCalibrationValueCommand,
-            ISetRTCCalibrationValueCommand setRTCCalibrationValueCommand)
+            ISetRTCCalibrationValueCommand setRTCCalibrationValueCommand,
+            IGetDisarmOnDischargeThresholdCommand getDisarmOnDischargeThresholdCommand)
         {
             _getLastErrorCodeCommand = getLastErrorCodeCommand;
             _resetLastErrorCodeCommand = resetLastErrorCodeCommand;
@@ -134,6 +139,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _returnToNormalTxCommand = returnToNormalTxCommand;
             _getRTCCalibrationValueCommand = getRTCCalibrationValueCommand;
             _setRTCCalibrationValueCommand = setRTCCalibrationValueCommand;
+            _getDisarmOnDischargeThresholdCommand = getDisarmOnDischargeThresholdCommand;
         }
 
         #region Get last error code
@@ -658,6 +664,23 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private void OnSetRTCCalibrationValueResponse(bool isSuccessful)
         {
             _onSetRTCCalibrationValue(isSuccessful);
+        }
+
+        #endregion
+
+        #region Get disarm on discharge threshold
+
+        public async Task GetDisarmOnDischargeThresholdAsync(OnGetDisarmOnDischargeThresholdDelegate onGetDisarmOnDischargeThreshold)
+        {
+            _onGetDisarmOnDischargeThreshold = onGetDisarmOnDischargeThreshold ?? throw new ArgumentNullException();
+
+            _getDisarmOnDischargeThresholdCommand.SetResponseDelegate(OnGetDisarmOnDischargeThresholdResponse);
+            _getDisarmOnDischargeThresholdCommand.SendGetDisarmOnDischargeThreshold();
+        }
+
+        private void OnGetDisarmOnDischargeThresholdResponse(float threshold)
+        {
+            _onGetDisarmOnDischargeThreshold(threshold);
         }
 
         #endregion

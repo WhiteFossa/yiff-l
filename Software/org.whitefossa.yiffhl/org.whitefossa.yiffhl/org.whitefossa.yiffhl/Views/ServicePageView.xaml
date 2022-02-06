@@ -602,6 +602,53 @@
 
                 <!-- End of RTC calibration -->
 
+                <!-- Disarm on discharge -->
+
+                <Frame
+                    Style="{StaticResource FramesStyle}">
+
+                    <StackLayout>
+                        <Label
+                            Text="Disarm on discharge"
+                            HorizontalOptions="Center" />
+
+                        <StackLayout
+                            Orientation="Horizontal">
+
+                            <Label
+                                Text="Disarm threshold:"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center" />
+
+                            <Editor
+                                Keyboard="Numeric"
+                                HorizontalOptions="FillAndExpand"
+                                VerticalOptions="Center"
+                                Text="{Binding DisarmOnDischargeThresholdAsString}" />
+
+                            <Label
+                                Text="%"
+                                HorizontalOptions="End"
+                                VerticalOptions="Center" />
+
+                            <Button
+                                Text="Get"
+                                VerticalOptions="Center"
+                                HorizontalOptions="End"
+                                Command="{Binding GetDisarmOnDischargeThresholdCommand}" />
+
+                            <Button
+                                Text="Set"
+                                VerticalOptions="Center"
+                                HorizontalOptions="End"
+                                Command="{Binding SetDisarmOnDischargeThresholdCommand}" />
+                        </StackLayout>
+
+                    </StackLayout>
+                </Frame>
+
+                <!-- End of disarm on discharge -->
+
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>

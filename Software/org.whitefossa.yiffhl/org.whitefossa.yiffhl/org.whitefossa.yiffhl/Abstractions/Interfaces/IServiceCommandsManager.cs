@@ -43,6 +43,8 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
     public delegate void OnGetRTCCalibrationValueDelegate(uint value);
     public delegate void OnSetRTCCalibrationValueDelegate(bool isSuccessful);
 
+    public delegate void OnGetDisarmOnDischargeThresholdDelegate(float threshold);
+
     public interface IServiceCommandsManager
     {
         Task GetLastErrorCodeAsync(OnGetLastErrorCodeDelegate onGetLastErrorCode);
@@ -85,5 +87,7 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
 
         Task GetRTCCalibrationValueAsync(OnGetRTCCalibrationValueDelegate onGetRTCCalibrationValue);
         Task SetRTCCalibrationValueAsync(uint newValue, OnSetRTCCalibrationValueDelegate onSetRTCCalibrationValue);
+
+        Task GetDisarmOnDischargeThresholdAsync(OnGetDisarmOnDischargeThresholdDelegate onGetDisarmOnDischargeThreshold);
     }
 }
