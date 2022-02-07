@@ -147,20 +147,57 @@ L2HAL_24x_ContextStruct L2HAL_24x_DetectEepromAtAddress(I2C_HandleTypeDef* i2CHa
 /**
  * Read data from EEPROM into given destination.
  * @param context Pointer to driver context
- * @param address Read data starting from this EEPROM address
+ * @param eepromAddress Read data starting from this EEPROM address
  * @param destination Put read data here
  * @param size How much bytes to read
  */
-void L2HAL_24x_ReadData(L2HAL_24x_ContextStruct* context, uint16_t address, uint8_t* destination, uint16_t size);
+void L2HAL_24x_ReadData(L2HAL_24x_ContextStruct* context, uint16_t eepromAddress, uint8_t* destination, uint16_t size);
 
 /**
  * Write data from source into EEPROM. Writes byte-by-byte, slow but no problems with pages
  * @param context Pointer to driver context
- * @param address Write data starting from this EEPROM address
+ * @param eepromAddress Write data starting from this EEPROM address
  * @param destination Get data to write from here
  * @param size How much bytes to write
  */
-void L2HAL_24x_WriteData(L2HAL_24x_ContextStruct* context, uint16_t address, uint8_t* source, uint16_t size);
+void L2HAL_24x_WriteData(L2HAL_24x_ContextStruct* context, uint16_t eepromAddress, uint8_t* source, uint16_t size);
 
+
+/*************************
+* Private stuff is below *
+**************************/
+
+/**
+ * Determines page number by EEPROM address
+ * @param context Pointer to driver context
+ * @param eepromAddress EEPROM address
+ * @return Page number
+ */
+uint16_t L2HAL_24x_GetPageNumber(L2HAL_24x_ContextStruct* context, uint16_t eepromAddress);
+
+/**
+ * Returns address of page's first byte
+ * @param context Pointer to driver context
+ * @param pageNumber Page number
+ * @return Page's first byte EEPROM address
+ */
+uint16_t L2HAL_24x_GetPageStartAddress(L2HAL_24x_ContextStruct* context, uint16_t pageNumber);
+
+/**
+ * Returns address of page's last byte
+ * @param context Pointer to driver context
+ * @param pageNumber Page number
+ * @return Page's last byte EEPROM address
+ */
+uint16_t L2HAL_24x_GetPageEndAddress(L2HAL_24x_ContextStruct* context, uint16_t pageNumber);
+
+/**
+ * Writes data within one page, causing L2HAL_Error(Generic) if interpage write going to occur.
+ * @param context Pointer to driver context
+ * @param eepromAddress EEPROM address of first byte, pointed by dataPtr
+ * @param dataPtr Pointer to first byte of data
+ * @param size Amount of data to write
+ */
+void L2HAL_24x_PageWrite(L2HAL_24x_ContextStruct* context, uint16_t eepromAddress, uint8_t* dataPtr, uint16_t size);
 
 #endif /* L2HAL_DRIVERS_EEPROM_24X_INCLUDE_L2HAL_24X_H_ */
