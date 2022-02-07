@@ -41,7 +41,7 @@
  * EEPROM-related stuff
  */
 #define YHL_EEPROM_ADDRESS 0xA0
-#define YHL_EEPROM_PAGE_SIZE 1 /* Strange. Random errors if page size is bigger */
+#define YHL_EEPROM_PAGE_SIZE 64
 
 /**
  * Pause to let response to be transmitted before terminating bluetooth connection

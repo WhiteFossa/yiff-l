@@ -64,11 +64,11 @@ L2HAL_24x_ContextStruct L2HAL_24x_DetectEepromAtAddress(I2C_HandleTypeDef* i2CHa
 	return context;
 }
 
-void L2HAL_24x_ReadData(L2HAL_24x_ContextStruct* context, uint16_t address, uint8_t* destination, uint16_t size)
+void L2HAL_24x_ReadData(L2HAL_24x_ContextStruct* context, uint16_t eepromAddress, uint8_t* destination, uint16_t size)
 {
 	if (HAL_OK != HAL_I2C_Mem_Read(context->I2CHandle,
 			context->BusAddress,
-			address,
+			eepromAddress,
 			context->MemAddressSize,
 			destination,
 			size,
@@ -78,41 +78,84 @@ void L2HAL_24x_ReadData(L2HAL_24x_ContextStruct* context, uint16_t address, uint
 	}
 }
 
-void L2HAL_24x_WriteData(L2HAL_24x_ContextStruct* context, uint16_t address, uint8_t* source, uint16_t size)
+uint16_t L2HAL_24x_GetPageNumber(L2HAL_24x_ContextStruct* context, uint16_t eepromAddress)
 {
-	uint16_t remainToWrite = size;
-	uint16_t startAddress = address;
-	uint8_t* sourcePartPtr = source;
+	return eepromAddress / context->WritePageSize;
+}
 
-	while(remainToWrite > 0)
+uint16_t L2HAL_24x_GetPageStartAddress(L2HAL_24x_ContextStruct* context, uint16_t pageNumber)
+{
+	return context->WritePageSize * pageNumber;
+}
+
+uint16_t L2HAL_24x_GetPageEndAddress(L2HAL_24x_ContextStruct* context, uint16_t pageNumber)
+{
+	return L2HAL_24x_GetPageStartAddress(context, pageNumber + 1) - 1;
+}
+
+void L2HAL_24x_PageWrite(L2HAL_24x_ContextStruct* context, uint16_t eepromAddress, uint8_t* dataPtr, uint16_t size)
+{
+	if (0 == size)
 	{
-		uint16_t writeSize;
-		if (remainToWrite >= context->WritePageSize)
+		L2HAL_Error(Generic);
+	}
+
+	uint16_t startPageNumber = L2HAL_24x_GetPageNumber(context, eepromAddress);
+	uint16_t endPageNumber = L2HAL_24x_GetPageNumber(context, eepromAddress + size - 1);
+
+	if (startPageNumber != endPageNumber)
+	{
+		/* Interpage write attempt */
+		L2HAL_Error(Generic);
+	}
+
+	if (HAL_OK != HAL_I2C_Mem_Write(context->I2CHandle,
+			context->BusAddress,
+			eepromAddress,
+			context->MemAddressSize,
+			dataPtr,
+			size,
+			L2HAL_24X_BUS_TIMEOUT))
+	{
+		L2HAL_Error(Generic);
+	}
+
+	/* Time to write data */
+	HAL_Delay(L2HAL_24X_INTERWRITE_PAUSE);
+}
+
+void L2HAL_24x_WriteData(L2HAL_24x_ContextStruct* context, uint16_t eepromAddress, uint8_t* source, uint16_t size)
+{
+	uint16_t currentEEPROMAddress = eepromAddress;
+	uint16_t remainsToWrite = size;
+	uint8_t* currentSourcePtr = source;
+
+	while(remainsToWrite > 0)
+	{
+		uint16_t currentPageNumber = L2HAL_24x_GetPageNumber(context, currentEEPROMAddress);
+		uint16_t endPageAddress = L2HAL_24x_GetPageEndAddress(context, currentPageNumber);
+
+		uint16_t startAddressInPage = currentEEPROMAddress;
+
+		uint16_t endAddressInPage;
+		uint16_t writeAmount;
+		if (startAddressInPage + remainsToWrite > endPageAddress)
 		{
-			writeSize = context->WritePageSize;
+			/* Will be more pages, writing current page till the end */
+			endAddressInPage = endPageAddress;
+			writeAmount = endAddressInPage - startAddressInPage + 1;
 		}
 		else
 		{
-			writeSize = remainToWrite;
+			/* Current page is the last one */
+			endAddressInPage = startAddressInPage + remainsToWrite;
+			writeAmount = remainsToWrite;
 		}
 
-		if (HAL_OK != HAL_I2C_Mem_Write(context->I2CHandle,
-				context->BusAddress,
-				startAddress,
-				context->MemAddressSize,
-				sourcePartPtr,
-				writeSize,
-				L2HAL_24X_BUS_TIMEOUT))
-		{
-			L2HAL_Error(Generic);
-		}
+		L2HAL_24x_PageWrite(context, startAddressInPage, currentSourcePtr, writeAmount);
 
-		remainToWrite = (uint16_t)(remainToWrite - writeSize);
-		startAddress = (uint16_t)(startAddress + writeSize);
-		sourcePartPtr += writeSize;
-
-
-		/* Time to write data */
-		HAL_Delay(L2HAL_24X_INTERWRITE_PAUSE);
+		currentSourcePtr += writeAmount;
+		currentEEPROMAddress += writeAmount;
+		remainsToWrite -= writeAmount;
 	}
 }
