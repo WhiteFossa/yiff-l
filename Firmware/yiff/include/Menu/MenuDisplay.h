@@ -170,6 +170,11 @@ void MenuDisplay_EncoderClickHandler(void);
  */
 void MenuDisplay_EncoderRotationHandler(int8_t direction);
 
+/**
+ * Call this to exit menu display
+ */
+void MenuDisplay_ExitMenuDisplay(void);
+
 
 
 #endif /* INCLUDE_MENUDISPLAY_H_ */

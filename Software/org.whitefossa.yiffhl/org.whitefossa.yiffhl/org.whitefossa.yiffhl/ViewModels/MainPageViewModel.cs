@@ -881,7 +881,7 @@ namespace org.whitefossa.yiffhl.ViewModels
 
             _packetsProcessor.RegisterOnEnteringSleepmodeEventHandler(MainModel.OnEnteringSleepmode);
 
-            // Setting up events generato events handlers
+            // Setting up events generator events handlers
             _eventsGenerator.RegisterOnShowMatchingDisplayHandler(NavigateToMatchingPage);
 
             MainModel.OnFoxArmed += async () => await OnFoxArmedAsync();
@@ -1060,6 +1060,7 @@ namespace org.whitefossa.yiffhl.ViewModels
         {
             #region Notifying controls
 
+            OnPropertyChanged(nameof(IsFoxArmedFormatted));
             OnPropertyChanged(nameof(IsArmButtonEnabled));
             OnPropertyChanged(nameof(IsDisarmButtonEnabled));
             OnPropertyChanged(nameof(IsSettingsControlsEnabled));
@@ -1384,6 +1385,7 @@ Do you want to continue?");
             OnPropertyChanged(nameof(FoxRangeFormatted));
             OnPropertyChanged(nameof(FrequencyFormatted));
             OnPropertyChanged(nameof(PowerFormatted));
+            OnPropertyChanged(nameof(IsPowerControlsEnabled));
         }
 
         #endregion
