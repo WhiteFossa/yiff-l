@@ -147,20 +147,24 @@ void MenuDisplay_GoToParentNode(void)
 	if (NULL == parent)
 	{
 		/* Exiting menu */
-		FoxState.CurrentDisplay = StatusDisplay;
-		Main_SetDefaultButtonsActions();
-
-		if (FoxState.SupressDrawing)
-		{
-			return;
-		}
-
-		FMGL_API_ClearScreen(&fmglContext);
-		return;
+		MenuDisplay_ExitMenuDisplay();
 	}
 
 	MenuDisplay_SwitchNode(parent);
 	MenuDisplay_DrawMenuDisplay();
+}
+
+void MenuDisplay_ExitMenuDisplay(void)
+{
+	FoxState.CurrentDisplay = StatusDisplay;
+	Main_SetDefaultButtonsActions();
+
+	if (FoxState.SupressDrawing)
+	{
+		return;
+	}
+
+	FMGL_API_ClearScreen(&fmglContext);
 }
 
 void MenuDisplay_DrawMenuDisplay(void)
@@ -891,6 +895,8 @@ void MenuDisplay_Arm(void)
 		InformationPopup_Show("Service mode!", "Fox in service TX!", MenuDisplay);
 		return;
 	}
+
+	MenuDisplay_ExitMenuDisplay();
 
 	PendingCommandsFlags.NeedToArmFoxByHandpaws = true;
 }
