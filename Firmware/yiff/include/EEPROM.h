@@ -116,7 +116,17 @@ typedef struct
 	/**
 	 * EEPROM version, bump each time when EEPROM structure changes
 	 */
-	volatile uint16_t Version;
+	volatile uint16_t EEPROMVersion;
+
+	/**
+	 * Hardware revision, needed by the bootloader
+	 */
+	volatile uint16_t HardwareRevision;
+
+	/**
+	 * Firmware version, needed by the bootloader
+	 */
+	volatile uint16_t FirmwareVersion;
 
 	/**
 	 * Absolute address of main header
@@ -191,16 +201,6 @@ typedef struct
 	 * Code of last failure
 	 */
 	volatile YhlFailureCausesEnum LastFailure;
-
-	/**
-	 * Fox hardware revision
-	 */
-	volatile uint16_t HardwareRevision;
-
-	/**
-	 * Fox software version
-	 */
-	volatile uint16_t SoftwareVersion;
 
 	/**
 	 * Device serial number

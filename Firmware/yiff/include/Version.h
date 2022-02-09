@@ -26,7 +26,7 @@
 /**
  * Firmware version
  */
-#define YHL_VER_SOFTWARE_VERSION 8U
+#define YHL_VER_FIRMWARE_VERSION 8U
 
 
 #endif /* INCLUDE_VERSION_H_ */

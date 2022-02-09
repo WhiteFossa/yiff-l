@@ -14,7 +14,10 @@ void EEPROM_Format(void)
 	/* Writing constant header*/
 	EEPROMConstantHeaderStruct constantHeader;
 
-	constantHeader.Version = YHL_EEPROM_DATA_VERSION;
+	constantHeader.EEPROMVersion = YHL_EEPROM_DATA_VERSION;
+	constantHeader.HardwareRevision = YHL_VER_HARDWARE_REVISION;
+	constantHeader.FirmwareVersion = YHL_VER_FIRMWARE_VERSION;
+
 	constantHeader.HeaderAddress = sizeof(EEPROMConstantHeaderStruct); /* Main header goes immediately after constant header */
 	EEPROM_WriteConstantHeader(&constantHeader);
 
@@ -56,9 +59,7 @@ void EEPROM_Format(void)
 	/* No failure after format */
 	defaultHeader.LastFailure = YhlFailureCause_OK;
 
-	/* Fox version information */
-	defaultHeader.HardwareRevision = YHL_VER_HARDWARE_REVISION;
-	defaultHeader.SoftwareVersion = YHL_VER_SOFTWARE_VERSION;
+	/* Serial number */
 	defaultHeader.SerialNumber = Rand_GetRandom();
 
 	/* RTC calibration */
@@ -192,7 +193,7 @@ bool EEPROM_InitHeaders(void)
 	FoxState.IsEEPROMHeadersInitialized = true;
 
 	/* Checking did we have a firmware update */
-	if (EEPROM_Header.SoftwareVersion != YHL_VER_SOFTWARE_VERSION)
+	if (EEPROM_ConstantHeader.FirmwareVersion != YHL_VER_FIRMWARE_VERSION)
 	{
 		EEPROM_OnSoftwareUpdate();
 	}
@@ -372,6 +373,6 @@ void EEPROM_UpdateCurrentProfile()
 void EEPROM_OnSoftwareUpdate(void)
 {
 	/* Finally updating firmware version in EEPROM */
-	EEPROM_Header.SoftwareVersion = YHL_VER_SOFTWARE_VERSION;
-	EEPROM_WriteHeader(&EEPROM_Header, EEPROM_ConstantHeader.HeaderAddress);
+	EEPROM_ConstantHeader.FirmwareVersion = YHL_VER_FIRMWARE_VERSION;
+	EEPROM_WriteConstantHeader(&EEPROM_ConstantHeader);
 }

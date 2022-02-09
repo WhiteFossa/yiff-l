@@ -1175,11 +1175,11 @@ void OnGetIdentificationData(uint8_t payloadSize, uint8_t* payload)
 	memcpy(&response[4], &tmp16, 2);
 
 	/* Hardware revision */
-	tmp16 = EEPROM_Header.HardwareRevision;
+	tmp16 = EEPROM_ConstantHeader.HardwareRevision;
 	memcpy(&response[6], &tmp16, 2);
 
 	/* Software version */
-	tmp16 = EEPROM_Header.SoftwareVersion;
+	tmp16 = EEPROM_ConstantHeader.FirmwareVersion;
 	memcpy(&response[8], &tmp16, 2);
 
 	/* Serial number */
