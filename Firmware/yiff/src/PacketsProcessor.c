@@ -348,15 +348,14 @@ void OnNewCommandToFox(uint8_t payloadSize, uint8_t* payload)
 
 void OnSetDateAndTime(uint8_t payloadSize, uint8_t* payload)
 {
+	if (payloadSize != 8U)
+	{
+		return;
+	}
+
 	bool isValid = true;
 
 	if (FoxState.GlobalState.IsArmed)
-	{
-		isValid = false;
-		goto OnSetDateAndTime_Validate;
-	}
-
-	if (payloadSize != 8U)
 	{
 		isValid = false;
 		goto OnSetDateAndTime_Validate;
@@ -490,19 +489,23 @@ void OnGetName(uint8_t payloadSize, uint8_t* payload)
 
 void OnGetProfilesCount(uint8_t payloadSize, uint8_t* payload)
 {
+	if (payloadSize != 1)
+	{
+		return;
+	}
+
 	uint8_t response = EEPROM_Header.NumberOfProfiles;
 	SendResponse(GetProfilesCount, 1, &response);
 }
 
 void OnGetProfileName(uint8_t payloadSize, uint8_t* payload)
 {
-	bool isValid = true;
-
 	if (payloadSize != 2)
 	{
-		isValid = false;
-		goto OnGetProfileName_Validate;
+		return;
 	}
+
+	bool isValid = true;
 
 	uint8_t profileId = payload[1];
 	if (!EEPROM_IsProfileIdValid(profileId))
@@ -540,16 +543,14 @@ OnGetProfileName_Validate:
 
 void OnAddNewProfile(uint8_t payloadSize, uint8_t* payload)
 {
+	if (payloadSize != 1)
+	{
+		return;
+	}
+
 	bool canWeAdd = true;
 
 	if (FoxState.GlobalState.IsArmed)
-	{
-		canWeAdd = false;
-		goto OnAddNewProfile_Validate;
-	}
-
-
-	if (payloadSize != 1)
 	{
 		canWeAdd = false;
 		goto OnAddNewProfile_Validate;
@@ -587,15 +588,14 @@ void OnGetCurrentProfileId(uint8_t payloadSize, uint8_t* payload)
 
 void OnSwitchProfile(uint8_t payloadSize, uint8_t* payload)
 {
+	if (payloadSize != 2)
+	{
+		return;
+	}
+
 	bool isValid = true;
 
 	if (FoxState.GlobalState.IsArmed)
-	{
-		isValid = false;
-		goto OnSwitchProfile_Validate;
-	}
-
-	if (payloadSize != 2)
 	{
 		isValid = false;
 		goto OnSwitchProfile_Validate;
@@ -676,15 +676,14 @@ void OnGetFrequency(uint8_t payloadSize, uint8_t* payload)
 
 void OnSetFrequency(uint8_t payloadSize, uint8_t* payload)
 {
+	if (payloadSize != 6)
+	{
+		return;
+	}
+
 	bool isValid = true;
 
 	if (FoxState.GlobalState.IsArmed)
-	{
-		isValid = false;
-		goto OnSetFrequency_Validate;
-	}
-
-	if (payloadSize != 6)
 	{
 		isValid = false;
 		goto OnSetFrequency_Validate;
@@ -713,21 +712,25 @@ OnSetFrequency_Validate:
 
 void OnGetCode(uint8_t payloadSize, uint8_t* payload)
 {
+	if (payloadSize != 1)
+	{
+		return;
+	}
+
 	uint8_t response = FoxState.Code;
 	SendResponse(GetCode, 1, &response);
 }
 
 void OnSetCode(uint8_t payloadSize, uint8_t* payload)
 {
+	if (payloadSize != 2)
+	{
+		return;
+	}
+
 	bool isValid = true;
 
 	if (FoxState.GlobalState.IsArmed)
-	{
-		isValid = false;
-		goto OnSetCode_Validate;
-	}
-
-	if (payloadSize != 2)
 	{
 		isValid = false;
 		goto OnSetCode_Validate;
@@ -766,38 +769,31 @@ void OnGetSpeed(uint8_t payloadSize, uint8_t* payload)
 
 void OnSetSpeed(uint8_t payloadSize, uint8_t* payload)
 {
-	bool isValid = true;
+	if (payloadSize != 2)
+	{
+		return;
+	}
 
 	if (FoxState.GlobalState.IsArmed)
 	{
-		isValid = false;
-		goto OnSetSpeed_Validate;
-	}
-
-	if (payloadSize != 2)
-	{
-		isValid = false;
-		goto OnSetSpeed_Validate;
+		goto OnSetSpeed_ValidationFailed;
 	}
 
 	uint8_t speedByte = payload[1];
 
 	if (!IsBool(speedByte))
 	{
-		isValid = false;
-		goto OnSetSpeed_Validate;
+		goto OnSetSpeed_ValidationFailed;
 	}
 
 	FoxState.IsFast = ToBool(speedByte);
 	PendingCommandsFlags.NeedToSetSpeed = true;
+	return;
 
-OnSetSpeed_Validate:
-	if (!isValid)
-	{
-		uint8_t result = YHL_PACKET_PROCESSOR_FAILURE;
-		SendResponse(SetSpeed, 1, &result);
-		return;
-	}
+	uint8_t result;
+OnSetSpeed_ValidationFailed:
+	result = YHL_PACKET_PROCESSOR_FAILURE;
+	SendResponse(SetSpeed, 1, &result);
 }
 
 void OnGetCycle(uint8_t payloadSize, uint8_t* payload)
@@ -822,15 +818,14 @@ void OnGetCycle(uint8_t payloadSize, uint8_t* payload)
 
 void OnSetCycle(uint8_t payloadSize, uint8_t* payload)
 {
+	if (payloadSize != 6)
+	{
+		return;
+	}
+
 	bool isValid = true;
 
 	if (FoxState.GlobalState.IsArmed)
-	{
-		isValid = false;
-		goto OnSetCycle_Validate;
-	}
-
-	if (payloadSize != 6)
 	{
 		isValid = false;
 		goto OnSetCycle_Validate;
@@ -883,15 +878,14 @@ void OnGetEndingToneDuration(uint8_t payloadSize, uint8_t* payload)
 
 void OnSetEndingToneDuration(uint8_t payloadSize, uint8_t* payload)
 {
+	if (payloadSize != 2)
+	{
+		return;
+	}
+
 	bool isValid = true;
 
 	if (FoxState.GlobalState.IsArmed)
-	{
-		isValid = false;
-		goto OnSetEndingToneDuration_Validate;
-	}
-
-	if (payloadSize != 2)
 	{
 		isValid = false;
 		goto OnSetEndingToneDuration_Validate;
@@ -989,15 +983,14 @@ OnDisarmFox_Validate:
 
 void OnSetBeginAndEndTimes(uint8_t payloadSize, uint8_t* payload)
 {
+	if (payloadSize != 9)
+	{
+		return;
+	}
+
 	bool isValid = true;
 
 	if (FoxState.GlobalState.IsArmed)
-	{
-		isValid = false;
-		goto OnSetBeginAndEndTimes_Validate;
-	}
-
-	if (payloadSize != 9)
 	{
 		isValid = false;
 		goto OnSetBeginAndEndTimes_Validate;
@@ -1043,15 +1036,14 @@ void OnGetFoxPower(uint8_t payloadSize, uint8_t* payload)
 
 void OnSetFoxPower(uint8_t payloadSize, uint8_t* payload)
 {
+	if (payloadSize != 5)
+	{
+		return;
+	}
+
 	bool isValid = true;
 
 	if (FoxState.GlobalState.IsArmed)
-	{
-		isValid = false;
-		goto OnSetFoxPower_Validate;
-	}
-
-	if (payloadSize != 5)
 	{
 		isValid = false;
 		goto OnSetFoxPower_Validate;
@@ -1232,13 +1224,12 @@ void OnGetAntennaMatchingStatus(uint8_t payloadSize, uint8_t* payload)
 
 void OnGetAntennaMatchingData(uint8_t payloadSize, uint8_t* payload)
 {
-	bool isValid = true;
-
 	if (payloadSize != 2)
 	{
-		isValid = false;
-		goto OnGetAntennaMatchingData_Validate;
+		return;
 	}
+
+	bool isValid = true;
 
 	uint8_t matcherPosition = payload[1];
 
@@ -1330,18 +1321,14 @@ void OnGetUbattADCToUbattVoltsFactors(uint8_t payloadSize, uint8_t* payload)
 
 void OnSetUbattADCToUbattVoltsFactors(uint8_t payloadSize, uint8_t* payload)
 {
-	bool isValid = true;
-
 	if (payloadSize != 10)
 	{
-		isValid = false;
-		goto OnSetUbattADCToUbattVoltsFactors_Validate;
+		return;
 	}
 
 	if (!IsBool(payload[1]))
 	{
-		isValid = false;
-		goto OnSetUbattADCToUbattVoltsFactors_Validate;
+		goto OnSetUbattADCToUbattVoltsFactors_ValidationFailed;
 	}
 
 	bool isReset = ToBool(payload[1]);
@@ -1353,19 +1340,15 @@ void OnSetUbattADCToUbattVoltsFactors(uint8_t payloadSize, uint8_t* payload)
 	memcpy(&factorB, &payload[6], 4);
 
 	/* Attempt to set */
-	isValid = FoxState_SetUbattADCToUbattVoltsFactors(isReset, factorA, factorB);
-	if (isValid)
+	if(FoxState_SetUbattADCToUbattVoltsFactors(isReset, factorA, factorB))
 	{
 		return;
 	}
 
-OnSetUbattADCToUbattVoltsFactors_Validate:
-	if (!isValid)
-	{
-		uint8_t result = YHL_PACKET_PROCESSOR_FAILURE;
-		SendResponse(SetUbattADCToUbattVoltsFactors, 1, &result);
-		return;
-	}
+	uint8_t result;
+OnSetUbattADCToUbattVoltsFactors_ValidationFailed:
+	result = YHL_PACKET_PROCESSOR_FAILURE;
+	SendResponse(SetUbattADCToUbattVoltsFactors, 1, &result);
 }
 
 void OnGetUbattVoltsToBattLevelFactors(uint8_t payloadSize, uint8_t* payload)
@@ -1384,18 +1367,14 @@ void OnGetUbattVoltsToBattLevelFactors(uint8_t payloadSize, uint8_t* payload)
 
 void OnSetUbattVoltsToBattLevelFactors(uint8_t payloadSize, uint8_t* payload)
 {
-	bool isValid = true;
-
 	if (payloadSize != 10)
 	{
-		isValid = false;
-		goto OnSetUbattVoltsToBattLevelFactors_Validate;
+		return;
 	}
 
 	if (!IsBool(payload[1]))
 	{
-		isValid = false;
-		goto OnSetUbattVoltsToBattLevelFactors_Validate;
+		goto OnSetUbattVoltsToBattLevelFactors_ValidationFailure;
 	}
 
 	bool isReset = ToBool(payload[1]);
@@ -1407,19 +1386,15 @@ void OnSetUbattVoltsToBattLevelFactors(uint8_t payloadSize, uint8_t* payload)
 	memcpy(&factorB, &payload[6], 4);
 
 	/* Attempt to set */
-	isValid = FoxState_SetUbattVoltsToBattLevelFactors(isReset, factorA, factorB);
-	if (isValid)
+	if(FoxState_SetUbattVoltsToBattLevelFactors(isReset, factorA, factorB))
 	{
 		return;
 	}
 
-OnSetUbattVoltsToBattLevelFactors_Validate:
-	if (!isValid)
-	{
-		uint8_t result = YHL_PACKET_PROCESSOR_FAILURE;
-		SendResponse(SetUbattVoltsToBattLevelFactors, 1, &result);
-		return;
-	}
+	uint8_t result;
+OnSetUbattVoltsToBattLevelFactors_ValidationFailure:
+	result = YHL_PACKET_PROCESSOR_FAILURE;
+	SendResponse(SetUbattVoltsToBattLevelFactors, 1, &result);
 }
 
 void OnGetU80mADCtoU80mVoltsFactors(uint8_t payloadSize, uint8_t* payload)
@@ -1438,18 +1413,14 @@ void OnGetU80mADCtoU80mVoltsFactors(uint8_t payloadSize, uint8_t* payload)
 
 void OnSetU80mADCtoU80mVoltsFactors(uint8_t payloadSize, uint8_t* payload)
 {
-	bool isValid = true;
-
 	if (payloadSize != 10)
 	{
-		isValid = false;
-		goto OnSetU80mADCtoU80mVoltsFactors_Validate;
+		return;
 	}
 
 	if (!IsBool(payload[1]))
 	{
-		isValid = false;
-		goto OnSetU80mADCtoU80mVoltsFactors_Validate;
+		goto OnSetU80mADCtoU80mVoltsFactors_ValidationFailure;
 	}
 
 	bool isReset = ToBool(payload[1]);
@@ -1461,19 +1432,15 @@ void OnSetU80mADCtoU80mVoltsFactors(uint8_t payloadSize, uint8_t* payload)
 	memcpy(&factorB, &payload[6], 4);
 
 	/* Attempt to set */
-	isValid = FoxState_SetU80mADCtoU80mVoltsFactors(isReset, factorA, factorB);
-	if (isValid)
+	if (FoxState_SetU80mADCtoU80mVoltsFactors(isReset, factorA, factorB))
 	{
 		return;
 	}
 
-	OnSetU80mADCtoU80mVoltsFactors_Validate:
-	if (!isValid)
-	{
-		uint8_t result = YHL_PACKET_PROCESSOR_FAILURE;
-		SendResponse(SetU80mADCtoU80mVoltsFactors, 1, &result);
-		return;
-	}
+	uint8_t result;
+OnSetU80mADCtoU80mVoltsFactors_ValidationFailure:
+	result = YHL_PACKET_PROCESSOR_FAILURE;
+	SendResponse(SetU80mADCtoU80mVoltsFactors, 1, &result);
 }
 
 void OnGetP80mToU80mFactors(uint8_t payloadSize, uint8_t* payload)
@@ -1492,18 +1459,14 @@ void OnGetP80mToU80mFactors(uint8_t payloadSize, uint8_t* payload)
 
 void OnSetP80mToU80mFactors(uint8_t payloadSize, uint8_t* payload)
 {
-	bool isValid = true;
-
 	if (payloadSize != 10)
 	{
-		isValid = false;
-		goto OnSetP80mToU80mFactors_Validate;
+		goto OnSetP80mToU80mFactors_ValidationFailure;
 	}
 
 	if (!IsBool(payload[1]))
 	{
-		isValid = false;
-		goto OnSetP80mToU80mFactors_Validate;
+		goto OnSetP80mToU80mFactors_ValidationFailure;
 	}
 
 	bool isReset = ToBool(payload[1]);
@@ -1515,19 +1478,15 @@ void OnSetP80mToU80mFactors(uint8_t payloadSize, uint8_t* payload)
 	memcpy(&factorB, &payload[6], 4);
 
 	/* Attempt to set */
-	isValid = FoxState_SetP80mToU80mFactors(isReset, factorA, factorB);
-	if (isValid)
+	if(FoxState_SetP80mToU80mFactors(isReset, factorA, factorB))
 	{
 		return;
 	}
 
-	OnSetP80mToU80mFactors_Validate: // TODO: Refactor validation
-	if (!isValid)
-	{
-		uint8_t result = YHL_PACKET_PROCESSOR_FAILURE;
-		SendResponse(SetP80mToU80mFactors, 1, &result);
-		return;
-	}
+	uint8_t result;
+OnSetP80mToU80mFactors_ValidationFailure:
+	result = YHL_PACKET_PROCESSOR_FAILURE;
+	SendResponse(SetP80mToU80mFactors, 1, &result);
 }
 
 void OnGetUantVolts(uint8_t payloadSize, uint8_t* payload)
@@ -1557,18 +1516,14 @@ void OnGetUantADCToUantVoltsFactors(uint8_t payloadSize, uint8_t* payload)
 
 void OnSetUantADCToUantVoltsFactors(uint8_t payloadSize, uint8_t* payload)
 {
-	bool isValid = true;
-
 	if (payloadSize != 10)
 	{
-		isValid = false;
-		goto OnSetUantADCToUantVoltsFactors_Validate;
+		goto OnSetUantADCToUantVoltsFactors_ValidationFailed;
 	}
 
 	if (!IsBool(payload[1]))
 	{
-		isValid = false;
-		goto OnSetUantADCToUantVoltsFactors_Validate;
+		goto OnSetUantADCToUantVoltsFactors_ValidationFailed;
 	}
 
 	bool isReset = ToBool(payload[1]);
@@ -1580,19 +1535,15 @@ void OnSetUantADCToUantVoltsFactors(uint8_t payloadSize, uint8_t* payload)
 	memcpy(&factorB, &payload[6], 4);
 
 	/* Attempt to set */
-	isValid = FoxState_SetUantADCToUantVoltsFactors(isReset, factorA, factorB);
-	if (isValid)
+	if(FoxState_SetUantADCToUantVoltsFactors(isReset, factorA, factorB))
 	{
 		return;
 	}
 
-	OnSetUantADCToUantVoltsFactors_Validate: // TODO: Refactor validation
-	if (!isValid)
-	{
-		uint8_t result = YHL_PACKET_PROCESSOR_FAILURE;
-		SendResponse(SetUantADCToUantVoltsFactors, 1, &result);
-		return;
-	}
+	uint8_t result;
+OnSetUantADCToUantVoltsFactors_ValidationFailed:
+	result = YHL_PACKET_PROCESSOR_FAILURE;
+	SendResponse(SetUantADCToUantVoltsFactors, 1, &result);
 }
 
 void OnForceTxOn(uint8_t payloadSize, uint8_t* payload)
@@ -1655,14 +1606,13 @@ void OnSetRTCCalibrationValue(uint8_t payloadSize, uint8_t* payload)
 
 	uint8_t calibrationValue = payload[1];
 
-	bool isValid = FoxState_SetRTCCalibrationValue(calibrationValue);
-
-	if (!isValid)
+	if (FoxState_SetRTCCalibrationValue(calibrationValue))
 	{
-		uint8_t result = YHL_PACKET_PROCESSOR_FAILURE;
-		SendResponse(SetRTCCalibrationValue, 1, &result);
 		return;
 	}
+
+	uint8_t result = YHL_PACKET_PROCESSOR_FAILURE;
+	SendResponse(SetRTCCalibrationValue, 1, &result);
 }
 
 void OnGetDisarmOnDischargeValue(uint8_t payloadSize, uint8_t* payload)
@@ -1688,14 +1638,13 @@ void OnSetDisarmOnDischargeValue(uint8_t payloadSize, uint8_t* payload)
 	float newValue;
 	memcpy(&newValue, &payload[1], 4);
 
-	bool isValid = FoxState_SetDisarmOnDischargeValue(newValue);
-
-	if (!isValid)
+	if(FoxState_SetDisarmOnDischargeValue(newValue))
 	{
-		uint8_t result = YHL_PACKET_PROCESSOR_FAILURE;
-		SendResponse(SetDisarmOnDischargeValue, 1, &result);
 		return;
 	}
+
+	uint8_t result = YHL_PACKET_PROCESSOR_FAILURE;
+	SendResponse(SetDisarmOnDischargeValue, 1, &result);
 }
 
 void EmitEnteringSleepmodeEvent(void)
