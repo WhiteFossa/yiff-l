@@ -129,6 +129,11 @@ typedef struct
 	volatile uint16_t FirmwareVersion;
 
 	/**
+	 * If true, then on reset we need to enter bootloader
+	 */
+	volatile bool IsEnterBootloader;
+
+	/**
 	 * Absolute address of main header
 	 */
 	volatile uint16_t HeaderAddress;

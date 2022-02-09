@@ -18,6 +18,8 @@ void EEPROM_Format(void)
 	constantHeader.HardwareRevision = YHL_VER_HARDWARE_REVISION;
 	constantHeader.FirmwareVersion = YHL_VER_FIRMWARE_VERSION;
 
+	constantHeader.IsEnterBootloader = false;
+
 	constantHeader.HeaderAddress = sizeof(EEPROMConstantHeaderStruct); /* Main header goes immediately after constant header */
 	EEPROM_WriteConstantHeader(&constantHeader);
 
