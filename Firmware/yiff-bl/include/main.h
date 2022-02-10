@@ -11,7 +11,8 @@
 #include <stdbool.h>
 #include <stm32f1xx_hal.h>
 #include <Bootloader.h>
-
+#include <l2hal.h>
+#include <GlobalVariables.h>
 
 
 #endif /* INCLUDE_MAIN_H_ */

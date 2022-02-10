@@ -54,6 +54,9 @@ int main(int argc, char* argv[])
 	/* Mandatory for STM32 HAL*/
 	HAL_Init();
 
+	/* Setting up hardware */
+	L2HAL_Init();
+
 //	__HAL_RCC_GPIOC_CLK_ENABLE();
 //
 //	GPIO_InitTypeDef GPIO_InitStruct;
