@@ -48,6 +48,10 @@
 
 int main(int argc, char* argv[])
 {
+	/* In seems that setting VECT_TAB_OFFSET have no effect, so settings VTOR
+	 * by handpaws */
+	SCB->VTOR = VTOR_ADDRESS;
+
 	/* Mandatory for STM32 HAL*/
 	HAL_Init();
 

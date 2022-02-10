@@ -27,9 +27,7 @@
 
 // ----------------------------------------------------------------------------
 
-#include <stdio.h>
-#include <stdlib.h>
-#include "diag/trace.h"
+#include <main.h>
 
 // ----------------------------------------------------------------------------
 //
@@ -51,17 +49,29 @@
 #pragma GCC diagnostic ignored "-Wmissing-declarations"
 #pragma GCC diagnostic ignored "-Wreturn-type"
 
-int
-main(int argc, char* argv[])
+int main(int argc, char* argv[])
 {
-  // At this stage the system clock should have already been configured
-  // at high speed.
+	/* Mandatory for STM32 HAL*/
+	HAL_Init();
 
-  // Infinite loop
-  while (1)
-    {
-       // Add your code here.
-    }
+//	__HAL_RCC_GPIOC_CLK_ENABLE();
+//
+//	GPIO_InitTypeDef GPIO_InitStruct;
+//
+//	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+//	GPIO_InitStruct.Pull = GPIO_NOPULL;
+//	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+//
+//	GPIO_InitStruct.Pin = GPIO_PIN_13;
+//	HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+//
+//	while (true)
+//	{
+//		HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+//		HAL_Delay(500);
+//	}
+
+	JumpToEntryPoint(YBL_MAIN_CODE_START);
 }
 
 #pragma GCC diagnostic pop
