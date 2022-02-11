@@ -42,7 +42,7 @@
 /**
  * Place ISRs here. Synchronize this value with FLASH section from mem.ld
  */
-#define VTOR_ADDRESS 0x08004000
+#define VTOR_ADDRESS 0x08008000
 
 /**
  * Set default buttons actions

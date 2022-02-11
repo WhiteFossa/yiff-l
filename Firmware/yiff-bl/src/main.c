@@ -66,6 +66,11 @@ int main(int argc, char* argv[])
 
 	Main_InitDisplayAndFonts();
 
+	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, 0, 0, NULL, NULL, false, "Yiff!");
+	FMGL_API_PushFramebuffer(&fmglContext);
+
+	HAL_Delay(2000);
+
 	JumpToEntryPoint(YBL_MAIN_CODE_START);
 }
 

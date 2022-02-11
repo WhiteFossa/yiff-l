@@ -16,6 +16,7 @@
 #include <HAL.h>
 #include <Version.h>
 #include <HardwareLogic.h>
+#include <terminusRegular12.h>
 
 /**
  * Initialize display and fonts

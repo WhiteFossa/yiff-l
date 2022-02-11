@@ -13,7 +13,7 @@
 /**
  * Fox main code entry point
  */
-#define YBL_MAIN_CODE_START 0x08004000
+#define YBL_MAIN_CODE_START 0x08008000
 
 /**
  * Entry point
