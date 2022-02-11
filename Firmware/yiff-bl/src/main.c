@@ -64,12 +64,18 @@ int main(int argc, char* argv[])
 	/* Detecting display */
 	HL_TurnDisplayOn();
 
+	/* Now since this we can draw */
 	Main_InitDisplayAndFonts();
 
-	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, 0, 0, NULL, NULL, false, "Yiff!");
-	FMGL_API_PushFramebuffer(&fmglContext);
+	/* Initializing logger */
+	Log_Init();
 
-	HAL_Delay(2000);
+	char buffer[33];
+	for (uint8_t tmp = 0; tmp < 20; tmp ++)
+	{
+		snprintf(buffer, 32, "YIFF%d", tmp);
+		Log_AddLine(buffer);
+	}
 
 	JumpToEntryPoint(YBL_MAIN_CODE_START);
 }
