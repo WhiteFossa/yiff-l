@@ -317,23 +317,20 @@
 							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.printsize.1660082007" name="GNU Arm Cross Print Size" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.printsize.604635659"/>
 						</toolChain>
 					</folderInfo>
-					<fileInfo id="ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.1658055171.556998828" name="stm32f1xx_hal_timebase_tim_template.c" rcbsApplicability="disable" resourcePath="system/src/stm32f1-hal/stm32f1xx_hal_timebase_tim_template.c" toolsToInvoke="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.945035344.55765764">
-						<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.945035344.55765764" name="GNU Arm Cross C Compiler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.945035344">
-							<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.234337281" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
-						</tool>
-					</fileInfo>
-					<fileInfo id="ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.1658055171.1900952919" name="stm32f1xx_hal_dac_ex.c" rcbsApplicability="disable" resourcePath="system/src/stm32f1-hal/stm32f1xx_hal_dac_ex.c" toolsToInvoke="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.945035344.1335825576">
-						<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.945035344.1335825576" name="GNU Arm Cross C Compiler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.945035344">
-							<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.443460789" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
-						</tool>
-					</fileInfo>
-					<fileInfo id="ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.1658055171.1170013927" name="stm32f1xx_hal_msp_template.c" rcbsApplicability="disable" resourcePath="system/src/stm32f1-hal/stm32f1xx_hal_msp_template.c" toolsToInvoke="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.945035344.1997340229">
-						<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.945035344.1997340229" name="GNU Arm Cross C Compiler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.945035344">
-							<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.565294702" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
+					<fileInfo id="ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.1658055171.1049464319" name="stm32f1xx_hal_adc.c" rcbsApplicability="disable" resourcePath="system/src/stm32f1-hal/stm32f1xx_hal_adc.c" toolsToInvoke="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.945035344.1719115471">
+						<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.945035344.1719115471" name="GNU Arm Cross C Compiler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.945035344">
+							<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.1388008679" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
 						</tool>
 					</fileInfo>
 					<fileInfo id="ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.1658055171.1274126530" name="stm32f1xx_hal_timebase_rtc_alarm_template.c" rcbsApplicability="disable" resourcePath="system/src/stm32f1-hal/stm32f1xx_hal_timebase_rtc_alarm_template.c" toolsToInvoke="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.945035344.242839123">
-						<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.945035344.242839123" name="GNU Arm Cross C Compiler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.945035344"/>
+						<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.945035344.242839123" name="GNU Arm Cross C Compiler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.945035344">
+							<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.1069227158" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
+						</tool>
+					</fileInfo>
+					<fileInfo id="ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.1658055171.1535609341" name="stm32f1xx_hal_adc_ex.c" rcbsApplicability="disable" resourcePath="system/src/stm32f1-hal/stm32f1xx_hal_adc_ex.c" toolsToInvoke="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.945035344.1644363662">
+						<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.945035344.1644363662" name="GNU Arm Cross C Compiler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.945035344">
+							<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.959320237" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
+						</tool>
 					</fileInfo>
 					<fileInfo id="ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.1658055171.src/stm32f1xx_hal_msp.c" name="stm32f1xx_hal_msp.c" rcbsApplicability="disable" resourcePath="src/stm32f1xx_hal_msp.c" toolsToInvoke="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.828680627.2140394383">
 						<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.828680627.2140394383" name="GNU Arm Cross C Compiler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.828680627">
@@ -597,23 +594,15 @@
 							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.printsize.1112753181" name="GNU Arm Cross Print Size" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.printsize.865042819"/>
 						</toolChain>
 					</folderInfo>
-					<fileInfo id="ilg.gnuarmeclipse.managedbuild.cross.config.elf.release.898671671.535032925" name="stm32f1xx_hal_timebase_tim_template.c" rcbsApplicability="disable" resourcePath="system/src/stm32f1-hal/stm32f1xx_hal_timebase_tim_template.c" toolsToInvoke="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.1678610744.284123095">
-						<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.1678610744.284123095" name="GNU Arm Cross C Compiler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.1678610744">
-							<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.289213320" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
-						</tool>
-					</fileInfo>
-					<fileInfo id="ilg.gnuarmeclipse.managedbuild.cross.config.elf.release.898671671.498977285" name="stm32f1xx_hal_dac_ex.c" rcbsApplicability="disable" resourcePath="system/src/stm32f1-hal/stm32f1xx_hal_dac_ex.c" toolsToInvoke="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.1678610744.936813205">
-						<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.1678610744.936813205" name="GNU Arm Cross C Compiler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.1678610744">
-							<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.1386088177" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
-						</tool>
-					</fileInfo>
-					<fileInfo id="ilg.gnuarmeclipse.managedbuild.cross.config.elf.release.898671671.134702487" name="stm32f1xx_hal_msp_template.c" rcbsApplicability="disable" resourcePath="system/src/stm32f1-hal/stm32f1xx_hal_msp_template.c" toolsToInvoke="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.1678610744.2051708234">
-						<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.1678610744.2051708234" name="GNU Arm Cross C Compiler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.1678610744">
-							<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.1345588061" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
+					<fileInfo id="ilg.gnuarmeclipse.managedbuild.cross.config.elf.release.898671671.2049843722" name="stm32f1xx_hal_adc.c" rcbsApplicability="disable" resourcePath="system/src/stm32f1-hal/stm32f1xx_hal_adc.c" toolsToInvoke="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.1678610744.1504800203">
+						<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.1678610744.1504800203" name="GNU Arm Cross C Compiler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.1678610744">
+							<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.823227261" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
 						</tool>
 					</fileInfo>
 					<fileInfo id="ilg.gnuarmeclipse.managedbuild.cross.config.elf.release.898671671.1498335118" name="stm32f1xx_hal_timebase_rtc_alarm_template.c" rcbsApplicability="disable" resourcePath="system/src/stm32f1-hal/stm32f1xx_hal_timebase_rtc_alarm_template.c" toolsToInvoke="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.1678610744.2019431620">
-						<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.1678610744.2019431620" name="GNU Arm Cross C Compiler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.1678610744"/>
+						<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.1678610744.2019431620" name="GNU Arm Cross C Compiler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.1678610744">
+							<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.2107811638" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
+						</tool>
 					</fileInfo>
 					<fileInfo id="ilg.gnuarmeclipse.managedbuild.cross.config.elf.release.898671671.1656791653" name="stm32f1xx_hal_can.c" rcbsApplicability="disable" resourcePath="system/src/stm32f1-hal/stm32f1xx_hal_can.c" toolsToInvoke="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.1678610744.1409791360">
 						<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.1678610744.1409791360" name="GNU Arm Cross C Compiler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.1678610744">
@@ -653,6 +642,11 @@
 								<additionalInput kind="additionalinputdependency" paths=""/>
 							</inputType>
 							<outputType id="org.eclipse.cdt.managedbuilder.ui.rcbs.outputtype.2145050567" name="Resource Custom Build Step Output Type" outputNames=""/>
+						</tool>
+					</fileInfo>
+					<fileInfo id="ilg.gnuarmeclipse.managedbuild.cross.config.elf.release.898671671.1689830853" name="stm32f1xx_hal_adc_ex.c" rcbsApplicability="disable" resourcePath="system/src/stm32f1-hal/stm32f1xx_hal_adc_ex.c" toolsToInvoke="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.1678610744.1081901396">
+						<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.1678610744.1081901396" name="GNU Arm Cross C Compiler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.1678610744">
+							<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.673188111" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
 						</tool>
 					</fileInfo>
 					<fileInfo id="ilg.gnuarmeclipse.managedbuild.cross.config.elf.release.898671671.src/stm32f1xx_hal_msp.c" name="stm32f1xx_hal_msp.c" rcbsApplicability="disable" resourcePath="src/stm32f1xx_hal_msp.c" toolsToInvoke="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.196336925.720401130">

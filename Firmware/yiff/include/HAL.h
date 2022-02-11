@@ -318,7 +318,7 @@ YHL_HAL_AMChannelEnum;
 /**
  * Init fox-specific hardware here
  */
-void HAL_IntiHardware(void);
+void HAL_InitHardware(void);
 
 /**
  * Switch TX manipulator on of off

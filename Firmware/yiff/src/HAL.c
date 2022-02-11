@@ -8,7 +8,7 @@
 #include <HAL.h>
 #include <HALPrivate.h>
 
-void HAL_IntiHardware(void)
+void HAL_InitHardware(void)
 {
 	/**********
 	 * PORT B *
@@ -94,7 +94,7 @@ void HAL_IntiHardware(void)
 	HAL_GPIO_WritePin(HAL_AM_PORT, HAL_AM_CHAN0_PIN | HAL_AM_CHAN1_PIN | HAL_AM_CHAN2_PIN | HAL_AM_CHAN5_PIN, GPIO_PIN_RESET);
 
 	/* Antenna matching (3th and 4th channels) */
-	HAL_GPIO_DeInit(GPIOA, HAL_AM_CHAN3_PIN | HAL_AM_CHAN4_PIN);
+	HAL_GPIO_DeInit(HAL_AM_PORT, HAL_AM_CHAN3_PIN | HAL_AM_CHAN4_PIN);
 	GPIO_InitStruct.Pin = HAL_AM_CHAN3_PIN | HAL_AM_CHAN4_PIN;
 	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 	GPIO_InitStruct.Pull = GPIO_NOPULL;

@@ -66,7 +66,33 @@ void L2HAL_SetupI2C(void)
 
 void HAL_I2C_MspInit(I2C_HandleTypeDef *hi2c)
 {
-	if (hi2c->Instance == I2C2)
+	if (hi2c->Instance == L2HAL_DISPLAY_BUS)
+	{
+		/**
+		 * I2C for display
+		 * Setting up port
+		 * I2C1 at PB6 (SCL) and PB7 (SDA)
+		 */
+
+		/* Clocking port */
+		L2HAL_DISPLAY_BUS_CLOCK_PORT();
+
+		GPIO_InitTypeDef GPIO_InitStruct;
+
+		GPIO_InitStruct.Pin = L2HAL_DISPLAY_BUS_SCL | L2HAL_DISPLAY_BUS_SDA;
+		GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
+		GPIO_InitStruct.Pull = GPIO_PULLUP;
+		GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+
+		HAL_GPIO_Init(L2HAL_DISPLAY_BUS_PORT, &GPIO_InitStruct);
+
+		/* Display driver uses I2C interrupts exchange */
+		HAL_NVIC_SetPriority(I2C1_ER_IRQn, I2C1_ER_IRQN_PRIORITY, I2C1_ER_IRQN_SUBPRIORITY);
+		HAL_NVIC_EnableIRQ(I2C1_ER_IRQn);
+		HAL_NVIC_SetPriority(I2C1_EV_IRQn, I2C1_EV_IRQN_PRIORITY, I2C1_EV_IRQN_SUBPRIORITY);
+		HAL_NVIC_EnableIRQ(I2C1_EV_IRQn);
+	}
+	else if (hi2c->Instance == I2C2)
 	{
 		/**
 		 * I2C for other devices
@@ -96,13 +122,39 @@ void HAL_I2C_MspInit(I2C_HandleTypeDef *hi2c)
 
 void HAL_I2C_MspDeInit(I2C_HandleTypeDef* hi2c)
 {
-	if (hi2c->Instance == I2C2)
+	if (hi2c->Instance == L2HAL_DISPLAY_BUS)
+	{
+		HAL_NVIC_DisableIRQ(I2C1_ER_IRQn);
+		HAL_NVIC_DisableIRQ(I2C1_EV_IRQn);
+
+		L2HAL_DISPLAY_BUS_CLOCK_DISABLE();
+		HAL_GPIO_DeInit(L2HAL_DISPLAY_BUS_PORT, L2HAL_DISPLAY_BUS_SCL | L2HAL_DISPLAY_BUS_SDA);
+	}
+	else if (hi2c->Instance == I2C2)
 	{
 		HAL_NVIC_DisableIRQ(I2C2_ER_IRQn);
 		HAL_NVIC_DisableIRQ(I2C2_EV_IRQn);
 
 		__HAL_RCC_I2C2_CLK_DISABLE();
 		HAL_GPIO_DeInit(GPIOB, GPIO_PIN_10 | GPIO_PIN_11);
+	}
+}
+
+void I2C1_EV_IRQHandler(void)
+{
+	HAL_I2C_EV_IRQHandler(&I2C_Display);
+}
+
+void I2C1_ER_IRQHandler(void)
+{
+	HAL_I2C_ER_IRQHandler(&I2C_Display);
+}
+
+void HAL_I2C_MemTxCpltCallback(I2C_HandleTypeDef *hi2c)
+{
+	if (hi2c->Instance == I2C1)
+	{
+		L2HAL_SSD1327_InterruptTransferCompleted(&L2HAL_SSD1327_Context);
 	}
 }
 

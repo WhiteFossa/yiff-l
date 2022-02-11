@@ -13,6 +13,14 @@
 #include <Bootloader.h>
 #include <l2hal.h>
 #include <GlobalVariables.h>
+#include <HAL.h>
+#include <Version.h>
+#include <HardwareLogic.h>
+
+/**
+ * Initialize display and fonts
+ */
+void Main_InitDisplayAndFonts(void);
 
 
 #endif /* INCLUDE_MAIN_H_ */

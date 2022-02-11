@@ -56,25 +56,51 @@ int main(int argc, char* argv[])
 
 	/* Setting up hardware */
 	L2HAL_Init();
+	HAL_InitHardware();
 
-//	__HAL_RCC_GPIOC_CLK_ENABLE();
-//
-//	GPIO_InitTypeDef GPIO_InitStruct;
-//
-//	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-//	GPIO_InitStruct.Pull = GPIO_NOPULL;
-//	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-//
-//	GPIO_InitStruct.Pin = GPIO_PIN_13;
-//	HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-//
-//	while (true)
-//	{
-//		HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
-//		HAL_Delay(500);
-//	}
+	/* Time for regulators spin-up */
+	HAL_Delay(1000);
+
+	/* Detecting display */
+	HL_TurnDisplayOn();
+
+	Main_InitDisplayAndFonts();
 
 	JumpToEntryPoint(YBL_MAIN_CODE_START);
+}
+
+void Main_InitDisplayAndFonts(void)
+{
+	/* Colors */
+	OffColor.R = 0;
+	OffColor.G = 0;
+	OffColor.B = 0;
+
+	OnColor.R = 255;
+	OnColor.G = 255;
+	OnColor.B = 255;
+
+	/* Attaching FMGL to display */
+	fmglContext = FMGL_API_AttachToDriver(&L2HAL_SSD1327_Context, &L2HAL_SSD1327_GetWidth, &L2HAL_SSD1327_GetHeight, &L2HAL_SSD1327_SetActiveColor,
+			&L2HAL_SSD1327_DrawPixel, &L2HAL_SSD1327_GetPixel, &L2HAL_SSD1327_PushFramebuffer, OffColor);
+
+	/* Initializing font */
+	FMGL_FontTerminusRegular12 = FMGL_FontTerminusRegular12Init();
+
+	transparencyMode = FMGL_XBMTransparencyModeTransparentInactive;
+
+	/* Common font settings */
+	commonFont.Font = &FMGL_FontTerminusRegular12;
+	commonFont.Scale = 1;
+	commonFont.CharactersSpacing = 0;
+	commonFont.LinesSpacing = 0;
+	commonFont.BackgroundColor = &OffColor;
+	commonFont.FontColor = &OnColor;
+	commonFont.Transparency = &transparencyMode;
+
+	/* Clearing display */
+	FMGL_API_ClearScreen(&fmglContext);
+	FMGL_API_PushFramebuffer(&fmglContext);
 }
 
 #pragma GCC diagnostic pop

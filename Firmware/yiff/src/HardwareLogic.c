@@ -11,7 +11,7 @@
 
 void HL_Init()
 {
-	HAL_IntiHardware();
+	HAL_InitHardware();
 
 	HL_IsU80mFeedbackActive = false;
 	HL_U80mLockCounter = 0;
