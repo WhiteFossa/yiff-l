@@ -666,6 +666,9 @@ void Main_ProcessRebootToBootloader(void)
 		uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
 		SendResponse(RebootToBootloader, 1, &response);
 
+		/* Giving fox time to transmit a response */
+		HAL_Delay(1000);
+
 		__disable_irq();
 		SCB->VTOR = BOOTLOADER_OEP;
 		const uint32_t address = BOOTLOADER_OEP;

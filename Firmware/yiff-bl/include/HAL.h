@@ -84,18 +84,21 @@ extern I2C_HandleTypeDef I2C_Display;
  */
 #define HAL_LEFT_BUTTON_PORT GPIOA
 #define HAL_LEFT_BUTTON_PIN GPIO_PIN_4
+#define HAL_LEFT_BUTTON_EXTI_LINE EXTI4_IRQn
 
 /**
  * Right button
  */
 #define HAL_RIGHT_BUTTON_PORT GPIOA
 #define HAL_RIGHT_BUTTON_PIN GPIO_PIN_6
+#define HAL_RIGHT_BUTTON_EXTI_LINE EXTI9_5_IRQn
 
 /**
  * Encoder button
  */
 #define HAL_ENCODER_BUTTON_PORT GPIOB
 #define HAL_ENCODER_BUTTON_PIN GPIO_PIN_14
+#define HAL_ENCODER_BUTTON_EXTI_LINE EXTI15_10_IRQn
 
 /**
  * Encoder right
@@ -108,6 +111,8 @@ extern I2C_HandleTypeDef I2C_Display;
  */
 #define HAL_ENCODER_LEFT_PORT GPIOB
 #define HAL_ENCODER_LEFT_PIN GPIO_PIN_12
+
+
 
 /**
  * Bluetooth uses this USART

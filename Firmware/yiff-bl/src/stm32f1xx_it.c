@@ -184,5 +184,29 @@ void SysTick_Handler(void)
   * @}
   */
 
+void EXTI4_IRQHandler(void)
+{
+	HAL_GPIO_EXTI_IRQHandler(HAL_LEFT_BUTTON_PIN);
+}
+
+void EXTI9_5_IRQHandler(void)
+{
+	if (GPIO_PIN_RESET == HAL_GPIO_ReadPin(HAL_RIGHT_BUTTON_PORT, HAL_RIGHT_BUTTON_PIN))
+	{
+		HAL_GPIO_EXTI_IRQHandler(HAL_RIGHT_BUTTON_PIN);
+	}
+}
+
+void EXTI15_10_IRQHandler(void)
+{
+	if (GPIO_PIN_RESET == HAL_GPIO_ReadPin(HAL_ENCODER_BUTTON_PORT, HAL_ENCODER_BUTTON_PIN))
+	{
+		HAL_GPIO_EXTI_IRQHandler(HAL_ENCODER_BUTTON_PIN);
+	}
+	else if (GPIO_PIN_RESET == HAL_GPIO_ReadPin(HAL_ENCODER_RIGHT_PORT, HAL_ENCODER_RIGHT_PIN))
+	{
+		HAL_GPIO_EXTI_IRQHandler(HAL_ENCODER_RIGHT_PIN);
+	}
+}
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
