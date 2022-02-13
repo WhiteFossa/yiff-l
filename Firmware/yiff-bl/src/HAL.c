@@ -236,3 +236,13 @@ void HAL_InitializeDisplayBus(void)
 
 	HAL_IsDisplayBusInitialized = true;
 }
+
+bool HAL_IsLeftButtonPressed(void)
+{
+	return GPIO_PIN_RESET == HAL_GPIO_ReadPin(HAL_LEFT_BUTTON_PORT, HAL_LEFT_BUTTON_PIN);
+}
+
+bool HAL_IsRightButtonPressed(void)
+{
+	return GPIO_PIN_RESET == HAL_GPIO_ReadPin(HAL_RIGHT_BUTTON_PORT, HAL_RIGHT_BUTTON_PIN);
+}

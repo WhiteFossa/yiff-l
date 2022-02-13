@@ -155,4 +155,15 @@ void HAL_SwitchDisplayPower(bool isOn);
  */
 void HAL_InitializeDisplayBus(void);
 
+/**
+ * True if left button is pressed
+ */
+bool HAL_IsLeftButtonPressed(void);
+
+/**
+ * True if right button is pressed
+ * @return
+ */
+bool HAL_IsRightButtonPressed(void);
+
 #endif /* INCLUDE_HAL_H_ */

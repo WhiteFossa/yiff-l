@@ -14,6 +14,7 @@
 #include <EEPROM.h>
 #include <UART.h>
 #include <PacketsProcessor.h>
+#include <HAL.h>
 
 extern EEPROMConstantHeaderStruct EEPROM_ConstantHeader;
 

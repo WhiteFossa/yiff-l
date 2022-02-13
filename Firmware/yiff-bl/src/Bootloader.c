@@ -42,8 +42,16 @@ void EnterDFUMode(void)
 	snprintf(textBuffer, 33, "UART ready");
 	Log_AddLine(textBuffer);
 
+	snprintf(textBuffer, 33, "Both buttons to exit");
+	Log_AddLine(textBuffer);
+
 	while(true)
 	{
+		if (HAL_IsLeftButtonPressed() && HAL_IsRightButtonPressed())
+		{
+			JumpToEntryPoint(YBL_MAIN_CODE_START);
+		}
+
 		if (UART_IsPacketReady)
 		{
 			OnNewRawPacket(UART_ReceivedPacketFullLength, UART_ReceivedPacket);
