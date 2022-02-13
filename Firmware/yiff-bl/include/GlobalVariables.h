@@ -10,6 +10,7 @@
 
 #include <l2hal_systick.h>
 #include <stm32f1xx_hal.h>
+#include <EEPROM.h>
 
 /*****************************
 * Hardware handlers go below *
@@ -39,6 +40,16 @@ I2C_HandleTypeDef I2C_Display;
  * Display driver context.
  */
 L2HAL_SSD1327_ContextStruct L2HAL_SSD1327_Context;
+
+/**
+ * CRC calculator context
+ */
+L2HAL_CRCContextStruct CRC_Context;
+
+/**
+ * EEPROM context
+ */
+L2HAL_24x_ContextStruct EEPROMContext;
 
 /****************************
 * Graphics stuff goes below *
@@ -74,5 +85,14 @@ FMGL_API_ColorStruct OnColor;
  */
 FMGL_API_XBMTransparencyMode transparencyMode;
 
+
+/**************************
+* EEPROM stuff goes below *
+***************************/
+
+/**
+ * EEPROM constant header
+ */
+EEPROMConstantHeaderStruct EEPROM_ConstantHeader;
 
 #endif /* INCLUDE_GLOBALVARIABLES_H_ */

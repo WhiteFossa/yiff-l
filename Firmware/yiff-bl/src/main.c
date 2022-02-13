@@ -70,12 +70,39 @@ int main(int argc, char* argv[])
 	/* Initializing logger */
 	Log_Init();
 
-	char buffer[33];
-	for (uint8_t tmp = 0; tmp < 20; tmp ++)
+	char textBuffer[33];
+	snprintf(textBuffer, 32, "Fossa's DFU loader v%d", YBL_VERSION);
+	Log_AddLine(textBuffer);
+
+	/* Setting up CRC calculator */
+	CRC_Context = L2HAL_CRC_Init();
+
+	snprintf(textBuffer, 32, "CRC calculator ready");
+	Log_AddLine(textBuffer);
+
+	/* Connecting to EEPROM */
+	EEPROMContext = L2HAL_24x_DetectEepromAtAddress(&I2C_Other, YBL_EEPROM_ADDRESS, true, YBL_EEPROM_PAGE_SIZE);
+	if (!EEPROMContext.IsFound)
 	{
-		snprintf(buffer, 32, "YIFF%d", tmp);
-		Log_AddLine(buffer);
+		/* Unable to find EEPROM. */
+		snprintf(textBuffer, 32, "Unable to connect to EEPROM! Halt.");
+		Log_AddLine(textBuffer);
+
+		while(true) {}
 	}
+
+	EEPROM_ReadConstantHeader(&EEPROM_ConstantHeader);
+	bool isEEPROMCrcOK = EEPROM_CheckConstantHeader(&EEPROM_ConstantHeader);
+	if (!isEEPROMCrcOK)
+	{
+		snprintf(textBuffer, 32, "Incorrect EEPROM CRC!");
+		Log_AddLine(textBuffer);
+
+		EnterDFUMode();
+	}
+
+	snprintf(textBuffer, 32, "EEPROM CRC OK");
+	Log_AddLine(textBuffer);
 
 	JumpToEntryPoint(YBL_MAIN_CODE_START);
 }

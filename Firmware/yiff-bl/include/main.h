@@ -18,6 +18,8 @@
 #include <HardwareLogic.h>
 #include <terminusRegular12.h>
 #include <Log.h>
+#include <EEPROM.h>
+#include <stdio.h>
 
 /**
  * Initialize display and fonts
