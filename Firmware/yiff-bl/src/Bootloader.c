@@ -10,7 +10,7 @@
 void JumpToEntryPoint(const uint32_t address)
 {
 	char textBuffer[33];
-	snprintf(textBuffer, 32, "Jumping to OEP");
+	snprintf(textBuffer, 33, "Jumping to OEP");
 	Log_AddLine(textBuffer);
 
 	const JumpToEntryPointStruct* jumpStruct = (JumpToEntryPointStruct*)address;
@@ -21,9 +21,32 @@ void JumpToEntryPoint(const uint32_t address)
 void EnterDFUMode(void)
 {
 	char textBuffer[33];
-	snprintf(textBuffer, 32, "Entering DFU mode");
+	snprintf(textBuffer, 33, "Entering DFU mode");
 	Log_AddLine(textBuffer);
 
-	/* TODO: Implement DFU mode */
-	while(true) {}
+	snprintf(textBuffer, 33, "HW revision: %d", EEPROM_ConstantHeader.HardwareRevision);
+	Log_AddLine(textBuffer);
+
+	snprintf(textBuffer, 33, "FW version: %d", EEPROM_ConstantHeader.FirmwareVersion);
+	Log_AddLine(textBuffer);
+
+	snprintf(textBuffer, 33, "EEPROM version: %d", EEPROM_ConstantHeader.EEPROMVersion);
+	Log_AddLine(textBuffer);
+
+	/* Setting up UART */
+	UART_Init();
+	UART_StartListen();
+
+	snprintf(textBuffer, 33, "UART ready");
+	Log_AddLine(textBuffer);
+
+	while(true)
+	{
+		if (UART_IsPacketReady)
+		{
+			OnNewRawPacket(UART_ReceivedPacketFullLength, UART_ReceivedPacket);
+
+			UART_IsPacketReady = false;
+		}
+	}
 }

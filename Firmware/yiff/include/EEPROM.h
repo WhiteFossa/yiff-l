@@ -299,12 +299,12 @@ extern EEPROMProfileStruct EEPROM_CurrentProfile;
 void EEPROM_Format(void);
 
 /**
- * Write constant EEPROM header (it always go from 0x00 address in EEPROM)
+ * Write constant EEPROM header (it always goes from 0x00 address in EEPROM)
  */
 void EEPROM_WriteConstantHeader(EEPROMConstantHeaderStruct* constantHeader);
 
 /**
- * Read constant EEPROM header (it always go from 0x00 address in EEPROM)
+ * Read constant EEPROM header (it always goes from 0x00 address in EEPROM)
  */
 void EEPROM_ReadConstantHeader(EEPROMConstantHeaderStruct* constantHeader);
 

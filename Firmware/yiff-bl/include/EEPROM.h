@@ -71,4 +71,9 @@ void EEPROM_ReadConstantHeader(EEPROMConstantHeaderStruct* constantHeader);
  */
 bool EEPROM_CheckConstantHeader(EEPROMConstantHeaderStruct* constantHeader);
 
+/**
+ * Write constant EEPROM header (it always goes from 0x00 address in EEPROM)
+ */
+void EEPROM_WriteConstantHeader(EEPROMConstantHeaderStruct* constantHeader);
+
 #endif /* INCLUDE_EEPROM_H_ */

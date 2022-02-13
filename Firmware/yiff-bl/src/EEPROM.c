@@ -23,3 +23,10 @@ bool EEPROM_CheckConstantHeader(EEPROMConstantHeaderStruct* constantHeader)
 	return result;
 }
 
+void EEPROM_WriteConstantHeader(EEPROMConstantHeaderStruct* constantHeader)
+{
+	constantHeader->CRCSum = 0;
+	constantHeader->CRCSum = L2HAL_CRC_Calculate(&CRC_Context, (uint8_t*)constantHeader, sizeof(EEPROMConstantHeaderStruct));
+	L2HAL_24x_WriteData(&EEPROMContext, 0x00, (uint8_t*)constantHeader, sizeof(EEPROMConstantHeaderStruct));
+}
+

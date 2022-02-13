@@ -71,13 +71,13 @@ int main(int argc, char* argv[])
 	Log_Init();
 
 	char textBuffer[33];
-	snprintf(textBuffer, 32, "Fossa's DFU loader v%d", YBL_VERSION);
+	snprintf(textBuffer, 33, "Fossa's DFU loader v%d", YBL_VERSION);
 	Log_AddLine(textBuffer);
 
 	/* Setting up CRC calculator */
 	CRC_Context = L2HAL_CRC_Init();
 
-	snprintf(textBuffer, 32, "CRC calculator ready");
+	snprintf(textBuffer, 33, "CRC calculator ready");
 	Log_AddLine(textBuffer);
 
 	/* Connecting to EEPROM */
@@ -85,7 +85,7 @@ int main(int argc, char* argv[])
 	if (!EEPROMContext.IsFound)
 	{
 		/* Unable to find EEPROM. */
-		snprintf(textBuffer, 32, "Unable to connect to EEPROM! Halt.");
+		snprintf(textBuffer, 33, "Unable to connect to EEPROM! Halt.");
 		Log_AddLine(textBuffer);
 
 		while(true) {}
@@ -95,14 +95,24 @@ int main(int argc, char* argv[])
 	bool isEEPROMCrcOK = EEPROM_CheckConstantHeader(&EEPROM_ConstantHeader);
 	if (!isEEPROMCrcOK)
 	{
-		snprintf(textBuffer, 32, "Incorrect EEPROM CRC!");
+		snprintf(textBuffer, 33, "Incorrect EEPROM CRC!");
 		Log_AddLine(textBuffer);
 
 		EnterDFUMode();
 	}
 
-	snprintf(textBuffer, 32, "EEPROM CRC OK");
+	snprintf(textBuffer, 33, "EEPROM CRC is OK");
 	Log_AddLine(textBuffer);
+
+	/* Do we need to enter DFU mode? */
+	if (EEPROM_ConstantHeader.IsEnterBootloader)
+	{
+		EnterDFUMode();
+	}
+
+	/* Always setting "Enter DFU mode" flag, main firmware have to clean it */
+	EEPROM_ConstantHeader.IsEnterBootloader = true;
+	EEPROM_WriteConstantHeader(&EEPROM_ConstantHeader);
 
 	JumpToEntryPoint(YBL_MAIN_CODE_START);
 }

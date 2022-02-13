@@ -11,6 +11,11 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <Log.h>
+#include <EEPROM.h>
+#include <UART.h>
+#include <PacketsProcessor.h>
+
+extern EEPROMConstantHeaderStruct EEPROM_ConstantHeader;
 
 /**
  * Fox main code entry point

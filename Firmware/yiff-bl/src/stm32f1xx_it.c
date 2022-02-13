@@ -156,6 +156,7 @@ void PendSV_Handler(void)
 void SysTick_Handler(void)
 {
 	HAL_IncTick();
+	L2HAL_SysTick_Callback();
 }
 
 /******************************************************************************/
