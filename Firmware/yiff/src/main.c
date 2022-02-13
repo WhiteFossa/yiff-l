@@ -48,10 +48,6 @@
 
 int main(int argc, char* argv[])
 {
-	/* In seems that setting VECT_TAB_OFFSET have no effect, so settings VTOR
-	 * by handpaws */
-	SCB->VTOR = VTOR_ADDRESS;
-
 	/* Mandatory for STM32 HAL*/
 	HAL_Init();
 
@@ -165,6 +161,10 @@ int main(int argc, char* argv[])
 	/* Debugging stuff begin */
 
 	/* Debugging stuff end */
+
+	/* It seems that the fox booted successfully, resetting "Enter bootloader" flag */
+	EEPROM_ConstantHeader.IsEnterBootloader = false;
+	EEPROM_WriteConstantHeader(&EEPROM_ConstantHeader);
 
 	while(true)
 	{

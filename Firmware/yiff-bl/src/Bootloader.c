@@ -13,8 +13,10 @@ void JumpToEntryPoint(const uint32_t address)
 	snprintf(textBuffer, 33, "Jumping to OEP");
 	Log_AddLine(textBuffer);
 
-	const JumpToEntryPointStruct* jumpStruct = (JumpToEntryPointStruct*)address;
+	__disable_irq();
+	SCB->VTOR = YBL_MAIN_CODE_START;
 
+	const JumpToEntryPointStruct* jumpStruct = (JumpToEntryPointStruct*)address;
 	asm("msr msp, %0; bx %1;" : : "r"(jumpStruct->StackPointer), "r"(jumpStruct->EntryPoint));
 }
 

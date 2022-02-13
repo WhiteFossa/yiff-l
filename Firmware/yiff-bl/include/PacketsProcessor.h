@@ -29,6 +29,15 @@ extern L2HAL_CRCContextStruct CRC_Context;
 #define YBL_PACKET_PROCESSOR_MIN_COMMAND_TO_FOX_PAYLOAD_LENGTH 2U
 
 /**
+ * Possible commands
+ */
+typedef enum
+{
+	Identification = 0xFF
+}
+Commands;
+
+/**
  * Call this when new raw packet came from UART
  */
 void OnNewRawPacket(uint8_t size, uint8_t* packet);
@@ -39,9 +48,9 @@ void OnNewRawPacket(uint8_t size, uint8_t* packet);
 void OnNewPacket(uint8_t payloadSize, uint8_t* payload);
 
 /**
- * Called when new command to fox came. Payload is not a packet payload, but packet payload except first byte
+ * Called when new command came. Payload is not a packet payload, but packet payload except first byte
  * (which is always YHL_PACKET_PROCESSOR_COMMAND_TO_FOX).
  */
-void OnNewCommandToFox(uint8_t payloadSize, uint8_t* payload);
+void OnNewCommand(uint8_t payloadSize, uint8_t* payload);
 
 #endif /* INCLUDE_PACKETSPROCESSOR_H_ */

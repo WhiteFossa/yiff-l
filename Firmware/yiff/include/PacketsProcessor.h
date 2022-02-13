@@ -182,7 +182,9 @@ typedef enum
 
 	GetDisarmOnDischargeValue = 0x38,
 
-	SetDisarmOnDischargeValue = 0x39
+	SetDisarmOnDischargeValue = 0x39,
+
+	RebootToBootloader = 0x3A
 }
 CommandToFoxEnum;
 
@@ -515,6 +517,11 @@ void OnGetDisarmOnDischargeValue(uint8_t payloadSize, uint8_t* payload);
  * Called when "Set disarm on discharge" command comes
  */
 void OnSetDisarmOnDischargeValue(uint8_t payloadSize, uint8_t* payload);
+
+/**
+ * Called when "Reboot to bootloader" command comes
+ */
+void OnRebootToBootloader(uint8_t payloadSize, uint8_t* payload);
 
 /**
  * Emits "Entering sleepmode" event

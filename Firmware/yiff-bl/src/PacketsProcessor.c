@@ -41,19 +41,19 @@ void OnNewPacket(uint8_t payloadSize, uint8_t* payload)
 			uint8_t commandPayload[YBL_UART_PACKET_MAX_SIZE - YBL_PACKET_PROCESSOR_PAYLOAD_SIZE_DELTA - 1U];
 			memcpy(commandPayload, payload + 1, commandPayloadSize);
 
-			OnNewCommandToFox(commandPayloadSize, commandPayload);
+			OnNewCommand(commandPayloadSize, commandPayload);
 
 			return;
 		}
 	}
 }
 
-void OnNewCommandToFox(uint8_t payloadSize, uint8_t* payload)
+void OnNewCommand(uint8_t payloadSize, uint8_t* payload)
 {
 	switch(payload[0])
 	{
-		case 0x01:
-			/* Set date and time */
+		case Identification:
+			/* Identify herself */
 
 			break;
 	}
