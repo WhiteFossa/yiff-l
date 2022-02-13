@@ -119,6 +119,8 @@
 
         GetDisarmOnDischargeThreshold = 0x38,
 
-        SetDisarmOnDischargeThreshold = 0x39
+        SetDisarmOnDischargeThreshold = 0x39,
+
+        RebootToBootloader = 0x3A
     }
 }

@@ -649,6 +649,31 @@
 
                 <!-- End of disarm on discharge -->
 
+                <!-- Firmware update -->
+
+                <Frame
+                    Style="{StaticResource FramesStyle}">
+
+                    <StackLayout>
+                        <Label
+                            Text="Firmware update"
+                            HorizontalOptions="Center" />
+
+                        <StackLayout
+                            Orientation="Horizontal">
+
+                            <Button
+                                Text="Reboot to bootloader"
+                                VerticalOptions="Center"
+                                HorizontalOptions="CenterAndExpand"
+                                Command="{Binding RebootToBootloaderCommand}" />
+                        </StackLayout>
+
+                    </StackLayout>
+                </Frame>
+
+                <!-- End of firmware update -->
+
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>

@@ -48,6 +48,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private readonly IGetDisarmOnDischargeThresholdCommand _getDisarmOnDischargeThresholdCommand;
         private readonly ISetDisarmOnDischargeThresholdCommand _setDisarmOnDischargeThresholdCommand;
 
+        private readonly IRebootToBootloaderCommand _rebootToBootloaderCommand;
+
         #endregion
 
         private Abstractions.Interfaces.OnGetLastErrorCodeDelegate _onGetLastErrorCode;
@@ -93,6 +95,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private OnGetDisarmOnDischargeThresholdDelegate _onGetDisarmOnDischargeThreshold;
         private OnSetDisarmOnDischargeThresholdDelegate _onSetDisarmOnDischargeThreshold;
 
+        private Abstractions.Interfaces.OnRebootToBootloaderDelegate _onRebootToBootloader;
+
         public ServiceCommandsManager(IGetLastErrorCodeCommand getLastErrorCodeCommand,
             IResetLastErrorCodeCommand resetLastErrorCodeCommand,
             IUpdateSerialNumberCommand updateSerialNumberCommand,
@@ -117,7 +121,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             IGetRTCCalibrationValueCommand getRTCCalibrationValueCommand,
             ISetRTCCalibrationValueCommand setRTCCalibrationValueCommand,
             IGetDisarmOnDischargeThresholdCommand getDisarmOnDischargeThresholdCommand,
-            ISetDisarmOnDischargeThresholdCommand setDisarmOnDischargeThresholdCommand)
+            ISetDisarmOnDischargeThresholdCommand setDisarmOnDischargeThresholdCommand,
+            IRebootToBootloaderCommand rebootToBootloaderCommand)
         {
             _getLastErrorCodeCommand = getLastErrorCodeCommand;
             _resetLastErrorCodeCommand = resetLastErrorCodeCommand;
@@ -144,6 +149,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _setRTCCalibrationValueCommand = setRTCCalibrationValueCommand;
             _getDisarmOnDischargeThresholdCommand = getDisarmOnDischargeThresholdCommand;
             _setDisarmOnDischargeThresholdCommand = setDisarmOnDischargeThresholdCommand;
+            _rebootToBootloaderCommand = rebootToBootloaderCommand;
         }
 
         #region Get last error code
@@ -696,12 +702,29 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _onSetDisarmOnDischargeThreshold = onSetDisarmOnDischargeThreshold;
 
             _setDisarmOnDischargeThresholdCommand.SetResponseDelegate(OnSetDisarmOnDischargeThresholdResponse);
-            _setDisarmOnDischargeThresholdCommand.SendSetDisarmOnDischargeThreshold(newThreshold);
+            _setDisarmOnDischargeThresholdCommand.SendSetDisarmOnDischargeThresholdCommand(newThreshold);
         }
 
         private void OnSetDisarmOnDischargeThresholdResponse(bool isSuccessful)
         {
             _onSetDisarmOnDischargeThreshold(isSuccessful);
+        }
+
+        #endregion
+
+        #region Reboot to bootloader
+
+        public async Task RebootToBootloaderAsync(Abstractions.Interfaces.OnRebootToBootloaderDelegate onRebootToBootloader)
+        {
+            _onRebootToBootloader = onRebootToBootloader;
+
+            _rebootToBootloaderCommand.SetResponseDelegate(OnRebootToBootloaderResponse);
+            _rebootToBootloaderCommand.SendRebootToBootloaderCommand();
+        }
+
+        private void OnRebootToBootloaderResponse(bool isSuccessful)
+        {
+            _onRebootToBootloader(isSuccessful);
         }
 
         #endregion

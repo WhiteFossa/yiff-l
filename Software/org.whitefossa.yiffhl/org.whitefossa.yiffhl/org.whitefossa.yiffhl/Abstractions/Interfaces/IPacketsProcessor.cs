@@ -103,6 +103,7 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
         void SetOnSetRTCCalibrationValueResponse(OnResponseDelegate onSetRTCCalibrationValueResponse);
         void SetOnGetDisarmOnDischargeThresholdResponse(OnResponseDelegate onGetDisarmOnDischargeThresholdResponse);
         void SetOnSetDisarmOnDischargeThresholdResponse(OnResponseDelegate onSetDisarmOnDischargeThresholdResponse);
+        void SetOnRebootToBootloaderResponse(OnResponseDelegate onRebootToBootloaderResponse);
 
         #endregion
 

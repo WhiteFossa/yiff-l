@@ -424,6 +424,11 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         public ICommand SetDisarmOnDischargeThresholdCommand { get; }
 
+        /// <summary>
+        /// Reboot to bootloader command
+        /// </summary>
+        public ICommand RebootToBootloaderCommand { get; }
+
         public ServicePageViewModel()
         {
 
@@ -466,6 +471,8 @@ namespace org.whitefossa.yiffhl.ViewModels
 
             GetDisarmOnDischargeThresholdCommand = new Command(async () => await OnGetDisarmOnDischargeThresholdAsync());
             SetDisarmOnDischargeThresholdCommand = new Command(async () => await OnSetDisarmOnDischargeThresholdAsync());
+
+            RebootToBootloaderCommand = new Command(async () => await OnRebootToBootloaderAsync());
 
             // Setting up poll service data timer
             PollServiceDataTimer = new Timer(PollServiceDataInterval);
@@ -1049,17 +1056,36 @@ namespace org.whitefossa.yiffhl.ViewModels
             }
 
             await _serviceCommandsManager
-                .SetDisarmOnDischargeThresholdAsync(newThreshold / 100.0f, async (s) => await OnOnSetDisarmOnDischargeThresholdAsyncAsync(s));
+                .SetDisarmOnDischargeThresholdAsync(newThreshold / 100.0f, async (s) => await OnSetDisarmOnDischargeThresholdAsync(s));
         }
 
-        private async Task OnOnSetDisarmOnDischargeThresholdAsyncAsync(bool isSuccessful)
+        private async Task OnSetDisarmOnDischargeThresholdAsync(bool isSuccessful)
         {
             await OnGetDisarmOnDischargeThresholdAsync();
 
             if (!isSuccessful)
             {
-                await _userNotifier.ShowErrorMessageAsync("Failure", @"Unable to set new disarm щт discharge threshold calibration value.
+                await _userNotifier.ShowErrorMessageAsync("Failure", @"Unable to set new disarm on discharge threshold calibration value.
 Is value in a valid range?");
+            }
+        }
+
+        #endregion
+
+        #region Reboot to bootloader
+
+        private async Task OnRebootToBootloaderAsync()
+        {
+            await _serviceCommandsManager.RebootToBootloaderAsync(async (s) => await OnRebootToBootloaderResponseAsync(s));
+        }
+
+        private async Task OnRebootToBootloaderResponseAsync(bool isSuccessful)
+        {
+            if (!isSuccessful)
+            {
+                await _userNotifier.ShowErrorMessageAsync("Failure", @"Unable to reboot into bootloader.
+Is fox armed?
+Is TX forced?");
             }
         }
 

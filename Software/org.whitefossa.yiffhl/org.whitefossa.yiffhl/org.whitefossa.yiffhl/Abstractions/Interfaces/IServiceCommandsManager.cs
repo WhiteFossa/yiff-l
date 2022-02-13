@@ -46,6 +46,8 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
     public delegate void OnGetDisarmOnDischargeThresholdDelegate(float threshold);
     public delegate void OnSetDisarmOnDischargeThresholdDelegate(bool isSuccessful);
 
+    public delegate void OnRebootToBootloaderDelegate(bool isSuccessful);
+
     public interface IServiceCommandsManager
     {
         Task GetLastErrorCodeAsync(OnGetLastErrorCodeDelegate onGetLastErrorCode);
@@ -91,5 +93,7 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
 
         Task GetDisarmOnDischargeThresholdAsync(OnGetDisarmOnDischargeThresholdDelegate onGetDisarmOnDischargeThreshold);
         Task SetDisarmOnDischargeThresholdAsync(float newThreshold, OnSetDisarmOnDischargeThresholdDelegate onSetDisarmOnDischargeThreshold);
+
+        Task RebootToBootloaderAsync(OnRebootToBootloaderDelegate onRebootToBootloader);
     }
 }

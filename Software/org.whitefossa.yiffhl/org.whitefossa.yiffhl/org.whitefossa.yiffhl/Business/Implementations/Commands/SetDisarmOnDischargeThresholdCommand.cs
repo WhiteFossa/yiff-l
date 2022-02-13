@@ -24,7 +24,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations.Commands
             _onSetDisarmOnDischargeThresholdResponse = onSetDisarmOnDischargeThresholdResponse;
         }
 
-        public void SendSetDisarmOnDischargeThreshold(float newThreshold)
+        public void SendSetDisarmOnDischargeThresholdCommand(float newThreshold)
         {
             var payload = new List<byte>();
 

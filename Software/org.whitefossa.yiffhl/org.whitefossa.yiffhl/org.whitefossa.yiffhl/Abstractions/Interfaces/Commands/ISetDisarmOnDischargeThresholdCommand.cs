@@ -6,6 +6,6 @@
     {
         void SetResponseDelegate(OnSetDisarmOnDischargeThresholdResponseDelegate onSetDisarmOnDischargeThresholdResponseDelegate);
 
-        void SendSetDisarmOnDischargeThreshold(float newThreshold);
+        void SendSetDisarmOnDischargeThresholdCommand(float newThreshold);
     }
 }

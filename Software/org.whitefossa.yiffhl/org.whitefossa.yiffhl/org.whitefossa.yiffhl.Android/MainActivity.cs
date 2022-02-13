@@ -103,6 +103,7 @@ namespace org.whitefossa.yiffhl.Droid
             App.Container.Register<ISetRTCCalibrationValueCommand, SetRTCCalibrationValueCommand>().AsSingleton();
             App.Container.Register<IGetDisarmOnDischargeThresholdCommand, GetDisarmOnDischargeThresholdCommand>().AsSingleton();
             App.Container.Register<ISetDisarmOnDischargeThresholdCommand, SetDisarmOnDischargeThresholdCommand>().AsSingleton();
+            App.Container.Register<IRebootToBootloaderCommand, RebootToBootloaderCommand>().AsSingleton();
 
             #endregion
 

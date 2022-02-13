@@ -91,6 +91,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
         private OnResponseDelegate _onSetRTCCalibrationValueResponse;
         private OnResponseDelegate _onGetDisarmOnDischargeThresholdResponse;
         private OnResponseDelegate _onSetDisarmOnDischargeThresholdResponse;
+        private OnResponseDelegate _onRebootToBootloaderResponse;
 
         #endregion
 
@@ -691,6 +692,13 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
                         _onSetDisarmOnDischargeThresholdResponse(responsePayload);
                         break;
 
+                    // Reboot to bootloader
+                    case CommandType.RebootToBootloader:
+                        CheckOnResponseDelegate(_onRebootToBootloaderResponse);
+
+                        _onRebootToBootloaderResponse(responsePayload);
+                        break;
+
                     default:
                         return; // We've got some junk
                 }
@@ -1131,6 +1139,12 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
         {
             _onSetDisarmOnDischargeThresholdResponse = onSetDisarmOnDischargeThresholdResponse
                 ?? throw new ArgumentNullException(nameof(onSetDisarmOnDischargeThresholdResponse));
+        }
+
+        public void SetOnRebootToBootloaderResponse(OnResponseDelegate onRebootToBootloaderResponse)
+        {
+            _onRebootToBootloaderResponse = onRebootToBootloaderResponse
+                ?? throw new ArgumentNullException(nameof(onRebootToBootloaderResponse));
         }
     }
 }
