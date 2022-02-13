@@ -217,6 +217,7 @@ void Main_ProcessHighPriorityEvents(void)
 	Main_ReturnFromForceTx();
 	Main_SetRTCCalibrationValue();
 	Main_SetDisarmOnDischargeValue();
+	Main_ProcessRebootToBootloader();
 }
 
 void Main_ProcessFoxNameChange(void)
@@ -652,6 +653,24 @@ void Main_SetDisarmOnDischargeValue(void)
 		SendResponse(SetDisarmOnDischargeValue, 1, &response);
 
 		PendingCommandsFlags.NeedToSetDisarmOnDischargeValue = false;
+	}
+}
+
+void Main_ProcessRebootToBootloader(void)
+{
+	if (PendingCommandsFlags.NeedToRebootToBootloader)
+	{
+		EEPROM_ConstantHeader.IsEnterBootloader = true;
+		EEPROM_WriteConstantHeader(&EEPROM_ConstantHeader);
+
+		uint8_t response = YHL_PACKET_PROCESSOR_SUCCESS;
+		SendResponse(RebootToBootloader, 1, &response);
+
+		__disable_irq();
+		SCB->VTOR = BOOTLOADER_OEP;
+		const uint32_t address = BOOTLOADER_OEP;
+		const JumpToEntryPointStruct* jumpStruct = (JumpToEntryPointStruct*)address;
+		asm("msr msp, %0; bx %1;" : : "r"(jumpStruct->StackPointer), "r"(jumpStruct->EntryPoint));
 	}
 }
 

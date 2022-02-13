@@ -70,6 +70,8 @@ void FoxState_Init(void)
 
 	PendingCommandsFlags.NeedToSetDisarmOnDischargeValue = false;
 
+	PendingCommandsFlags.NeedToRebootToBootloader = false;
+
 	FoxState.CurrentDisplay = StatusDisplay;
 }
 

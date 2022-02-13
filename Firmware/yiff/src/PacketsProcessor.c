@@ -343,6 +343,11 @@ void OnNewCommandToFox(uint8_t payloadSize, uint8_t* payload)
 			/* Set disarm-on-discharge value */
 			OnSetDisarmOnDischargeValue(payloadSize, payload);
 			break;
+
+		case RebootToBootloader:
+			/* Reboot to bootloader */
+			OnRebootToBootloader(payloadSize, payload);
+			break;
 	}
 }
 
@@ -1645,6 +1650,22 @@ void OnSetDisarmOnDischargeValue(uint8_t payloadSize, uint8_t* payload)
 
 	uint8_t result = YHL_PACKET_PROCESSOR_FAILURE;
 	SendResponse(SetDisarmOnDischargeValue, 1, &result);
+}
+
+void OnRebootToBootloader(uint8_t payloadSize, uint8_t* payload)
+{
+	if (payloadSize != 1)
+	{
+		return;
+	}
+
+	if (FoxState.GlobalState.IsArmed || FoxState.ServiceSettings.IsForceTx)
+	{
+		uint8_t result = YHL_PACKET_PROCESSOR_FAILURE;
+		SendResponse(RebootToBootloader, 1, &result);
+	}
+
+	PendingCommandsFlags.NeedToRebootToBootloader = true;
 }
 
 void EmitEnteringSleepmodeEvent(void)

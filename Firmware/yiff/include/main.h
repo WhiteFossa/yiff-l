@@ -40,6 +40,11 @@
 #include <stdbool.h>
 
 /**
+ * Jump here to get into bootloader
+ */
+#define BOOTLOADER_OEP 0x08000000
+
+/**
  * Set default buttons actions
  */
 void Main_SetDefaultButtonsActions(void);

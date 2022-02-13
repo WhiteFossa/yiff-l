@@ -169,6 +169,11 @@ typedef struct
 	 * If true, then we need to set disarm-on-discharge value
 	 */
 	bool NeedToSetDisarmOnDischargeValue;
+
+	/**
+	 * If true, then we need to reboot to bootloader
+	 */
+	bool NeedToRebootToBootloader;
 }
 PendingCommandsFlagsStruct;
 

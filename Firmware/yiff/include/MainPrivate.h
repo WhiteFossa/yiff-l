@@ -63,6 +63,28 @@ extern HardwareControlsEventsStruct HardwareControlsEvents;
 extern FMGL_API_XBMTransparencyMode transparencyMode;
 
 /**
+ * Entry point
+ */
+typedef void (EntryPoint)(void);
+
+/**
+ * Jump to entry point struct
+ */
+typedef struct
+{
+	/**
+	 * Stack pointer
+	 */
+	uint32_t StackPointer;
+
+	/**
+	 * Entry point
+	 */
+	EntryPoint* EntryPoint;
+}
+JumpToEntryPointStruct;
+
+/**
  * Checks if fox name changed and if so, then saves it into EEPROM and bluetooth module
  */
 void Main_ProcessFoxNameChange(void);
@@ -229,6 +251,11 @@ void Main_SetRTCCalibrationValue(void);
  * Sets disarm-on-discharge value if needed
  */
 void Main_SetDisarmOnDischargeValue(void);
+
+/**
+ * Reboot to bootloader if needed
+ */
+void Main_ProcessRebootToBootloader(void);
 
 /**
  * As it name states, processes high priority events.
