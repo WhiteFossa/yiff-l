@@ -369,7 +369,9 @@ void MenuDisplay_DrawMenuLines(uint8_t linesCount, char* lines, uint8_t activeLi
 			FMGL_API_DrawRectangleFilled(&fmglContext, 0, lineTop, rightmostPixel, lineTop + YHL_MENU_LINE_HEIGHT, OnColor, OnColor);
 		}
 
-		FMGL_API_RenderTextWithLineBreaks(&fmglContext, &font, 0, lineTop, NULL, NULL, false, lines + YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE * line);
+		uint16_t tmpWidth;
+		uint16_t tmpHeight;
+		FMGL_API_RenderTextWithLineBreaks(&fmglContext, &font, 0, lineTop, &tmpWidth, &tmpHeight, false, lines + YHL_MENU_MAX_ITEM_TEXT_MEMORY_SIZE * line);
 	}
 }
 

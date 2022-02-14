@@ -100,7 +100,10 @@ void DrawCurrentTime(uint32_t time)
 	uint8_t bufferSize = 16;
 	char buffer[bufferSize];
 	TimestampToHMSString(time, buffer, bufferSize);
-	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, YHL_TIME_LEFT, YHL_TIME_TOP, NULL, NULL, false, buffer);
+
+	uint16_t tmpWidth;
+	uint16_t tmpHeight;
+	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, YHL_TIME_LEFT, YHL_TIME_TOP, &tmpWidth, &tmpHeight, false, buffer);
 }
 
 void DrawTXStatus(bool isTXOn)
@@ -130,7 +133,8 @@ void DrawFoxName(char* name)
 			YHL_FOX_NAME_CLEAR_BOTTOM, OffColor, OffColor);
 
 	uint16_t width;
-	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, 0, 0, &width, NULL, true, name);
+	uint16_t tmpHeight;
+	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, 0, 0, &width, &tmpHeight, true, name);
 
 	int16_t spacing = (int16_t)((FMGL_API_GetDisplayWidth(&fmglContext) - width) / 2U);
 	if (spacing < 0)
@@ -138,7 +142,8 @@ void DrawFoxName(char* name)
 		spacing = 0;
 	}
 
-	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, (uint16_t)spacing, YHL_FOX_NAME_TOP, NULL, NULL, false, name);
+	uint16_t tmpWidth;
+	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, (uint16_t)spacing, YHL_FOX_NAME_TOP, &tmpWidth, &tmpHeight, false, name);
 }
 
 uint16_t DrawFoxFrequency(FoxFrequencyStruct frequency)
@@ -149,8 +154,8 @@ uint16_t DrawFoxFrequency(FoxFrequencyStruct frequency)
 	snprintf(buffer, 16, "%.3f", freqMHz);
 
 	uint16_t width;
-
-	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &frequencyFont, YHL_FREQUENCY_LEFT, YHL_FREQUENCY_TOP, &width, NULL, false, buffer);
+	uint16_t tmpHeight;
+	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &frequencyFont, YHL_FREQUENCY_LEFT, YHL_FREQUENCY_TOP, &width, &tmpHeight, false, buffer);
 
 	return width;
 }
@@ -218,16 +223,21 @@ void DrawFoxCode(FoxCodeEnum code, bool isFast, uint16_t availableWidth)
 	/* Dry runs*/
 	uint16_t numberWidth;
 	uint16_t codeWidth;
-	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, 0, 0, &numberWidth, NULL, true, number);
-	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, 0, 0, &codeWidth, NULL, true, codeTxtWithSpeed);
+	uint16_t tmpHeight;
+	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, 0, 0, &numberWidth, &tmpHeight, true, number);
+	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, 0, 0, &codeWidth, &tmpHeight, true, codeTxtWithSpeed);
 
 	uint16_t numberSpacing = (uint16_t)(availableWidth - numberWidth) / 2U;
 	uint16_t codeSpacing = (uint16_t)(availableWidth - codeWidth) / 2U;
 
 	uint16_t lastPixel = (uint16_t)(FMGL_API_GetDisplayWidth(&fmglContext) - 1U);
 
-	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, (uint16_t)(lastPixel - (numberWidth + numberSpacing)), YHL_CODE_LINE1_TOP, NULL, NULL, false, number);
-	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, (uint16_t)(lastPixel - (codeWidth + codeSpacing)), YHL_CODE_LINE2_TOP, NULL, NULL, false, codeTxtWithSpeed);
+	uint16_t tmpWidth;
+	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, (uint16_t)(lastPixel - (numberWidth + numberSpacing)), YHL_CODE_LINE1_TOP,
+			&tmpWidth, &tmpHeight, false, number);
+
+	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, (uint16_t)(lastPixel - (codeWidth + codeSpacing)), YHL_CODE_LINE2_TOP, &tmpWidth,
+			&tmpHeight, false, codeTxtWithSpeed);
 }
 
 void DrawFoxCycle(FoxCycleStruct cycle)
@@ -259,7 +269,10 @@ void DrawFoxCycle(FoxCycleStruct cycle)
 	}
 
 	snprintf(buffer, bufferSize, "Cycle: %s", cycleTimeTxt);
-	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, YHL_CYCLE_LEFT, YHL_CYCLE_TOP, NULL, NULL, false, buffer);
+
+	uint16_t tmpWidth;
+	uint16_t tmpHeight;
+	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, YHL_CYCLE_LEFT, YHL_CYCLE_TOP, &tmpWidth, &tmpHeight, false, buffer);
 }
 
 void DrawEndingTone(uint8_t endingToneLength, FoxCycleStruct cycle)
@@ -275,15 +288,17 @@ void DrawEndingTone(uint8_t endingToneLength, FoxCycleStruct cycle)
 	uint8_t bufferSize = 32;
 	char buffer[bufferSize];
 
+	uint16_t tmpWidth;
+	uint16_t tmpHeight;
 	if (cycle.IsContinuous)
 	{
 		snprintf(buffer, bufferSize, "Ending tone: N/A");
-		FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, YHL_ENDING_TONE_LEFT, YHL_ENDING_TONE_TOP, NULL, NULL, false, buffer);
+		FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, YHL_ENDING_TONE_LEFT, YHL_ENDING_TONE_TOP, &tmpWidth, &tmpHeight, false, buffer);
 		return;
 	}
 
 	snprintf(buffer, bufferSize, "Ending tone: %ds", endingToneLength);
-	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, YHL_ENDING_TONE_LEFT, YHL_ENDING_TONE_TOP, NULL, NULL, false, buffer);
+	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, YHL_ENDING_TONE_LEFT, YHL_ENDING_TONE_TOP, &tmpWidth, &tmpHeight, false, buffer);
 }
 
 void DrawFoxCycleState(CycleStateStruct cycleState, uint32_t currentTime, FoxCycleStruct cycle, GlobalFoxStateStruct globalState)
@@ -296,12 +311,15 @@ void DrawFoxCycleState(CycleStateStruct cycleState, uint32_t currentTime, FoxCyc
 			OffColor,
 			OffColor);
 
+	uint16_t tmpWidth;
+	uint16_t tmpHeight;
+
 	if (GfsBeforeFinish != globalState.CurrentState)
 	{
 		uint8_t bufferSize = 32;
 		char buffer[bufferSize];
 		snprintf(buffer, bufferSize, "Waiting for start");
-		FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, YHL_CYCLE_STATE_LEFT, YHL_CYCLE_STATE_TOP, NULL, NULL, false, buffer);
+		FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, YHL_CYCLE_STATE_LEFT, YHL_CYCLE_STATE_TOP, &tmpWidth, &tmpHeight, false, buffer);
 		return;
 	}
 
@@ -310,7 +328,7 @@ void DrawFoxCycleState(CycleStateStruct cycleState, uint32_t currentTime, FoxCyc
 		uint8_t bufferSize = 32;
 		char buffer[bufferSize];
 		snprintf(buffer, bufferSize, "N/A: Continuous cycle");
-		FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, YHL_CYCLE_STATE_LEFT, YHL_CYCLE_STATE_TOP, NULL, NULL, false, buffer);
+		FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, YHL_CYCLE_STATE_LEFT, YHL_CYCLE_STATE_TOP, &tmpWidth, &tmpHeight, false, buffer);
 		return;
 	}
 
@@ -342,7 +360,7 @@ void DrawFoxCycleState(CycleStateStruct cycleState, uint32_t currentTime, FoxCyc
 	char buffer[bufferSize];
 	snprintf(buffer, bufferSize, "%s till %s", timeBuffer, actionBuffer);
 
-	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, YHL_CYCLE_STATE_LEFT, YHL_CYCLE_STATE_TOP, NULL, NULL, false, buffer);
+	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, YHL_CYCLE_STATE_LEFT, YHL_CYCLE_STATE_TOP, &tmpWidth, &tmpHeight, false, buffer);
 }
 
 void DrawGlobalState(GlobalFoxStateStruct globalState, uint32_t currentTime)
@@ -355,12 +373,14 @@ void DrawGlobalState(GlobalFoxStateStruct globalState, uint32_t currentTime)
 			OffColor,
 			OffColor);
 
+	uint16_t tmpWidth;
+	uint16_t tmpHeight;
 	if (GfsStandby == globalState.CurrentState)
 	{
 		uint8_t bufferSize = 32;
 		char buffer[bufferSize];
 		snprintf(buffer, bufferSize, "Standing by");
-		FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, YHL_GLOBAL_STATE_LEFT, YHL_GLOBAL_STATE_TOP, NULL, NULL, false, buffer);
+		FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, YHL_GLOBAL_STATE_LEFT, YHL_GLOBAL_STATE_TOP, &tmpWidth, &tmpHeight, false, buffer);
 		return;
 	}
 
@@ -391,7 +411,7 @@ void DrawGlobalState(GlobalFoxStateStruct globalState, uint32_t currentTime)
 	char buffer[bufferSize];
 	snprintf(buffer, bufferSize, "%s till %s", timeBuffer, actionBuffer);
 
-	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, YHL_GLOBAL_STATE_LEFT, YHL_GLOBAL_STATE_TOP, NULL, NULL, false, buffer);
+	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, YHL_GLOBAL_STATE_LEFT, YHL_GLOBAL_STATE_TOP, &tmpWidth, &tmpHeight, false, buffer);
 }
 
 void DrawFoxPower(float power, FoxFrequencyStruct frequency)
@@ -406,13 +426,16 @@ void DrawFoxPower(float power, FoxFrequencyStruct frequency)
 
 	uint8_t bufferSize = 32;
 	char buffer[bufferSize];
+
+	uint16_t tmpWidth;
+	uint16_t tmpHeight;
 	if (frequency.Is144MHz)
 	{
 		snprintf(buffer, bufferSize, "Power: N/A");
-		FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, YHL_POWER_LEFT, YHL_POWER_TOP, NULL, NULL, false, buffer);
+		FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, YHL_POWER_LEFT, YHL_POWER_TOP, &tmpWidth, &tmpHeight, false, buffer);
 		return;
 	}
 
 	snprintf(buffer, bufferSize, "Power: %.1fW", power);
-	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, YHL_POWER_LEFT, YHL_POWER_TOP, NULL, NULL, false, buffer);
+	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, YHL_POWER_LEFT, YHL_POWER_TOP, &tmpWidth, &tmpHeight, false, buffer);
 }

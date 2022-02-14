@@ -113,7 +113,11 @@ void NumberInputDisplay_Display(void)
 		/* Didn't fit, drawing as is */
 		titleXShift = 0;
 	}
-	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, (uint16_t)titleXShift, YHL_NUMBER_INPUT_DISPLAY_TITLE_TOP, NULL, NULL, false, NumberInputDisplay_Title);
+
+	uint16_t tmpWidth;
+	uint16_t tmpHeight;
+	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, (uint16_t)titleXShift, YHL_NUMBER_INPUT_DISPLAY_TITLE_TOP, &tmpWidth, &tmpHeight,
+			false, NumberInputDisplay_Title);
 
 	/* Value */
 	int32_t usableYSpace = displayHeight - titleHeight - YHL_BUTTONS_HEIGHT;
@@ -137,7 +141,7 @@ void NumberInputDisplay_Display(void)
 	}
 
 	int32_t valueYShift = ((usableYSpace - valueHeight) / 2) + titleHeight;
-	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, (uint16_t)valueXShift, (uint16_t)valueYShift, NULL, NULL, false, valueText);
+	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, (uint16_t)valueXShift, (uint16_t)valueYShift, &tmpWidth, &tmpHeight, false, valueText);
 
 	/* Buttons */
 	strncpy(LeftButton.Text, "OK", YHL_MAX_BUTTON_TEXT_MEMORY_SIZE);

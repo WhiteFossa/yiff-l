@@ -36,7 +36,10 @@ void InformationPopup_Show(char* title, char* message, FoxDisplayEnum previousDi
 		/* Didn't fit, drawing as is */
 		titleXShift = 0;
 	}
-	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, (uint16_t)titleXShift, YHL_INFORMAION_POPUP_TITLE_TOP, NULL, NULL, false, title);
+
+	uint16_t tmpWidth;
+	uint16_t tmpHeight;
+	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, (uint16_t)titleXShift, YHL_INFORMAION_POPUP_TITLE_TOP, &tmpWidth, &tmpHeight, false, title);
 
 	/* Message */
 	int32_t usableYSpace = displayHeight - titleHeight - YHL_BUTTONS_HEIGHT;
@@ -57,7 +60,7 @@ void InformationPopup_Show(char* title, char* message, FoxDisplayEnum previousDi
 	}
 
 	int32_t messageYShift = ((usableYSpace - messageHeight) / 2) + titleHeight;
-	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, (uint16_t)messageXShift, (uint16_t)messageYShift, NULL, NULL, false, message);
+	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, (uint16_t)messageXShift, (uint16_t)messageYShift, &tmpWidth, &tmpHeight, false, message);
 
 	/* Buttons */
 	strncpy(LeftButton.Text, "Back", YHL_MAX_BUTTON_TEXT_MEMORY_SIZE);

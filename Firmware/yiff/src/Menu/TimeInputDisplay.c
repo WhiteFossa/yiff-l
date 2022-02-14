@@ -68,7 +68,11 @@ void TimeInputDisplay_Display()
 		/* Didn't fit, drawing as is */
 		titleXShift = 0;
 	}
-	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, (uint16_t)titleXShift, YHL_TIME_INPUT_DISPLAY_TITLE_TOP, NULL, NULL, false, TimeInputDisplay_Title);
+
+	uint16_t tmpWidth;
+	uint16_t tmpHeight;
+	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, (uint16_t)titleXShift, YHL_TIME_INPUT_DISPLAY_TITLE_TOP, &tmpWidth, &tmpHeight,
+			false, TimeInputDisplay_Title);
 
 	/* Value */
 	int32_t usableYSpace = displayHeight - titleHeight - YHL_BUTTONS_HEIGHT;
@@ -95,7 +99,7 @@ void TimeInputDisplay_Display()
 	}
 
 	int32_t valueYShift = ((usableYSpace - valueHeight) / 2) + titleHeight;
-	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, (uint16_t)valueXShift, (uint16_t)valueYShift, NULL, NULL, false, valueText);
+	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, (uint16_t)valueXShift, (uint16_t)valueYShift, &tmpWidth, &tmpHeight, false, valueText);
 
 
 	/* Buttons */

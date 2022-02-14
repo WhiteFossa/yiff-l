@@ -47,5 +47,7 @@ void DrawButton(FoxButtonStruct* button, uint16_t x, uint16_t y, uint16_t width,
 	if (spacingX < 0) { spacingX = 0; }
 	if (spacingY < 0) { spacingY = 0; }
 
-	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &font, (uint16_t)(x + spacingX), (uint16_t)(y + spacingY), NULL, NULL, false, button->Text);
+	uint16_t tmpWidth;
+	uint16_t tmpHeight;
+	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &font, (uint16_t)(x + spacingX), (uint16_t)(y + spacingY), &tmpWidth, &tmpHeight, false, button->Text);
 }

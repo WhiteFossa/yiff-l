@@ -71,7 +71,11 @@ void ItemSelectionDisplay_Display(void)
 		/* Didn't fit, drawing as is */
 		titleXShift = 0;
 	}
-	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, (uint16_t)titleXShift, YHL_ITEM_SELECTION_DISPLAY_TITLE_TOP, NULL, NULL, false, ItemSelectionDisplay_Title);
+
+	uint16_t tmpWidth;
+	uint16_t tmpHeight;
+	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, (uint16_t)titleXShift, YHL_ITEM_SELECTION_DISPLAY_TITLE_TOP, &tmpWidth, &tmpHeight,
+			false, ItemSelectionDisplay_Title);
 
 	/* Lines */
 	char window[YHL_ITEM_SELECTION_DISPLAY_MAX_LINES][YHL_ITEM_SELECTION_DISPLAY_TEXT_MEMORY_SIZE];
@@ -137,7 +141,9 @@ void ItemSelectionDisplay_DrawMenuLines(uint8_t linesCount, char* lines, uint8_t
 			FMGL_API_DrawRectangleFilled(&fmglContext, 0, (uint16_t)lineTop, rightmostPixel, (uint16_t)lineTop + YHL_ITEM_SELECTION_DISPLAY_LINE_HEIGHT, OnColor, OnColor);
 		}
 
-		FMGL_API_RenderTextWithLineBreaks(&fmglContext, &font, 0, (uint16_t)lineTop, NULL, NULL, false, buffer);
+		uint16_t tmpWidth;
+		uint16_t tmpHeight;
+		FMGL_API_RenderTextWithLineBreaks(&fmglContext, &font, 0, (uint16_t)lineTop, &tmpWidth, &tmpHeight, false, buffer);
 	}
 }
 

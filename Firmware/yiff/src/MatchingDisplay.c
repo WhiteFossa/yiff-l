@@ -44,7 +44,8 @@ void DrawMatchingStatusString(uint8_t step)
 	snprintf(buffer, bufferSize, "Matching: %d/%d", step + 1, HAL_AM_MAX_VALUE + 1);
 
 	uint16_t stringWidth;
-	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, 0, 0, &stringWidth, NULL, true, buffer);
+	uint16_t tmpHeight;
+	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, 0, 0, &stringWidth, &tmpHeight, true, buffer);
 
 	int32_t spacing = (FMGL_API_GetDisplayWidth(&fmglContext) - stringWidth) / 2;
 	if (spacing < 0)
@@ -52,7 +53,8 @@ void DrawMatchingStatusString(uint8_t step)
 		spacing = 0;
 	}
 
-	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, (uint16_t)spacing, YHL_ANTENNA_MATCHING_PROGRESS_TOP, NULL, NULL, false, buffer);
+	uint16_t tmpWidth;
+	FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, (uint16_t)spacing, YHL_ANTENNA_MATCHING_PROGRESS_TOP, &tmpWidth, &tmpHeight, false, buffer);
 }
 
 void DrawMatchingGraph(MatchingStatusStruct matchingData)
