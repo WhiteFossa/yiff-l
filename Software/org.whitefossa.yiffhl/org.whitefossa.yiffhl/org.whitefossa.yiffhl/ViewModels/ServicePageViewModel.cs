@@ -1086,7 +1086,11 @@ Is value in a valid range?");
                 await _userNotifier.ShowErrorMessageAsync("Failure", @"Unable to reboot into bootloader.
 Is fox armed?
 Is TX forced?");
+
+                return;
             }
+
+            await _userNotifier.ShowNotificationMessageAsync("Success", "The fox have to be in DFU mode now.");
         }
 
         #endregion
