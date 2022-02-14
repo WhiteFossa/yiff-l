@@ -13,6 +13,12 @@ void JumpToEntryPoint(const uint32_t address)
 	snprintf(textBuffer, 33, "Jumping to OEP");
 	Log_AddLine(textBuffer);
 
+	/* We might press buttons to jump to OEP. Clearing interrupt flags */
+	__HAL_GPIO_EXTI_CLEAR_IT(HAL_LEFT_BUTTON_PIN);
+	__HAL_GPIO_EXTI_CLEAR_IT(HAL_RIGHT_BUTTON_PIN);
+	__HAL_GPIO_EXTI_CLEAR_IT(HAL_ENCODER_BUTTON_PIN);
+	__HAL_GPIO_EXTI_CLEAR_IT(HAL_ENCODER_RIGHT_PIN);
+
 	__disable_irq();
 	SCB->VTOR = YBL_MAIN_CODE_START;
 
