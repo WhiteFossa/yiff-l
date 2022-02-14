@@ -136,6 +136,12 @@ void HAL_InitHardware(void);
 void HAL_EnableUART(void);
 
 /**
+ * Disables UART
+ */
+void HAL_DisableUART(void);
+
+
+/**
  * True, if display bus is initialized
  */
 bool HAL_GetDisplayBusInitializationStatus(void);

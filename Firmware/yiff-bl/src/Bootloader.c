@@ -19,6 +19,9 @@ void JumpToEntryPoint(const uint32_t address)
 	__HAL_GPIO_EXTI_CLEAR_IT(HAL_ENCODER_BUTTON_PIN);
 	__HAL_GPIO_EXTI_CLEAR_IT(HAL_ENCODER_RIGHT_PIN);
 
+	/* De-initializing UART */
+	HAL_DisableUART();
+
 	__disable_irq();
 	SCB->VTOR = YBL_MAIN_CODE_START;
 

@@ -165,6 +165,15 @@ void HAL_EnableUART(void)
 	}
 }
 
+void HAL_DisableUART(void)
+{
+	UART_Handle.Instance = HAL_BLUETOOTH_UART;
+	if(HAL_UART_DeInit(&UART_Handle) != HAL_OK)
+	{
+		L2HAL_Error(Generic);
+	}
+}
+
 bool HAL_GetDisplayBusInitializationStatus(void)
 {
 	return HAL_IsDisplayBusInitialized;
