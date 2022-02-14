@@ -410,6 +410,11 @@ void FMGL_API_RenderOneLineDumb(FMGL_API_DriverContext* context, FMGL_API_FontSe
 void FMGL_API_RenderTextWithLineBreaks(FMGL_API_DriverContext* context, FMGL_API_FontSettings* fontSettings, uint16_t x, uint16_t y, uint16_t* width, uint16_t* height,
 		bool isDryRun, char* string)
 {
+	if (NULL == width || NULL == height)
+	{
+		L2HAL_Error(Generic);
+	}
+
 	*width = 0;
 	*height = y;
 

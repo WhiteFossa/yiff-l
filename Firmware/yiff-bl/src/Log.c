@@ -24,9 +24,11 @@ void Log_DrawCurrentLog(void)
 
 	uint16_t y = 0;
 
+	uint16_t outWidth;
+	uint16_t outHeight;
 	for (uint8_t line = 0; line < LOG_LINES_COUNT; line ++)
 	{
-		FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, 0, y, NULL, NULL, false, Log_LogLines[line]);
+		FMGL_API_RenderTextWithLineBreaks(&fmglContext, &commonFont, 0, y, &outWidth, &outHeight, false, Log_LogLines[line]);
 
 		y += LOG_LINE_Y_SHIFT;
 	}
