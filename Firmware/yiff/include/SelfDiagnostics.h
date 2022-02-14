@@ -604,7 +604,27 @@ typedef enum
 	/**
 	 * Failed to start ADC in Uant measurement
 	 */
-	YhlFailureCause_FailedToStartADCUant = 117
+	YhlFailureCause_FailedToStartADCUant = 117,
+
+	/**
+	 * Failed to stop ADC in Ubatt measurement
+	 */
+	YhlFailureCause_FailedToStopADCUbatt = 118,
+
+	/**
+	 * Failed to start ADC in Ubatt measurement
+	 */
+	YhlFailureCause_FailedToStartADCUbatt = 119,
+
+	/**
+	 * Failed to stop ADC in U80m measurement
+	 */
+	YhlFailureCause_FailedToStopADCU80m = 120,
+
+	/**
+	 * Failed to start ADC in U80m measurement
+	 */
+	YhlFailureCause_FailedToStartADCU80m = 121
 }
 YhlFailureCausesEnum;
 

@@ -132,10 +132,6 @@ void HAL_InitHardware(void)
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	HAL_GPIO_Init(HAL_ENCODER_LEFT_PORT, &GPIO_InitStruct);
 
-	HAL_NVIC_DisableIRQ(HAL_RIGHT_BUTTON_EXTI_LINE);
-	HAL_NVIC_DisableIRQ(HAL_LEFT_BUTTON_EXTI_LINE);
-	HAL_NVIC_DisableIRQ(HAL_ENCODER_BUTTON_EXTI_LINE);
-
 	/* Enable UART (for bluetooth) */
 	HAL_EnableUART();
 
