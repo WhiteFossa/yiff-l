@@ -669,11 +669,7 @@ void Main_ProcessRebootToBootloader(void)
 		/* Giving fox time to transmit a response */
 		HAL_Delay(1000);
 
-		__disable_irq();
-		SCB->VTOR = BOOTLOADER_OEP;
-		const uint32_t address = BOOTLOADER_OEP;
-		const JumpToEntryPointStruct* jumpStruct = (JumpToEntryPointStruct*)address;
-		asm("msr msp, %0; bx %1;" : : "r"(jumpStruct->StackPointer), "r"(jumpStruct->EntryPoint));
+		NVIC_SystemReset();
 	}
 }
 

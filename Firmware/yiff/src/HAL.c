@@ -311,7 +311,10 @@ void HAL_SetupADCGeneric(void)
 
 void HAL_SetupADCForUAntMeasurement(void)
 {
-	HAL_ADC_Stop_IT(&ADC_Handle);
+	if (HAL_ADC_Stop_IT(&ADC_Handle) != HAL_OK)
+	{
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_FailedToStopADCUant);
+	}
 
 	HAL_CurrentADCChannel = YHL_HAL_UAnt;
 
@@ -325,12 +328,18 @@ void HAL_SetupADCForUAntMeasurement(void)
 		SelfDiagnostics_HaltOnFailure(YhlFailureCause_ADCUantSetupFailure);
 	}
 
-	HAL_ADC_Start_IT(&ADC_Handle);
+	if (HAL_ADC_Start_IT(&ADC_Handle) != HAL_OK)
+	{
+		SelfDiagnostics_HaltOnFailure(YhlFailureCause_FailedToStartADCUant);
+	}
 }
 
 void HAL_SetupADCForUBattMeasurement(void)
 {
-	HAL_ADC_Stop_IT(&ADC_Handle);
+	if (HAL_ADC_Stop_IT(&ADC_Handle) != HAL_OK)
+	{
+		L2HAL_Error(Generic);
+	}
 
 	HAL_CurrentADCChannel = YHL_HAL_UBatt;
 
@@ -344,7 +353,10 @@ void HAL_SetupADCForUBattMeasurement(void)
 		SelfDiagnostics_HaltOnFailure(YhlFailureCause_ADCUbattSetupFailure);
 	}
 
-	HAL_ADC_Start_IT(&ADC_Handle);
+	if (HAL_ADC_Start_IT(&ADC_Handle) != HAL_OK)
+	{
+		L2HAL_Error(Generic);
+	}
 }
 
 void HAL_SetupADCForU80mMeasurement(void)

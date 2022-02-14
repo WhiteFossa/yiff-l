@@ -594,7 +594,17 @@ typedef enum
 	/**
 	 * Something went wrong when trying to set RTC calibration value
 	 */
-	YhlFailureCause_FailedToSetRTCCalibrationValue = 115
+	YhlFailureCause_FailedToSetRTCCalibrationValue = 115,
+
+	/**
+	 * Failed to stop ADC in Uant measurement
+	 */
+	YhlFailureCause_FailedToStopADCUant = 116,
+
+	/**
+	 * Failed to start ADC in Uant measurement
+	 */
+	YhlFailureCause_FailedToStartADCUant = 117
 }
 YhlFailureCausesEnum;
 

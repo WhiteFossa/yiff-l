@@ -234,10 +234,13 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef *hadc)
 	/* Clocking in */
 	__HAL_RCC_ADC1_CLK_ENABLE();
 
-	RCC_PeriphCLKInitTypeDef  PeriphClkInit;
+	RCC_PeriphCLKInitTypeDef PeriphClkInit;
 	PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_ADC;
 	PeriphClkInit.AdcClockSelection = RCC_ADCPCLK2_DIV6;
-	HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit);
+	if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
+	{
+		L2HAL_Error(Generic);
+	}
 
 	__HAL_RCC_GPIOA_CLK_ENABLE();
 	GPIO_InitTypeDef gpioInit;
@@ -259,7 +262,7 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef *hadc)
 
 	HAL_NVIC_DisableIRQ(ADC1_IRQn);
 
-	__HAL_RCC_ADC1_CLK_ENABLE();
+	__HAL_RCC_ADC1_CLK_DISABLE();
 }
 
 void HAL_SPI_MspInit(SPI_HandleTypeDef *hspi)

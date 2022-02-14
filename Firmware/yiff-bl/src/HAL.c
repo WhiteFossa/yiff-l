@@ -136,7 +136,6 @@ void HAL_InitHardware(void)
 	HAL_NVIC_DisableIRQ(HAL_LEFT_BUTTON_EXTI_LINE);
 	HAL_NVIC_DisableIRQ(HAL_ENCODER_BUTTON_EXTI_LINE);
 
-
 	/* Enable UART (for bluetooth) */
 	HAL_EnableUART();
 
