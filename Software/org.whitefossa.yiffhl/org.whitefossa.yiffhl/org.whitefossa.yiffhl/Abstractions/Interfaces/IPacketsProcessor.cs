@@ -43,6 +43,12 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
         /// </summary>
         void OnDisconnect();
 
+        /// <summary>
+        /// True, if no commands are pending in queue and no commands are being processed just now
+        /// </summary>
+        /// <returns></returns>
+        bool IsNoPendingCommands();
+
         #region Responses to commands
 
         void SetOnSetDateAndTimeResponse(OnResponseDelegate onSetDateAndTimeResponse);

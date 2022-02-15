@@ -707,6 +707,14 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
             }
         }
 
+        public bool IsNoPendingCommands()
+        {
+            lock(_commandQueueLock)
+            {
+                return !_commandsQueue.Any() && !_isWaitingForResponse;
+            }
+        }
+
         private void CheckOnResponseDelegate(OnResponseDelegate del)
         {
             if (del == null)

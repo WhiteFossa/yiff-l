@@ -1,9 +1,10 @@
-﻿using org.whitefossa.yiffhl.Abstractions.Enums;
+﻿using org.whitefossa.yiffhl.Abstractions.DTOs;
+using org.whitefossa.yiffhl.Abstractions.Enums;
 using org.whitefossa.yiffhl.Abstractions.Interfaces;
 using org.whitefossa.yiffhl.Abstractions.Interfaces.Models;
 using org.whitefossa.yiffhl.Models;
 using System;
-using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Input;
@@ -21,6 +22,10 @@ namespace org.whitefossa.yiffhl.ViewModels
         private readonly IServiceCommandsManager _serviceCommandsManager;
         private readonly IFoxIdentificationManager _foxIdentificationManager;
         private readonly IUserNotifier _userNotifier;
+        private readonly IPacketsProcessor _packetsProcessor;
+        private readonly IFoxConnector _foxConnector;
+        private readonly IAppCloser _appCloser;
+
         private MainModel _mainModel;
 
         public INavigation Navigation;
@@ -28,7 +33,7 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// <summary>
         /// Timer to poll service data
         /// </summary>
-        private Timer PollServiceDataTimer;
+        private System.Timers.Timer PollServiceDataTimer;
 
         /// <summary>
         /// Last error code
@@ -436,6 +441,9 @@ namespace org.whitefossa.yiffhl.ViewModels
             _serviceCommandsManager = App.Container.Resolve<IServiceCommandsManager>();
             _foxIdentificationManager = App.Container.Resolve<IFoxIdentificationManager>();
             _userNotifier = App.Container.Resolve<IUserNotifier>();
+            _packetsProcessor = App.Container.Resolve<IPacketsProcessor>();
+            _foxConnector = App.Container.Resolve<IFoxConnector>();
+            _appCloser = App.Container.Resolve<IAppCloser>();
 
             GetLastErrorCodeCommand = new Command(async () => await OnGetLastErrorAsync());
             ResetLastErrorCodeCommand = new Command(async () => await OnResetLastErrorCodeAsync());
@@ -475,7 +483,7 @@ namespace org.whitefossa.yiffhl.ViewModels
             RebootToBootloaderCommand = new Command(async () => await OnRebootToBootloaderAsync());
 
             // Setting up poll service data timer
-            PollServiceDataTimer = new Timer(PollServiceDataInterval);
+            PollServiceDataTimer = new System.Timers.Timer(PollServiceDataInterval);
             PollServiceDataTimer.Elapsed += async (s, e) => await OnReloadServiceDataRequestAsync(s, e);
             PollServiceDataTimer.AutoReset = true;
             PollServiceDataTimer.Start();
@@ -574,6 +582,11 @@ namespace org.whitefossa.yiffhl.ViewModels
         private async Task OnReloadServiceDataRequestAsync(Object source, ElapsedEventArgs e)
         {
             if (_mainModel.AppDisplays.Peek() != ActiveDisplay.ServiceDisplay)
+            {
+                return;
+            }
+
+            if (_mainModel.ServiceSettingsModel.IsBootloaderMode)
             {
                 return;
             }
@@ -1076,6 +1089,15 @@ Is value in a valid range?");
 
         private async Task OnRebootToBootloaderAsync()
         {
+            // Assuming that the fox will successfully reboot to bootloader we enabling bootloader mode (now to avoid sending commands to fox)
+            _mainModel.ServiceSettingsModel.IsBootloaderMode = true;
+
+            // Waiting for completion of all pending commands
+            while (!_packetsProcessor.IsNoPendingCommands())
+            {
+                Thread.Sleep(100);
+            }
+
             await _serviceCommandsManager.RebootToBootloaderAsync(async (s) => await OnRebootToBootloaderResponseAsync(s));
         }
 
@@ -1083,6 +1105,8 @@ Is value in a valid range?");
         {
             if (!isSuccessful)
             {
+                _mainModel.ServiceSettingsModel.IsBootloaderMode = false;
+
                 await _userNotifier.ShowErrorMessageAsync("Failure", @"Unable to reboot into bootloader.
 Is fox armed?
 Is TX forced?");
@@ -1090,7 +1114,40 @@ Is TX forced?");
                 return;
             }
 
+            // Re-estabilishing connection (it is lost because of fox powercycle), but now in bootloader mode
+            await _foxConnector.DisconnectAsync();
+
+            _mainModel.OnFoxConnectorConnected += async(f) => await OnBootloaderConnectedAsync(f);
+            _mainModel.OnFoxConnectorDisconnected += async() => await OnBootloaderDisconnectAsync();
+            _mainModel.OnFoxConnectorFailedToConnect += async (e) => await OnBootloaderFailedToConnectAsync(e);
+
+            await _foxConnector.ConnectAsync(_mainModel.ConnectedFox);
+
             await _userNotifier.ShowNotificationMessageAsync("Success", "The fox have to be in DFU mode now.");
+        }
+
+        private async Task OnBootloaderConnectedAsync(PairedFoxDTO connectedFox)
+        {
+            _packetsProcessor.OnConnect();
+
+            // TODO: Request bootloader identification
+        }
+
+        private async Task OnBootloaderDisconnectAsync()
+        {
+            await _userNotifier.ShowNotificationMessageAsync("Disconnected", @"Bootloader disconnected.
+Application will be terminated.");
+
+            _appCloser.Close();
+        }
+
+        private async Task OnBootloaderFailedToConnectAsync(Exception exception)
+        {
+            await _userNotifier.ShowNotificationMessageAsync("Disconnected", $@"Bootloader disconnected.
+Application will be terminated.
+Reason: {exception.Message}");
+
+            _appCloser.Close();
         }
 
         #endregion

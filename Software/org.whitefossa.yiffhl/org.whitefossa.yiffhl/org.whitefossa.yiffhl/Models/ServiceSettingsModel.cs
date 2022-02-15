@@ -97,6 +97,11 @@
         /// </summary>
         public float DisarmOnDischargeThreshold { get; set; }
 
+        /// <summary>
+        /// If true, then the fox is in bootloader mode. In bootloader mode we mustn't send "normal" commands to her
+        /// </summary>
+        public bool IsBootloaderMode { get; set; }
+
         public ServiceSettingsModel()
         {
             LastErrorCode = null;
@@ -124,6 +129,8 @@
             UantFactorB = 0;
 
             DisarmOnDischargeThreshold = 0;
+
+            IsBootloaderMode = false;
         }
     }
 }

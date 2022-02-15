@@ -864,7 +864,7 @@ namespace org.whitefossa.yiffhl.ViewModels
 
             // Setting up fox connector delegates
             MainModel.OnFoxConnectorNewByteRead += OnNewByteRead;
-            MainModel.OnFoxConnectorConnected += OnConnectedAsync;
+            MainModel.OnFoxConnectorConnected += async (f) => await OnConnectedAsync(f);
             MainModel.OnFoxConnectorDisconnected += OnDisconnect;
             MainModel.OnFoxConnectorFailedToConnect += OnFailedToConnect;
 
@@ -1017,7 +1017,7 @@ namespace org.whitefossa.yiffhl.ViewModels
             }
         }
 
-        private async void OnConnectedAsync(PairedFoxDTO connectedFox)
+        private async Task OnConnectedAsync(PairedFoxDTO connectedFox)
         {
             _packetsProcessor.OnConnect();
 
@@ -1815,6 +1815,11 @@ Do you want to continue?");
         private async Task OnDynamicFoxStatusPollRequest(Object source, ElapsedEventArgs e)
         {
             if (!MainModel.IsConnected)
+            {
+                return;
+            }
+
+            if (MainModel.ServiceSettingsModel.IsBootloaderMode)
             {
                 return;
             }

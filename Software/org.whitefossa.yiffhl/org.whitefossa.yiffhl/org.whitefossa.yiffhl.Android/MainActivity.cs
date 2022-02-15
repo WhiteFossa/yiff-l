@@ -43,6 +43,7 @@ namespace org.whitefossa.yiffhl.Droid
             App.Container.Register<IAntennaMatchingManager, AntennaMatchingManager>().AsSingleton();
             App.Container.Register<IEventsGenerator, EventsGenerator>().AsSingleton();
             App.Container.Register<IServiceCommandsManager, ServiceCommandsManager>().AsSingleton();
+            App.Container.Register<IAppCloser, AppCloser>().AsSingleton();
 
             #region Commands
 
