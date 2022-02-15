@@ -119,5 +119,5 @@ void OnGetIdentificationData(uint8_t payloadSize, uint8_t* payload)
 	tmp16 = EEPROM_ConstantHeader.FirmwareVersion;
 	memcpy(&response[8], &tmp16, 2);
 
-	SendResponse(YBL_GetIdentificationData, 14, response);
+	SendResponse(YBL_GetIdentificationData, 10, response);
 }
