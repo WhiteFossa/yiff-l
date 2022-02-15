@@ -219,7 +219,7 @@ void OnNewCommandToFox(uint8_t payloadSize, uint8_t* payload);
 void SendPacket(uint8_t payloadSize, uint8_t* payload);
 
 /**
- * Send response to given command
+ * Sends response to given command
  */
 void SendResponse(CommandToFoxEnum responseTo, uint8_t payloadSize, uint8_t* payload);
 

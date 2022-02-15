@@ -52,9 +52,72 @@ void OnNewCommand(uint8_t payloadSize, uint8_t* payload)
 {
 	switch(payload[0])
 	{
-		case Identification:
+		case YBL_GetIdentificationData:
 			/* Identify herself */
-
+			OnGetIdentificationData(payloadSize, payload);
 			break;
 	}
+}
+
+void SendResponse(Commands responseTo, uint8_t payloadSize, uint8_t* payload)
+{
+	uint8_t fullPayloadSize = payloadSize + 2; /* +2 because one byte is response marker, another is command to what we respond */
+	uint8_t fullPayload[YBL_PACKET_PROCESSOR_MAX_PAYLOAD_SIZE];
+
+	fullPayload[0] = YBL_PACKET_PROCESSOR_RESPONSE_FROM_FOX;
+	fullPayload[1] = responseTo;
+
+	if (payloadSize > 0)
+	{
+		memcpy(fullPayload + 2, payload, payloadSize);
+	}
+
+	SendPacket(fullPayloadSize, fullPayload);
+}
+
+void SendPacket(uint8_t payloadSize, uint8_t* payload)
+{
+	if (payloadSize < YBL_PACKET_PROCESSOR_MIN_PAYLOAD_SIZE || payloadSize > YBL_PACKET_PROCESSOR_MAX_PAYLOAD_SIZE)
+	{
+		L2HAL_Error(Generic);
+	}
+
+	uint8_t fullPacketSize = (uint8_t)(payloadSize + YBL_PACKET_PROCESSOR_PAYLOAD_SIZE_DELTA);
+
+	uint8_t fullPacket[YBL_PACKET_PROCESSOR_MAX_PAYLOAD_SIZE + YBL_PACKET_PROCESSOR_PAYLOAD_SIZE_DELTA];
+	fullPacket[0] = fullPacketSize; /* Length */
+	memcpy(fullPacket + 1, payload, payloadSize); /* Payload */
+
+	uint32_t crc = L2HAL_CRC_Calculate(&CRC_Context, fullPacket, fullPacketSize - 4U);
+	memcpy(fullPacket + fullPacketSize - 4U, (uint8_t*)&crc, 4);
+
+	UART_SendBlocking(fullPacket, fullPacketSize);
+}
+
+void OnGetIdentificationData(uint8_t payloadSize, uint8_t* payload)
+{
+	if (payloadSize != 1)
+	{
+		return;
+	}
+
+	uint8_t response[10];
+
+	/* Signature */
+	uint32_t tmp32 = YBL_VER_FOX_SIGNATURE;
+	memcpy(&response[0], &tmp32, 4);
+
+	/* Protocol version */
+	uint16_t tmp16 = YBL_VER_PROTOCOL_VERSION;
+	memcpy(&response[4], &tmp16, 2);
+
+	/* Hardware revision */
+	tmp16 = EEPROM_ConstantHeader.HardwareRevision;
+	memcpy(&response[6], &tmp16, 2);
+
+	/* Software version */
+	tmp16 = EEPROM_ConstantHeader.FirmwareVersion;
+	memcpy(&response[8], &tmp16, 2);
+
+	SendResponse(YBL_GetIdentificationData, 14, response);
 }
