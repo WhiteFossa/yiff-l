@@ -95,6 +95,12 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
 
         #endregion
 
+        #region Bootloader commands responses
+
+        private OnResponseDelegate _onBootloaderGetIdentificationDataResponse;
+
+        #endregion
+
         #region Events
 
         private OnEnteringSleepmodeEventDelegate _onEnteringSleepmodeEvent;
@@ -699,6 +705,18 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
                         _onRebootToBootloaderResponse(responsePayload);
                         break;
 
+
+                    #region Bootloader responses
+
+                    // Get identification data (bootloader)
+                    case CommandType.BootloaderGetIdentificationData:
+                        CheckOnResponseDelegate(_onBootloaderGetIdentificationDataResponse);
+
+                        _onBootloaderGetIdentificationDataResponse(responsePayload);
+                        break;
+
+                    #endregion
+
                     default:
                         return; // We've got some junk
                 }
@@ -1153,6 +1171,12 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
         {
             _onRebootToBootloaderResponse = onRebootToBootloaderResponse
                 ?? throw new ArgumentNullException(nameof(onRebootToBootloaderResponse));
+        }
+
+        public void SetOnBootloaderGetIdentificationDataResponse(OnResponseDelegate onBootloaderGetIdentificationDataResponse)
+        {
+            _onBootloaderGetIdentificationDataResponse = onBootloaderGetIdentificationDataResponse
+                ?? throw new ArgumentNullException(nameof(onBootloaderGetIdentificationDataResponse));
         }
     }
 }

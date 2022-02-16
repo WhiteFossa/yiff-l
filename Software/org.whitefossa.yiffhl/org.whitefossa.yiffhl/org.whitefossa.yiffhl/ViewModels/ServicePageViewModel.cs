@@ -4,6 +4,7 @@ using org.whitefossa.yiffhl.Abstractions.Interfaces;
 using org.whitefossa.yiffhl.Abstractions.Interfaces.Models;
 using org.whitefossa.yiffhl.Models;
 using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
@@ -1115,22 +1116,48 @@ Is TX forced?");
             }
 
             // Re-estabilishing connection (it is lost because of fox powercycle), but now in bootloader mode
+            var foxToReconnect = _mainModel.ConnectedFox;
+
             await _foxConnector.DisconnectAsync();
 
+            foreach (OnFoxConnectorConnectedDelegate d in _mainModel.OnFoxConnectorConnected.GetInvocationList())
+            {
+                _mainModel.OnFoxConnectorConnected -= d;
+            }
             _mainModel.OnFoxConnectorConnected += async(f) => await OnBootloaderConnectedAsync(f);
+
+            foreach (OnFoxConnectorDisconnectedDelegate d in _mainModel.OnFoxConnectorDisconnected.GetInvocationList())
+            {
+                _mainModel.OnFoxConnectorDisconnected -= d;
+            }
             _mainModel.OnFoxConnectorDisconnected += async() => await OnBootloaderDisconnectAsync();
+
+            foreach (OnFoxConnectorFailedToConnectDelegate d in _mainModel.OnFoxConnectorFailedToConnect.GetInvocationList())
+            {
+                _mainModel.OnFoxConnectorFailedToConnect -= d;
+            }
             _mainModel.OnFoxConnectorFailedToConnect += async (e) => await OnBootloaderFailedToConnectAsync(e);
 
-            await _foxConnector.ConnectAsync(_mainModel.ConnectedFox);
+            _foxConnector.SetupDelegates
+            (
+                _mainModel.OnFoxConnectorNewByteRead,
+                _mainModel.OnFoxConnectorConnected,
+                _mainModel.OnFoxConnectorDisconnected,
+                _mainModel.OnFoxConnectorFailedToConnect
+            );
 
             await _userNotifier.ShowNotificationMessageAsync("Success", "The fox have to be in DFU mode now.");
+
+            await _foxConnector.ConnectAsync(foxToReconnect);
         }
 
         private async Task OnBootloaderConnectedAsync(PairedFoxDTO connectedFox)
         {
             _packetsProcessor.OnConnect();
 
-            // TODO: Request bootloader identification
+            // Reqeuesting identification
+            await _serviceCommandsManager.GetBootloaderIdentificationData(
+                async (isfb, pv, hr, sv) => await OnGetBootloaderIdentificationDataResponseAsync(isfb, pv, hr, sv));
         }
 
         private async Task OnBootloaderDisconnectAsync()
@@ -1148,6 +1175,24 @@ Application will be terminated.
 Reason: {exception.Message}");
 
             _appCloser.Close();
+        }
+
+        #endregion
+
+        #region Bootloader identification
+
+        private async Task OnGetBootloaderIdentificationDataResponseAsync
+        (
+            bool isFoxBootloader,
+            UInt16 protocolVersion,
+            UInt16 hardwareRevision,
+            UInt16 softwareVersion
+        )
+        {
+            Debug.WriteLine($"Is fox bootloader: {isFoxBootloader}");
+            Debug.WriteLine($"Protocol version: {protocolVersion}");
+            Debug.WriteLine($"Hardware revision: {hardwareRevision}");
+            Debug.WriteLine($"Software version: {softwareVersion}");
         }
 
         #endregion

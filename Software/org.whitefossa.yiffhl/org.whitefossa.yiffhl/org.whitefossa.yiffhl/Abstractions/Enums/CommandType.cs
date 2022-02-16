@@ -121,6 +121,13 @@
 
         SetDisarmOnDischargeThreshold = 0x39,
 
-        RebootToBootloader = 0x3A
+        RebootToBootloader = 0x3A,
+
+
+        #region Bootloader commands
+
+        BootloaderGetIdentificationData = 0xFF
+
+        #endregion
     }
 }

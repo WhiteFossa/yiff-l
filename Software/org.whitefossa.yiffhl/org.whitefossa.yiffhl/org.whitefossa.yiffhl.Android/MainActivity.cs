@@ -106,6 +106,9 @@ namespace org.whitefossa.yiffhl.Droid
             App.Container.Register<ISetDisarmOnDischargeThresholdCommand, SetDisarmOnDischargeThresholdCommand>().AsSingleton();
             App.Container.Register<IRebootToBootloaderCommand, RebootToBootloaderCommand>().AsSingleton();
 
+            App.Container.Register<Abstractions.Interfaces.Commands.Bootloader.IGetIdentificationDataCommand,
+                yiffhl.Business.Implementations.Commands.Bootloader.GetIdentificationDataCommand>().AsSingleton();
+
             #endregion
 
             base.OnCreate(savedInstanceState);

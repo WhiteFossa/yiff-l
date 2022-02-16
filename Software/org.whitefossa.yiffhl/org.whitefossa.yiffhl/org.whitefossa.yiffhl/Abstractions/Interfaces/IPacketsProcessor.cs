@@ -113,6 +113,12 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
 
         #endregion
 
+        #region Responses to bootloader commands
+
+        void SetOnBootloaderGetIdentificationDataResponse(OnResponseDelegate onBootloaderGetIdentificationDataResponse);
+
+        #endregion
+
         #region Events handlers registration
 
         void RegisterOnEnteringSleepmodeEventHandler(OnEnteringSleepmodeEventDelegate onEnteringSleepmodeEvent);

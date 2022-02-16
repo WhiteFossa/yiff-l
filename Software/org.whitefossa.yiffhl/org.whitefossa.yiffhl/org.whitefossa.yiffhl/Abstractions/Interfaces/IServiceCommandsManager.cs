@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace org.whitefossa.yiffhl.Abstractions.Interfaces
 {
@@ -48,6 +49,14 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
 
     public delegate void OnRebootToBootloaderDelegate(bool isSuccessful);
 
+    public delegate void OnGetBootloaderIdentificationData
+    (
+        bool isFoxBootloader,
+        UInt16 protocolVersion,
+        UInt16 hardwareRevision,
+        UInt16 softwareVersion
+    );
+
     public interface IServiceCommandsManager
     {
         Task GetLastErrorCodeAsync(OnGetLastErrorCodeDelegate onGetLastErrorCode);
@@ -95,5 +104,7 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
         Task SetDisarmOnDischargeThresholdAsync(float newThreshold, OnSetDisarmOnDischargeThresholdDelegate onSetDisarmOnDischargeThreshold);
 
         Task RebootToBootloaderAsync(OnRebootToBootloaderDelegate onRebootToBootloader);
+
+        Task GetBootloaderIdentificationData(OnGetBootloaderIdentificationData onGetBootloaderIdentificationData);
     }
 }
