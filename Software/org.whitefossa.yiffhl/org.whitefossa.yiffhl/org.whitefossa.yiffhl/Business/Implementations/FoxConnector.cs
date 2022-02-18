@@ -58,7 +58,6 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         {
             var disconnectThread = new Thread(() => DisconnectThreadRun());
             disconnectThread.Start();
-            disconnectThread.Join(); // TODO: Maybe do it more intelligent to not block the main thread?
         }
 
         public void SetupDelegates

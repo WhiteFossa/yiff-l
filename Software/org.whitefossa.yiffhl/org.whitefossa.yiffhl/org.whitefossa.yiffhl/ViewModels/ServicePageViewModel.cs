@@ -2,6 +2,7 @@
 using org.whitefossa.yiffhl.Abstractions.Enums;
 using org.whitefossa.yiffhl.Abstractions.Interfaces;
 using org.whitefossa.yiffhl.Abstractions.Interfaces.Models;
+using org.whitefossa.yiffhl.Business.Helpers;
 using org.whitefossa.yiffhl.Models;
 using System;
 using System.Diagnostics;
@@ -434,6 +435,11 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// Reboot to bootloader command
         /// </summary>
         public ICommand RebootToBootloaderCommand { get; }
+
+        /// <summary>
+        /// Reconnect to this fox when going to bootloader mode
+        /// </summary>
+        private PairedFoxDTO _foxToReconnect { get; set; }
 
         public ServicePageViewModel()
         {
@@ -1116,27 +1122,37 @@ Is TX forced?");
             }
 
             // Re-estabilishing connection (it is lost because of fox powercycle), but now in bootloader mode
-            var foxToReconnect = _mainModel.ConnectedFox;
+            _foxToReconnect = _mainModel.ConnectedFox;
+
+            _mainModel.OnFoxConnectorDisconnected = DelegatesHelper.RemoveAllMethods(_mainModel.OnFoxConnectorDisconnected);
+            _mainModel.OnFoxConnectorDisconnected += async() => await OnFoxDisconnectedAsync();
+
+            _mainModel.OnFoxConnectorConnected = DelegatesHelper.RemoveAllMethods(_mainModel.OnFoxConnectorConnected);
+            _mainModel.OnFoxConnectorConnected += async (f) => await OnBootloaderConnectedAsync(f);
+
+            DelegatesHelper.RemoveAllMethods(_mainModel.OnFoxConnectorFailedToConnect);
+            _mainModel.OnFoxConnectorFailedToConnect += async (e) => await OnBootloaderFailedToConnectAsync(e);
+
+            _foxConnector.SetupDelegates
+            (
+                _mainModel.OnFoxConnectorNewByteRead,
+                _mainModel.OnFoxConnectorConnected,
+                _mainModel.OnFoxConnectorDisconnected,
+                _mainModel.OnFoxConnectorFailedToConnect
+            );
 
             await _foxConnector.DisconnectAsync();
+        }
 
-            foreach (OnFoxConnectorConnectedDelegate d in _mainModel.OnFoxConnectorConnected.GetInvocationList())
-            {
-                _mainModel.OnFoxConnectorConnected -= d;
-            }
-            _mainModel.OnFoxConnectorConnected += async(f) => await OnBootloaderConnectedAsync(f);
+        /// <summary>
+        /// Called when fox connection (non-bootloader) is dropped
+        /// </summary>
+        private async Task OnFoxDisconnectedAsync()
+        {
+            _packetsProcessor.OnDisconnect();
 
-            foreach (OnFoxConnectorDisconnectedDelegate d in _mainModel.OnFoxConnectorDisconnected.GetInvocationList())
-            {
-                _mainModel.OnFoxConnectorDisconnected -= d;
-            }
-            _mainModel.OnFoxConnectorDisconnected += async() => await OnBootloaderDisconnectAsync();
-
-            foreach (OnFoxConnectorFailedToConnectDelegate d in _mainModel.OnFoxConnectorFailedToConnect.GetInvocationList())
-            {
-                _mainModel.OnFoxConnectorFailedToConnect -= d;
-            }
-            _mainModel.OnFoxConnectorFailedToConnect += async (e) => await OnBootloaderFailedToConnectAsync(e);
+            _mainModel.OnFoxConnectorDisconnected = DelegatesHelper.RemoveAllMethods(_mainModel.OnFoxConnectorDisconnected);
+            _mainModel.OnFoxConnectorDisconnected += async () => await OnBootloaderDisconnectAsync();
 
             _foxConnector.SetupDelegates
             (
@@ -1148,7 +1164,7 @@ Is TX forced?");
 
             await _userNotifier.ShowNotificationMessageAsync("Success", "The fox have to be in DFU mode now.");
 
-            await _foxConnector.ConnectAsync(foxToReconnect);
+            await _foxConnector.ConnectAsync(_foxToReconnect);
         }
 
         private async Task OnBootloaderConnectedAsync(PairedFoxDTO connectedFox)
@@ -1162,6 +1178,8 @@ Is TX forced?");
 
         private async Task OnBootloaderDisconnectAsync()
         {
+            _packetsProcessor.OnDisconnect();
+
             await _userNotifier.ShowNotificationMessageAsync("Disconnected", @"Bootloader disconnected.
 Application will be terminated.");
 
