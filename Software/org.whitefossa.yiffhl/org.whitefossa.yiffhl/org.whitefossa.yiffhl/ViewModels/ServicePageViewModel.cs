@@ -1,4 +1,5 @@
 ﻿using org.whitefossa.yiffhl.Abstractions.DTOs;
+using org.whitefossa.yiffhl.Abstractions.DTOs.Bootloader;
 using org.whitefossa.yiffhl.Abstractions.Enums;
 using org.whitefossa.yiffhl.Abstractions.Interfaces;
 using org.whitefossa.yiffhl.Abstractions.Interfaces.Models;
@@ -20,6 +21,11 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// Interval in milliseconds to poll service data
         /// </summary>
         private const int PollServiceDataInterval = 2000;
+
+        /// <summary>
+        /// Expected bootloader protocol version
+        /// </summary>
+        private const UInt16 ExpectedBootloaderProtocolVersion = 1;
 
         private readonly IServiceCommandsManager _serviceCommandsManager;
         private readonly IFoxIdentificationManager _foxIdentificationManager;
@@ -441,6 +447,52 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         private PairedFoxDTO _foxToReconnect { get; set; }
 
+        /// <summary>
+        /// True if fox in bootloader mode and successfully identified
+        /// </summary>
+        private bool _isBootloaderReady { get; set; }
+
+        /// <summary>
+        /// Is "Reboot to bootloader" button enabled?
+        /// </summary>
+        public bool IsRebootToBootloaderButtonEnabled
+        {
+            get => !_isBootloaderReady;
+        }
+
+        /// <summary>
+        /// Is bootloader controls enabled?
+        /// </summary>
+        public bool IsBootloaderControlsEnabled
+        {
+            get => _isBootloaderReady;
+        }
+
+        /// <summary>
+        /// Fox hardware revision as string
+        /// </summary>
+        public string FoxHardwareRevisionAsString
+        {
+            get => _mainModel.ServiceSettingsModel.BootloaderIdentificationData != null
+                ? _mainModel.ServiceSettingsModel.BootloaderIdentificationData.HardwareRevision.ToString()
+                : "N/A";
+        }
+
+        /// <summary>
+        /// Fox firmware version as string
+        /// </summary>
+        public string FoxFirmwareVersionAsString
+        {
+            get => _mainModel.ServiceSettingsModel.BootloaderIdentificationData != null
+                ? _mainModel.ServiceSettingsModel.BootloaderIdentificationData.FirmwareVersion.ToString()
+                : "N/A";
+        }
+
+        /// <summary>
+        /// Return from bootloader to main firmware
+        /// </summary>
+        public ICommand ReturnFromBootloaderCommand { get; }
+
         public ServicePageViewModel()
         {
 
@@ -488,6 +540,10 @@ namespace org.whitefossa.yiffhl.ViewModels
             SetDisarmOnDischargeThresholdCommand = new Command(async () => await OnSetDisarmOnDischargeThresholdAsync());
 
             RebootToBootloaderCommand = new Command(async () => await OnRebootToBootloaderAsync());
+            
+            ReturnFromBootloaderCommand = new Command(async() => await OnReturnFromBootloaderAsync());
+
+            _isBootloaderReady = false;
 
             // Setting up poll service data timer
             PollServiceDataTimer = new System.Timers.Timer(PollServiceDataInterval);
@@ -1204,13 +1260,47 @@ Reason: {exception.Message}");
             bool isFoxBootloader,
             UInt16 protocolVersion,
             UInt16 hardwareRevision,
-            UInt16 softwareVersion
+            UInt16 firmwareVersion
         )
         {
-            Debug.WriteLine($"Is fox bootloader: {isFoxBootloader}");
-            Debug.WriteLine($"Protocol version: {protocolVersion}");
-            Debug.WriteLine($"Hardware revision: {hardwareRevision}");
-            Debug.WriteLine($"Software version: {softwareVersion}");
+            if (!isFoxBootloader)
+            {
+                await _userNotifier.ShowErrorMessageAsync("Error", @"Bootloader responded, but it's not a fox bootloader.
+Application will be terminated.");
+
+                _appCloser.Close();
+            }
+
+            if (protocolVersion != ExpectedBootloaderProtocolVersion)
+            {
+                await _userNotifier.ShowErrorMessageAsync("Error", $@"Wrong bootloader protocol version.
+Expected: { ExpectedBootloaderProtocolVersion },
+Got: { protocolVersion }.
+Application will be terminated.");
+
+                _appCloser.Close();
+            }
+
+            _mainModel.ServiceSettingsModel.BootloaderIdentificationData = new BootloaderIdentificationData()
+            {
+                HardwareRevision = hardwareRevision,
+                FirmwareVersion = firmwareVersion
+            };
+
+            _isBootloaderReady = true;
+            OnPropertyChanged(nameof(IsRebootToBootloaderButtonEnabled));
+            OnPropertyChanged(nameof(IsBootloaderControlsEnabled));
+            OnPropertyChanged(nameof(FoxHardwareRevisionAsString));
+            OnPropertyChanged(nameof(FoxFirmwareVersionAsString));
+        }
+
+        #endregion
+
+        #region Return from bootloader
+
+        private async Task OnReturnFromBootloaderAsync()
+        {
+
         }
 
         #endregion

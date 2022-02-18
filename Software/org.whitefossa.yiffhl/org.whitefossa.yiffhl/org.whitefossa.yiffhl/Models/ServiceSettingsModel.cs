@@ -1,4 +1,6 @@
-﻿namespace org.whitefossa.yiffhl.Models
+﻿using org.whitefossa.yiffhl.Abstractions.DTOs.Bootloader;
+
+namespace org.whitefossa.yiffhl.Models
 {
     public class ServiceSettingsModel
     {
@@ -101,6 +103,11 @@
         /// If true, then the fox is in bootloader mode. In bootloader mode we mustn't send "normal" commands to her
         /// </summary>
         public bool IsBootloaderMode { get; set; }
+
+        /// <summary>
+        /// Bootloader identification data (valid only if IsBootloaderMode == true)
+        /// </summary>
+        public BootloaderIdentificationData BootloaderIdentificationData { get; set; }
 
         public ServiceSettingsModel()
         {

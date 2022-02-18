@@ -665,8 +665,41 @@
                             <Button
                                 Text="Reboot to bootloader"
                                 VerticalOptions="Center"
-                                HorizontalOptions="CenterAndExpand"
-                                Command="{Binding RebootToBootloaderCommand}" />
+                                HorizontalOptions="StartAndExpand"
+                                Command="{Binding RebootToBootloaderCommand}"
+                                IsEnabled="{Binding IsRebootToBootloaderButtonEnabled}" />
+
+                            <Button
+                                Text="Return from bootloader"
+                                VerticalOptions="Center"
+                                HorizontalOptions="EndAndExpand"
+                                Command="{Binding ReturnFromBootloaderCommand}"
+                                IsEnabled="{Binding IsBootloaderControlsEnabled}" />
+                            
+                        </StackLayout>
+
+                        <StackLayout
+                            Orientation="Horizontal">
+                            
+                            <Label
+                                Text="Hardware revision:" />
+
+                            <Label
+                                FontAttributes="Bold"
+                                Text="{Binding FoxHardwareRevisionAsString}"
+                                IsEnabled="{Binding IsBootloaderControlsEnabled}" />
+                        </StackLayout>
+
+                        <StackLayout
+                            Orientation="Horizontal">
+
+                            <Label
+                                Text="Firmware version:" />
+
+                            <Label
+                                FontAttributes="Bold"
+                                Text="{Binding FoxFirmwareVersionAsString}"
+                                IsEnabled="{Binding IsBootloaderControlsEnabled}" />
                         </StackLayout>
 
                     </StackLayout>
