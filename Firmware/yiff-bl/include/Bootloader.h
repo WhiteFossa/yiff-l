@@ -20,10 +20,21 @@
 
 extern EEPROMConstantHeaderStruct EEPROM_ConstantHeader;
 extern PendingCommandsFlagsStruct PendingCommandsFlags;
+
+/**
+ * FLASH start address
+ */
+#define YBL_FLASH_START 0x08000000
+
 /**
  * Fox main code entry point
  */
 #define YBL_MAIN_CODE_START 0x08008000
+
+/**
+ * FLASH end address
+ */
+#define YBL_FLASH_END 0x0801FFFF
 
 /**
  * Entry point

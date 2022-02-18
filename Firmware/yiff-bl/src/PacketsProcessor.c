@@ -106,7 +106,7 @@ void OnGetIdentificationData(uint8_t payloadSize, uint8_t* payload)
 		return;
 	}
 
-	uint8_t response[10];
+	uint8_t response[22];
 
 	/* Signature */
 	uint32_t tmp32 = YBL_VER_FOX_SIGNATURE;
@@ -124,7 +124,19 @@ void OnGetIdentificationData(uint8_t payloadSize, uint8_t* payload)
 	tmp16 = EEPROM_ConstantHeader.FirmwareVersion;
 	memcpy(&response[8], &tmp16, 2);
 
-	SendResponse(YBL_GetIdentificationData, 10, response);
+	/* FLASH start address */
+	tmp32 = YBL_FLASH_START;
+	memcpy(&response[10], &tmp32, 4);
+
+	/* Main firmware start address */
+	tmp32 = YBL_MAIN_CODE_START;
+	memcpy(&response[14], &tmp32, 4);
+
+	/* FLASH end address */
+	tmp32 = YBL_FLASH_END;
+	memcpy(&response[18], &tmp32, 4);
+
+	SendResponse(YBL_GetIdentificationData, 22, response);
 }
 
 void OnRebootToMainFirmware(uint8_t payloadSize, uint8_t* payload)

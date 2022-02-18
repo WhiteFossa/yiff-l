@@ -13,6 +13,7 @@
 #include <Version.h>
 #include <EEPROM.h>
 #include <Commands.h>
+#include <Bootloader.h>
 
 extern L2HAL_CRCContextStruct CRC_Context;
 extern EEPROMConstantHeaderStruct EEPROM_ConstantHeader;
