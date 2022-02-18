@@ -116,6 +116,7 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
         #region Responses to bootloader commands
 
         void SetOnBootloaderGetIdentificationDataResponse(OnResponseDelegate onBootloaderGetIdentificationDataResponse);
+        void SetOnRebootToMainFirmwareResponse(OnResponseDelegate onRebootToMainFirmwareResponse);
 
         #endregion
 

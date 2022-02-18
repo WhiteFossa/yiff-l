@@ -55,6 +55,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         #region Bootloader commands
 
         private readonly Abstractions.Interfaces.Commands.Bootloader.IGetIdentificationDataCommand _bootloaderGetIdentificationDataCommand;
+        private readonly Abstractions.Interfaces.Commands.Bootloader.IRebootToMainFirmwareCommand _rebootToMainFirmwareCommand;
 
         #endregion
 
@@ -103,9 +104,11 @@ namespace org.whitefossa.yiffhl.Business.Implementations
 
         private Abstractions.Interfaces.OnRebootToBootloaderDelegate _onRebootToBootloader;
 
+        private OnRebootToMainFirmwareDelegate _onRebootToMainFirmware;
+
         #region Bootloader delegates
 
-        private OnGetBootloaderIdentificationData _onGetBootloaderIdentificationData;
+        private OnGetBootloaderIdentificationDataDelegate _onGetBootloaderIdentificationData;
 
         #endregion
 
@@ -135,7 +138,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             IGetDisarmOnDischargeThresholdCommand getDisarmOnDischargeThresholdCommand,
             ISetDisarmOnDischargeThresholdCommand setDisarmOnDischargeThresholdCommand,
             IRebootToBootloaderCommand rebootToBootloaderCommand,
-            Abstractions.Interfaces.Commands.Bootloader.IGetIdentificationDataCommand bootloaderGetIdentificationDataCommand)
+            Abstractions.Interfaces.Commands.Bootloader.IGetIdentificationDataCommand bootloaderGetIdentificationDataCommand,
+            Abstractions.Interfaces.Commands.Bootloader.IRebootToMainFirmwareCommand rebootToMainFirmwareCommand)
         {
             _getLastErrorCodeCommand = getLastErrorCodeCommand;
             _resetLastErrorCodeCommand = resetLastErrorCodeCommand;
@@ -164,6 +168,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _setDisarmOnDischargeThresholdCommand = setDisarmOnDischargeThresholdCommand;
             _rebootToBootloaderCommand = rebootToBootloaderCommand;
             _bootloaderGetIdentificationDataCommand = bootloaderGetIdentificationDataCommand;
+            _rebootToMainFirmwareCommand = rebootToMainFirmwareCommand;
         }
 
         #region Get last error code
@@ -745,7 +750,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
 
         #region Get bootloader identification data
 
-        public async Task GetBootloaderIdentificationData(OnGetBootloaderIdentificationData onGetBootloaderIdentificationData)
+        public async Task GetBootloaderIdentificationData(OnGetBootloaderIdentificationDataDelegate onGetBootloaderIdentificationData)
         {
             _onGetBootloaderIdentificationData = onGetBootloaderIdentificationData;
 
@@ -762,6 +767,23 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         )
         {
             _onGetBootloaderIdentificationData(isFoxBootloader, protocolVersion, hardwareRevision, softwareVersion);
+        }
+
+        #endregion
+
+        #region Reboot to main firmware
+
+        public async Task RebootToMainFirmware(OnRebootToMainFirmwareDelegate onRebootToMainFirmware)
+        {
+            _onRebootToMainFirmware = onRebootToMainFirmware;
+
+            _rebootToMainFirmwareCommand.SetResponseDelegate(OnRebootToMainFirmwareResponse);
+            _rebootToMainFirmwareCommand.RebootToMainFirmware();
+        }
+
+        private void OnRebootToMainFirmwareResponse()
+        {
+            _onRebootToMainFirmware();
         }
 
         #endregion

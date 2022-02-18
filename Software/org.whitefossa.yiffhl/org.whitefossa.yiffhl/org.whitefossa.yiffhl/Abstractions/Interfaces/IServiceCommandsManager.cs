@@ -49,13 +49,15 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
 
     public delegate void OnRebootToBootloaderDelegate(bool isSuccessful);
 
-    public delegate void OnGetBootloaderIdentificationData
+    public delegate void OnGetBootloaderIdentificationDataDelegate
     (
         bool isFoxBootloader,
         UInt16 protocolVersion,
         UInt16 hardwareRevision,
         UInt16 softwareVersion
     );
+
+    public delegate void OnRebootToMainFirmwareDelegate();
 
     public interface IServiceCommandsManager
     {
@@ -105,6 +107,8 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
 
         Task RebootToBootloaderAsync(OnRebootToBootloaderDelegate onRebootToBootloader);
 
-        Task GetBootloaderIdentificationData(OnGetBootloaderIdentificationData onGetBootloaderIdentificationData);
+        Task GetBootloaderIdentificationData(OnGetBootloaderIdentificationDataDelegate onGetBootloaderIdentificationData);
+
+        Task RebootToMainFirmware(OnRebootToMainFirmwareDelegate onRebootToMainFirmware);
     }
 }

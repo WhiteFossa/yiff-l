@@ -126,7 +126,9 @@
 
         #region Bootloader commands
 
-        BootloaderGetIdentificationData = 0xFF
+        BootloaderGetIdentificationData = 0xFF,
+
+        BootloaderRebootToMainFirmware = 0xFE
 
         #endregion
     }

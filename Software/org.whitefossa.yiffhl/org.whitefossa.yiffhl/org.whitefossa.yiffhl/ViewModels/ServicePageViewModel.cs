@@ -1300,7 +1300,12 @@ Application will be terminated.");
 
         private async Task OnReturnFromBootloaderAsync()
         {
+            await _serviceCommandsManager.RebootToMainFirmware(async () => await OnRebootToMainFirmwareResponseAsync());
+        }
 
+        private async Task OnRebootToMainFirmwareResponseAsync()
+        {
+            await _foxConnector.DisconnectAsync();
         }
 
         #endregion

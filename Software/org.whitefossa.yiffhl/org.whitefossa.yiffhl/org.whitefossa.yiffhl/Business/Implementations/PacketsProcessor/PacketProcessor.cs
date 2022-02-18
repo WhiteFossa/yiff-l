@@ -98,6 +98,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
         #region Bootloader commands responses
 
         private OnResponseDelegate _onBootloaderGetIdentificationDataResponse;
+        private OnResponseDelegate _onRebootToMainFirmwareResponse;
 
         #endregion
 
@@ -715,6 +716,13 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
                         _onBootloaderGetIdentificationDataResponse(responsePayload);
                         break;
 
+                    // Reboot to main firmware
+                    case CommandType.BootloaderRebootToMainFirmware:
+                        CheckOnResponseDelegate(_onRebootToMainFirmwareResponse);
+
+                        _onRebootToMainFirmwareResponse(responsePayload);
+                        break;
+
                     #endregion
 
                     default:
@@ -1177,6 +1185,12 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
         {
             _onBootloaderGetIdentificationDataResponse = onBootloaderGetIdentificationDataResponse
                 ?? throw new ArgumentNullException(nameof(onBootloaderGetIdentificationDataResponse));
+        }
+
+        public void SetOnRebootToMainFirmwareResponse(OnResponseDelegate onRebootToMainFirmwareResponse)
+        {
+            _onRebootToMainFirmwareResponse = onRebootToMainFirmwareResponse
+                ?? throw new ArgumentNullException(nameof(onRebootToMainFirmwareResponse));
         }
     }
 }

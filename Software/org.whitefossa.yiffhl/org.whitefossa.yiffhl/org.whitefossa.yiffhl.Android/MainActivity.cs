@@ -109,6 +109,9 @@ namespace org.whitefossa.yiffhl.Droid
             App.Container.Register<Abstractions.Interfaces.Commands.Bootloader.IGetIdentificationDataCommand,
                 yiffhl.Business.Implementations.Commands.Bootloader.GetIdentificationDataCommand>().AsSingleton();
 
+            App.Container.Register<Abstractions.Interfaces.Commands.Bootloader.IRebootToMainFirmwareCommand,
+                yiffhl.Business.Implementations.Commands.Bootloader.RebootToMainFirmwareCommand>().AsSingleton();
+
             #endregion
 
             base.OnCreate(savedInstanceState);
