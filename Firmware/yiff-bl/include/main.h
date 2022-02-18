@@ -20,11 +20,17 @@
 #include <Log.h>
 #include <EEPROM.h>
 #include <stdio.h>
+#include <Commands.h>
 
+extern PendingCommandsFlagsStruct PendingCommandsFlags;
 /**
  * Initialize display and fonts
  */
 void Main_InitDisplayAndFonts(void);
 
+/**
+ * Reset pending commands flags to initial state
+ */
+void Main_InitPendingCommandsFlags(void);
 
 #endif /* INCLUDE_MAIN_H_ */

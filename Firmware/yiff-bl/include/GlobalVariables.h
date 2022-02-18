@@ -11,6 +11,8 @@
 #include <l2hal_systick.h>
 #include <stm32f1xx_hal.h>
 #include <EEPROM.h>
+#include <l2hal_ssd1327.h>
+#include <Commands.h>
 
 /*****************************
 * Hardware handlers go below *
@@ -94,5 +96,11 @@ FMGL_API_XBMTransparencyMode transparencyMode;
  * EEPROM constant header
  */
 EEPROMConstantHeaderStruct EEPROM_ConstantHeader;
+
+/********************
+ * Pending commands *
+ ********************/
+
+PendingCommandsFlagsStruct PendingCommandsFlags;
 
 #endif /* INCLUDE_GLOBALVARIABLES_H_ */

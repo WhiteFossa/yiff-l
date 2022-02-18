@@ -15,9 +15,11 @@
 #include <UART.h>
 #include <PacketsProcessor.h>
 #include <HAL.h>
+#include <Commands.h>
+
 
 extern EEPROMConstantHeaderStruct EEPROM_ConstantHeader;
-
+extern PendingCommandsFlagsStruct PendingCommandsFlags;
 /**
  * Fox main code entry point
  */
@@ -55,5 +57,9 @@ void JumpToEntryPoint(const uint32_t address);
  */
 void EnterDFUMode(void);
 
+/**
+ * Reboots to main firmware if needed
+ */
+void ProcessRebootToMainFirmware(void);
 
 #endif /* INCLUDE_BOOTLOADER_H_ */

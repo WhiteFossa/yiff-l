@@ -12,9 +12,11 @@
 #include <l2hal_crc.h>
 #include <Version.h>
 #include <EEPROM.h>
+#include <Commands.h>
 
 extern L2HAL_CRCContextStruct CRC_Context;
 extern EEPROMConstantHeaderStruct EEPROM_ConstantHeader;
+extern PendingCommandsFlagsStruct PendingCommandsFlags;
 
 /**
  * Packet size minus this value is payload size
@@ -47,7 +49,9 @@ extern EEPROMConstantHeaderStruct EEPROM_ConstantHeader;
  */
 typedef enum
 {
-	YBL_GetIdentificationData = 0xFF
+	YBL_GetIdentificationData = 0xFF,
+
+	YBL_RebootToMainFirmware = 0xFE
 }
 Commands;
 
@@ -81,5 +85,10 @@ void SendPacket(uint8_t payloadSize, uint8_t* payload);
  * Called when "Get identification data" command comes
  */
 void OnGetIdentificationData(uint8_t payloadSize, uint8_t* payload);
+
+/**
+ * Called when "Reboot to main firmware" command comes
+ */
+void OnRebootToMainFirmware(uint8_t payloadSize, uint8_t* payload);
 
 #endif /* INCLUDE_PACKETSPROCESSOR_H_ */

@@ -61,6 +61,9 @@ int main(int argc, char* argv[])
 	/* Time for regulators spin-up */
 	HAL_Delay(1000);
 
+	/* Resetting commands flags */
+	Main_InitPendingCommandsFlags();
+
 	/* Detecting display */
 	HL_TurnDisplayOn();
 
@@ -149,6 +152,11 @@ void Main_InitDisplayAndFonts(void)
 	/* Clearing display */
 	FMGL_API_ClearScreen(&fmglContext);
 	FMGL_API_PushFramebuffer(&fmglContext);
+}
+
+void Main_InitPendingCommandsFlags(void)
+{
+	PendingCommandsFlags.IsRebootToMainFirmware = false;
 }
 
 #pragma GCC diagnostic pop

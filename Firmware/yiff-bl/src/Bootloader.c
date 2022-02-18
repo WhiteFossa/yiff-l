@@ -61,5 +61,20 @@ void EnterDFUMode(void)
 
 			UART_IsPacketReady = false;
 		}
+
+		ProcessRebootToMainFirmware();
+	}
+}
+
+void ProcessRebootToMainFirmware(void)
+{
+	if (PendingCommandsFlags.IsRebootToMainFirmware)
+	{
+		SendResponse(YBL_RebootToMainFirmware, 0, NULL);
+
+		/* Giving fox time to transmit a response */
+		HAL_Delay(1000);
+
+		JumpToEntryPoint(YBL_MAIN_CODE_START);
 	}
 }

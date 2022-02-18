@@ -56,6 +56,11 @@ void OnNewCommand(uint8_t payloadSize, uint8_t* payload)
 			/* Identify herself */
 			OnGetIdentificationData(payloadSize, payload);
 			break;
+
+		case YBL_RebootToMainFirmware:
+			/* Reboot to main firmware */
+			OnRebootToMainFirmware(payloadSize, payload);
+			break;
 	}
 }
 
@@ -120,4 +125,14 @@ void OnGetIdentificationData(uint8_t payloadSize, uint8_t* payload)
 	memcpy(&response[8], &tmp16, 2);
 
 	SendResponse(YBL_GetIdentificationData, 10, response);
+}
+
+void OnRebootToMainFirmware(uint8_t payloadSize, uint8_t* payload)
+{
+	if (payloadSize != 1)
+	{
+		return;
+	}
+
+	PendingCommandsFlags.IsRebootToMainFirmware = true;
 }
