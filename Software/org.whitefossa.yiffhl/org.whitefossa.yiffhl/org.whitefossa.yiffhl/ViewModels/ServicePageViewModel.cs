@@ -6,6 +6,7 @@ using org.whitefossa.yiffhl.Abstractions.Interfaces.Models;
 using org.whitefossa.yiffhl.Business.Helpers;
 using org.whitefossa.yiffhl.Models;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
@@ -1331,6 +1332,9 @@ Application will be terminated.");
             OnPropertyChanged(nameof(FlashStartAddressAsString));
             OnPropertyChanged(nameof(MainFirmwareStartAddressAsString));
             OnPropertyChanged(nameof(FlashEndAddressAsString));
+
+            // TODO: Remove me, debug
+            await _serviceCommandsManager.ReadMainFirmware(async(fd) => await OnReadMainFirmwareAsync(fd));
         }
 
         #endregion
@@ -1345,6 +1349,15 @@ Application will be terminated.");
         private async Task OnRebootToMainFirmwareResponseAsync()
         {
             await _foxConnector.DisconnectAsync();
+        }
+
+        #endregion
+
+        #region Read main firmware
+
+        private async Task OnReadMainFirmwareAsync(List<byte> firmwareDump)
+        {
+            int a = 10;
         }
 
         #endregion

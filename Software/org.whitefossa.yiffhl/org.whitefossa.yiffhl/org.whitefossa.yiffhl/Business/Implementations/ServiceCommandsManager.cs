@@ -1,6 +1,8 @@
-﻿using org.whitefossa.yiffhl.Abstractions.Interfaces;
+﻿using Acr.UserDialogs;
+using org.whitefossa.yiffhl.Abstractions.Interfaces;
 using org.whitefossa.yiffhl.Abstractions.Interfaces.Commands;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using OnResetLastErrorCodeDelegate = org.whitefossa.yiffhl.Abstractions.Interfaces.OnResetLastErrorCodeDelegate;
 
@@ -8,6 +10,21 @@ namespace org.whitefossa.yiffhl.Business.Implementations
 {
     public class ServiceCommandsManager : IServiceCommandsManager
     {
+        /// <summary>
+        /// Bootloader size in 32-bytes FLASH read pages
+        /// </summary>
+        private const uint BootloaderSizeInReadPages = 1024;
+
+        /// <summary>
+        /// Main firmware size in 32-bytes FLASH read pages
+        /// </summary>
+        private const uint MainFirmwareSizeInReadPages = 3072;
+
+        /// <summary>
+        /// Main firmware last page (in 32-bytes FLASH read pages)
+        /// </summary>
+        private const uint MainFirmwareLastReadPage = BootloaderSizeInReadPages + MainFirmwareSizeInReadPages;
+
         #region Commands
 
         private readonly IGetLastErrorCodeCommand _getLastErrorCodeCommand;
@@ -56,6 +73,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
 
         private readonly Abstractions.Interfaces.Commands.Bootloader.IGetIdentificationDataCommand _bootloaderGetIdentificationDataCommand;
         private readonly Abstractions.Interfaces.Commands.Bootloader.IRebootToMainFirmwareCommand _rebootToMainFirmwareCommand;
+        private readonly Abstractions.Interfaces.Commands.Bootloader.IReadFlashPageCommand _readFlashPageCommand;
 
         #endregion
 
@@ -104,13 +122,30 @@ namespace org.whitefossa.yiffhl.Business.Implementations
 
         private Abstractions.Interfaces.OnRebootToBootloaderDelegate _onRebootToBootloader;
 
-        private OnRebootToMainFirmwareDelegate _onRebootToMainFirmware;
-
         #region Bootloader delegates
 
         private OnGetBootloaderIdentificationDataDelegate _onGetBootloaderIdentificationData;
 
+        private OnRebootToMainFirmwareDelegate _onRebootToMainFirmware;
+
+        private OnReadMainFirmwareDelegate _onReadMainFirmware;
+
         #endregion
+
+        /// <summary>
+        /// Current main firmware page (reading)
+        /// </summary>
+        private uint _currentMainFirmwareReadPage;
+
+        /// <summary>
+        /// Main firmware dump accumulates here
+        /// </summary>
+        private List<byte> _mainFirmwareDump = new List<byte>();
+
+        /// <summary>
+        /// To display operations progress
+        /// </summary>
+        private IProgressDialog _progressDialog;
 
         public ServiceCommandsManager(IGetLastErrorCodeCommand getLastErrorCodeCommand,
             IResetLastErrorCodeCommand resetLastErrorCodeCommand,
@@ -139,7 +174,8 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             ISetDisarmOnDischargeThresholdCommand setDisarmOnDischargeThresholdCommand,
             IRebootToBootloaderCommand rebootToBootloaderCommand,
             Abstractions.Interfaces.Commands.Bootloader.IGetIdentificationDataCommand bootloaderGetIdentificationDataCommand,
-            Abstractions.Interfaces.Commands.Bootloader.IRebootToMainFirmwareCommand rebootToMainFirmwareCommand)
+            Abstractions.Interfaces.Commands.Bootloader.IRebootToMainFirmwareCommand rebootToMainFirmwareCommand,
+            Abstractions.Interfaces.Commands.Bootloader.IReadFlashPageCommand readFlashPageCommand)
         {
             _getLastErrorCodeCommand = getLastErrorCodeCommand;
             _resetLastErrorCodeCommand = resetLastErrorCodeCommand;
@@ -169,6 +205,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _rebootToBootloaderCommand = rebootToBootloaderCommand;
             _bootloaderGetIdentificationDataCommand = bootloaderGetIdentificationDataCommand;
             _rebootToMainFirmwareCommand = rebootToMainFirmwareCommand;
+            _readFlashPageCommand = readFlashPageCommand;
         }
 
         #region Get last error code
@@ -796,6 +833,50 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private void OnRebootToMainFirmwareResponse()
         {
             _onRebootToMainFirmware();
+        }
+
+        #endregion
+
+        #region Read main firmware
+
+        public async Task ReadMainFirmware(OnReadMainFirmwareDelegate onReadMainFirmware)
+        {
+            _onReadMainFirmware = onReadMainFirmware;
+
+            _readFlashPageCommand.SetResponseDelegate(async(s, d) => await OnReadFlashPageFromMainFirmwareAsync(s, d));
+
+            _progressDialog = UserDialogs.Instance.Progress("Reading FLASH", null, null, true, MaskType.Clear);
+
+            _mainFirmwareDump.Clear();
+
+            _currentMainFirmwareReadPage = BootloaderSizeInReadPages; // First page of the main firmware
+            _readFlashPageCommand.SendReadFlashPageCommand(_currentMainFirmwareReadPage);
+        }
+
+        private async Task OnReadFlashPageFromMainFirmwareAsync(bool isSuccessful, List<byte> data)
+        {
+            if (!isSuccessful)
+            {
+                throw new InvalidOperationException($"Failed to read FLASH page { _currentMainFirmwareReadPage }");
+            }
+
+            _mainFirmwareDump.AddRange(data);
+
+            _progressDialog.PercentComplete = 
+                (int)Math.Round(100 * (_currentMainFirmwareReadPage - BootloaderSizeInReadPages) / (double)MainFirmwareSizeInReadPages);
+
+            _currentMainFirmwareReadPage ++;
+
+            if (_currentMainFirmwareReadPage < MainFirmwareLastReadPage)
+            {
+                // Continue to read
+                _readFlashPageCommand.SendReadFlashPageCommand(_currentMainFirmwareReadPage);
+                return;
+            }
+
+            // Completed
+            _progressDialog.Dispose();
+            _onReadMainFirmware(_mainFirmwareDump);
         }
 
         #endregion

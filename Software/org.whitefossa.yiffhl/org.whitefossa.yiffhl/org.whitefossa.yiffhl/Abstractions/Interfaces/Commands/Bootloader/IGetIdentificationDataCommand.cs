@@ -2,7 +2,7 @@
 
 namespace org.whitefossa.yiffhl.Abstractions.Interfaces.Commands.Bootloader
 {
-    public delegate void OnGetIdentificationDataDelegate
+    public delegate void OnGetIdentificationDataResponseDelegate
     (
         bool isFoxBootloader,
         UInt16 protocolVersion,
@@ -15,7 +15,7 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces.Commands.Bootloader
 
     public interface IGetIdentificationDataCommand
     {
-        void SetResponseDelegate(OnGetIdentificationDataDelegate onGetIdentificationDataResponse);
+        void SetResponseDelegate(OnGetIdentificationDataResponseDelegate onGetIdentificationDataResponse);
 
         void SendGetBootloaderIdentificationDataCommand();
     }

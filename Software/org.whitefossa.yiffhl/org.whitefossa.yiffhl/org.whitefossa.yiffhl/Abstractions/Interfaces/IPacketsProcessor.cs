@@ -117,6 +117,7 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
 
         void SetOnBootloaderGetIdentificationDataResponse(OnResponseDelegate onBootloaderGetIdentificationDataResponse);
         void SetOnRebootToMainFirmwareResponse(OnResponseDelegate onRebootToMainFirmwareResponse);
+        void SetOnReadFlashPageResponse(OnResponseDelegate onReadFlashPageResponse);
 
         #endregion
 

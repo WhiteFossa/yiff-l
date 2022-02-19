@@ -128,7 +128,9 @@
 
         BootloaderGetIdentificationData = 0xFF,
 
-        BootloaderRebootToMainFirmware = 0xFE
+        BootloaderRebootToMainFirmware = 0xFE,
+
+        BootloaderReadFlashPage = 0xFD
 
         #endregion
     }

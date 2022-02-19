@@ -112,6 +112,9 @@ namespace org.whitefossa.yiffhl.Droid
             App.Container.Register<Abstractions.Interfaces.Commands.Bootloader.IRebootToMainFirmwareCommand,
                 yiffhl.Business.Implementations.Commands.Bootloader.RebootToMainFirmwareCommand>().AsSingleton();
 
+            App.Container.Register<Abstractions.Interfaces.Commands.Bootloader.IReadFlashPageCommand,
+                yiffhl.Business.Implementations.Commands.Bootloader.ReadFlashPageCommand>().AsSingleton();
+
             #endregion
 
             base.OnCreate(savedInstanceState);

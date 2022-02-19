@@ -15,7 +15,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations.Commands.Bootloader
         private const UInt32 FoxBootloaderSignature = 0xF055AF06;
 
         private readonly IPacketsProcessor _packetsProcessor;
-        private OnGetIdentificationDataDelegate _onGetIdentificationDataResponse;
+        private OnGetIdentificationDataResponseDelegate _onGetIdentificationDataResponse;
 
         public GetIdentificationDataCommand(IPacketsProcessor packetsProcessor)
         {
@@ -23,7 +23,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations.Commands.Bootloader
             _packetsProcessor.SetOnBootloaderGetIdentificationDataResponse(OnGetIdentificationDataResponse);
         }
 
-        public void SetResponseDelegate(OnGetIdentificationDataDelegate onGetIdentificationDataResponse)
+        public void SetResponseDelegate(OnGetIdentificationDataResponseDelegate onGetIdentificationDataResponse)
         {
             _onGetIdentificationDataResponse = onGetIdentificationDataResponse;
         }

@@ -99,6 +99,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
 
         private OnResponseDelegate _onBootloaderGetIdentificationDataResponse;
         private OnResponseDelegate _onRebootToMainFirmwareResponse;
+        private OnResponseDelegate _onReadFlashPageResponse;
 
         #endregion
 
@@ -723,6 +724,13 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
                         _onRebootToMainFirmwareResponse(responsePayload);
                         break;
 
+                    // Read FLASH page
+                    case CommandType.BootloaderReadFlashPage:
+                        CheckOnResponseDelegate(_onReadFlashPageResponse);
+
+                        _onReadFlashPageResponse(responsePayload);
+                        break;
+
                     #endregion
 
                     default:
@@ -1191,6 +1199,12 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
         {
             _onRebootToMainFirmwareResponse = onRebootToMainFirmwareResponse
                 ?? throw new ArgumentNullException(nameof(onRebootToMainFirmwareResponse));
+        }
+
+        public void SetOnReadFlashPageResponse(OnResponseDelegate onReadFlashPageResponse)
+        {
+            _onReadFlashPageResponse = onReadFlashPageResponse
+                ?? throw new ArgumentNullException(nameof(onReadFlashPageResponse));
         }
     }
 }
