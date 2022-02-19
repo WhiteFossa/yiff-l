@@ -763,10 +763,22 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             bool isFoxBootloader,
             UInt16 protocolVersion,
             UInt16 hardwareRevision,
-            UInt16 softwareVersion
+            UInt16 softwareVersion,
+            UInt32 flashStartAddress,
+            UInt32 mainFirmwareStartAddress,
+            UInt32 flashEndAddress
         )
         {
-            _onGetBootloaderIdentificationData(isFoxBootloader, protocolVersion, hardwareRevision, softwareVersion);
+            _onGetBootloaderIdentificationData
+            (
+                isFoxBootloader,
+                protocolVersion,
+                hardwareRevision,
+                softwareVersion,
+                flashEndAddress,
+                mainFirmwareStartAddress,
+                flashEndAddress
+            );
         }
 
         #endregion

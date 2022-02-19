@@ -702,6 +702,42 @@
                                 IsEnabled="{Binding IsBootloaderControlsEnabled}" />
                         </StackLayout>
 
+                        <StackLayout
+                            Orientation="Horizontal">
+
+                            <Label
+                                Text="FLASH start address:" />
+
+                            <Label
+                                FontAttributes="Bold"
+                                Text="{Binding FlashStartAddressAsString}"
+                                IsEnabled="{Binding IsBootloaderControlsEnabled}" />
+                        </StackLayout>
+
+                        <StackLayout
+                            Orientation="Horizontal">
+
+                            <Label
+                                Text="Main firmware start address:" />
+
+                            <Label
+                                FontAttributes="Bold"
+                                Text="{Binding MainFirmwareStartAddressAsString}"
+                                IsEnabled="{Binding IsBootloaderControlsEnabled}" />
+                        </StackLayout>
+
+                        <StackLayout
+                            Orientation="Horizontal">
+
+                            <Label
+                                Text="FLASH end address:" />
+
+                            <Label
+                                FontAttributes="Bold"
+                                Text="{Binding FlashEndAddressAsString}"
+                                IsEnabled="{Binding IsBootloaderControlsEnabled}" />
+                        </StackLayout>
+
                     </StackLayout>
                 </Frame>
 

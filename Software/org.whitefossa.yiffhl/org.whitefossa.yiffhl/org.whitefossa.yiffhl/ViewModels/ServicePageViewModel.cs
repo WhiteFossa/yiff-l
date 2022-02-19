@@ -489,6 +489,36 @@ namespace org.whitefossa.yiffhl.ViewModels
         }
 
         /// <summary>
+        /// FLASH start address as sting
+        /// </summary>
+        public string FlashStartAddressAsString
+        {
+            get => _mainModel.ServiceSettingsModel.BootloaderIdentificationData != null
+                ? $"0x{ Convert.ToString(_mainModel.ServiceSettingsModel.BootloaderIdentificationData.FlashStartAddress, 16) }"
+                : "N/A";
+        }
+
+        /// <summary>
+        /// Main firmware start address as sting
+        /// </summary>
+        public string MainFirmwareStartAddressAsString
+        {
+            get => _mainModel.ServiceSettingsModel.BootloaderIdentificationData != null
+                ? $"0x{ Convert.ToString(_mainModel.ServiceSettingsModel.BootloaderIdentificationData.MainFirmwareStartAddress, 16) }"
+                : "N/A";
+        }
+
+        /// <summary>
+        /// FLASH end address as sting
+        /// </summary>
+        public string FlashEndAddressAsString
+        {
+            get => _mainModel.ServiceSettingsModel.BootloaderIdentificationData != null
+                ? $"0x{ Convert.ToString(_mainModel.ServiceSettingsModel.BootloaderIdentificationData.FlashEndAddress, 16) }"
+                : "N/A";
+        }
+
+        /// <summary>
         /// Return from bootloader to main firmware
         /// </summary>
         public ICommand ReturnFromBootloaderCommand { get; }
@@ -1229,7 +1259,7 @@ Is TX forced?");
 
             // Reqeuesting identification
             await _serviceCommandsManager.GetBootloaderIdentificationData(
-                async (isfb, pv, hr, sv) => await OnGetBootloaderIdentificationDataResponseAsync(isfb, pv, hr, sv));
+                async (isfb, pv, hr, sv, fs, mfs, fe) => await OnGetBootloaderIdentificationDataResponseAsync(isfb, pv, hr, sv, fs, mfs, fe));
         }
 
         private async Task OnBootloaderDisconnectAsync()
@@ -1260,7 +1290,10 @@ Reason: {exception.Message}");
             bool isFoxBootloader,
             UInt16 protocolVersion,
             UInt16 hardwareRevision,
-            UInt16 firmwareVersion
+            UInt16 firmwareVersion,
+            UInt32 flashStartAddress,
+            UInt32 mainFirmwareStartAddress,
+            UInt32 flashEndAddress
         )
         {
             if (!isFoxBootloader)
@@ -1284,7 +1317,10 @@ Application will be terminated.");
             _mainModel.ServiceSettingsModel.BootloaderIdentificationData = new BootloaderIdentificationData()
             {
                 HardwareRevision = hardwareRevision,
-                FirmwareVersion = firmwareVersion
+                FirmwareVersion = firmwareVersion,
+                FlashStartAddress = flashStartAddress,
+                MainFirmwareStartAddress = mainFirmwareStartAddress,
+                FlashEndAddress = flashEndAddress
             };
 
             _isBootloaderReady = true;
@@ -1292,6 +1328,9 @@ Application will be terminated.");
             OnPropertyChanged(nameof(IsBootloaderControlsEnabled));
             OnPropertyChanged(nameof(FoxHardwareRevisionAsString));
             OnPropertyChanged(nameof(FoxFirmwareVersionAsString));
+            OnPropertyChanged(nameof(FlashStartAddressAsString));
+            OnPropertyChanged(nameof(MainFirmwareStartAddressAsString));
+            OnPropertyChanged(nameof(FlashEndAddressAsString));
         }
 
         #endregion

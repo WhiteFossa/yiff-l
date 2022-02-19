@@ -40,9 +40,9 @@ namespace org.whitefossa.yiffhl.Business.Implementations.Commands.Bootloader
                 return;
             }
 
-            if (payload.Count != 10)
+            if (payload.Count != 22)
             {
-                _onGetIdentificationDataResponse(false, 0, 0, 0);
+                _onGetIdentificationDataResponse(false, 0, 0, 0, 0, 0, 0);
                 return;
             }
 
@@ -55,7 +55,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations.Commands.Bootloader
 
             if (signature != FoxBootloaderSignature)
             {
-                _onGetIdentificationDataResponse(false, 0, 0, 0);
+                _onGetIdentificationDataResponse(false, 0, 0, 0, 0, 0, 0);
                 return;
             }
 
@@ -79,9 +79,39 @@ namespace org.whitefossa.yiffhl.Business.Implementations.Commands.Bootloader
                 .GetRange(8, 2)
                 .ToArray();
 
-            var softwareVersion = BitConverter.ToUInt16(softwareVersionBytes, 0);
+            var firmwareVersion = BitConverter.ToUInt16(softwareVersionBytes, 0);
 
-            _onGetIdentificationDataResponse(true, protocolVersion, hardwareRevision, softwareVersion);
+            var flashStartAddressBytes = payload
+                .ToList()
+                .GetRange(10, 4)
+                .ToArray();
+
+            var flashStartAddress = BitConverter.ToUInt32(flashStartAddressBytes, 0);
+
+            var mainFirmwareStartAddressBytes = payload
+                .ToList()
+                .GetRange(14, 4)
+                .ToArray();
+
+            var mainFirmwareStartAddress = BitConverter.ToUInt32(mainFirmwareStartAddressBytes, 0);
+
+            var flashEndAddressBytes = payload
+                .ToList()
+                .GetRange(18, 4)
+                .ToArray();
+
+            var flashEndAddress = BitConverter.ToUInt32(flashEndAddressBytes, 0);
+
+            _onGetIdentificationDataResponse
+             (
+                true,
+                protocolVersion,
+                hardwareRevision,
+                firmwareVersion,
+                flashStartAddress,
+                mainFirmwareStartAddress,
+                flashEndAddress
+             );
         }
     }
 }
