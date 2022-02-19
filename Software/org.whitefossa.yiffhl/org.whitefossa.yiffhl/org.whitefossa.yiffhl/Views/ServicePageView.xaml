@@ -738,6 +738,25 @@
                                 IsEnabled="{Binding IsBootloaderControlsEnabled}" />
                         </StackLayout>
 
+                        <StackLayout
+                            Orientation="Horizontal">
+
+                            <Button
+                                Text="Dump"
+                                VerticalOptions="Center"
+                                HorizontalOptions="StartAndExpand"
+                                Command="{Binding DumpFirmwareCommand}"
+                                IsEnabled="{Binding IsBootloaderControlsEnabled}" />
+
+                            <Button
+                                Text="Update"
+                                VerticalOptions="Center"
+                                HorizontalOptions="EndAndExpand"
+                                Command="{Binding UpdateFirmwareCommand}"
+                                IsEnabled="{Binding IsBootloaderControlsEnabled}" />
+
+                        </StackLayout>
+
                     </StackLayout>
                 </Frame>
 

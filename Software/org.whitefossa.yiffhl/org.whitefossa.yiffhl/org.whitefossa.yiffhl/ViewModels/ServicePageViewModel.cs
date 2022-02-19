@@ -34,6 +34,7 @@ namespace org.whitefossa.yiffhl.ViewModels
         private readonly IPacketsProcessor _packetsProcessor;
         private readonly IFoxConnector _foxConnector;
         private readonly IAppCloser _appCloser;
+        private readonly IFilesManager _filesManager;
 
         private MainModel _mainModel;
 
@@ -524,6 +525,8 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         public ICommand ReturnFromBootloaderCommand { get; }
 
+        public ICommand DumpFirmwareCommand { get; }
+
         public ServicePageViewModel()
         {
 
@@ -534,6 +537,7 @@ namespace org.whitefossa.yiffhl.ViewModels
             _packetsProcessor = App.Container.Resolve<IPacketsProcessor>();
             _foxConnector = App.Container.Resolve<IFoxConnector>();
             _appCloser = App.Container.Resolve<IAppCloser>();
+            _filesManager = App.Container.Resolve<IFilesManager>();
 
             GetLastErrorCodeCommand = new Command(async () => await OnGetLastErrorAsync());
             ResetLastErrorCodeCommand = new Command(async () => await OnResetLastErrorCodeAsync());
@@ -573,6 +577,8 @@ namespace org.whitefossa.yiffhl.ViewModels
             RebootToBootloaderCommand = new Command(async () => await OnRebootToBootloaderAsync());
             
             ReturnFromBootloaderCommand = new Command(async() => await OnReturnFromBootloaderAsync());
+
+            DumpFirmwareCommand = new Command(async () => await OnDumpFirmwareAsync());
 
             _isBootloaderReady = false;
 
@@ -1332,10 +1338,6 @@ Application will be terminated.");
             OnPropertyChanged(nameof(FlashStartAddressAsString));
             OnPropertyChanged(nameof(MainFirmwareStartAddressAsString));
             OnPropertyChanged(nameof(FlashEndAddressAsString));
-
-            // TODO: Remove me, debug
-            await _serviceCommandsManager.ReadMainFirmware(_mainModel.ServiceSettingsModel.BootloaderIdentificationData,
-                async(fd) => await OnReadMainFirmwareAsync(fd));
         }
 
         #endregion
@@ -1356,9 +1358,16 @@ Application will be terminated.");
 
         #region Read main firmware
 
+        private async Task OnDumpFirmwareAsync()
+        {
+            await _serviceCommandsManager.ReadMainFirmware(_mainModel.ServiceSettingsModel.BootloaderIdentificationData,
+                async (fd) => await OnReadMainFirmwareAsync(fd));
+        }
+
+
         private async Task OnReadMainFirmwareAsync(List<byte> firmwareDump)
         {
-            int a = 10;
+            await _filesManager.SaveFileAsync(firmwareDump);
         }
 
         #endregion

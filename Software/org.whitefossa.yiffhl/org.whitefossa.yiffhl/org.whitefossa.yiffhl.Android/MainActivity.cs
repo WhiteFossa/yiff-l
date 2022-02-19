@@ -44,6 +44,7 @@ namespace org.whitefossa.yiffhl.Droid
             App.Container.Register<IEventsGenerator, EventsGenerator>().AsSingleton();
             App.Container.Register<IServiceCommandsManager, ServiceCommandsManager>().AsSingleton();
             App.Container.Register<IAppCloser, AppCloser>().AsSingleton();
+            App.Container.Register<IFilesManager, FilesManager>().AsSingleton();
 
             #region Commands
 
