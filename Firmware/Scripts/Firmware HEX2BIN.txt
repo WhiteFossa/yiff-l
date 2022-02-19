@@ -1,1 +1,13 @@
-hex2bin -c -l 0x18000 Yiff-HL.hex
+1) Prepare un-padded bin-file:
+
+$ hex2bin -c Yiff-HL.hex
+
+
+2) Prepare empty file of required (98304 bytes) size, filled with 0xFF:
+
+$ dd if=/dev/zero ibs=1 count=98304 | tr "\000" "\377" > Yiff-HL_padded.bin
+
+
+3) Isert un-padded file into padded one:
+
+dd if=Yiff-HL.bin of=Yiff-HL_padded.bin conv=notrunc
