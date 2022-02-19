@@ -78,3 +78,8 @@ void ProcessRebootToMainFirmware(void)
 		JumpToEntryPoint(YBL_MAIN_CODE_START);
 	}
 }
+
+uint32_t GetReadFlashAddressByPageNumber(uint32_t pageNumber)
+{
+	return YBL_FLASH_START + YBL_READ_FLASH_PAGE_SIZE * pageNumber;
+}

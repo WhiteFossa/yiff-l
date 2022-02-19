@@ -46,13 +46,21 @@ extern PendingCommandsFlagsStruct PendingCommandsFlags;
 #define YBL_PACKET_PROCESSOR_MAX_PAYLOAD_SIZE 59U
 
 /**
+ * Responses to requests
+ */
+#define YBL_PACKET_PROCESSOR_SUCCESS 0x00
+#define YBL_PACKET_PROCESSOR_FAILURE 0x01
+
+/**
  * Possible commands
  */
 typedef enum
 {
 	YBL_GetIdentificationData = 0xFF,
 
-	YBL_RebootToMainFirmware = 0xFE
+	YBL_RebootToMainFirmware = 0xFE,
+
+	YBL_ReadFlashPage = 0xFD
 }
 Commands;
 
@@ -91,5 +99,10 @@ void OnGetIdentificationData(uint8_t payloadSize, uint8_t* payload);
  * Called when "Reboot to main firmware" command comes
  */
 void OnRebootToMainFirmware(uint8_t payloadSize, uint8_t* payload);
+
+/**
+ * Called when "Read FLASH page" command comes
+ */
+void OnReadFlashPage(uint8_t payloadSize, uint8_t* payload);
 
 #endif /* INCLUDE_PACKETSPROCESSOR_H_ */

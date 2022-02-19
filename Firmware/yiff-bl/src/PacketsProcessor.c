@@ -61,6 +61,11 @@ void OnNewCommand(uint8_t payloadSize, uint8_t* payload)
 			/* Reboot to main firmware */
 			OnRebootToMainFirmware(payloadSize, payload);
 			break;
+
+		case YBL_ReadFlashPage:
+			/* Read flash page */
+			OnReadFlashPage(payloadSize, payload);
+			break;
 	}
 }
 
@@ -147,4 +152,45 @@ void OnRebootToMainFirmware(uint8_t payloadSize, uint8_t* payload)
 	}
 
 	PendingCommandsFlags.IsRebootToMainFirmware = true;
+}
+
+void OnReadFlashPage(uint8_t payloadSize, uint8_t* payload)
+{
+	if (payloadSize != 5)
+	{
+		return;
+	}
+
+	uint32_t pageNumber;
+	memcpy(&pageNumber, &payload[1], 4);
+
+	uint32_t pageStartAddress = GetReadFlashAddressByPageNumber(pageNumber);
+
+	uint8_t result[33];
+	memset(result, 0x00, 33);
+
+	if (
+		pageStartAddress < YBL_FLASH_START
+		||
+		pageStartAddress > YBL_FLASH_END
+		)
+	{
+		/* Out of FLASH */
+		result[0] = YBL_PACKET_PROCESSOR_FAILURE;
+		SendResponse(YBL_ReadFlashPage, 33, result);
+		return;
+	}
+
+	result[0] = YBL_PACKET_PROCESSOR_SUCCESS;
+
+	uint32_t pageEndAddress = pageStartAddress + YBL_READ_FLASH_PAGE_SIZE;
+	if (pageEndAddress > YBL_FLASH_END)
+	{
+		pageEndAddress = YBL_FLASH_END;
+	}
+
+	uint8_t readLength = (uint8_t)(pageEndAddress - pageStartAddress);
+	memcpy(&result[1], (uint8_t*)pageStartAddress, readLength);
+
+	SendResponse(YBL_ReadFlashPage, 33, result);
 }

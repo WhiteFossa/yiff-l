@@ -37,6 +37,11 @@ extern PendingCommandsFlagsStruct PendingCommandsFlags;
 #define YBL_FLASH_END 0x0801FFFF
 
 /**
+ * We read FLASH using this "page" size
+ */
+#define YBL_READ_FLASH_PAGE_SIZE 32U
+
+/**
  * Entry point
  */
 typedef void (EntryPoint)(void);
@@ -72,5 +77,10 @@ void EnterDFUMode(void);
  * Reboots to main firmware if needed
  */
 void ProcessRebootToMainFirmware(void);
+
+/**
+ * Get address of first byte of FLASH when reading it
+ */
+uint32_t GetReadFlashAddressByPageNumber(uint32_t pageNumber);
 
 #endif /* INCLUDE_BOOTLOADER_H_ */
