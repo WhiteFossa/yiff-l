@@ -1334,7 +1334,8 @@ Application will be terminated.");
             OnPropertyChanged(nameof(FlashEndAddressAsString));
 
             // TODO: Remove me, debug
-            await _serviceCommandsManager.ReadMainFirmware(async(fd) => await OnReadMainFirmwareAsync(fd));
+            await _serviceCommandsManager.ReadMainFirmware(_mainModel.ServiceSettingsModel.BootloaderIdentificationData,
+                async(fd) => await OnReadMainFirmwareAsync(fd));
         }
 
         #endregion

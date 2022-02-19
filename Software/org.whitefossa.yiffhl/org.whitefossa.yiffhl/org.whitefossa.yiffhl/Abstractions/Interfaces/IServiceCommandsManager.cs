@@ -1,4 +1,5 @@
-﻿using System;
+﻿using org.whitefossa.yiffhl.Abstractions.DTOs.Bootloader;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -117,6 +118,6 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
 
         Task RebootToMainFirmware(OnRebootToMainFirmwareDelegate onRebootToMainFirmware);
 
-        Task ReadMainFirmware(OnReadMainFirmwareDelegate onReadMainFirmware);
+        Task ReadMainFirmware(BootloaderIdentificationData bootloaderIdentificationData, OnReadMainFirmwareDelegate onReadMainFirmware);
     }
 }

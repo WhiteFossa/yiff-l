@@ -1,4 +1,5 @@
 ﻿using Acr.UserDialogs;
+using org.whitefossa.yiffhl.Abstractions.DTOs.Bootloader;
 using org.whitefossa.yiffhl.Abstractions.Interfaces;
 using org.whitefossa.yiffhl.Abstractions.Interfaces.Commands;
 using System;
@@ -11,19 +12,9 @@ namespace org.whitefossa.yiffhl.Business.Implementations
     public class ServiceCommandsManager : IServiceCommandsManager
     {
         /// <summary>
-        /// Bootloader size in 32-bytes FLASH read pages
+        /// We read FLASH by this sized pages
         /// </summary>
-        private const uint BootloaderSizeInReadPages = 1024;
-
-        /// <summary>
-        /// Main firmware size in 32-bytes FLASH read pages
-        /// </summary>
-        private const uint MainFirmwareSizeInReadPages = 3072;
-
-        /// <summary>
-        /// Main firmware last page (in 32-bytes FLASH read pages)
-        /// </summary>
-        private const uint MainFirmwareLastReadPage = BootloaderSizeInReadPages + MainFirmwareSizeInReadPages;
+        private const uint FlashReadPageSize = 32;
 
         #region Commands
 
@@ -131,6 +122,21 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         private OnReadMainFirmwareDelegate _onReadMainFirmware;
 
         #endregion
+
+        /// <summary>
+        /// Bootloader size in 32-bytes FLASH read pages
+        /// </summary>
+        private uint _bootloaderSizeInReadPages;
+
+        /// <summary>
+        /// Main firmware size in 32-bytes FLASH read pages
+        /// </summary>
+        private uint _mainFirmwareSizeInReadPages;
+
+        /// <summary>
+        /// Main firmware last page (in 32-bytes FLASH read pages)
+        /// </summary>
+        private uint _mainFirmwareLastReadPage;
 
         /// <summary>
         /// Current main firmware page (reading)
@@ -839,8 +845,17 @@ namespace org.whitefossa.yiffhl.Business.Implementations
 
         #region Read main firmware
 
-        public async Task ReadMainFirmware(OnReadMainFirmwareDelegate onReadMainFirmware)
+        public async Task ReadMainFirmware(BootloaderIdentificationData bootloaderIdentificationData, OnReadMainFirmwareDelegate onReadMainFirmware)
         {
+            // Calculating main firmware size
+            _bootloaderSizeInReadPages
+                = (bootloaderIdentificationData.MainFirmwareStartAddress - bootloaderIdentificationData.FlashStartAddress) / FlashReadPageSize;
+
+            _mainFirmwareSizeInReadPages
+                = (bootloaderIdentificationData.FlashEndAddress + 1 - bootloaderIdentificationData.MainFirmwareStartAddress) / FlashReadPageSize;
+
+            _mainFirmwareLastReadPage = _bootloaderSizeInReadPages + _mainFirmwareSizeInReadPages;
+
             _onReadMainFirmware = onReadMainFirmware;
 
             _readFlashPageCommand.SetResponseDelegate(async(s, d) => await OnReadFlashPageFromMainFirmwareAsync(s, d));
@@ -849,7 +864,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
 
             _mainFirmwareDump.Clear();
 
-            _currentMainFirmwareReadPage = BootloaderSizeInReadPages; // First page of the main firmware
+            _currentMainFirmwareReadPage = _bootloaderSizeInReadPages; // First page of the main firmware
             _readFlashPageCommand.SendReadFlashPageCommand(_currentMainFirmwareReadPage);
         }
 
@@ -863,11 +878,11 @@ namespace org.whitefossa.yiffhl.Business.Implementations
             _mainFirmwareDump.AddRange(data);
 
             _progressDialog.PercentComplete = 
-                (int)Math.Round(100 * (_currentMainFirmwareReadPage - BootloaderSizeInReadPages) / (double)MainFirmwareSizeInReadPages);
+                (int)Math.Round(100 * (_currentMainFirmwareReadPage - _bootloaderSizeInReadPages) / (double)_mainFirmwareSizeInReadPages);
 
             _currentMainFirmwareReadPage ++;
 
-            if (_currentMainFirmwareReadPage < MainFirmwareLastReadPage)
+            if (_currentMainFirmwareReadPage < _mainFirmwareLastReadPage)
             {
                 // Continue to read
                 _readFlashPageCommand.SendReadFlashPageCommand(_currentMainFirmwareReadPage);
