@@ -775,7 +775,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations
                 protocolVersion,
                 hardwareRevision,
                 softwareVersion,
-                flashEndAddress,
+                flashStartAddress,
                 mainFirmwareStartAddress,
                 flashEndAddress
             );
