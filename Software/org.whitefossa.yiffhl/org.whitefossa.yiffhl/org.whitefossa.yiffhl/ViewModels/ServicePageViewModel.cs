@@ -1360,8 +1360,10 @@ Application will be terminated.");
 
         private async Task OnDumpFirmwareAsync()
         {
-            await _serviceCommandsManager.ReadMainFirmware(_mainModel.ServiceSettingsModel.BootloaderIdentificationData,
-                async (fd) => await OnReadMainFirmwareAsync(fd));
+            await _filesManager.SaveFileAsync(new List<byte>() { 0x0F, 0x05, 0x5A });
+
+            //   await _serviceCommandsManager.ReadMainFirmware(_mainModel.ServiceSettingsModel.BootloaderIdentificationData,
+            //     async (fd) => await OnReadMainFirmwareAsync(fd));
         }
 
 

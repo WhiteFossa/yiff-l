@@ -8,6 +8,8 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
     /// </summary>
     public interface IFilesManager
     {
+        Task<string> GetFirmwareDirectoryPath();
+
         Task SaveFileAsync(List<byte> content);
     }
 }
