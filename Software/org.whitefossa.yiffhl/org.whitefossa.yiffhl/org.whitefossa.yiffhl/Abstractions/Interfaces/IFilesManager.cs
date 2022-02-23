@@ -11,5 +11,7 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
         Task<string> GetFirmwareDirectoryPath();
 
         Task SaveFileAsync(List<byte> content);
+
+        Task OnSaveFilePermissionResultAsync(bool isGranted);
     }
 }

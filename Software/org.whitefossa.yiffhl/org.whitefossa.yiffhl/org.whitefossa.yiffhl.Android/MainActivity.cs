@@ -1,9 +1,11 @@
 ﻿
 using Acr.UserDialogs;
+using Android;
 using Android.App;
 using Android.Content.PM;
 using Android.OS;
 using Android.Runtime;
+using AndroidX.Core.App;
 using Nancy.TinyIoc;
 using org.whitefossa.yiffhl.Abstractions.Interfaces;
 using org.whitefossa.yiffhl.Abstractions.Interfaces.Commands;
@@ -13,11 +15,13 @@ using org.whitefossa.yiffhl.Business.Implementations.Commands;
 using org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor;
 using org.whitefossa.yiffhl.Droid.Business.Implementations;
 using org.whitefossa.yiffhl.Models;
+using System.Linq;
+using Constants = org.whitefossa.yiffhl.Droid.Business.Implementations.Constants;
 
 namespace org.whitefossa.yiffhl.Droid
 {
     [Activity(Label = "Project YIFF: HL", Icon = "@mipmap/icon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize )]
-    public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
+    public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity, ActivityCompat.IOnRequestPermissionsResultCallback
     {
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -126,11 +130,26 @@ namespace org.whitefossa.yiffhl.Droid
 
             UserDialogs.Init(this);
         }
+
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {
-            Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+            if (requestCode == Constants.FileManagerWriteExternalStoragePermission)
+            {
+                if (permissions.Length == 1 && permissions.First() == Manifest.Permission.WriteExternalStorage)
+                {
+                    var filesManager = App.Container.Resolve<IFilesManager>();
 
-            base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+                    if (grantResults.Length == 1)
+                    {
+                        filesManager.OnSaveFilePermissionResultAsync(grantResults.First() == Permission.Granted);
+                    }
+                }
+            }
+            else
+            {
+                Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+                base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+            }
         }
     }
 }
