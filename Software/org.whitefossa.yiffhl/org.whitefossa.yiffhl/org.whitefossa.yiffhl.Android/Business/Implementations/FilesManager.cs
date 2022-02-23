@@ -3,6 +3,7 @@ using Android.Content.PM;
 using AndroidX.Core.App;
 using AndroidX.Core.Content;
 using org.whitefossa.yiffhl.Abstractions.Interfaces;
+using org.whitefossa.yiffhl.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -41,15 +42,18 @@ namespace org.whitefossa.yiffhl.Droid.Business.Implementations
                 );
         }
 
-        public async Task SaveFileAsync(List<byte> content)
+        public async Task SaveFileAsync(string filename, List<byte> content)
         {
+            _ = filename ?? throw new ArgumentNullException(nameof(filename));
+            _ = content ?? throw new ArgumentNullException(nameof(content));
+
             var isWriteable = Android.OS.Environment.MediaMounted.Equals(Android.OS.Environment.ExternalStorageState);
             if (!isWriteable)
             {
                 throw new InvalidOperationException("External storage is unavailable");
             }
 
-            _saveFilename = "firmware.bin";
+            _saveFilename = filename;
             _saveContent = content;
             
             // Requesting permission to write a file
@@ -82,6 +86,13 @@ namespace org.whitefossa.yiffhl.Droid.Business.Implementations
             {
                 await writer.WriteAsync(_saveContent.ToArray());
             }
+        }
+
+        public async Task<string> GenerateDumpFilename(MainModel mainModel)
+        {
+            var now = DateTime.Now;
+            return $"Dump_{ mainModel.ConnectedFox.Name }_{now.Year:0000}_{now.Month:00}_{now.Day:00}"
+                + $"_{now.Hour:00}_{now.Minute:00}_{now.Second:00}.bin";
         }
     }
 }

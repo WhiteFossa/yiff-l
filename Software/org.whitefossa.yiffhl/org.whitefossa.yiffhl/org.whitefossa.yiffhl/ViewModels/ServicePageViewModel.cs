@@ -8,6 +8,7 @@ using org.whitefossa.yiffhl.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
@@ -1367,7 +1368,15 @@ Application will be terminated.");
 
         private async Task OnReadMainFirmwareAsync(List<byte> firmwareDump)
         {
-            await _filesManager.SaveFileAsync(firmwareDump);
+            var now = DateTime.Now;
+            var dumpFilename = await _filesManager.GenerateDumpFilename(_mainModel);
+
+            await _filesManager.SaveFileAsync(dumpFilename, firmwareDump);
+
+            var foxDirectory = await _filesManager.GetFirmwareDirectoryPath();
+            var fullPath = Path.Combine(foxDirectory, dumpFilename);
+
+            await _userNotifier.ShowNotificationMessageAsync("Success", $"Firmware dump saved to { fullPath } file.");
         }
 
         #endregion
