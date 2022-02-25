@@ -119,5 +119,7 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
         Task RebootToMainFirmware(OnRebootToMainFirmwareDelegate onRebootToMainFirmware);
 
         Task ReadMainFirmware(BootloaderIdentificationData bootloaderIdentificationData, OnReadMainFirmwareDelegate onReadMainFirmware);
+
+        Task<bool> VaildateMainFirmwareAsync(BootloaderIdentificationData bootloaderIdentificationData, List<byte> firmwareBytes);
     }
 }

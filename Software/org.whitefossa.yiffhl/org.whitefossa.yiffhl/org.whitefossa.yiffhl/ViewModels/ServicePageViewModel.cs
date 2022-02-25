@@ -13,6 +13,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Input;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace org.whitefossa.yiffhl.ViewModels
@@ -526,7 +527,15 @@ namespace org.whitefossa.yiffhl.ViewModels
         /// </summary>
         public ICommand ReturnFromBootloaderCommand { get; }
 
+        /// <summary>
+        /// Dump firmware to file
+        /// </summary>
         public ICommand DumpFirmwareCommand { get; }
+
+        /// <summary>
+        /// Update fox firmware
+        /// </summary>
+        public ICommand UpdateFirmwareCommand { get; }
 
         public ServicePageViewModel()
         {
@@ -580,6 +589,8 @@ namespace org.whitefossa.yiffhl.ViewModels
             ReturnFromBootloaderCommand = new Command(async() => await OnReturnFromBootloaderAsync());
 
             DumpFirmwareCommand = new Command(async () => await OnDumpFirmwareAsync());
+
+            UpdateFirmwareCommand = new Command(async () => await OnUpdateFirmwareAsync());
 
             _isBootloaderReady = false;
 
@@ -1365,10 +1376,8 @@ Application will be terminated.");
               async (fd) => await OnReadMainFirmwareAsync(fd));
         }
 
-
         private async Task OnReadMainFirmwareAsync(List<byte> firmwareDump)
         {
-            var now = DateTime.Now;
             var dumpFilename = await _filesManager.GenerateDumpFilename(_mainModel);
 
             await _filesManager.SaveFileAsync(dumpFilename, firmwareDump);
@@ -1377,6 +1386,57 @@ Application will be terminated.");
             var fullPath = Path.Combine(foxDirectory, dumpFilename);
 
             await _userNotifier.ShowNotificationMessageAsync("Success", $"Firmware dump saved to { fullPath } file.");
+        }
+
+        #endregion
+
+        #region Flash main firmware
+
+        private async Task OnUpdateFirmwareAsync()
+        {
+            // Selecting file with update
+            try
+            {
+                var options = new PickOptions()
+                {
+                    PickerTitle = "Select firmware file"
+                };
+
+                var result = await FilePicker.PickAsync(options);
+                if (result != null)
+                {
+                    var updateFile = await _filesManager.ReadFileAsync(result.FullPath);
+
+                    var isFirmwareValid = await _serviceCommandsManager.VaildateMainFirmwareAsync
+                        (
+                            _mainModel.ServiceSettingsModel.BootloaderIdentificationData,
+                            updateFile
+                        );
+
+                    if (!isFirmwareValid)
+                    {
+                        await _userNotifier.ShowErrorMessageAsync("Wrong file", "Selected file doesn't contain valid firmware!");
+                        return;
+                    }
+
+                    // Dumping existing firmware
+                    await _serviceCommandsManager.ReadMainFirmware(_mainModel.ServiceSettingsModel.BootloaderIdentificationData,
+                        async (fd) => await OnReadMainFirmwareBackupAsync(fd));
+                }
+            }
+            catch (Exception)
+            {
+                // User cancelled
+            }
+        }
+
+        private async Task OnReadMainFirmwareBackupAsync(List<byte> firmwareDump)
+        {
+            var backupFilename = await _filesManager.GenerateBackupFilename(_mainModel);
+
+            await _filesManager.SaveFileAsync(backupFilename, firmwareDump);
+
+            // Erasing main firmware FLASH
         }
 
         #endregion

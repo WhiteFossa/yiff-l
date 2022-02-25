@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 namespace org.whitefossa.yiffhl.Abstractions.Interfaces
 {
     /// <summary>
-    /// Interface for saving files into the fox directory
+    /// Interface for saving files into the fox directory/reading them from anywhere
     /// </summary>
     public interface IFilesManager
     {
@@ -16,5 +16,9 @@ namespace org.whitefossa.yiffhl.Abstractions.Interfaces
         Task OnSaveFilePermissionResultAsync(bool isGranted);
 
         Task<string> GenerateDumpFilename(MainModel mainModel);
+
+        Task<List<byte>> ReadFileAsync(string fullPath);
+
+        Task<string> GenerateBackupFilename(MainModel mainModel);
     }
 }

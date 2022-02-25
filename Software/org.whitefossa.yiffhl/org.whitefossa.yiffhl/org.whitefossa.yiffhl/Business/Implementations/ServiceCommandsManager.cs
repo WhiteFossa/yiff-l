@@ -895,5 +895,21 @@ namespace org.whitefossa.yiffhl.Business.Implementations
         }
 
         #endregion
+
+        #region Validate main firmware
+
+        public async Task<bool> VaildateMainFirmwareAsync(BootloaderIdentificationData bootloaderIdentificationData, List<byte> firmwareBytes)
+        {
+            var expectedFirmwareSize = bootloaderIdentificationData.FlashEndAddress - bootloaderIdentificationData.MainFirmwareStartAddress + 1;
+
+            if (expectedFirmwareSize != firmwareBytes.Count)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        #endregion
     }
 }

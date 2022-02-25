@@ -7,6 +7,7 @@ using org.whitefossa.yiffhl.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 
@@ -92,6 +93,26 @@ namespace org.whitefossa.yiffhl.Droid.Business.Implementations
         {
             var now = DateTime.Now;
             return $"Dump_{ mainModel.ConnectedFox.Name }_{now.Year:0000}_{now.Month:00}_{now.Day:00}"
+                + $"_{now.Hour:00}_{now.Minute:00}_{now.Second:00}.bin";
+        }
+
+        public async Task<List<byte>> ReadFileAsync(string fullPath)
+        {
+            _ = fullPath ?? throw new ArgumentNullException(nameof(fullPath));
+
+            var isReadable = Android.OS.Environment.MediaMounted.Equals(Android.OS.Environment.ExternalStorageState);
+            if (!isReadable)
+            {
+                throw new InvalidOperationException("External storage is unavailable");
+            }
+
+            return (await File.ReadAllBytesAsync(fullPath)).ToList();
+        }
+
+        public async Task<string> GenerateBackupFilename(MainModel mainModel)
+        {
+            var now = DateTime.Now;
+            return $"Backup_{ mainModel.ConnectedFox.Name }_{now.Year:0000}_{now.Month:00}_{now.Day:00}"
                 + $"_{now.Hour:00}_{now.Minute:00}_{now.Second:00}.bin";
         }
     }
