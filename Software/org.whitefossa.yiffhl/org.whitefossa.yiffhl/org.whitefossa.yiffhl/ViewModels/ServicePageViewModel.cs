@@ -1395,6 +1395,7 @@ Application will be terminated.");
         private async Task OnUpdateFirmwareAsync()
         {
             // Selecting file with update
+            FileResult result = null;
             try
             {
                 var options = new PickOptions()
@@ -1402,7 +1403,16 @@ Application will be terminated.");
                     PickerTitle = "Select firmware file"
                 };
 
-                var result = await FilePicker.PickAsync(options);
+                result = await FilePicker.PickAsync(options);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+                return;
+            }
+
+            Device.BeginInvokeOnMainThread(async () =>
+            {
                 if (result != null)
                 {
                     var updateFile = await _filesManager.ReadFileAsync(result.FullPath);
@@ -1423,11 +1433,7 @@ Application will be terminated.");
                     await _serviceCommandsManager.ReadMainFirmware(_mainModel.ServiceSettingsModel.BootloaderIdentificationData,
                         async (fd) => await OnReadMainFirmwareBackupAsync(fd));
                 }
-            }
-            catch (Exception)
-            {
-                // User cancelled
-            }
+            });
         }
 
         private async Task OnReadMainFirmwareBackupAsync(List<byte> firmwareDump)
