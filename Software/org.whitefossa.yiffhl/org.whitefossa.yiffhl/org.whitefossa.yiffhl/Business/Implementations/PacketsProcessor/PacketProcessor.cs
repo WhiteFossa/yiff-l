@@ -100,6 +100,7 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
         private OnResponseDelegate _onBootloaderGetIdentificationDataResponse;
         private OnResponseDelegate _onRebootToMainFirmwareResponse;
         private OnResponseDelegate _onReadFlashPageResponse;
+        private OnResponseDelegate _onEraseFlashPageResponse;
 
         #endregion
 
@@ -731,6 +732,13 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
                         _onReadFlashPageResponse(responsePayload);
                         break;
 
+                    // Erase FLASH page
+                    case CommandType.BootloaderEraseFlashPage:
+                        CheckOnResponseDelegate(_onEraseFlashPageResponse);
+
+                        _onEraseFlashPageResponse(responsePayload);
+                        break;
+
                     #endregion
 
                     default:
@@ -1205,6 +1213,12 @@ namespace org.whitefossa.yiffhl.Business.Implementations.PacketsProcessor
         {
             _onReadFlashPageResponse = onReadFlashPageResponse
                 ?? throw new ArgumentNullException(nameof(onReadFlashPageResponse));
+        }
+
+        public void SetOnEraseFlashPageResponse(OnResponseDelegate onEraseFlashPageResponse)
+        {
+            _onEraseFlashPageResponse = onEraseFlashPageResponse
+                ?? throw new ArgumentNullException(nameof(onEraseFlashPageResponse));
         }
     }
 }

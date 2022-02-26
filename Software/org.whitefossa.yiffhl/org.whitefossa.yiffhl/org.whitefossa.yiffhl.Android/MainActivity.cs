@@ -120,6 +120,9 @@ namespace org.whitefossa.yiffhl.Droid
             App.Container.Register<Abstractions.Interfaces.Commands.Bootloader.IReadFlashPageCommand,
                 yiffhl.Business.Implementations.Commands.Bootloader.ReadFlashPageCommand>().AsSingleton();
 
+            App.Container.Register<Abstractions.Interfaces.Commands.Bootloader.IEraseFlashPageCommand,
+                yiffhl.Business.Implementations.Commands.Bootloader.EraseFlashPageCommand>().AsSingleton();
+
             #endregion
 
             base.OnCreate(savedInstanceState);

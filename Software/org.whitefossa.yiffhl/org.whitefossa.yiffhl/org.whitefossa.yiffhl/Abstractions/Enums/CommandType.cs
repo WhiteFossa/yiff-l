@@ -130,7 +130,9 @@
 
         BootloaderRebootToMainFirmware = 0xFE,
 
-        BootloaderReadFlashPage = 0xFD
+        BootloaderReadFlashPage = 0xFD,
+
+        BootloaderEraseFlashPage = 0xFC
 
         #endregion
     }

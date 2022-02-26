@@ -2,6 +2,7 @@
 using org.whitefossa.yiffhl.Abstractions.DTOs.Bootloader;
 using org.whitefossa.yiffhl.Abstractions.Enums;
 using org.whitefossa.yiffhl.Abstractions.Interfaces;
+using org.whitefossa.yiffhl.Abstractions.Interfaces.Commands.Bootloader;
 using org.whitefossa.yiffhl.Abstractions.Interfaces.Models;
 using org.whitefossa.yiffhl.Business.Helpers;
 using org.whitefossa.yiffhl.Models;
@@ -1443,6 +1444,14 @@ Application will be terminated.");
             await _filesManager.SaveFileAsync(backupFilename, firmwareDump);
 
             // Erasing main firmware FLASH
+            var eraseFlashCommand = App.Container.Resolve<IEraseFlashPageCommand>();
+            eraseFlashCommand.SetResponseDelegate(OnPageErase);
+            eraseFlashCommand.SendEraseFlashPageCommand(0x08008000);
+        }
+
+        private void OnPageErase(bool isSuccessful)
+        {
+            int a = 10;
         }
 
         #endregion
