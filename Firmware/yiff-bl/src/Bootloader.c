@@ -63,6 +63,7 @@ void EnterDFUMode(void)
 		}
 
 		ProcessRebootToMainFirmware();
+		ProcessFlashPageErase();
 	}
 }
 
@@ -82,4 +83,59 @@ void ProcessRebootToMainFirmware(void)
 uint32_t GetReadFlashAddressByPageNumber(uint32_t pageNumber)
 {
 	return YBL_FLASH_START + YBL_READ_FLASH_PAGE_SIZE * pageNumber;
+}
+
+void ProcessFlashPageErase(void)
+{
+	if (PendingCommandsFlags.IsEraseFlashPage)
+	{
+		uint8_t result;
+		bool isSuccessful = true;
+
+		if (HAL_FLASH_Unlock() != HAL_OK)
+		{
+			isSuccessful = false;
+			goto ProcessFlashPageEraseSendResponse;
+		}
+
+		FLASH_EraseInitTypeDef eraseInitStruct;
+		eraseInitStruct.TypeErase = FLASH_TYPEERASE_PAGES;
+		eraseInitStruct.Banks = FLASH_BANK_1;
+		eraseInitStruct.PageAddress = PendingCommandsData.EraseThisFlashPageStartAddress;
+		eraseInitStruct.NbPages = 1;
+
+		uint32_t eraseResult;
+		if (HAL_FLASHEx_Erase(&eraseInitStruct, &eraseResult) != HAL_OK)
+		{
+			isSuccessful = false;
+			goto ProcessFlashPageEraseSendResponse;
+		}
+
+		if (eraseResult != 0xFFFFFFFF)
+		{
+			isSuccessful = false;
+			goto ProcessFlashPageEraseSendResponse;
+		}
+
+		if (HAL_FLASH_Lock() != HAL_OK)
+		{
+			isSuccessful = false;
+			goto ProcessFlashPageEraseSendResponse;
+		}
+
+ProcessFlashPageEraseSendResponse:
+
+		if (isSuccessful)
+		{
+			result = YBL_PACKET_PROCESSOR_SUCCESS;
+		}
+		else
+		{
+			result = YBL_PACKET_PROCESSOR_FAILURE;
+		}
+
+		SendResponse(YBL_EraseFlashPage, 1, &result);
+
+		PendingCommandsFlags.IsEraseFlashPage = false;
+	}
 }

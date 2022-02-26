@@ -103,4 +103,6 @@ EEPROMConstantHeaderStruct EEPROM_ConstantHeader;
 
 PendingCommandsFlagsStruct PendingCommandsFlags;
 
+PendingCommandsDataStruct PendingCommandsData;
+
 #endif /* INCLUDE_GLOBALVARIABLES_H_ */

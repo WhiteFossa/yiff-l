@@ -18,6 +18,7 @@
 extern L2HAL_CRCContextStruct CRC_Context;
 extern EEPROMConstantHeaderStruct EEPROM_ConstantHeader;
 extern PendingCommandsFlagsStruct PendingCommandsFlags;
+extern PendingCommandsDataStruct PendingCommandsData;
 
 /**
  * Packet size minus this value is payload size
@@ -60,7 +61,9 @@ typedef enum
 
 	YBL_RebootToMainFirmware = 0xFE,
 
-	YBL_ReadFlashPage = 0xFD
+	YBL_ReadFlashPage = 0xFD,
+
+	YBL_EraseFlashPage = 0xFC
 }
 Commands;
 
@@ -104,5 +107,10 @@ void OnRebootToMainFirmware(uint8_t payloadSize, uint8_t* payload);
  * Called when "Read FLASH page" command comes
  */
 void OnReadFlashPage(uint8_t payloadSize, uint8_t* payload);
+
+/**
+ * Called when "Erase FLASH page" command comes
+ */
+void OnEraseFlashPage(uint8_t payloadSize, uint8_t* payload);
 
 #endif /* INCLUDE_PACKETSPROCESSOR_H_ */

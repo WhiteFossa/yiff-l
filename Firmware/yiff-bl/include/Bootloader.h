@@ -83,4 +83,9 @@ void ProcessRebootToMainFirmware(void);
  */
 uint32_t GetReadFlashAddressByPageNumber(uint32_t pageNumber);
 
+/**
+ * Erases FLASH page if needed
+ */
+void ProcessFlashPageErase(void);
+
 #endif /* INCLUDE_BOOTLOADER_H_ */

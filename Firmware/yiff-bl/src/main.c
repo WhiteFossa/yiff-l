@@ -157,6 +157,7 @@ void Main_InitDisplayAndFonts(void)
 void Main_InitPendingCommandsFlags(void)
 {
 	PendingCommandsFlags.IsRebootToMainFirmware = false;
+	PendingCommandsFlags.IsEraseFlashPage = false;
 }
 
 #pragma GCC diagnostic pop

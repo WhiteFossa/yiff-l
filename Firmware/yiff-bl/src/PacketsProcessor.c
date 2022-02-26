@@ -66,6 +66,11 @@ void OnNewCommand(uint8_t payloadSize, uint8_t* payload)
 			/* Read flash page */
 			OnReadFlashPage(payloadSize, payload);
 			break;
+
+		case YBL_EraseFlashPage:
+			/* Erase flash page */
+			OnEraseFlashPage(payloadSize, payload);
+			break;
 	}
 }
 
@@ -193,4 +198,30 @@ void OnReadFlashPage(uint8_t payloadSize, uint8_t* payload)
 	memcpy(&result[1], (uint8_t*)pageStartAddress, readLength);
 
 	SendResponse(YBL_ReadFlashPage, 33, result);
+}
+
+
+void OnEraseFlashPage(uint8_t payloadSize, uint8_t* payload)
+{
+	if (payloadSize != 5)
+	{
+		return;
+	}
+
+	uint32_t pageStartAddress;
+	memcpy(&pageStartAddress, &payload[1], 4);
+
+	if (
+		pageStartAddress < YBL_MAIN_CODE_START
+		||
+		pageStartAddress > YBL_FLASH_END)
+	{
+		/* Out of main firmware */
+		uint8_t result = YBL_PACKET_PROCESSOR_FAILURE;
+		SendResponse(YBL_EraseFlashPage, 1, &result);
+		return;
+	}
+
+	PendingCommandsData.EraseThisFlashPageStartAddress = pageStartAddress;
+	PendingCommandsFlags.IsEraseFlashPage = true;
 }
