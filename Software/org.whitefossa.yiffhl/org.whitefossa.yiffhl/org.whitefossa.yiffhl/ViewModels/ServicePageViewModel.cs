@@ -1412,29 +1412,29 @@ Application will be terminated.");
                 return;
             }
 
-            Device.BeginInvokeOnMainThread(async () =>
+            if (result != null)
             {
-                if (result != null)
+                var updateFile = await _filesManager.ReadFileAsync(result.FullPath);
+
+                var isFirmwareValid = await _serviceCommandsManager.VaildateMainFirmwareAsync
+                    (
+                        _mainModel.ServiceSettingsModel.BootloaderIdentificationData,
+                        updateFile
+                    );
+
+                if (!isFirmwareValid)
                 {
-                    var updateFile = await _filesManager.ReadFileAsync(result.FullPath);
+                    await _userNotifier.ShowErrorMessageAsync("Wrong file", "Selected file doesn't contain valid firmware!");
+                    return;
+                }
 
-                    var isFirmwareValid = await _serviceCommandsManager.VaildateMainFirmwareAsync
-                        (
-                            _mainModel.ServiceSettingsModel.BootloaderIdentificationData,
-                            updateFile
-                        );
-
-                    if (!isFirmwareValid)
-                    {
-                        await _userNotifier.ShowErrorMessageAsync("Wrong file", "Selected file doesn't contain valid firmware!");
-                        return;
-                    }
-
-                    // Dumping existing firmware
+                // Dumping existing firmware
+                Device.BeginInvokeOnMainThread(async () =>
+                {
                     await _serviceCommandsManager.ReadMainFirmware(_mainModel.ServiceSettingsModel.BootloaderIdentificationData,
                         async (fd) => await OnReadMainFirmwareBackupAsync(fd));
-                }
-            });
+                });
+            }
         }
 
         private async Task OnReadMainFirmwareBackupAsync(List<byte> firmwareDump)
