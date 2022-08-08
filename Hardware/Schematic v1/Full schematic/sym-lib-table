@@ -1,4 +1,4 @@
 (sym_lib_table
   (lib (name "Full-schematic-rescue")(type "Legacy")(uri "${KIPRJMOD}/Full schematic-rescue.lib")(options "")(descr ""))
-  (lib (name "G6L-1F-DC5")(type "Legacy")(uri "/home/fossa/Projects/Electronics/KiCad/not my libraries/G6L-1F-DC5/G6L-1F-DC5.lib")(options "")(descr ""))
+  (lib (name "SamsSys")(type "Legacy")(uri "/home/fossa/Projects/Electronics/KiCad/not my libraries/SamaSys/SamacSys_Parts.lib")(options "")(descr ""))
 )
