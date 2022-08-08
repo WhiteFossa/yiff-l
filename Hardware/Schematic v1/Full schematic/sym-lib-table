@@ -1,4 +1,5 @@
 (sym_lib_table
   (lib (name "Full-schematic-rescue")(type "Legacy")(uri "${KIPRJMOD}/Full schematic-rescue.lib")(options "")(descr ""))
-  (lib (name "SamsSys")(type "Legacy")(uri "/home/fossa/Projects/Electronics/KiCad/not my libraries/SamaSys/SamacSys_Parts.lib")(options "")(descr ""))
+  (lib (name "IM43TS")(type "Legacy")(uri "/home/fossa/Projects/Electronics/KiCad/not my libraries/Mouser/IM43TS.lib")(options "")(descr ""))
+  (lib (name "2222SQ-301GEC")(type "Legacy")(uri "/home/fossa/Projects/Electronics/KiCad/not my libraries/Mouser/2222SQ-301GEC.lib")(options "")(descr ""))
 )
