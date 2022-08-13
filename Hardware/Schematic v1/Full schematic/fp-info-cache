@@ -1,4 +1,4 @@
-20329691055469583
+20329691226702213
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -60220,6 +60220,20 @@ Mounting 4.5mm 9774100982
 0
 8
 1
+Mouser
+2222SQ301GEC
+2222SQ-301GEC-1
+Inductor
+0
+2
+2
+Mouser
+IM43TS
+IM43TS-2
+Relay or Contactor
+0
+8
+8
 NetTie
 NetTie-2_SMD_Pad0.5mm
 Net tie, 2 pin, 0.5mm square SMD pads
@@ -78889,20 +78903,6 @@ rotary encoder
 0
 5
 4
-SamacSys
-G6L-1F-DC5
-G6L-1F-DC5
-Relay or Contactor
-0
-4
-4
-SamacSys
-NE555DR
-D (R-PDSO-G8)
-Integrated Circuit
-0
-8
-8
 Sensor
 Aosong_DHT11_5.5x12.0_P2.54mm
 Temperature and humidity module, http://akizukidenshi.com/download/ds/aosong/DHT11.pdf

@@ -12612,7 +12612,7 @@
     (property "Value" "100uFx16V" (id 1) (at 43.0022 228.473 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
-    (property "Footprint" "Inductor_SMD:L_0603_1608Metric_Pad1.05x0.95mm_HandSolder" (id 2) (at 40.9702 231.14 0)
+    (property "Footprint" "Capacitor_THT:CP_Radial_D6.3mm_P2.50mm" (id 2) (at 40.9702 231.14 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Datasheet" "~" (id 3) (at 40.005 227.33 0)
@@ -17879,7 +17879,7 @@
       (reference "#PWR0173") (unit 1) (value "GND") (footprint "")
     )
     (path "/00000000-0000-0000-0000-000060da81bd"
-      (reference "C1") (unit 1) (value "100uFx16V") (footprint "Inductor_SMD:L_0603_1608Metric_Pad1.05x0.95mm_HandSolder")
+      (reference "C1") (unit 1) (value "100uFx16V") (footprint "Capacitor_THT:CP_Radial_D6.3mm_P2.50mm")
     )
     (path "/00000000-0000-0000-0000-00005fded36d"
       (reference "C2") (unit 1) (value "0.1uF") (footprint "Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder")
